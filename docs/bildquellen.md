@@ -3,7 +3,7 @@
 Prototyp. Die Dateien liegen lokal als WebP, nichts wird von den Quellseiten eingebunden.
 Eine Veröffentlichungsgenehmigung liegt nicht vor.
 
-Fußzeile auf den Seiten: „Bilder/Daten teilweise Herstellerangaben Schwarzfeller – Prototyp, Rechte vor Veröffentlichung klären.“
+Die Bildnachweise stehen im Impressum, nicht mehr in der Fußzeile.
 
 Schwarzfeller-Fotos: Produktfotos der Schwarzfeller GmbH, heruntergeladen von den genannten Datei-URLs, längste Kante höchstens 1.200 px, WebP. Lizenz auf der Seite nicht genannt. Nur für diesen Prototyp.
 
@@ -256,7 +256,7 @@ Preise von Schwarzfeller sind nicht übernommen. Miete bleibt „auf Anfrage“.
 
 ## Anhänger
 
-Alle Karten bleiben „Beispiel“, bis die Fahrzeuge von AMK feststehen. Die Beträge 25 € pro Tag, 79 € pro Wochenende, 1.190 €, 2.450 € und 980 € sind erfunden und auf der Karte so beschriftet. 120 € pro Woche ist entfallen. Kühlanhänger und der Koffer zur Miete: Preis auf Anfrage.
+Die Anhängerkarten auf der Seite nennen keine Beträge und keine Maße. Sie sind Beispieltypen, bis die Fahrzeuge von AMK feststehen. Die früher notierten Beträge 25 € pro Tag, 79 € pro Wochenende, 1.190 €, 2.450 € und 980 € sind erfunden und nicht veröffentlicht. 120 € pro Woche ist entfallen. Die folgenden Eckdaten bleiben die gelesenen Hersteller- und Händlerangaben zur Einordnung, nicht der Bestand von AMK.
 
 ### Hochlader 750 kg
 
@@ -350,11 +350,11 @@ Daten: https://www.pkw-anhaenger.center/TEMARED-COOLER-3015-2C-2000kg-288x138x17
 
 ### Hochlader 750 kg (Kauf)
 
-Dieselben Eckdaten und dasselbe Foto. Preis hier: Beispiel-Kaufpreis: 1.190 €. Erfundener Beispielpreis, kein Angebot von AMK. MwSt. nicht geregelt.
+Dieselben gelesenen Eckdaten und dasselbe Foto, nur zur Einordnung. Auf der Kaufseite steht kein Preis.
 
 ### Kofferanhänger (Kauf)
 
-Dieselben Eckdaten und dasselbe Foto. Preis hier: Beispiel-Kaufpreis: 980 €. Erfundener Beispielpreis, kein Angebot von AMK. MwSt. nicht geregelt.
+Dieselben gelesenen Eckdaten und dasselbe Foto, nur zur Einordnung. Auf der Kaufseite steht kein Preis.
 
 ### Fahrzeugtransporter
 
