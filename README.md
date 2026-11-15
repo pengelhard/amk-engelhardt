@@ -15,19 +15,19 @@ Die Startadresse `index.html` ist der Einstieg. `mieten/` ist die Übersicht der
 | `index.html` | Einstieg: Einsatzfoto, Bildflächen, Angebote |
 | `angebote/` | Angebote und Neuheiten aus `data/angebote.json` |
 | `mieten/` | Übersicht Mieten: Bauzaun, Absperrung, Anhänger |
-| `mieten/bauzaun/`, `mieten/absperrung/`, `mieten/mietpark/` | Bildkacheln der Kategorie. Der Mengenrechner steht nur unter Bauzaun |
+| `mieten/bauzaun/`, `mieten/absperrung/`, `mieten/mietpark/` | Bauzaun ist ein Konfigurator. Absperrung und Mietpark bleiben Bildkacheln |
 | `kaufen/` | Nur Verkaufsanhänger, ohne Filterleiste |
 | `kaufen/anhaenger/<slug>/` | Detail eines Verkaufsanhängers |
 | `produkt/<slug>/` | Detail eines Mietprodukts |
 | `service/` | Full Service und die zwei genannten Partner |
-| `anfrage/` | Anfrageliste wie ein Warenkorb, `mailto` |
+| `anfrage/` | Anfrageliste wie ein Warenkorb, `mailto`. Leer zusätzlich „Individuelle Beratung anfragen“ |
 | `ueber-uns/` | Firma, Standort |
 | `kontakt/` | Kontaktdaten, Zeiten, Terminabsprache, Karte nach Einwilligung, Route in neuem Tab |
 | `impressum/`, `datenschutz/` | Angaben nach § 5 DDG und Datenschutz nur für das, was die Seite nutzt. Entwurf, vor Veröffentlichung rechtlich prüfen. Dieser Satz steht nur hier, nicht auf den Seiten. |
 
 Das Hauptmenü hat drei Punkte: Mieten, Kaufen, Kontakt. Rechts daneben liegt das Anfrage-Zeichen mit Zähler. Unter 980 px ersetzt eine Fußleiste mit Mieten, Kaufen, Kontakt, Anfrage und Anrufen das Menü; das Anfrage-Zeichen im Kopf ist dort aus. Das Telefon steht in der Fußzeile und in der Fußleiste, nicht als eigene Zeile im Kopf. Service, Über uns, Impressum und Datenschutz bleiben in der Fußzeile erreichbar.
 
-JavaScript ergänzt nur: Merkzettel in `localStorage`, Nachrechnen im Mengenrechner, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/angebote.json`, die Einwilligung für die Karte und danach Leaflet. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt.
+JavaScript ergänzt nur: Merkzettel in `localStorage`, die Bauzaun-Konfiguration als eine Position, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/angebote.json`, die Einwilligung für die Karte und danach Leaflet. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt. `js/rechner.js` ist nicht mehr eingebunden.
 
 ## Angebote und Neuheiten
 
@@ -129,9 +129,9 @@ Die Schrift ist Manrope, lokal als WOFF2 unter `assets/fonts/`, Lizenz SIL OFL. 
 
 Impressum und Datenschutz sind neu geschrieben. Eine USt-IdNr. steht auf der Seite nicht: die alte Seite ließ das Feld leer, und ohne Nummer ist die Zeile nicht einschlägig. § 18 Abs. 2 MStV steht nicht im Impressum. Für eine gewerbliche Produktseite wird er hier nicht als Pflicht behauptet. Die Angabe zum EU-US Data Privacy Framework ist nur der Verweis auf die öffentliche Liste vom 15.11.2026, keine eigene Zusage. Bildnachweise stehen im Impressum. Entwurf, vor Veröffentlichung rechtlich prüfen. Dieser Hinweis steht nur in dieser Datei.
 
-## Mengenrechner
+## Bauzaun-Konfigurator
 
-Die Feldlänge ist die Breite des offenen Bauzauns Standard bei Schwarzfeller: 3.450 mm, also 3,45 m. Quelle: https://www.schwarzfeller.de/bauzaun/offene-bauzaune/ Felder = Meter geteilt durch 3,45, aufgerundet. XXL ist 3.500 mm breit und fällt nicht unter diese Rechnung. Füße bei einer geraden Strecke = Felder plus 1 und Schellen = Stöße bleiben Annahmen, plus eine Schelle, wenn ein Tor gewählt ist. Die Höhe ändert die Stückzahl nicht. Für 35 m ohne Tor steht im HTML: 11 Felder, 12 Füße, 10 Schellen. Der Rechner ist eingeklappt und auf `mieten/bauzaun/` geöffnet.
+`mieten/bauzaun/` fragt Art (Standard, F1, Secure, XXL), Menge in Metern oder Feldern und den Mietzeitraum. Meter werden nicht in Felder umgerechnet: Standard und F1 sind 3.450 mm breit, Secure 3.472 mm, XXL 3.500 mm (Schwarzfeller). Betonfüße, Verbindungsschellen und Streben nach Bedarf stehen als inklusive, ohne Stückzahl. Sonderwünsche sind Häkchen mit „Aufpreis auf Anfrage“: Hochsicherheitsschellen, Bauzaunplane, Sichtschutz, Tür, Tor, Zusatzstreben. „In die Anfrage legen“ schreibt eine Position. Die Produktseiten bleiben unter „Einzelteile“, sie sind nicht mehr der Hauptweg. Die Mieten-Kachel verlinkt `bauzaun/`.
 
 ## Beispielpreise der Anhänger
 
@@ -141,7 +141,7 @@ Ein VDE-Badge gibt es nicht. Die gelesenen Schwarzfeller-Seiten nennen kein VDE,
 
 ## Anfrage
 
-„Zur Anfrage hinzufügen“ legt den Artikel in `localStorage` (`amk-wunsch`) oder erhöht die Menge. Es nimmt ihn nicht wieder herunter. Ein Hinweis zeigt „Weiter umsehen“ und „Zur Anfrage“. Die Übersicht unter `anfrage/` zeigt Bild, Name, Miete oder Kauf, Menge, Entfernen und „Preis auf Anfrage“. Liegt eine Miete darin, kommen Zeitraum von/bis, die Wahl „Lieferung, Aufbau und Abbau“ oder „Selbstabholung“, Einsatzort und PLZ dazu. Bei Zaunartikeln zusätzlich Länge und Höhe, auch aus dem Mengenrechner (`laenge`, `hoehe`, `produkt`). Name, Firma (optional), Telefon, E-Mail und Nachricht bleiben. Absenden öffnet nur `mailto:info@bauzaun-mieten.net` mit der Liste. Der Satz daneben heißt „Ihr E-Mail-Programm öffnet sich“. Ohne JavaScript steht der Hinweis, an dieselbe Adresse zu schreiben. Die Angaben liegen zusätzlich unter `amk-anfrage-meta`. Das steht kurz im Datenschutz, ohne Banner.
+„Zur Anfrage hinzufügen“ legt den Artikel in `localStorage` (`amk-wunsch`) oder erhöht die Menge. Es nimmt ihn nicht wieder herunter. Ein Hinweis zeigt „Weiter umsehen“ und „Zur Anfrage“. Die Übersicht unter `anfrage/` zeigt Bild, Name, Miete oder Kauf, Menge, Entfernen und „Preis auf Anfrage“. Eine Bauzaun-Konfiguration zeigt stattdessen Art, Menge, Zeitraum, „Inklusive“ und Extras, ohne zweiten Mengenregler. Liegt eine Miete darin, kommen Zeitraum von/bis, die Wahl „Lieferung, Aufbau und Abbau“ oder „Selbstabholung“, Einsatzort und PLZ dazu. Bei einzelnen Zaunartikeln zusätzlich Länge und Höhe (`laenge`, `hoehe`, `produkt`). Ist der Korb leer, stehen drei gleichwertige Wege: Mieten, Kaufen und „Individuelle Beratung anfragen“ (`anfrage/beratung/`: Anliegen, Ort, Zeitraum optional, Kontakt, dieselbe `mailto`-Zeile). Name, Firma (optional), Telefon, E-Mail und Nachricht bleiben. Absenden öffnet nur `mailto:info@bauzaun-mieten.net` mit der Liste. Der Satz daneben heißt „Ihr E-Mail-Programm öffnet sich“. Ohne JavaScript steht der Hinweis, an dieselbe Adresse zu schreiben. Die Angaben liegen zusätzlich unter `amk-anfrage-meta`. Das steht kurz im Datenschutz, ohne Banner.
 
 ## Offene Fragen an Peter
 
