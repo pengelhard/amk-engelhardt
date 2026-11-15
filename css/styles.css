@@ -713,6 +713,7 @@ a.contact-card:hover .contact-main { color: var(--green); }
   min-height: 26rem;
   background: #e7eeea;
   overflow: hidden;
+  contain: paint;
 }
 .map-live,
 .map-fallback { position: absolute; inset: 0; }
