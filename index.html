@@ -32,38 +32,14 @@
     </header>
   </div>
   <main id="inhalt">
-    <section class="hero" data-karussell aria-roledescription="Karussell" aria-label="Hauptkategorien">
-      <div class="hero-media" data-slides>
-        <div class="slide is-on" role="group" aria-roledescription="Folie" aria-label="1 von 5" data-title="Bauzaun" data-href="mieten/bauzaun/" data-cta="Zum Bauzaun">
-          <img src="images/bauzaun-standard.webp" width="700" height="456" alt="Bauzaun auf einer Baustelle, im Hintergrund Kran und Gerüst" fetchpriority="high" decoding="async">
-        </div>
-        <div class="slide" role="group" aria-roledescription="Folie" aria-label="2 von 5" aria-hidden="true" data-title="Absperrungen" data-href="mieten/absperrung/" data-cta="Zu den Absperrungen">
-          <img data-src="images/absperrschranke.webp" width="450" height="316" alt="Rot-weiße Absperrschranken an einer Straße" decoding="async" style="object-position:center 62%">
-        </div>
-        <div class="slide" role="group" aria-roledescription="Folie" aria-label="3 von 5" aria-hidden="true" data-title="Verkehrsschilder" data-href="produkt/verkehrsschilder/" data-cta="Zu den Schildern">
-          <img data-src="images/verkehrsschilder.webp" width="600" height="697" alt="Gruppe von Verkehrsschildern" decoding="async" style="object-position:center 46%">
-        </div>
-        <div class="slide" role="group" aria-roledescription="Folie" aria-label="4 von 5" aria-hidden="true" data-title="Anhänger kaufen" data-href="kaufen/" data-cta="Anhänger ansehen">
-          <img data-src="images/fahrzeugtransporter.webp" width="800" height="534" alt="Kippbarer Autotransporter mit einem Pkw auf der Ladefläche" decoding="async" style="object-position:center 55%">
-        </div>
-        <div class="slide" role="group" aria-roledescription="Folie" aria-label="5 von 5" aria-hidden="true" data-title="Kühlanhänger mieten" data-href="produkt/kuehlanhaenger-13/" data-cta="Zum Kühlanhänger">
-          <img data-src="images/kuehlanhaenger-13.webp" width="540" height="405" alt="Kühlanhänger mit Kühlaggregat über der Tür" decoding="async" style="object-position:center 58%">
-        </div>
+    <section class="hero hero--still">
+      <div class="hero-media">
+        <img src="images/anhaenger-plane.webp" srcset="images/anhaenger-plane.webp 2440w" sizes="100vw" width="2440" height="1580" alt="Einachsiger Anhänger mit grauer Plane" fetchpriority="high" decoding="async">
       </div>
       <div class="wrap hero-copy hero-copy--statement">
         <p class="eyebrow">Hainsfarth · seit 2011</p>
         <h1>Auf uns ist Verlass.<br>Auf unsere Zäune auch.</h1>
         <p class="lead">Bauzäune, Absperrungen und Verkehrsschilder zur Miete, Anhänger zum Kauf. Wir liefern, bauen auf und holen wieder ab.</p>
-        <div class="slide-bar">
-          <p class="slide-kicker" id="slide-kicker">Bauzaun</p>
-          <a class="slide-go" data-slide-go href="mieten/bauzaun/">Zum Bauzaun</a>
-          <div class="slide-tools">
-            <button class="slide-arrow" type="button" data-step="-1" aria-label="Vorherige Folie"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M14.5 6.5 9 12l5.5 5.5"/></svg></button>
-            <div class="slide-dots" role="group" aria-label="Folien"></div>
-            <button class="slide-arrow" type="button" data-step="1" aria-label="Nächste Folie"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M9.5 6.5 15 12l-5.5 5.5"/></svg></button>
-            <button class="slide-pause" type="button" data-pause aria-pressed="false" aria-label="Automatischen Wechsel anhalten"><svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path fill="currentColor" d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg><svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18" hidden><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg></button>
-          </div>
-        </div>
       </div>
     </section>
     <section class="mosaic" aria-label="Bereiche">
@@ -75,14 +51,31 @@
         <img src="images/absperrschranke.webp" width="450" height="316" alt="Rot-weiße Absperrschranken an einer Straße">
         <span><small>Mieten</small><strong>Absperrung</strong></span>
       </a>
-      <a href="produkt/kuehlanhaenger-13/">
-        <img src="images/kuehlanhaenger-13.webp" width="540" height="405" alt="Kühlanhänger mit Kühlaggregat über der Tür">
-        <span><small>Mieten</small><strong>Kühlanhänger</strong></span>
+      <a href="mieten/mietpark/">
+        <img src="images/anhaenger-offen.webp" width="720" height="481" alt="Offener Hochlader mit Bordwänden">
+        <span><strong>Anhänger mieten</strong></span>
       </a>
       <a href="kaufen/">
         <img src="images/fahrzeugtransporter.webp" width="800" height="534" alt="Kippbarer Autotransporter mit einem Pkw auf der Ladefläche">
-        <span><small>Kaufen</small><strong>Anhänger</strong></span>
+        <span><strong>Anhänger kaufen</strong></span>
       </a>
+    </section>
+    <section class="trust" aria-labelledby="ablauf-titel">
+      <div class="wrap">
+        <h2 id="ablauf-titel">So läuft's</h2>
+        <ol class="steps">
+          <li><strong>Anfrage</strong><span>Sie nennen Art, Menge und Zeitraum.</span></li>
+          <li><strong>Angebot</strong><span>Wir nennen den Preis.</span></li>
+          <li><strong>Lieferung &amp; Aufbau</strong><span>Wir bringen den Zaun und stellen ihn auf.</span></li>
+          <li><strong>Abholung</strong><span>Zum Ende holen wir alles wieder ab.</span></li>
+        </ol>
+        <p class="area-line"><strong>Liefergebiet.</strong> Lieferung und Aufbau rund um Hainsfarth.</p>
+      </div>
+    </section>
+    <section class="team" id="team" hidden>
+      <div class="wrap team-row">
+        <img id="team-foto" alt="Team von AMK Engelhardt" width="1200" height="800">
+      </div>
     </section>
     <section class="offers" id="aktuelles" aria-labelledby="aktuelles-titel" hidden>
       <div class="wrap">
@@ -103,6 +96,7 @@
     <div class="wrap">
       <p class="footer-name">AMK Engelhardt</p>
       <p>Oberer Kesselweg 2<br>86744 Hainsfarth</p>
+      <p>Mo–Fr 8–17 Uhr</p>
       <p><a href="tel:+499082921777">09082 921777</a><br><a href="mailto:info@bauzaun-mieten.net">info@bauzaun-mieten.net</a></p>
       <ul class="footer-links">
         <li><a href="mieten/">Mieten</a></li>
@@ -114,16 +108,13 @@
         <li><a href="ueber-uns/">Über uns</a></li>
         <li><a href="impressum/">Impressum</a></li>
         <li><a href="datenschutz/">Datenschutz</a></li>
-      <li><button type="button" class="cookie-settings" data-cookie-settings>Cookie-Einstellungen</button></li>
       </ul>
     </div>
   </footer>
   <nav class="tabbar" aria-label="Schnellnavigation">
-    <a href="mieten/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>Mieten</span></a>
-    <a href="kaufen/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>Kaufen</span></a>
-    <a href="kontakt/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M5 7h14v10H5zM5 8l7 5 7-5"/></svg><span>Kontakt</span></a>
+    <a href="tel:+499082921777"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M8 3.8h3.1l1.1 3.7-1.9 1.1a10.2 10.2 0 0 0 4.9 4.9l1.1-1.9 3.7 1.1V16a2 2 0 0 1-2.1 2A14.2 14.2 0 0 1 6 6.1 2 2 0 0 1 8 3.8z"/></svg><span>Anrufen</span></a>
     <a class="inquiry" href="anfrage/" aria-label="Anfrage, keine Artikel"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M6 3.5h9l4 4V20.5H6z"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M15 3.5v4.5h4.5M8.5 12h7M8.5 15.5h4.5"/></svg><span>Anfrage</span><span class="inquiry-count" data-wunsch-count data-empty="true" aria-live="polite">0</span></a>
-    <a href="tel:+499082921777"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M8 4h3l1 4-2 1a10 10 0 0 0 5 5l1-2 4 1v3a2 2 0 0 1-2 2A14 14 0 0 1 6 6a2 2 0 0 1 2-2z"/></svg><span>Anrufen</span></a>
+    <button type="button" class="tab-menu nav-toggle" aria-expanded="false" aria-controls="menue" aria-label="Menü öffnen"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menü</span></button>
   </nav>
       <div class="menu" id="menue" aria-hidden="true">
       <button type="button" class="menu-backdrop" data-menu-close tabindex="-1" aria-label="Menü schließen"></button>
@@ -148,9 +139,8 @@
       </div>
     </div>
 <script src="js/nav.js"></script>
-  <script src="js/karussell.js"></script>
-  <script src="js/aktuelles.js"></script>
+    <script src="js/aktuelles.js"></script>
+  <script src="js/team.js"></script>
   <script src="js/merkzettel.js"></script>
-  <script src="js/einwilligung.js"></script>
 </body>
 </html>

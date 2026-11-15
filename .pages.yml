@@ -33,7 +33,7 @@ content:
         label: Bild
         type: image
         required: true
-        description: Querformat, etwa 1200 × 675 Pixel. Die Kachel schneidet das Bild zu.
+        description: Querformat. Die Seite zeigt es im Verhältnis 4:3.
         options:
           media: aktuelles
           extensions: [webp, jpg, jpeg, png]
@@ -54,7 +54,7 @@ content:
       - name: preis
         label: Preis
         type: string
-        description: Optional. Leer lassen für „Preis auf Anfrage“.
+        description: Optional. Leer lassen, wenn der Preis erst im Angebot steht.
       - name: datum
         label: Datum
         type: date

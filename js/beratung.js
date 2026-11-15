@@ -13,7 +13,12 @@
     status.classList.remove("is-error");
     var von = val("von");
     var bis = val("bis");
-    if (window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(form.von, form.bis)) return;
+    if ((val("von") || val("bis")) && window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(form.von, form.bis)) return;
+    var trap = form.elements.botcheck;
+    if (trap && String(trap.value || "").trim()) {
+      window.location.href = "../danke/";
+      return;
+    }
     var lines = ["Individuelle Beratung an AMK Engelhardt", "", "Anliegen:", val("anliegen"), ""];
     lines.push("Ort: " + (val("ort") || "–"));
     function deDate(value) {
@@ -29,7 +34,19 @@
     var href = "mailto:info@bauzaun-mieten.net?subject=" +
       encodeURIComponent("Beratung – AMK Engelhardt") +
       "&body=" + encodeURIComponent(lines.join("\n"));
-    status.textContent = "Ihr E-Mail-Programm öffnet sich.";
-    window.location.href = href;
+    if (!window.AMK_FORMULAR) {
+      status.textContent = "Ihr E-Mail-Programm öffnet sich.";
+      window.location.href = href;
+      return;
+    }
+    window.AMK_FORMULAR.send({
+      status: status,
+      thanks: "../danke/",
+      mailto: href,
+      subject: "Beratung – AMK Engelhardt",
+      name: val("name"),
+      email: val("email"),
+      message: lines.join("\n")
+    });
   });
 })();

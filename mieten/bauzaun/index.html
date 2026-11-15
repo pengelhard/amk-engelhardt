@@ -35,20 +35,20 @@
     <section class="hero hero--short">
       <div class="hero-media"><img src="../../images/bauzaun-standard.webp" width="700" height="456" alt="Bauzaun auf einer Baustelle, im Hintergrund Kran und Gerüst"></div>
       <div class="wrap hero-copy">
-        <a class="home-back" href="../../">‹ Zurück zur Startseite</a>
+<nav class="crumbs" aria-label="Brotkrumen"><a href="../../mieten/">Mieten</a> <span aria-hidden="true">›</span> <span aria-current="page">Bauzaun</span></nav>
         <p class="eyebrow">Mieten</p>
         <h1>Bauzaun</h1>
-        <p class="lead">Art, Menge und Zeitraum in einem Schritt. Nur zur Miete.</p>
+        <p class="lead">Art, Menge und Zeitraum in einem Schritt.</p>
       </div>
     </section>
     
     <section class="copy">
       <div class="wrap">
-        <p>Wählen Sie die Bauzaunart, die Menge und den Mietzeitraum. Betonfüße, Verbindungsschellen und Streben nach Bedarf gehören dazu. Sonderwünsche haken Sie an, der Aufpreis kommt auf Anfrage. Ein Kauf von Bauzaun gibt es nicht.</p>
         <noscript>
           <p>Schreiben Sie an <a href="mailto:info@bauzaun-mieten.net">info@bauzaun-mieten.net</a> und nennen Sie Art, Menge und Zeitraum.</p>
         </noscript>
-        <form class="konfig" id="bauzaun-konfig">
+        <form class="konfig-layout" id="bauzaun-konfig">
+          <div class="konfig-main">
           <fieldset class="pick-set">
             <legend>Bauzaunart</legend>
             <div class="picks">
@@ -112,11 +112,10 @@
           </fieldset>
           <div class="included">
             <h2>Dabei, inklusive</h2>
-            <p>Betonfüße, in die die Felder gesteckt werden, Verbindungsschellen an den Stößen und Streben nach Bedarf. Welche Strebe zur Strecke passt, klären wir bei der Planung. Der Preis bleibt auf Anfrage.</p>
+            <p>Betonfüße, in die die Felder gesteckt werden, Verbindungsschellen an den Stößen und Streben nach Bedarf. Welche Strebe zur Strecke passt, klären wir bei der Planung.</p>
           </div>
           <fieldset class="choices extra-list">
             <legend>Sonderwünsche</legend>
-            <p>Aufpreis auf Anfrage.</p>
             <div class="extra-row">
               <label class="choice"><input type="checkbox" name="extra" value="hsschelle"> <span>Hochsicherheitsschellen</span></label>
             </div>
@@ -146,10 +145,20 @@
             </div>
             <p class="extra-note">Weitere Streben, über den Bedarf der Strecke hinaus.</p>
           </fieldset>
-          <div class="actions">
-            <button class="btn" type="submit">In die Anfrage legen</button>
           </div>
-          <p id="konfig-status" class="form-status" role="status"></p>
+          <aside class="konfig-summary" aria-live="polite">
+            <h2>Ihre Auswahl</h2>
+            <p class="sum-short" data-sum="short">Bauzaun Standard</p>
+            <dl class="sum-full">
+              <div><dt>Art</dt><dd data-sum="art">Bauzaun Standard</dd></div>
+              <div><dt>Menge</dt><dd data-sum="menge">–</dd></div>
+              <div><dt>Zeitraum</dt><dd data-sum="zeit">–</dd></div>
+              <div><dt>Extras</dt><dd data-sum="extras">–</dd></div>
+            </dl>
+            <p class="price-once">Preis auf Anfrage</p>
+            <button class="btn" type="submit">In die Anfrage legen</button>
+            <p id="konfig-status" class="form-status" role="status"></p>
+          </aside>
         </form>
         <details class="parts">
           <summary>Einzelteile</summary>
@@ -178,6 +187,7 @@
     <div class="wrap">
       <p class="footer-name">AMK Engelhardt</p>
       <p>Oberer Kesselweg 2<br>86744 Hainsfarth</p>
+      <p>Mo–Fr 8–17 Uhr</p>
       <p><a href="tel:+499082921777">09082 921777</a><br><a href="mailto:info@bauzaun-mieten.net">info@bauzaun-mieten.net</a></p>
       <ul class="footer-links">
         <li><a href="../../mieten/">Mieten</a></li>
@@ -189,17 +199,14 @@
         <li><a href="../../ueber-uns/">Über uns</a></li>
         <li><a href="../../impressum/">Impressum</a></li>
         <li><a href="../../datenschutz/">Datenschutz</a></li>
-      <li><button type="button" class="cookie-settings" data-cookie-settings>Cookie-Einstellungen</button></li>
       </ul>
     </div>
   </footer>
   <nav class="tabbar" aria-label="Schnellnavigation">
-<a href="../../mieten/" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>Mieten</span></a>
-<a href="../../kaufen/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>Kaufen</span></a>
-<a href="../../kontakt/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M5 7h14v10H5zM5 8l7 5 7-5"/></svg><span>Kontakt</span></a>
-<a class="inquiry" href="../../anfrage/" aria-label="Anfrage, keine Artikel"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M6 3.5h9l4 4V20.5H6z"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M15 3.5v4.5h4.5M8.5 12h7M8.5 15.5h4.5"/></svg><span>Anfrage</span><span class="inquiry-count" data-wunsch-count data-empty="true" aria-live="polite">0</span></a>
-    <a href="tel:+499082921777"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M8 4h3l1 4-2 1a10 10 0 0 0 5 5l1-2 4 1v3a2 2 0 0 1-2 2A14 14 0 0 1 6 6a2 2 0 0 1 2-2z"/></svg><span>Anrufen</span></a>
-</nav>
+    <a href="tel:+499082921777"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M8 3.8h3.1l1.1 3.7-1.9 1.1a10.2 10.2 0 0 0 4.9 4.9l1.1-1.9 3.7 1.1V16a2 2 0 0 1-2.1 2A14.2 14.2 0 0 1 6 6.1 2 2 0 0 1 8 3.8z"/></svg><span>Anrufen</span></a>
+    <a class="inquiry" href="../../anfrage/" aria-label="Anfrage, keine Artikel"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M6 3.5h9l4 4V20.5H6z"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M15 3.5v4.5h4.5M8.5 12h7M8.5 15.5h4.5"/></svg><span>Anfrage</span><span class="inquiry-count" data-wunsch-count data-empty="true" aria-live="polite">0</span></a>
+    <button type="button" class="tab-menu nav-toggle" aria-expanded="false" aria-controls="menue" aria-label="Menü öffnen"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menü</span></button>
+  </nav>
       <div class="menu" id="menue" aria-hidden="true">
       <button type="button" class="menu-backdrop" data-menu-close tabindex="-1" aria-label="Menü schließen"></button>
       <div class="menu-panel" role="dialog" aria-modal="true" aria-labelledby="menue-titel">
@@ -226,6 +233,5 @@
   <script src="../../js/merkzettel.js"></script>
   <script src="../../js/zeitraum.js"></script>
   <script src="../../js/bauzaun.js"></script>
-  <script src="../../js/einwilligung.js"></script>
 </body>
 </html>
