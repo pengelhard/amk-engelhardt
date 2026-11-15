@@ -13,6 +13,23 @@
   window.addEventListener("resize", pinTab);
   if (tab && window.ResizeObserver) new ResizeObserver(pinTab).observe(tab);
 
+  var bar = document.querySelector(".top");
+
+  function pinTop() {
+    if (!bar) return;
+    document.documentElement.style.setProperty("--top", bar.offsetHeight + "px");
+    var hero = document.querySelector(".hero");
+    if (!hero) {
+      bar.classList.add("is-solid");
+      return;
+    }
+    bar.classList.toggle("is-solid", window.scrollY > 8);
+  }
+
+  pinTop();
+  window.addEventListener("scroll", pinTop, { passive: true });
+  window.addEventListener("resize", pinTop);
+
   var button = document.querySelector(".nav-toggle");
   var nav = document.getElementById("nav");
   if (!button || !nav) return;
