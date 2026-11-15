@@ -12,8 +12,9 @@ Die Startadresse `index.html` ist der Einstieg. `mieten/` ist die Übersicht der
 
 | URL | Inhalt |
 | --- | --- |
-| `index.html` | Einstieg: Bildkarussell im Hero, Bildflächen, Angebote |
-| `angebote/` | Angebote und Neuheiten aus `data/angebote.json` |
+| `index.html` | Einstieg: Bildkarussell im Hero, Bildflächen, Aktuelles |
+| `aktuelles/` | Sonderangebote, Neuheiten und besondere Produkte aus `data/aktuelles.json` |
+| `angebote/` | Verweis auf `aktuelles/` |
 | `mieten/` | Übersicht Mieten: Bauzaun, Absperrung, Anhänger |
 | `mieten/bauzaun/`, `mieten/absperrung/`, `mieten/mietpark/` | Bauzaun ist ein Konfigurator. Absperrung und Mietpark bleiben Bildkacheln |
 | `kaufen/` | Nur Verkaufsanhänger, ohne Filterleiste |
@@ -27,28 +28,33 @@ Die Startadresse `index.html` ist der Einstieg. `mieten/` ist die Übersicht der
 
 Das Hauptmenü hat drei Punkte: Mieten, Kaufen, Kontakt. Rechts daneben liegt das Anfrage-Zeichen mit Zähler. Unter 980 px ersetzt eine Fußleiste mit Mieten, Kaufen, Kontakt, Anfrage und Anrufen das Menü; das Anfrage-Zeichen im Kopf ist dort aus. Das Telefon steht in der Fußzeile und in der Fußleiste, nicht als eigene Zeile im Kopf. Service, Über uns, Impressum und Datenschutz bleiben in der Fußzeile erreichbar.
 
-JavaScript ergänzt nur: Merkzettel in `localStorage`, das Bildkarussell auf der Startseite, die Bauzaun-Konfiguration als eine Position, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/angebote.json`, die Einwilligung für die Karte und danach Leaflet. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt. `js/rechner.js` ist nicht mehr eingebunden.
+JavaScript ergänzt nur: Merkzettel in `localStorage`, das Bildkarussell auf der Startseite, die Bauzaun-Konfiguration als eine Position, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/aktuelles.json`, die Einwilligung für die Karte und danach Leaflet. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt. `js/rechner.js` ist nicht mehr eingebunden.
 
 Das Karussell liegt im Hero und lässt Slogan, Lead und die zwei Buttons stehen. Fünf vorhandene Fotos: Bauzaun Standard, Absperrschranke, Verkehrsschilder, Fahrzeugtransporter, Kühlanhänger 1,3 t. Nachweise stehen schon im Impressum. Wechsel alle 5 Sekunden, Pause bei Hover, Fokus und über den Pause-Knopf. `prefers-reduced-motion` schaltet den Automatiklauf aus. Die erste Folie lädt sofort, die übrigen erst beim Wechsel. Kein CDN.
 
-## Angebote und Neuheiten
+## Aktuelles und Angebote
 
-Pflege nur in `data/angebote.json`. Eine Liste, ein Eintrag pro Karte. Felder:
+Michael Engelhardt pflegt nur diesen Bereich, über [Pages CMS](https://pagescms.org). Alles andere auf der Testseite pflegen wir. Pages CMS schreibt in `data/aktuelles.json`. Die Startseite und `aktuelles/` lesen dieselbe Datei, ohne Build. Eine Liste aus einzelnen Markdown-Dateien wäre ohne Build nicht auffindbar, deshalb ist die Sammlung diese eine JSON-Liste. `.pages.yml` gibt im CMS nur diese Liste und den Medienordner `images/aktuelles/` frei.
 
-| Feld | Inhalt |
-| --- | --- |
-| `titel` | Überschrift |
-| `text` | Ein kurzer Satz |
-| `bild` | Pfad ab der Seitenwurzel, nur eine vorhandene Datei unter `images/`, zum Beispiel `images/bauzaun-standard.webp` |
-| `alt` | Beschreibung des Bildes |
-| `badge` | `Neu` oder `Angebot` |
-| `beispiel` | Wird nicht mehr als Marke ausgegeben. Sichtbare Karten sind als normale Angebote formuliert, ohne Rabatt und ohne Betrag |
-| `bis` | Leer oder `JJJJ-MM-TT`. Der genannte Tag zählt noch. Danach blendet `js/angebote.js` den Eintrag aus |
-| `link` | Relativer Pfad ab der Seitenwurzel, zum Beispiel `kaufen/` |
+Felder: Titel, Kurztext, Bild, Bildbeschreibung, Typ (Angebot, Neuheit, Besonderes Produkt), Preis (leer heißt „Preis auf Anfrage“), Datum, Gültig bis, Sichtbar. Abgelaufene Einträge und unsichtbare Einträge verschwinden. Der genannte Gültig-bis-Tag zählt noch. Die Startseite zeigt höchstens die drei neuesten und blendet den ganzen Bereich aus, wenn nichts sichtbar ist. „Anfragen“ legt den Eintrag in den Anfragekorb.
 
-Die Startseite und `angebote/` lesen dieselbe Datei. Unter `kaufen/` steht der Link dorthin. Kein Build, kein fremdes Bild.
+Der einzige Startinhalt ist „Anhänger zum Kauf“, mit dem vorhandenen Foto des Fahrzeugtransporters und ohne Preis. Der Nachweis steht im Impressum. Neue Bilder lädt Michael nach `images/aktuelles/` hoch, Querformat etwa 1200 × 675 Pixel.
 
-Die zwei sichtbaren Einträge lesen sich als Angebote: „Bauzaun“ und „Anhänger“, beide mit Preis auf Anfrage und ohne Zertifikat, Rabatt oder Betrag. Ein dritter Eintrag mit Datum 2020-01-01 bleibt in der Datei und erscheint nicht. Echte Konditionen von AMK fehlen noch, siehe offene Fragen.
+### So legt Michael einen Eintrag an
+
+1. Den Link in der Einladungs-Mail öffnen und anmelden. Ein GitHub-Konto ist nicht nötig.
+2. „Aktuelles & Angebote“ öffnen.
+3. Einen Eintrag hinzufügen: Titel, Kurztext, Typ und Bild. Die Bildbeschreibung ausfüllen.
+4. Den Preis leer lassen, wenn er auf Anfrage ist. „Gültig bis“ nur setzen, wenn der Eintrag endet. „Sichtbar“ anlassen. Ein Datum setzt die Reihenfolge.
+5. Speichern. Der Eintrag steht unter Aktuelles und, wenn er zu den drei neuesten gehört, auf der Startseite.
+
+### So lädt Peter ihn ein
+
+1. Unter https://app.pagescms.org mit dem GitHub-Konto anmelden, das `pengelhard/amk-engelhardt` sieht.
+2. Die Pages-CMS-GitHub-App für dieses Repository freigeben, falls sie noch fehlt.
+3. Das Repository öffnen und den Branch `main` wählen.
+4. Collaborators öffnen und die E-Mail-Adresse von Michael Engelhardt eintragen.
+5. Die Einladung senden. Er erhält einen Anmeldelink, sieht nur Aktuelles und den Bilderordner und kann `.pages.yml` nicht ändern.
 
 ## Verkauf und Miete
 
