@@ -201,6 +201,66 @@ main { position: relative; z-index: 0; padding-top: var(--top, 5.6rem); }
 .hero--field { background: linear-gradient(165deg, #245741 0%, #1f4d3a 46%, #12281e 100%); }
 .hero-media { position: absolute; inset: 0; }
 .hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; }
+.hero[data-karussell] { touch-action: pan-y; }
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.slide.is-on, .slide.is-hold { opacity: 1; }
+.slide-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  margin-top: 1.15rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+.slide-kicker { margin: 0; font-size: 1rem; font-weight: 700; letter-spacing: 0.01em; }
+.slide-go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.slide-go:hover { background: #fff; color: var(--green); }
+.slide-tools { display: flex; align-items: center; gap: 0.1rem; }
+.slide-arrow, .slide-pause, .slide-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.slide-arrow:hover, .slide-pause:hover, .slide-dot:hover { background: rgba(255, 255, 255, 0.14); }
+.slide-dot::after {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+}
+.slide-dot[aria-current="true"]::after { width: 1.15rem; background: #fff; }
+.slide-dots { display: flex; align-items: center; }
 .hero-media::before {
   content: "";
   position: absolute;
@@ -592,6 +652,7 @@ html { scroll-padding-bottom: calc(var(--tabbar, 4.75rem) + 0.75rem); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .slide { transition: none; }
   .hero-copy, .mosaic a, .facts, .tile { animation: none; }
   .tile--scene img, .mosaic img, .site-header { transition: none; }
 }
