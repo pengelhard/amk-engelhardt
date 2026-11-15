@@ -8,11 +8,12 @@ An der bestehenden Website, an Domain, DNS oder E-Mail wurde nichts geändert.
 
 ## Seiten
 
-Die Startadresse `index.html` leitet ohne JavaScript auf `mieten/` weiter. `kaufen/anhaenger/` leitet auf den Verkaufskatalog `kaufen/` weiter.
+Die Startadresse `index.html` ist der Einstieg. `mieten/` ist die Übersicht der drei Mietbereiche. `kaufen/anhaenger/` leitet auf den Verkaufskatalog `kaufen/` weiter.
 
 | URL | Inhalt |
 | --- | --- |
-| `mieten/` | Einstieg: ein Bild, ein Satz, Bildflächen für Bauzaun, Absperrung, Anhänger mieten und Anhänger kaufen |
+| `index.html` | Einstieg: Einsatzfoto, vier Bildflächen, drei Angaben |
+| `mieten/` | Übersicht Mieten: Bauzaun, Absperrung, Anhänger |
 | `mieten/bauzaun/`, `mieten/absperrung/`, `mieten/mietpark/` | Bildkacheln der Kategorie. Der Mengenrechner steht nur unter Bauzaun |
 | `kaufen/` | Nur Verkaufsanhänger, ohne Filterleiste |
 | `kaufen/anhaenger/<slug>/` | Detail eines Verkaufsanhängers |
@@ -95,7 +96,7 @@ Logo-Grün `#76B729` ist nur noch Akzent. Auf Weiß erreicht es etwa 2,45:1 und 
 
 Unter 980 px liegt eine feste Fußleiste: Mieten, Kaufen, Kontakt, Anrufen (`tel:+499082921777`). Jede Fläche ist mindestens 48 px, die aktive Seite trägt `aria-current`, der Inhalt bekommt `padding-bottom` inklusive `env(safe-area-inset-bottom)`. Ab 980 px bleibt die Kopfnavigation mit drei Punkten, die Fußleiste ist aus.
 
-Es sind keine Schriften von einem CDN eingebunden.
+Die Schrift ist Manrope, lokal als WOFF2 unter `assets/fonts/`, Lizenz SIL OFL. Es sind keine Schriften von einem CDN eingebunden. Der Kopf liegt über dem Foto und wird beim Scrollen weiß.
 
 ## Mengenrechner
 
