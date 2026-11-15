@@ -30,9 +30,23 @@
     </header>
   </div>
   <main id="inhalt">
-    <section class="hero">
-      <div class="hero-media">
-        <img src="images/bauzaun-standard.webp" width="700" height="456" alt="Bauzaun auf einer Baustelle, im Hintergrund Kran und Gerüst">
+    <section class="hero" data-karussell aria-roledescription="Karussell" aria-label="Hauptkategorien">
+      <div class="hero-media" data-slides>
+        <div class="slide is-on" role="group" aria-roledescription="Folie" aria-label="1 von 5" data-title="Bauzaun" data-href="mieten/bauzaun/" data-cta="Zum Bauzaun">
+          <img src="images/bauzaun-standard.webp" width="700" height="456" alt="Bauzaun auf einer Baustelle, im Hintergrund Kran und Gerüst" fetchpriority="high" decoding="async">
+        </div>
+        <div class="slide" role="group" aria-roledescription="Folie" aria-label="2 von 5" aria-hidden="true" data-title="Absperrungen" data-href="mieten/absperrung/" data-cta="Zu den Absperrungen">
+          <img data-src="images/absperrschranke.webp" width="450" height="316" alt="Rot-weiße Absperrschranken an einer Straße" decoding="async" style="object-position:center 62%">
+        </div>
+        <div class="slide" role="group" aria-roledescription="Folie" aria-label="3 von 5" aria-hidden="true" data-title="Verkehrsschilder" data-href="produkt/verkehrsschilder/" data-cta="Zu den Schildern">
+          <img data-src="images/verkehrsschilder.webp" width="600" height="697" alt="Gruppe von Verkehrsschildern" decoding="async" style="object-position:center 46%">
+        </div>
+        <div class="slide" role="group" aria-roledescription="Folie" aria-label="4 von 5" aria-hidden="true" data-title="Anhänger kaufen" data-href="kaufen/" data-cta="Anhänger ansehen">
+          <img data-src="images/fahrzeugtransporter.webp" width="800" height="534" alt="Kippbarer Autotransporter mit einem Pkw auf der Ladefläche" decoding="async" style="object-position:center 55%">
+        </div>
+        <div class="slide" role="group" aria-roledescription="Folie" aria-label="5 von 5" aria-hidden="true" data-title="Kühlanhänger mieten" data-href="produkt/kuehlanhaenger-13/" data-cta="Zum Kühlanhänger">
+          <img data-src="images/kuehlanhaenger-13.webp" width="540" height="405" alt="Kühlanhänger mit Kühlaggregat über der Tür" decoding="async" style="object-position:center 58%">
+        </div>
       </div>
       <div class="wrap hero-copy hero-copy--statement">
         <p class="eyebrow">Hainsfarth · seit 2011</p>
@@ -41,6 +55,16 @@
         <div class="actions actions--equal">
           <a class="btn" href="anfrage/">Anfrage stellen</a>
           <a class="btn" href="tel:+499082921777">Anrufen 09082 921777</a>
+        </div>
+        <div class="slide-bar">
+          <p class="slide-kicker" id="slide-kicker">Bauzaun</p>
+          <a class="slide-go" data-slide-go href="mieten/bauzaun/">Zum Bauzaun</a>
+          <div class="slide-tools">
+            <button class="slide-arrow" type="button" data-step="-1" aria-label="Vorherige Folie"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M14.5 6.5 9 12l5.5 5.5"/></svg></button>
+            <div class="slide-dots" role="group" aria-label="Folien"></div>
+            <button class="slide-arrow" type="button" data-step="1" aria-label="Nächste Folie"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M9.5 6.5 15 12l-5.5 5.5"/></svg></button>
+            <button class="slide-pause" type="button" data-pause aria-pressed="false" aria-label="Automatischen Wechsel anhalten"><svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path fill="currentColor" d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg><svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18" hidden><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg></button>
+          </div>
         </div>
       </div>
     </section>
@@ -104,6 +128,7 @@
     <a href="tel:+499082921777"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M8 4h3l1 4-2 1a10 10 0 0 0 5 5l1-2 4 1v3a2 2 0 0 1-2 2A14 14 0 0 1 6 6a2 2 0 0 1 2-2z"/></svg><span>Anrufen</span></a>
   </nav>
   <script src="js/nav.js"></script>
+  <script src="js/karussell.js"></script>
   <script src="js/angebote.js"></script>
 <script src="js/merkzettel.js"></script>
   <script src="js/einwilligung.js"></script>

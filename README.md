@@ -12,7 +12,7 @@ Die Startadresse `index.html` ist der Einstieg. `mieten/` ist die Übersicht der
 
 | URL | Inhalt |
 | --- | --- |
-| `index.html` | Einstieg: Einsatzfoto, Bildflächen, Angebote |
+| `index.html` | Einstieg: Bildkarussell im Hero, Bildflächen, Angebote |
 | `angebote/` | Angebote und Neuheiten aus `data/angebote.json` |
 | `mieten/` | Übersicht Mieten: Bauzaun, Absperrung, Anhänger |
 | `mieten/bauzaun/`, `mieten/absperrung/`, `mieten/mietpark/` | Bauzaun ist ein Konfigurator. Absperrung und Mietpark bleiben Bildkacheln |
@@ -27,7 +27,9 @@ Die Startadresse `index.html` ist der Einstieg. `mieten/` ist die Übersicht der
 
 Das Hauptmenü hat drei Punkte: Mieten, Kaufen, Kontakt. Rechts daneben liegt das Anfrage-Zeichen mit Zähler. Unter 980 px ersetzt eine Fußleiste mit Mieten, Kaufen, Kontakt, Anfrage und Anrufen das Menü; das Anfrage-Zeichen im Kopf ist dort aus. Das Telefon steht in der Fußzeile und in der Fußleiste, nicht als eigene Zeile im Kopf. Service, Über uns, Impressum und Datenschutz bleiben in der Fußzeile erreichbar.
 
-JavaScript ergänzt nur: Merkzettel in `localStorage`, die Bauzaun-Konfiguration als eine Position, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/angebote.json`, die Einwilligung für die Karte und danach Leaflet. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt. `js/rechner.js` ist nicht mehr eingebunden.
+JavaScript ergänzt nur: Merkzettel in `localStorage`, das Bildkarussell auf der Startseite, die Bauzaun-Konfiguration als eine Position, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/angebote.json`, die Einwilligung für die Karte und danach Leaflet. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt. `js/rechner.js` ist nicht mehr eingebunden.
+
+Das Karussell liegt im Hero und lässt Slogan, Lead und die zwei Buttons stehen. Fünf vorhandene Fotos: Bauzaun Standard, Absperrschranke, Verkehrsschilder, Fahrzeugtransporter, Kühlanhänger 1,3 t. Nachweise stehen schon im Impressum. Wechsel alle 5 Sekunden, Pause bei Hover, Fokus und über den Pause-Knopf. `prefers-reduced-motion` schaltet den Automatiklauf aus. Die erste Folie lädt sofort, die übrigen erst beim Wechsel. Kein CDN.
 
 ## Angebote und Neuheiten
 
