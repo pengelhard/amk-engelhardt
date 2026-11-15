@@ -1,0 +1,76 @@
+# Nur dieser Bereich ist im CMS sichtbar. Übrige Dateien stehen hier nicht.
+media:
+  - name: aktuelles
+    label: Bilder für Aktuelles
+    input: images/aktuelles
+    output: images/aktuelles
+    extensions: [webp, jpg, jpeg, png]
+    categories: [image]
+    rename: safe
+
+content:
+  - name: aktuelles
+    label: Aktuelles & Angebote
+    type: file
+    path: data/aktuelles.json
+    format: json
+    list: true
+    view:
+      primary: titel
+      sort: datum
+      order: desc
+    fields:
+      - name: titel
+        label: Titel
+        type: string
+        required: true
+      - name: text
+        label: Kurztext
+        type: text
+        required: true
+        description: Ein oder zwei Sätze.
+      - name: bild
+        label: Bild
+        type: image
+        required: true
+        description: Querformat, etwa 1200 × 675 Pixel. Die Kachel schneidet das Bild zu.
+        options:
+          media: aktuelles
+          extensions: [webp, jpg, jpeg, png]
+      - name: alt
+        label: Bildbeschreibung
+        type: string
+        required: true
+        description: Was auf dem Bild zu sehen ist.
+      - name: typ
+        label: Typ
+        type: select
+        required: true
+        options:
+          values:
+            - Angebot
+            - Neuheit
+            - Besonderes Produkt
+      - name: preis
+        label: Preis
+        type: string
+        description: Optional. Leer lassen für „Preis auf Anfrage“.
+      - name: datum
+        label: Datum
+        type: date
+        default: ""
+        description: Für die Reihenfolge. Auf der Startseite stehen höchstens die drei neuesten.
+        options:
+          format: yyyy-MM-dd
+      - name: bis
+        label: Gültig bis
+        type: date
+        default: ""
+        description: Optional. Der genannte Tag zählt noch, danach blendet die Seite den Eintrag aus.
+        options:
+          format: yyyy-MM-dd
+      - name: sichtbar
+        label: Sichtbar
+        type: boolean
+        default: true
+        description: Ausblenden, ohne den Eintrag zu löschen.

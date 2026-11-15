@@ -32,6 +32,12 @@
     };
   }
 
+  function localBild(value) {
+    var path = String(value || "").trim();
+    if (!path || /^[a-z]+:/i.test(path) || path.indexOf("..") !== -1) return "";
+    return path.replace(/^\/+/, "");
+  }
+
   function normalize(items) {
     if (!Array.isArray(items)) return [];
     return items.filter(function (item) {
@@ -43,6 +49,10 @@
       var next = { id: String(item.id), name: String(item.name || item.id), qty: qty };
       var konfig = cleanKonfig(item.konfig);
       if (konfig) next.konfig = konfig;
+      var bild = localBild(item.bild);
+      var note = String(item.note || "").trim();
+      if (bild) next.bild = bild;
+      if (note) next.note = note.slice(0, 80);
       return next;
     });
   }
@@ -111,11 +121,14 @@
     event.preventDefault();
     var id = node.getAttribute("data-add");
     var name = node.getAttribute("data-name") || id;
+    var note = node.getAttribute("data-note") || "";
+    var noteNode = toast.querySelector(".toast-note");
+    if (noteNode) noteNode.textContent = note || "Preis auf Anfrage.";
     var items = load();
     var found = null;
     items.forEach(function (item) { if (item.id === id) found = item; });
     if (found) found.qty += 1;
-    else items.push({ id: id, name: name, qty: 1 });
+    else items.push({ id: id, name: name, qty: 1, bild: node.getAttribute("data-bild") || "", note: note });
     save(items);
     showToast();
   });

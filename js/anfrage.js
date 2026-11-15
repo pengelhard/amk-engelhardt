@@ -55,6 +55,13 @@
       .replace(/"/g, "&quot;");
   }
 
+  function kind(id) {
+    id = String(id);
+    if (id.indexOf("kauf:") === 0) return "Kauf";
+    if (id.indexOf("aktuell:") === 0) return "Aktuelles";
+    return "Miete";
+  }
+
   function renting(items) {
     return items.some(function (item) { return String(item.id).indexOf("miete:") === 0; });
   }
@@ -105,12 +112,12 @@
     });
     list.innerHTML = data.map(function (item) {
       var info = CATALOG[item.id] || {};
-      var bild = item.konfig && BILD[item.konfig.key] ? BILD[item.konfig.key] : info.bild;
-      var modus = String(item.id).indexOf("kauf:") === 0 ? "Kauf" : "Miete";
+      var bild = item.konfig && BILD[item.konfig.key] ? BILD[item.konfig.key] : (info.bild || item.bild);
+      var modus = kind(item.id);
       var image = bild ? '<img src="../' + esc(bild) + '" alt="" width="320" height="220">' : "";
       var body = item.konfig
         ? konfigText(item)
-        : "<p>Preis auf Anfrage</p>";
+        : "<p>" + esc(item.note || "Preis auf Anfrage") + "</p>";
       var qty = item.konfig
         ? ""
         : '<label class="qty">Menge <input type="number" min="1" max="99" inputmode="numeric" value="' + item.qty + '" data-qty="' + esc(item.id) + '" aria-label="Menge ' + esc(item.name) + '"></label>';
@@ -216,8 +223,7 @@
         lines.push(k.art + " — Miete — " + k.menge + einheit + " — Zeitraum " + (deDate(k.von) || "–") + " bis " + (deDate(k.bis) || "–") + " — Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf — Extras: " + extra + " — Preis auf Anfrage");
         return;
       }
-      var modus = String(item.id).indexOf("kauf:") === 0 ? "Kauf" : "Miete";
-      lines.push(item.name + " — " + modus + " — Menge " + item.qty + " — Preis auf Anfrage");
+      lines.push(item.name + " — " + kind(item.id) + " — Menge " + item.qty + " — " + (item.note || "Preis auf Anfrage"));
     });
     lines.push("");
     if (fencing(items) && val("laenge")) lines.push("Zaunlänge: " + val("laenge") + " m");

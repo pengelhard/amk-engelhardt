@@ -385,6 +385,35 @@ main { position: relative; z-index: 0; padding-top: var(--top, 5.6rem); }
   border-radius: 999px;
 }
 .offer-empty, .offer-more { margin: 0.9rem 0 0; }
+.news-grid { display: grid; gap: 0.85rem; margin-top: 1.1rem; }
+.news-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--green-deep);
+  color: #fff;
+}
+.news-card img { width: 100%; height: 9.25rem; object-fit: cover; }
+.news-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  flex: 1;
+  padding: 0.85rem 0.9rem 0.95rem;
+}
+.news-card strong { color: #fff; font-size: 1.2rem; letter-spacing: -0.03em; line-height: 1.25; }
+.news-card p { margin: 0; color: rgba(255, 255, 255, 0.92); }
+.news-price { font-weight: 600; }
+.news-card .btn {
+  margin-top: 0.45rem;
+  width: 100%;
+  min-height: 2.75rem;
+  background: #fff;
+  color: var(--green);
+}
+.news-card .btn:hover { background: var(--accent); color: var(--on-accent); }
 .facts { background: var(--green); color: #fff; }
 .facts-row {
   display: grid;
@@ -625,6 +654,7 @@ html { scroll-padding-bottom: calc(var(--tabbar, 4.75rem) + 0.75rem); }
   .contact-card { grid-column: span 2; }
   .contact-card--wide { grid-column: span 3; }
   .mosaic, .offer-grid { grid-template-columns: 1fr 1fr; }
+  .news-grid { grid-template-columns: repeat(3, 1fr); align-items: stretch; }
   .mosaic--sale { grid-template-columns: 1fr 1fr 1fr; }
   .mosaic-wide { grid-column: 1 / -1; aspect-ratio: 21 / 9; }
   .footer-links { grid-template-columns: repeat(4, max-content); gap: 0.15rem 1.8rem; }
