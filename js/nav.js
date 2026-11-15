@@ -25,24 +25,107 @@
   window.addEventListener("resize", pinTop);
 
   var button = document.querySelector(".nav-toggle");
-  var nav = document.getElementById("nav");
-  if (!button || !nav) return;
+  var menu = document.getElementById("menue");
+  if (!button || !menu) return;
+
+  var panel = menu.querySelector(".menu-panel");
+  var open = false;
+  var returnFocus = null;
+
+  function focusables() {
+    return Array.prototype.filter.call(panel.querySelectorAll("a[href], button:not([disabled])"), function (el) {
+      return el.tabIndex >= 0;
+    });
+  }
+
+  function background() {
+    return [
+      document.querySelector(".skip"),
+      document.querySelector(".site-header"),
+      document.querySelector("main"),
+      document.querySelector(".site-footer"),
+      document.querySelector(".tabbar")
+    ];
+  }
+
+  function setInert(on) {
+    background().forEach(function (node) {
+      if (!node) return;
+      if (on) node.setAttribute("inert", "");
+      else node.removeAttribute("inert");
+    });
+  }
+
+  function lock(on) {
+    if (on) {
+      var gap = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+      document.documentElement.style.setProperty("--menu-gap", gap + "px");
+      document.documentElement.classList.add("menu-open");
+      document.body.classList.add("menu-open");
+      return;
+    }
+    document.documentElement.classList.remove("menu-open");
+    document.body.classList.remove("menu-open");
+    document.documentElement.style.removeProperty("--menu-gap");
+  }
 
   function close() {
-    nav.classList.remove("is-open");
+    if (!open) return;
+    open = false;
+    menu.classList.remove("is-open");
+    menu.setAttribute("aria-hidden", "true");
     button.setAttribute("aria-expanded", "false");
+    button.setAttribute("aria-label", "Menü öffnen");
+    lock(false);
+    setInert(false);
+    if (returnFocus && returnFocus.focus) returnFocus.focus();
+  }
+
+  function show() {
+    returnFocus = document.activeElement;
+    open = true;
+    menu.classList.add("is-open");
+    menu.setAttribute("aria-hidden", "false");
+    button.setAttribute("aria-expanded", "true");
+    button.setAttribute("aria-label", "Menü schließen");
+    lock(true);
+    setInert(true);
+    var closeButton = menu.querySelector(".menu-close");
+    if (closeButton) closeButton.focus();
   }
 
   button.addEventListener("click", function () {
-    var open = nav.classList.toggle("is-open");
-    button.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open) close();
+    else show();
   });
 
-  nav.addEventListener("click", function (event) {
-    if (event.target.closest("a")) close();
+  menu.addEventListener("click", function (event) {
+    if (event.target.closest("[data-menu-close]")) close();
+    else if (event.target.closest("a")) close();
   });
 
   document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") close();
+    if (!open) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      close();
+      return;
+    }
+    if (event.key !== "Tab" || !panel) return;
+    var items = focusables();
+    if (!items.length) return;
+    var first = items[0];
+    var last = items[items.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
+  window.addEventListener("resize", function () {
+    if (open && getComputedStyle(button).display === "none") close();
   });
 })();
