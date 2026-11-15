@@ -29,6 +29,8 @@ JavaScript ergänzt nur: Live-Filter und VDE-Häkchen, Merkzettel in `localStora
 
 Nur Anhänger sind zum Kauf. Bauzaun und Absperrung haben keinen Kaufpreis und keinen Kauf-Button. Im Formular stehen unter „Kauf“ ausschließlich die Beispiel-Anhänger. Die Filter Bauzaun, Absperrung und Mietpark gibt es nur unter `mieten/`.
 
+Kühlanhänger vermietet AMK für Events. Zwei Karten im Mietpark sind Beispiele, der Preis ist „auf Anfrage“, beide sind nur zur Miete und fehlen unter `kaufen/`.
+
 ## Von der bestehenden Website übernommen
 
 Gelesen wurden die öffentliche Seite [bauzaun-mieten.net](https://bauzaun-mieten.net/), das Menü, die Sitemap und die WordPress-Seiten, darunter Start, Absperrsysteme, Mieten/Kaufen, Service, Kontakt und Anfahrt, Über uns, Partner, Impressum, Datenschutz, AGB und Aktuelles.
@@ -46,6 +48,7 @@ Gelesen wurden die öffentliche Seite [bauzaun-mieten.net](https://bauzaun-miete
 - Sortiment zur Miete: Bauzäune in verschiedenen Höhen und Festigkeiten, Bauzaunfüße, Türen oder Tore, Bauzaunschloss, Personengitter und Demogitter aus feuerverzinktem Stahl in verschiedenen Gewichtsklassen, klappbare Polizeigitter (Hamburger Gitter), Absturzsicherungen, Drahtgitterzaun, Sichtschutz aus Blech
 - Zubehör: Notausgangsfahnen, Feuerlöscher, Kabelbrücken sowie Teile für Sicherheit, Stabilität, Transport, Sichtschutz und Zugangskontrolle
 - Großflächige Transportfahrzeuge und Anhänger, Fahrzeuge mit großem Ladevolumen auch zur Miete für den Selbsttransport
+- Kühlanhänger zur Miete für Events (Peter, 15.11.2026). Maße, Nutzlast und Preis fehlen noch
 - Service: Beratung und Planung, Anlieferung, Aufbau, Instandhaltung, Abbau, Abtransport, eigene Leute, individuelle Absprachen, zentrale Abwicklung
 - Zielgruppen nur als Band unter den Produkten: Privat, Firmen, Events
 - Kennzahlen der alten Startseite: 1.000+ Kundinnen und Kunden, 200+ Produkte
@@ -77,7 +80,7 @@ Die alte Angabe „7+ Jahre Erfahrung“ steht nicht mehr auf der Seite. Stattde
 | `images/bauzaun.webp` | bestehende Website, `.../2018/11/Bauzaun.jpg`, nur Prototyp, als WebP verkleinert |
 | `images/bauzaun-sichtschutz.webp` | bestehende Website, `.../2018/11/bauzaun-2.jpg`, nur Prototyp, als WebP verkleinert |
 | `images/baustelle.webp` | bestehende Website, `.../2018/11/Baustellenabsicherung.jpg`, nur Prototyp, als WebP verkleinert |
-| `images/anhaenger-offen.webp` | Humbaur GmbH, Wikimedia Commons, [Datei](https://commons.wikimedia.org/wiki/File:Humbaur_Hochlader_HU.jpg), CC BY-SA 4.0. Beispielbild, kein AMK-Fahrzeug |
+| `images/anhaenger-offen.webp` | Humbaur GmbH, Wikimedia Commons, [Datei](https://commons.wikimedia.org/wiki/File:Humbaur_Hochlader_HU.jpg), CC BY-SA 4.0. Beispielbild, kein AMK-Fahrzeug. Dieselbe Datei steht auch an den Kühlanhängern, dort mit dem Hinweis, dass es kein Kühlanhänger ist |
 | `images/anhaenger-plane.webp` | Rüdiger Müller, Wikimedia Commons, [Datei](https://commons.wikimedia.org/wiki/File:PKW-Anh%C3%A4nger.jpg), CC BY-SA 4.0. Beispielbild |
 | `images/anhaenger-transport.webp` | Humbaur GmbH, Wikimedia Commons, [Datei](https://commons.wikimedia.org/wiki/File:Humbaur_KFT.jpg), CC BY-SA 3.0. Beispielbild |
 | `images/anhaenger-einsatz.webp` | Ra Boe / Wikipedia, Wikimedia Commons, [Datei](https://commons.wikimedia.org/wiki/File:PKW_Anh%C3%A4nger_2011-by-RaBoe-01.jpg), CC BY-SA 3.0 de. Beispielbild |
@@ -110,6 +113,8 @@ Jeder Betrag ist erfunden, mit Zeitraum oder als Kaufpreis beschriftet, und auf 
 - Offener Anhänger, Kauf: 1.190 €
 - Fahrzeugtransporter, Kauf: 2.450 €
 - Offener Anhänger im Einsatz, Kauf: 980 €
+- Kühlanhänger, Miete: Preis auf Anfrage
+- Kühlanhänger, weiteres Beispiel, Miete: Preis auf Anfrage
 
 Das sind keine Preise von AMK. MwSt. und Transport sind darin nicht geregelt. Dieselben Angaben liegen in `data/anhaenger.js`. Nutzlast, Maße und Führerscheinklasse sind Platzhalter. Bauzaun und Absperrung bleiben bei „Preis auf Anfrage“.
 
@@ -123,7 +128,7 @@ Sichtbar ohne JavaScript: Bereich Miete oder Kauf, Produkte, Zaunlänge, Zeitrau
 
 Aus der Struktur:
 
-1. Gilt „Mietpark“ nur für Anhänger, oder kommen später auch weitere Geräte dazu?
+1. Kühlanhänger zur Miete für Events sind bestätigt. Gilt der Mietpark sonst nur für Anhänger, oder kommen weitere Geräte dazu? Welche echten Kühlanhänger, Fotos, Maße und Preise ersetzen die zwei Beispielkarten?
 2. Welche Produkte sind tatsächlich VDE-zertifiziert, und nach welcher Norm?
 3. Preise anzeigen (Miete pro Tag oder Woche, Kauf) oder überall „auf Anfrage“?
 4. Welchen Claim soll der Hero tragen?
@@ -144,4 +149,4 @@ Dazu:
 16. Soll die Anfrage später ein richtiges Formular werden, und bleibt `info@bauzaun-mieten.net` die einzige Adresse? Der Merkzettel liegt nur im Browser.
 17. Konkrete Höhen, Festigkeiten, Nutzlasten, Maße und Führerscheinklassen stehen auf der alten Seite nicht.
 
-Festgelegt und nicht mehr offen: Bauzaun und Absperrung nur zur Miete, Verkauf nur Anhänger, keine Container, keine Dixi, keine Toilettenwagen, keine Sanitärcontainer. Hosting ist GitHub Pages unter `/amk-engelhardt/`, eingeschaltet wird es später aus `main`.
+Festgelegt und nicht mehr offen: Bauzaun und Absperrung nur zur Miete, Verkauf nur Anhänger, Kühlanhänger nur zur Miete, keine Container, keine Dixi, keine Toilettenwagen, keine Sanitärcontainer. Hosting ist GitHub Pages unter `/amk-engelhardt/`, eingeschaltet wird es später aus `main`.
