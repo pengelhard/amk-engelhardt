@@ -61,9 +61,55 @@
       keyboard: false,
       alt: "AMK Engelhardt, Oberer Kesselweg 2, 86744 Hainsfarth"
     }).addTo(map).bindPopup("AMK Engelhardt<br>Oberer Kesselweg 2<br>86744 Hainsfarth").openPopup();
+    bindPinch(map);
     setTimeout(function () {
       if (map) map.invalidateSize();
     }, 50);
+  }
+
+  function bindPinch(plan) {
+    var el = plan.getContainer();
+    var token = {};
+    el._amkPinch = token;
+    var start = null;
+    var snap = plan.options.zoomSnap;
+    function alive() {
+      return el._amkPinch === token && plan.getContainer();
+    }
+    el.addEventListener("gesturestart", function (event) {
+      if (!alive()) return;
+      event.preventDefault();
+      start = plan.getZoom();
+      if (plan.touchZoom) plan.touchZoom.disable();
+    }, { passive: false });
+    el.addEventListener("gesturechange", function (event) {
+      if (!alive()) return;
+      event.preventDefault();
+      if (start == null || !event.scale) return;
+      plan.options.zoomSnap = 0;
+      plan.setZoom(start + Math.log(event.scale) / Math.LN2, { animate: false });
+    }, { passive: false });
+    el.addEventListener("gestureend", function (event) {
+      if (!alive()) return;
+      event.preventDefault();
+      plan.options.zoomSnap = snap;
+      start = null;
+      if (plan.touchZoom) plan.touchZoom.enable();
+    }, { passive: false });
+  }
+
+  function releaseMap() {
+    var nodes = document.querySelectorAll(".leaflet-pane, .leaflet-tile-container");
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].style.webkitTransform = "none";
+      nodes[i].style.transform = "none";
+    }
+    var frame = document.querySelector(".map-frame");
+    if (frame) frame.style.visibility = "hidden";
+    if (map) {
+      map.remove();
+      map = null;
+    }
   }
 
   function ensureLeaflet(done) {
@@ -130,6 +176,19 @@
 
   window.addEventListener("resize", function () {
     if (map) map.invalidateSize();
+  });
+
+  var leftPage = false;
+  window.addEventListener("pagehide", function () {
+    leftPage = true;
+    releaseMap();
+  });
+  window.addEventListener("pageshow", function (event) {
+    if (!leftPage && !event.persisted) return;
+    leftPage = false;
+    var frame = document.querySelector(".map-frame");
+    if (frame) frame.style.visibility = "";
+    if (!map && document.getElementById("karte") && read() === "ja") ensureLeaflet(initMap);
   });
 
   var saved = read();
