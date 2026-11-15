@@ -80,6 +80,44 @@
     return { extras: extras, invalid: invalid };
   }
 
+  function deDate(value) {
+    var match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ""));
+    return match ? match[3] + "." + match[2] + "." + match[1] : "";
+  }
+
+  function put(name, text) {
+    var node = form.querySelector('[data-sum="' + name + '"]');
+    if (node) node.textContent = text;
+  }
+
+  function syncSummary() {
+    var artKey = (form.querySelector('input[name="art"]:checked') || {}).value;
+    var art = ART[artKey] || "–";
+    var raw = String(menge.value || "").trim();
+    var felder = unit() === "felder";
+    var amount = raw ? (felder ? raw + (raw === "1" ? " Feld" : " Felder") : raw + " m") : "–";
+    var von = deDate(form.von.value);
+    var bis = deDate(form.bis.value);
+    var zeit = von && bis ? von + " – " + bis : (von || bis || "–");
+    var picked = readExtras();
+    var extras = picked.extras.map(function (entry) {
+      return entry.menge ? entry.menge + " × " + entry.name : entry.name;
+    });
+    var extraText = extras.length ? extras.join(", ") : "–";
+    put("art", art);
+    put("menge", amount);
+    put("zeit", zeit);
+    put("extras", extraText);
+    var bits = [art];
+    if (amount !== "–") bits.push(amount);
+    if (zeit !== "–") bits.push(zeit);
+    if (extraText !== "–") bits.push(extraText);
+    put("short", bits.join(" · "));
+  }
+
+  form.addEventListener("input", syncSummary);
+  form.addEventListener("change", syncSummary);
+
   function rememberPeriod(von, bis) {
     try {
       var meta = JSON.parse(localStorage.getItem("amk-anfrage-meta") || "{}");
@@ -143,6 +181,9 @@
     syncUnit();
     form.querySelectorAll('input[name="extra"]').forEach(syncQty);
     if (window.AMK_ZEIT) window.AMK_ZEIT.clearPair(form.von, form.bis);
-    status.textContent = "In die Anfrage gelegt.";
+    syncSummary();
+    status.textContent = "";
   });
+
+  syncSummary();
 })();

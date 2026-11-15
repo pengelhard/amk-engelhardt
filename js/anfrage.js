@@ -66,6 +66,23 @@
     return items.some(function (item) { return String(item.id).indexOf("miete:") === 0; });
   }
 
+  function needsPeriod(items) {
+    return items.some(function (item) {
+      if (String(item.id).indexOf("miete:") !== 0) return false;
+      var config = item.konfig;
+      return !(config && config.von && config.bis);
+    });
+  }
+
+  function editHref(item) {
+    var id = String(item.id);
+    if (item.konfig || id.indexOf("miete:bauzaun-konfig") === 0) return "../mieten/bauzaun/";
+    if (id.indexOf("kauf:") === 0) return "../kaufen/anhaenger/" + id.slice(5) + "/";
+    if (id.indexOf("miete:") === 0) return "../produkt/" + id.slice(6) + "/";
+    if (id.indexOf("aktuell:") === 0) return "../aktuelles/";
+    return "../anfrage/";
+  }
+
   function fencing(items) {
     return items.some(function (item) { return fencePattern.test(item.id) && !item.konfig; });
   }
@@ -102,8 +119,7 @@
     return "<p>" + esc(k.menge) + einheit + "</p>" +
       (zeit ? "<p>" + esc(zeit) + "</p>" : "") +
       "<p>Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf</p>" +
-      "<p>Extras: " + extras + "</p>" +
-      "<p>Preis auf Anfrage</p>";
+      "<p>Extras: " + extras + "</p>";
   }
 
   function render(items) {
@@ -112,10 +128,19 @@
     form.hidden = data.length === 0;
     var rent = document.getElementById("anfrage-miete");
     var fence = document.getElementById("anfrage-zaun");
+    var period = document.getElementById("anfrage-zeit");
+    var periodTitle = document.getElementById("anfrage-miete-titel");
+    var askPeriod = needsPeriod(data);
     if (rent) rent.hidden = !renting(data);
+    if (period) period.hidden = !askPeriod;
+    if (periodTitle) periodTitle.textContent = askPeriod ? "Zeitraum und Anfahrt" : "Anfahrt";
     if (fence) fence.hidden = !fencing(data);
     var rentOn = rent && !rent.hidden;
-    ["von", "bis", "ort", "plz"].forEach(function (id) {
+    ["von", "bis"].forEach(function (id) {
+      var field = document.getElementById(id);
+      if (field) field.required = !!(rentOn && askPeriod);
+    });
+    ["ort", "plz"].forEach(function (id) {
       var field = document.getElementById(id);
       if (field) field.required = !!rentOn;
     });
@@ -129,14 +154,15 @@
       var image = bild ? '<img src="../' + esc(bild) + '" alt="" width="320" height="220">' : "";
       var body = item.konfig
         ? konfigText(item)
-        : "<p>" + esc(item.note || "Preis auf Anfrage") + "</p>";
+        : (item.note ? "<p>" + esc(item.note) + "</p>" : "");
       var qty = item.konfig
         ? ""
         : '<label class="qty">Menge <input type="number" min="1" max="99" inputmode="numeric" value="' + item.qty + '" data-qty="' + esc(item.id) + '" aria-label="Menge ' + esc(item.name) + '"></label>';
       return '<li class="cart-row">' + image +
         '<div class="cart-main"><p class="cart-kind">' + modus + "</p><strong>" + esc(item.name) + "</strong>" + body + "</div>" +
         qty +
-        '<button type="button" class="text-btn" data-remove="' + esc(item.id) + '">Entfernen<span class="visually-hidden">: ' + esc(item.name) + "</span></button>" +
+        '<div class="cart-actions"><a class="text-btn" href="' + esc(editHref(item)) + '">Ändern<span class="visually-hidden">: ' + esc(item.name) + '</span></a>' +
+        '<button type="button" class="text-btn" data-remove="' + esc(item.id) + '">Entfernen<span class="visually-hidden">: ' + esc(item.name) + "</span></button></div>" +
         "</li>";
     }).join("");
   }
@@ -220,7 +246,14 @@
     function val(name) { return String(fields[name] || "").trim(); }
     status.classList.remove("is-error");
     if (!items.length) return;
-    if (renting(items) && window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(document.getElementById("von"), document.getElementById("bis"))) {
+    var askPeriod = needsPeriod(items);
+    if (askPeriod && renting(items) && window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(document.getElementById("von"), document.getElementById("bis"))) {
+      return;
+    }
+    var trap = form.querySelector('[name="botcheck"]');
+    if (trap && String(trap.value || "").trim()) {
+      if (window.AMK_FORMULAR) window.AMK_FORMULAR.send({ honeypot: true, thanks: "danke/", status: status, mailto: "mailto:info@bauzaun-mieten.net" });
+      else window.location.href = "danke/";
       return;
     }
     var lines = ["Anfrage an AMK Engelhardt", ""];
@@ -230,16 +263,16 @@
         var einheit = k.einheit === "felder" ? (k.menge === "1" ? " Feld" : " Felder") : " m";
         var listed = extraList(k.extras);
         var extra = listed ? listed + " — Aufpreis auf Anfrage" : "keine";
-        lines.push(k.art + " — Miete — " + k.menge + einheit + " — Zeitraum " + (deDate(k.von) || "–") + " bis " + (deDate(k.bis) || "–") + " — Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf — Extras: " + extra + " — Preis auf Anfrage");
+        lines.push(k.art + " — Miete — " + k.menge + einheit + " — Zeitraum " + (deDate(k.von) || "–") + " bis " + (deDate(k.bis) || "–") + " — Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf — Extras: " + extra);
         return;
       }
-      lines.push(item.name + " — " + kind(item.id) + " — Menge " + item.qty + " — " + (item.note || "Preis auf Anfrage"));
+      lines.push(item.name + " — " + kind(item.id) + " — Menge " + item.qty + (item.note ? " — " + item.note : ""));
     });
     lines.push("");
     if (fencing(items) && val("laenge")) lines.push("Zaunlänge: " + val("laenge") + " m");
     if (fencing(items) && val("hoehe")) lines.push("Höhe: " + val("hoehe") + " m");
     if (renting(items)) {
-      lines.push("Zeitraum: " + val("von") + " bis " + val("bis"));
+      if (askPeriod) lines.push("Zeitraum: " + val("von") + " bis " + val("bis"));
       lines.push("Leistung: " + (val("leistung") === "abholung" ? "Selbstabholung" : "Lieferung, Aufbau und Abbau"));
       lines.push("Einsatzort: " + val("ort"));
       lines.push("PLZ: " + val("plz"));
@@ -250,11 +283,29 @@
     lines.push("Telefon: " + val("telefon"));
     lines.push("E-Mail: " + val("email"));
     if (val("nachricht")) lines.push("", "Nachricht:", val("nachricht"));
+    lines.push("", "Preis auf Anfrage");
     var href = "mailto:info@bauzaun-mieten.net?subject=" +
       encodeURIComponent("Anfrage – AMK Engelhardt") +
       "&body=" + encodeURIComponent(lines.join("\n"));
-    status.textContent = "Ihr E-Mail-Programm öffnet sich.";
-    window.location.href = href;
+    var message = lines.join("\n");
+    if (!window.AMK_FORMULAR) {
+      status.textContent = "Ihr E-Mail-Programm öffnet sich.";
+      window.location.href = href;
+      return;
+    }
+    window.AMK_FORMULAR.send({
+      status: status,
+      thanks: "danke/",
+      mailto: href,
+      subject: "Anfrage – AMK Engelhardt",
+      name: val("name"),
+      email: val("email"),
+      message: message,
+      onSuccess: function () {
+        window.AMK_WUNSCH.save([], true);
+        try { localStorage.removeItem(META); } catch (error) {}
+      }
+    });
   });
 
   var previous = window.AMK_WUNSCH.onChange;

@@ -32,6 +32,10 @@
     }
     if (box) box.hidden = false;
     if (note) note.hidden = false;
+    var closeBtn = document.querySelector("[data-map-close]");
+    var legal = document.querySelector("[data-map-legal]");
+    if (closeBtn) closeBtn.hidden = true;
+    if (legal) legal.hidden = false;
   }
 
   function initMap() {
@@ -41,6 +45,10 @@
     var note = document.querySelector("[data-map-attrib]");
     if (box) box.hidden = true;
     if (note) note.hidden = true;
+    var closeBtn = document.querySelector("[data-map-close]");
+    var legal = document.querySelector("[data-map-legal]");
+    if (closeBtn) closeBtn.hidden = false;
+    if (legal) legal.hidden = true;
     live.hidden = false;
     map = L.map(live, {
       scrollWheelZoom: true,
@@ -150,28 +158,17 @@
     else showFallback();
   }
 
-  function showBar() {
-    if (document.querySelector(".consent")) return;
-    var bar = document.createElement("div");
-    bar.className = "consent";
-    bar.setAttribute("role", "region");
-    bar.setAttribute("aria-label", "Einwilligung für die Karte");
-    bar.innerHTML = '<div class="wrap consent-inner"><p>Für die bewegliche Karte verbindet sich Ihr Browser mit OpenStreetMap. <a href="' + root + 'datenschutz/">Datenschutz</a></p><div class="consent-actions"><button type="button" class="consent-btn" data-consent="nein">Ablehnen</button><button type="button" class="consent-btn" data-consent="ja">Akzeptieren</button></div></div>';
-    document.body.appendChild(bar);
-    bar.addEventListener("click", function (event) {
-      var button = event.target.closest ? event.target.closest("[data-consent]") : null;
-      if (!button) return;
-      apply(button.getAttribute("data-consent"));
-    });
-  }
-
   document.addEventListener("click", function (event) {
-    var trigger = event.target.closest ? event.target.closest("[data-cookie-settings]") : null;
-    if (!trigger) return;
+    var load = event.target.closest ? event.target.closest("[data-map-load]") : null;
+    if (load) {
+      event.preventDefault();
+      apply("ja");
+      return;
+    }
+    var close = event.target.closest ? event.target.closest("[data-map-close]") : null;
+    if (!close) return;
     event.preventDefault();
-    showBar();
-    var first = document.querySelector(".consent button");
-    if (first) first.focus();
+    apply("nein");
   });
 
   window.addEventListener("resize", function () {
@@ -191,13 +188,6 @@
     if (!map && document.getElementById("karte") && read() === "ja") ensureLeaflet(initMap);
   });
 
-  var saved = read();
-  if (saved === "ja") {
-    if (document.getElementById("karte")) ensureLeaflet(initMap);
-  } else if (saved === "nein") {
-    showFallback();
-  } else {
-    showFallback();
-    showBar();
-  }
+  if (read() === "ja" && document.getElementById("karte")) ensureLeaflet(initMap);
+  else showFallback();
 })();

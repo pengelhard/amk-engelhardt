@@ -116,7 +116,7 @@
   toast.className = "toast";
   toast.setAttribute("role", "status");
   toast.hidden = true;
-  toast.innerHTML = '<p class="toast-title">In die Anfrage gelegt.</p><p class="toast-note">Preis auf Anfrage.</p><div class="toast-actions"><button type="button" class="btn btn-ghost" data-toast-stay>Weiter umsehen</button><a class="btn" data-toast-go href="anfrage/">Zur Anfrage</a></div>';
+  toast.innerHTML = '<p class="toast-title">In die Anfrage gelegt.</p><p class="toast-note" hidden></p><div class="toast-actions"><button type="button" class="btn btn-ghost" data-toast-stay>Weiter umsehen</button><a class="btn" data-toast-go href="anfrage/">Zur Anfrage</a></div>';
   document.body.appendChild(toast);
 
   function hideToast() { toast.hidden = true; }
@@ -143,7 +143,10 @@
     var name = node.getAttribute("data-name") || id;
     var note = node.getAttribute("data-note") || "";
     var noteNode = toast.querySelector(".toast-note");
-    if (noteNode) noteNode.textContent = note || "Preis auf Anfrage.";
+    if (noteNode) {
+      noteNode.hidden = !note;
+      noteNode.textContent = note;
+    }
     var items = load();
     var found = null;
     items.forEach(function (item) { if (item.id === id) found = item; });

@@ -64,7 +64,7 @@
       '<div class="news-body">' + badge +
       "<strong>" + esc(title) + "</strong>" +
       "<p>" + esc(entry.text || "") + "</p>" +
-      '<p class="news-price">' + esc(price || "Preis auf Anfrage") + "</p>" +
+      (price ? '<p class="news-price">' + esc(price) + "</p>" : "") +
       '<button type="button" class="btn" data-add="aktuell:' + esc(slug(title)) + '" data-name="' + esc(title) + '"' + bild + note + ">Anfragen</button>" +
       "</div></article>"
     );
@@ -83,7 +83,8 @@
       return;
     }
     if (block) block.hidden = false;
-    node.innerHTML = '<div class="news-grid">' + shown.map(function (entry) {
+    var layout = shown.length === 1 ? "news-banner" : "news-grid";
+    node.innerHTML = '<div class="' + layout + '">' + shown.map(function (entry) {
       return card(entry, root);
     }).join("") + "</div>";
   }

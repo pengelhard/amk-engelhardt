@@ -12,33 +12,35 @@ Die Startadresse `index.html` ist der Einstieg. `mieten/` ist die Übersicht der
 
 | URL | Inhalt |
 | --- | --- |
-| `index.html` | Einstieg: Bildkarussell im Hero, Bildflächen, Aktuelles |
+| `index.html` | Einstieg: ein statisches Hero-Bild, Bildflächen, Ablauf, Aktuelles |
 | `aktuelles/` | Sonderangebote, Neuheiten und besondere Produkte aus `data/aktuelles.json` |
-| `angebote/` | Verweis auf `aktuelles/` |
+| `angebote/` | Weiterleitung auf `aktuelles/` (meta refresh und canonical) |
 | `mieten/` | Übersicht Mieten: Bauzaun, Absperrung, Anhänger |
 | `mieten/bauzaun/`, `mieten/absperrung/`, `mieten/mietpark/` | Bauzaun ist ein Konfigurator. Absperrung und Mietpark bleiben Bildkacheln |
 | `kaufen/` | Nur Verkaufsanhänger, ohne Filterleiste |
 | `kaufen/anhaenger/<slug>/` | Detail eines Verkaufsanhängers |
 | `produkt/<slug>/` | Detail eines Mietprodukts |
 | `service/` | Full Service und die zwei genannten Partner |
-| `anfrage/` | Anfrageliste wie ein Warenkorb, `mailto`. Leer zusätzlich „Individuelle Beratung anfragen“ |
+| `anfrage/` | Anfrageliste. Versand über `js/form-config.js`, sonst `mailto`. Leer zusätzlich „Individuelle Beratung anfragen“. `anfrage/danke/` nach erfolgreichem Versand |
 | `ueber-uns/` | Firma, Standort |
 | `kontakt/` | Kontaktdaten, Zeiten, Terminabsprache, Karte nach Einwilligung, Route in neuem Tab |
 | `impressum/`, `datenschutz/` | Angaben nach § 5 DDG und Datenschutz nur für das, was die Seite nutzt. Entwurf, vor Veröffentlichung rechtlich prüfen. Dieser Satz steht nur hier, nicht auf den Seiten. |
 
-Der Kopf trägt auf jeder Seite oben rechts ein Hamburger-Menü. Es öffnet dasselbe Panel: Startseite, Mieten, Kaufen, Aktuelles & Angebote, Kontakt, dazu „Anrufen 09082 921777“ und „Anfrage stellen“. Die aktuelle Seite ist markiert. Ab 980 px bleiben Mieten, Kaufen, Aktuelles & Angebote und Kontakt zusätzlich sichtbar, rechts daneben das Anfrage-Zeichen mit Zähler und der Hamburger. Die Fußleiste mit Mieten, Kaufen, Kontakt, Anfrage und Anrufen bleibt unter 980 px. Service, Über uns, Impressum und Datenschutz bleiben in der Fußzeile erreichbar.
+Der Kopf trägt auf jeder Seite oben rechts ein Hamburger-Menü. Es öffnet dasselbe Panel: Startseite, Mieten, Kaufen, Aktuelles & Angebote, Kontakt, dazu „Anrufen 09082 921777“ und „Anfrage stellen“. Die aktuelle Seite ist markiert. Ab 980 px bleiben Mieten, Kaufen, Aktuelles & Angebote und Kontakt zusätzlich sichtbar, rechts daneben das Anfrage-Zeichen mit Zähler und der Hamburger. Unter 980 px liegt eine Leiste mit Anrufen, Anfrage und Menü. Service, Über uns, Impressum und Datenschutz bleiben in der Fußzeile erreichbar. Unterseiten haben eine Brotkrume statt „Zurück“-Links.
 
-JavaScript ergänzt nur: Merkzettel in `localStorage`, das Bildkarussell auf der Startseite, die Bauzaun-Konfiguration als eine Position, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/aktuelles.json`, die Einwilligung für die Karte und danach Leaflet. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt. `js/rechner.js` ist nicht mehr eingebunden.
+JavaScript ergänzt nur: Merkzettel in `localStorage`, die Bauzaun-Konfiguration als eine Position, den Formularversand, Einlesen von `data/aktuelles.json` und auf der Kontaktseite die Karte nach „Karte laden“. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt. `js/rechner.js` und `js/karussell.js` sind nicht mehr eingebunden.
 
-Das Karussell liegt im Hero und lässt Slogan und Lead stehen. Die Buttons „Anfrage stellen“ und „Anrufen“ stehen im Menü, nicht im Hero. Fünf vorhandene Fotos: Bauzaun Standard, Absperrschranke, Verkehrsschilder, Fahrzeugtransporter, Kühlanhänger 1,3 t. Nachweise stehen schon im Impressum. Wechsel alle 5 Sekunden, Pause bei Hover, Fokus und über den Pause-Knopf. `prefers-reduced-motion` schaltet den Automatiklauf aus. Die erste Folie lädt sofort, die übrigen erst beim Wechsel. Kein CDN.
+Der Hero ist ein Standbild: `images/anhaenger-plane.webp`, 2440×1580, das schärfste vorhandene Motiv. `srcset` nennt nur diese Breite, die Darstellung geht nicht über 2440 px hinaus. Slogan und Lead bleiben. Die Buttons „Anfrage stellen“ und „Anrufen“ stehen im Menü, nicht im Hero. Kein CDN.
+
+Unter dem Ablauf liegt ein Abschnitt für ein Teamfoto. Er bleibt unsichtbar, solange `#team-foto` kein `data-src` hat. Liegt das Foto bereit, `data-src` auf den relativen Pfad setzen, zum Beispiel `images/team.webp`. Der Abschnitt erscheint erst, wenn das Bild lädt. Ohne Bild steht dort kein Text.
 
 ## Aktuelles und Angebote
 
 Michael Engelhardt pflegt nur diesen Bereich, über [Pages CMS](https://pagescms.org). Alles andere auf der Testseite pflegen wir. Pages CMS schreibt in `data/aktuelles.json`. Die Startseite und `aktuelles/` lesen dieselbe Datei, ohne Build. Eine Liste aus einzelnen Markdown-Dateien wäre ohne Build nicht auffindbar, deshalb ist die Sammlung diese eine JSON-Liste. `.pages.yml` gibt im CMS nur diese Liste und den Medienordner `images/aktuelles/` frei.
 
-Felder: Titel, Kurztext, Bild, Bildbeschreibung, Typ (Angebot, Neuheit, Besonderes Produkt), Preis (leer heißt „Preis auf Anfrage“), Datum, Gültig bis, Sichtbar. Abgelaufene Einträge und unsichtbare Einträge verschwinden. Der genannte Gültig-bis-Tag zählt noch. Die Startseite zeigt höchstens die drei neuesten und blendet den ganzen Bereich aus, wenn nichts sichtbar ist. „Anfragen“ legt den Eintrag in den Anfragekorb.
+Felder: Titel, Kurztext, Bild, Bildbeschreibung, Typ (Angebot, Neuheit, Besonderes Produkt), Preis (leer bleibt ohne Preiszeile), Datum, Gültig bis, Sichtbar. Abgelaufene Einträge und unsichtbare Einträge verschwinden. Der genannte Gültig-bis-Tag zählt noch. Die Startseite zeigt höchstens die drei neuesten und blendet den ganzen Bereich aus, wenn nichts sichtbar ist. Ein einzelner Eintrag wird als breites Banner gezeigt. „Anfragen“ legt den Eintrag in den Anfragekorb.
 
-Der einzige Startinhalt ist „Anhänger zum Kauf“, mit dem vorhandenen Foto des Fahrzeugtransporters und ohne Preis. Der Nachweis steht im Impressum. Neue Bilder lädt Michael nach `images/aktuelles/` hoch, Querformat etwa 1200 × 675 Pixel.
+Der einzige Startinhalt ist „Anhänger zum Kauf“, mit dem vorhandenen Foto des Fahrzeugtransporters und ohne Preis. Der Nachweis steht im Impressum. Neue Bilder lädt Michael nach `images/aktuelles/` hoch, Querformat.
 
 ### So legt Michael einen Eintrag an
 
@@ -121,17 +123,17 @@ Der Planenanhänger ist `images/anhaenger-plane.webp`, 2440×1580. Quelle: Fiver
 
 Die Kontaktkarte ist ohne Einwilligung `images/anfahrt-hainsfarth.webp`, 1600×900. Einmalig aus Kacheln von https://tile.openstreetmap.org/ zusammengesetzt, Zoom 16, nicht von Google. Namensnennung „© OpenStreetMap-Mitwirkende“, https://www.openstreetmap.org/copyright, ODbL. Nominatim und Photon liefern für „Oberer Kesselweg 2, 86744 Hainsfarth“ nur die Straße, nicht eine eigene Hausnummer: 48.9541035, 10.6229489 (OSM Way 91872453). Der Marker sitzt auf diesem Straßenpunkt.
 
-Nach Einwilligung ersetzt `js/einwilligung.js` das Bild durch eine Leaflet-Karte. Leaflet 1.9.4 liegt unter `assets/leaflet/` (BSD-2-Clause), es gibt keinen Abruf eines Karten-CDN und keinen Google-API-Schlüssel. Google Maps bietet `gestureHandling` nur mit Schlüssel, und der Schlüssel ist ein kostenpflichtiger Dienst. Die Kacheln kommen erst dann von https://tile.openstreetmap.org/{z}/{x}/{y}.png. Das Mausrad zoomt ohne Strg, auf dem Handy zoomen zwei Finger, verschieben geht mit einem Finger. Das entspricht `gestureHandling: "greedy"`. Die Wahl steht in `localStorage` unter `amk-karte` (`ja` oder `nein`). „Cookie-Einstellungen“ im Fuß öffnet die Leiste erneut. Ablehnen zeigt wieder das ruhende Bild, die Adresse und „Route in Google Maps öffnen“. Der Link lautet `https://www.google.com/maps/dir/?api=1&destination=Oberer+Kesselweg+2,+86744+Hainsfarth` und öffnet einen neuen Tab. Kein iframe.
+„Karte laden“ auf der Kontaktseite ist die Einwilligung. Erst dann ersetzt `js/einwilligung.js` das Bild durch eine Leaflet-Karte. Leaflet 1.9.4 liegt unter `assets/leaflet/` (BSD-2-Clause), es gibt keinen Abruf eines Karten-CDN und keinen Google-API-Schlüssel. Die Kacheln kommen erst dann von https://tile.openstreetmap.org/{z}/{x}/{y}.png. Das Mausrad zoomt ohne Strg, auf dem Handy zoomen zwei Finger, verschieben geht mit einem Finger. Die Wahl steht in `localStorage` unter `amk-karte` (`ja` oder `nein`). „Karte schließen“ zeigt wieder das ruhende Bild. Es gibt keinen Cookie-Banner. „Route in Google Maps öffnen“ lautet `https://www.google.com/maps/dir/?api=1&destination=Oberer+Kesselweg+2,+86744+Hainsfarth` und öffnet einen neuen Tab. Kein iframe.
 
 Nicht mehr eingebunden und aus `images/` entfernt: das alte Bauzaunfoto der bestehenden Website, das alte Sichtschutzfoto, der Motorradtransporter (Humbaur KFT) und der beladene offene Anhänger. Sie zeigten nicht den jeweiligen Typ. `images/baustelle.webp` liegt noch da und ist auf keiner Seite eingebunden.
 
 ## Farben und Kontrast
 
-Hauptfarbe ist ein gedecktes Tannengrün `#1F4D3A`. Weiße Schrift darauf liegt bei etwa 9,6:1. Der Hover der Flächen ist `#16382B` (Weiß darauf etwa 12,9:1). Logo-Grau `#6E6D6D` bleibt der Fließtext (etwa 5,2:1), Überschriften `#3A3939`, Absetzflächen `#F3F7F9`.
+Hauptfarbe ist ein gedecktes Tannengrün `#1F4D3A`. Weiße Schrift darauf liegt bei etwa 9,6:1. Der Hover der Flächen ist `#16382B` (Weiß darauf etwa 12,9:1). Der Fließtext ist `#4A4A4A` (über 7:1 auf Weiß), Überschriften `#3A3939`, Absetzflächen `#F3F7F9`.
 
 Logo-Grün `#76B729` ist nur noch Akzent. Auf Weiß erreicht es etwa 2,45:1 und ist damit kein Text und keine große Fläche. Es steht auf der kleinen Marke „TL“ (Schrift `#1A1A1A`, etwa 7,1:1), als Strich der aktiven Fußleiste, als Hover-Ring an den Buttons und als Farbe der Link-Unterstreichung. Links und der Fokusring selbst sind `#1F4D3A`, der Link-Hover `#132E22`.
 
-Unter 980 px liegt eine feste Fußleiste: Mieten, Kaufen, Kontakt, Anfrage, Anrufen (`tel:+499082921777`). Jede Fläche ist mindestens 48 px, die aktive Seite trägt `aria-current`, der Inhalt bekommt `padding-bottom` inklusive `env(safe-area-inset-bottom)`. Ab 980 px bleibt die Kopfnavigation mit drei Punkten plus Anfrage-Zeichen, die Fußleiste ist aus.
+Unter 980 px liegt eine feste Leiste: Anrufen (`tel:+499082921777`), Anfrage, Menü. Jede Fläche ist mindestens 48 px, der Inhalt bekommt `padding-bottom` inklusive `env(safe-area-inset-bottom)`. Ab 980 px bleibt die Kopfnavigation, die Leiste ist aus.
 
 Die Schrift ist Manrope, lokal als WOFF2 unter `assets/fonts/`, Lizenz SIL OFL. Es sind keine Schriften von einem CDN eingebunden. Der Kopf ist durchgehend ein weißer Balken. Logo und Menü ändern beim Scrollen weder Größe noch Form.
 
@@ -139,7 +141,7 @@ Impressum und Datenschutz sind neu geschrieben. Eine USt-IdNr. steht auf der Sei
 
 ## Bauzaun-Konfigurator
 
-`mieten/bauzaun/` fragt Art (Standard, F1, Secure, XXL), Menge in Metern oder Feldern und den Mietzeitraum. Meter werden nicht in Felder umgerechnet: Standard und F1 sind 3.450 mm breit, Secure 3.472 mm, XXL 3.500 mm (Schwarzfeller). Betonfüße, Verbindungsschellen und Streben nach Bedarf stehen als inklusive, ohne Stückzahl. Sonderwünsche sind Häkchen mit „Aufpreis auf Anfrage“: Hochsicherheitsschellen, Bauzaunplane, Sichtschutz, Tür, Tor, Zusatzstreben. Tür, Tor, Bauzaunplane und Zusatzstreben haben eine Anzahl, sichtbar erst nach dem Häkchen. Hochsicherheitsschellen gelten für den ganzen Zaun, Sichtschutz ist die Materialwahl, beides ohne Anzahl. Der Mietbeginn liegt nicht vor heute, das Ende nicht vor dem Beginn. Dieselbe Datumsregel gilt in Anfrage und Beratung. „In die Anfrage legen“ schreibt eine Position. Die Produktseiten bleiben unter „Einzelteile“, sie sind nicht mehr der Hauptweg. Die Mieten-Kachel verlinkt `bauzaun/`.
+`mieten/bauzaun/` fragt Art (Standard, F1, Secure, XXL), Menge in Metern oder Feldern und den Mietzeitraum. Meter werden nicht in Felder umgerechnet: Standard und F1 sind 3.450 mm breit, Secure 3.472 mm, XXL 3.500 mm (Schwarzfeller). Betonfüße, Verbindungsschellen und Streben nach Bedarf stehen als inklusive, ohne Stückzahl. Sonderwünsche sind Häkchen: Hochsicherheitsschellen, Bauzaunplane, Sichtschutz, Tür, Tor, Zusatzstreben. Tür, Tor, Bauzaunplane und Zusatzstreben haben eine Anzahl, sichtbar erst nach dem Häkchen. Hochsicherheitsschellen gelten für den ganzen Zaun, Sichtschutz ist die Materialwahl, beides ohne Anzahl. Der Mietbeginn liegt nicht vor heute, das Ende nicht vor dem Beginn. Dieselbe Datumsregel gilt in Anfrage und Beratung. Rechts läuft auf dem Desktop „Ihre Auswahl“ mit, auf dem Handy als Leiste unten, darin „In die Anfrage legen“. Die Produktseiten bleiben unter „Einzelteile“. Die Mieten-Kachel verlinkt `bauzaun/`.
 
 ## Beispielpreise der Anhänger
 
@@ -149,7 +151,24 @@ Ein VDE-Badge gibt es nicht. Die gelesenen Schwarzfeller-Seiten nennen kein VDE,
 
 ## Anfrage
 
-„Zur Anfrage hinzufügen“ legt den Artikel in `localStorage` (`amk-wunsch`) oder erhöht die Menge. Es nimmt ihn nicht wieder herunter. Ein Hinweis zeigt „Weiter umsehen“ und „Zur Anfrage“. Die Übersicht unter `anfrage/` zeigt Bild, Name, Miete oder Kauf, Menge, Entfernen und „Preis auf Anfrage“. Eine Bauzaun-Konfiguration zeigt stattdessen Art, Menge, Zeitraum, „Inklusive“ und Extras, ohne zweiten Mengenregler. Liegt eine Miete darin, kommen Zeitraum von/bis, die Wahl „Lieferung, Aufbau und Abbau“ oder „Selbstabholung“, Einsatzort und PLZ dazu. Bei einzelnen Zaunartikeln zusätzlich Länge und Höhe (`laenge`, `hoehe`, `produkt`). Ist der Korb leer, stehen drei gleichwertige Wege: Mieten, Kaufen und „Individuelle Beratung anfragen“ (`anfrage/beratung/`: Anliegen, Ort, Zeitraum optional, Kontakt, dieselbe `mailto`-Zeile). Name, Firma (optional), Telefon, E-Mail und Nachricht bleiben. Absenden öffnet nur `mailto:info@bauzaun-mieten.net` mit der Liste. Der Satz daneben heißt „Ihr E-Mail-Programm öffnet sich“. Ohne JavaScript steht der Hinweis, an dieselbe Adresse zu schreiben. Die Angaben liegen zusätzlich unter `amk-anfrage-meta`. Das steht kurz im Datenschutz, ohne Banner.
+„Zur Anfrage hinzufügen“ legt den Artikel in `localStorage` (`amk-wunsch`) oder erhöht die Menge. Es nimmt ihn nicht wieder herunter. Ein Hinweis zeigt „Weiter umsehen“ und „Zur Anfrage“. Die Übersicht unter `anfrage/` zeigt Bild, Name, Miete oder Kauf, Menge, Ändern und Entfernen. „Preis auf Anfrage“ steht dort einmal. Eine Bauzaun-Konfiguration zeigt Art, Menge, Zeitraum, „Inklusive“ und Extras, ohne zweiten Mengenregler. Liegt eine Miete ohne eigenen Zeitraum darin, kommen Zeitraum von/bis dazu, sonst nur Leistung, Einsatzort und PLZ. Bei einzelnen Zaunartikeln zusätzlich Länge und Höhe. Ist der Korb leer, stehen drei gleichwertige Wege: Mieten, Kaufen und „Individuelle Beratung anfragen“. Name, Firma (optional), Telefon, E-Mail und Nachricht bleiben. Die Angaben liegen zusätzlich unter `amk-anfrage-meta`.
+
+## Formularversand
+
+`js/form-config.js` gilt für Anfrage und Beratung:
+
+```js
+window.AMK_FORM = {
+  endpoint: "",
+  accessKey: ""
+};
+```
+
+Beide Werte leer: der Button öffnet `mailto:info@bauzaun-mieten.net`. Der Satz daneben heißt „Ihr E-Mail-Programm öffnet sich“.
+
+Beide gesetzt: `fetch` POST als JSON an `endpoint`, Felder `access_key`, `subject`, `from_name`, `email`, `message`, `botcheck` (Web3Forms-kompatibel). Bei Erfolg geht es zu `anfrage/danke/`. Schlägt der Versand fehl, öffnet sich das E-Mail-Programm. Das unsichtbare Feld `botcheck` bleibt leer; ist es gefüllt, wird nichts gesendet.
+
+Den Access-Key legt man beim Formular-Dienst an und trägt Endpoint und Key in `js/form-config.js` ein. In diesem Prototyp ist kein Konto angelegt und kein Key eingetragen. Ist der Dienst ein neuer Anbieter, dessen Name und Anschrift in `datenschutz/` nachtragen. Den echten Key nicht in ein öffentliches Repository schreiben.
 
 ## Offene Fragen an Peter
 
