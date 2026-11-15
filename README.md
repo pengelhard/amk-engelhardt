@@ -22,10 +22,10 @@ Die Startadresse `index.html` ist der Einstieg. `mieten/` ist die Übersicht der
 | `service/` | Full Service und die zwei genannten Partner |
 | `anfrage/` | Formular, Merkzettel, `mailto` |
 | `ueber-uns/` | Firma, Standort, Team-Platzhalter |
-| `kontakt/` | Kontaktdaten, Zeiten, Terminabsprache, Kartenlink |
-| `impressum/`, `datenschutz/` | Platzhalter |
+| `kontakt/` | Kontaktdaten, Zeiten, Terminabsprache, Anfahrt mit Karte nach Klick |
+| `impressum/`, `datenschutz/` | Angaben nach § 5 DDG und Datenschutz nur für das, was die Seite nutzt. Entwurf, vor Veröffentlichung rechtlich prüfen. Dieser Satz steht nur hier, nicht auf den Seiten. |
 
-Das Hauptmenü hat drei Punkte: Mieten, Kaufen, Kontakt. Das Telefon ist daneben ein eigener Button. Unter 980 px ersetzt eine Fußleiste mit Mieten, Kaufen, Kontakt und Anrufen das Menü. Service, Über uns, Anfrage, Impressum und Datenschutz bleiben in der Fußzeile erreichbar.
+Das Hauptmenü hat drei Punkte: Mieten, Kaufen, Kontakt. Unter 980 px ersetzt eine Fußleiste mit Mieten, Kaufen, Kontakt und Anrufen das Menü. Das Telefon steht in der Fußzeile und in der Fußleiste, nicht im Kopf. Service, Über uns, Anfrage, Impressum und Datenschutz bleiben in der Fußzeile erreichbar.
 
 JavaScript ergänzt nur: Merkzettel in `localStorage`, Nachrechnen im Mengenrechner, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/angebote.json`. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt.
 
@@ -98,7 +98,8 @@ Anhänger heißen nach dem Typ. Jede Anhängerkarte bleibt „Beispiel“. Foto 
 - Theme-Demoinhalte (Tectxon, englische Teamseiten, erfundene Personen, `info@example.com`, Portfolio Öl und Gas)
 - Leere Seite Aktuelles
 - AGB: die alte Seite sagt nur „Diese Seite befindet sich zur Zeit in Überarbeitung.“
-- Fertiger Impressums- und Datenschutztext. Beides sind Platzhalter. Die alte Datenschutzerklärung beschreibt Cookies und Analysewerkzeuge, die dieser Prototyp nicht nutzt
+- Die alte Datenschutzerklärung (Google Analytics, YouTube, Google Fonts, reCAPTCHA, Datenschutzbeauftragter). Die neue Seite beschreibt nur Hosting, Kontakt, die Karte nach Klick und die lokale Schrift. Ein Datenschutzbeauftragter ist nicht genannt
+- Hinweis der EU-OS-Plattform. Die Plattform ist eingestellt
 - Headerbild der alten Startseite, weil darin das Öl-Pumpen-Logo des Themes steckt
 - Alte Mini-Grafiken von 2012
 
@@ -116,7 +117,9 @@ Logo-Grün `#76B729` ist nur noch Akzent. Auf Weiß erreicht es etwa 2,45:1 und 
 
 Unter 980 px liegt eine feste Fußleiste: Mieten, Kaufen, Kontakt, Anrufen (`tel:+499082921777`). Jede Fläche ist mindestens 48 px, die aktive Seite trägt `aria-current`, der Inhalt bekommt `padding-bottom` inklusive `env(safe-area-inset-bottom)`. Ab 980 px bleibt die Kopfnavigation mit drei Punkten, die Fußleiste ist aus.
 
-Die Schrift ist Manrope, lokal als WOFF2 unter `assets/fonts/`, Lizenz SIL OFL. Es sind keine Schriften von einem CDN eingebunden. Der Kopf liegt über dem Foto und wird beim Scrollen weiß.
+Die Schrift ist Manrope, lokal als WOFF2 unter `assets/fonts/`, Lizenz SIL OFL. Es sind keine Schriften von einem CDN eingebunden. Der Kopf ist durchgehend ein weißer Balken. Logo und Menü ändern beim Scrollen weder Größe noch Form.
+
+Impressum und Datenschutz sind neu geschrieben. Die USt-IdNr. steht als Platzhalter `[USt-IdNr. bitte ergänzen, falls vorhanden]`, weil die alte Seite dort leer war. Bildnachweise stehen im Impressum. Entwurf, vor Veröffentlichung rechtlich prüfen. Dieser Hinweis steht nur in dieser Datei.
 
 ## Mengenrechner
 
@@ -158,7 +161,7 @@ Dazu:
 7. Schellen stehen jetzt mit den Schwarzfeller-Maßen als eigene Mietkarte. Bleibt das so, oder sind sie nur Zubehör zum Feld?
 8. Die Region Ries / Nordschwaben / Mittelfranken steht auf der alten Seite nicht. Dort steht Süddeutschland. Welche Formulierung soll bleiben?
 9. Das VDE-Badge ist entfernt. Die Sortierung „Beliebt“ bleibt ein Platzhalter. Gibt es eine echte Sortierung, und welches Badge außer TL an der Folie soll bleiben?
-10. Impressum und Datenschutz brauchen fertige Texte. Auf der alten Seite steht die Überschrift zur Umsatzsteuer-Identifikationsnummer, eine Nummer selbst ist dort nicht eingetragen.
+10. Die USt-IdNr. fehlt weiterhin. Im Impressum steht der Platzhalter, keine erfundene Nummer. Impressum und Datenschutz vor Veröffentlichung rechtlich prüfen.
 11. AGB der alten Seite sind nur „in Überarbeitung“. Sollen sie auf die neue Seite, und in welcher Fassung?
 12. Der Link zum väterlichen Betrieb ist auf der alten Seite als `htttp://www.fahrzeugbau-engelhardt.de` geschrieben. Welche Adresse soll auf die neue Seite, falls überhaupt?
 13. Partner Bauzaun Nord und bauzaun.net weiter öffentlich nennen?

@@ -18,12 +18,6 @@
   function pinTop() {
     if (!bar) return;
     document.documentElement.style.setProperty("--top", bar.offsetHeight + "px");
-    var hero = document.querySelector(".hero");
-    if (!hero) {
-      bar.classList.add("is-solid");
-      return;
-    }
-    bar.classList.toggle("is-solid", window.scrollY > 8);
   }
 
   pinTop();

@@ -3,7 +3,7 @@
 Prototyp. Die Dateien liegen lokal als WebP, nichts wird von den Quellseiten eingebunden.
 Eine Veröffentlichungsgenehmigung liegt nicht vor.
 
-Fußzeile auf den Seiten: „Bilder/Daten teilweise Herstellerangaben Schwarzfeller – Prototyp, Rechte vor Veröffentlichung klären.“
+Die Bildnachweise stehen im Impressum, nicht mehr in der Fußzeile.
 
 Schwarzfeller-Fotos: Produktfotos der Schwarzfeller GmbH, heruntergeladen von den genannten Datei-URLs, längste Kante höchstens 1.200 px, WebP. Lizenz auf der Seite nicht genannt. Nur für diesen Prototyp.
 
