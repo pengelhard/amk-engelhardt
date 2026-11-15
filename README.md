@@ -12,7 +12,8 @@ Die Startadresse `index.html` ist der Einstieg. `mieten/` ist die Übersicht der
 
 | URL | Inhalt |
 | --- | --- |
-| `index.html` | Einstieg: Einsatzfoto, vier Bildflächen, drei Angaben |
+| `index.html` | Einstieg: Einsatzfoto, Bildflächen, Angebote |
+| `angebote/` | Angebote und Neuheiten aus `data/angebote.json` |
 | `mieten/` | Übersicht Mieten: Bauzaun, Absperrung, Anhänger |
 | `mieten/bauzaun/`, `mieten/absperrung/`, `mieten/mietpark/` | Bildkacheln der Kategorie. Der Mengenrechner steht nur unter Bauzaun |
 | `kaufen/` | Nur Verkaufsanhänger, ohne Filterleiste |
@@ -26,7 +27,26 @@ Die Startadresse `index.html` ist der Einstieg. `mieten/` ist die Übersicht der
 
 Das Hauptmenü hat drei Punkte: Mieten, Kaufen, Kontakt. Das Telefon ist daneben ein eigener Button. Unter 980 px ersetzt eine Fußleiste mit Mieten, Kaufen, Kontakt und Anrufen das Menü. Service, Über uns, Anfrage, Impressum und Datenschutz bleiben in der Fußzeile erreichbar.
 
-JavaScript ergänzt nur: Merkzettel in `localStorage`, Nachrechnen im Mengenrechner, Zusammensetzen der `mailto`-Nachricht. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt.
+JavaScript ergänzt nur: Merkzettel in `localStorage`, Nachrechnen im Mengenrechner, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/angebote.json`. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt.
+
+## Angebote und Neuheiten
+
+Pflege nur in `data/angebote.json`. Eine Liste, ein Eintrag pro Karte. Felder:
+
+| Feld | Inhalt |
+| --- | --- |
+| `titel` | Überschrift |
+| `text` | Ein kurzer Satz |
+| `bild` | Pfad ab der Seitenwurzel, nur eine vorhandene Datei unter `images/`, zum Beispiel `images/bauzaun-standard.webp` |
+| `alt` | Beschreibung des Bildes |
+| `badge` | `Neu` oder `Angebot` |
+| `beispiel` | `true`, solange es kein echtes Angebot von AMK ist. Dann erscheint die Marke Beispiel |
+| `bis` | Leer oder `JJJJ-MM-TT`. Der genannte Tag zählt noch. Danach blendet `js/angebote.js` den Eintrag aus |
+| `link` | Relativer Pfad ab der Seitenwurzel, zum Beispiel `kaufen/` |
+
+Die Startseite und `angebote/` lesen dieselbe Datei. Unter `kaufen/` steht der Link dorthin. Kein Build, kein fremdes Bild.
+
+Die zwei sichtbaren Einträge sind Beispiele für den Prototyp: „VDE-Bauzaun“ als Neuheit und „Anhänger reduziert“ ohne Rabattbetrag, beide mit Preis auf Anfrage. Sie sind keine Zusage und keine VDE-Angabe. Ein dritter Eintrag mit Datum 2020-01-01 bleibt in der Datei und erscheint nicht.
 
 ## Verkauf und Miete
 
