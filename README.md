@@ -12,8 +12,8 @@ Die Startadresse `index.html` leitet ohne JavaScript auf `mieten/` weiter. `kauf
 
 | URL | Inhalt |
 | --- | --- |
-| `mieten/` | Filteransicht Bauzaun, Absperrung, Mietpark |
-| `mieten/bauzaun/`, `mieten/absperrung/`, `mieten/mietpark/` | Dieselbe Ansicht mit gesetztem Filter, auch ohne JavaScript |
+| `mieten/` | Einstieg: ein Bild, ein Satz, Bildflächen für Bauzaun, Absperrung, Anhänger mieten und Anhänger kaufen |
+| `mieten/bauzaun/`, `mieten/absperrung/`, `mieten/mietpark/` | Bildkacheln der Kategorie. Der Mengenrechner steht nur unter Bauzaun |
 | `kaufen/` | Nur Verkaufsanhänger, ohne Filterleiste |
 | `kaufen/anhaenger/<slug>/` | Detail eines Verkaufsanhängers |
 | `produkt/<slug>/` | Detail eines Mietprodukts |
@@ -23,11 +23,13 @@ Die Startadresse `index.html` leitet ohne JavaScript auf `mieten/` weiter. `kauf
 | `kontakt/` | Kontaktdaten, Zeiten, Terminabsprache, Kartenlink |
 | `impressum/`, `datenschutz/` | Platzhalter |
 
-JavaScript ergänzt nur: Live-Filter, das VDE-Häkchen nur wenn die sichtbare Kategorie mindestens einen VDE-Artikel hat, Merkzettel in `localStorage`, Nachrechnen im Mengenrechner, Zusammensetzen der `mailto`-Nachricht. Mieten und Kaufen sind echte Links. Die Filterseiten, die Produktkarten und das Formular stehen im HTML.
+Das Hauptmenü hat drei Punkte: Mieten, Kaufen, Kontakt. Das Telefon ist daneben ein eigener Button. Unter 980 px ersetzt eine Fußleiste mit Mieten, Kaufen, Kontakt und Anrufen das Menü. Service, Über uns, Anfrage, Impressum und Datenschutz bleiben in der Fußzeile erreichbar.
+
+JavaScript ergänzt nur: Merkzettel in `localStorage`, Nachrechnen im Mengenrechner, Zusammensetzen der `mailto`-Nachricht. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt.
 
 ## Verkauf und Miete
 
-Nur Anhänger sind zum Kauf. Bauzaun und Absperrung haben keinen Kaufpreis und keinen Kauf-Button. Im Formular stehen unter „Kauf“ ausschließlich die Beispiel-Anhänger. Die Filter Bauzaun, Absperrung und Mietpark gibt es nur unter `mieten/`.
+Nur Anhänger sind zum Kauf. Bauzaun und Absperrung haben keinen Kaufpreis und keinen Kauf-Button. Im Formular stehen unter „Kauf“ ausschließlich die Beispiel-Anhänger. Bauzaun, Absperrung und Mietpark sind Bildflächen unter `mieten/`, nicht eine Filterleiste.
 
 Kühlanhänger vermietet AMK für Events. Im Mietpark stehen „Kühlanhänger 1,3 t“ und „Kühlanhänger 2,0 t“, beide Beispiel, Preis auf Anfrage, nur zur Miete, nicht unter `kaufen/`.
 
@@ -89,9 +91,9 @@ Nicht mehr eingebunden und aus `images/` entfernt: das alte Bauzaunfoto der best
 
 Hauptfarbe ist ein gedecktes Tannengrün `#1F4D3A`. Weiße Schrift darauf liegt bei etwa 9,6:1. Der Hover der Flächen ist `#16382B` (Weiß darauf etwa 12,9:1). Logo-Grau `#6E6D6D` bleibt der Fließtext (etwa 5,2:1), Überschriften `#3A3939`, Absetzflächen `#F3F7F9`.
 
-Logo-Grün `#76B729` ist nur noch Akzent. Auf Weiß erreicht es etwa 2,45:1 und ist damit kein Text und keine große Fläche. Es steht auf Badges (Schrift `#1A1A1A`, etwa 7,1:1), auf den kleinen Ziffern der Schritte, als 3-px-Strich der aktiven Fußleiste, als Hover-Ring an den Buttons und als Farbe der Link-Unterstreichung. Links und der Fokusring selbst sind `#1F4D3A`, der Link-Hover `#132E22`.
+Logo-Grün `#76B729` ist nur noch Akzent. Auf Weiß erreicht es etwa 2,45:1 und ist damit kein Text und keine große Fläche. Es steht auf den kleinen Marken „Beispiel“ und „TL“ (Schrift `#1A1A1A`, etwa 7,1:1), als Strich der aktiven Fußleiste, als Hover-Ring an den Buttons und als Farbe der Link-Unterstreichung. Links und der Fokusring selbst sind `#1F4D3A`, der Link-Hover `#132E22`.
 
-Unter 980 px liegt eine feste Fußleiste: Start, Mieten, Kaufen, Anfrage, Anrufen (`tel:+499082921777`). Jede Fläche ist mindestens 48 px, die aktive Seite trägt `aria-current`, der Inhalt bekommt `padding-bottom` inklusive `env(safe-area-inset-bottom)`. Ab 980 px bleibt die Kopfnavigation, die Fußleiste ist aus.
+Unter 980 px liegt eine feste Fußleiste: Mieten, Kaufen, Kontakt, Anrufen (`tel:+499082921777`). Jede Fläche ist mindestens 48 px, die aktive Seite trägt `aria-current`, der Inhalt bekommt `padding-bottom` inklusive `env(safe-area-inset-bottom)`. Ab 980 px bleibt die Kopfnavigation mit drei Punkten, die Fußleiste ist aus.
 
 Es sind keine Schriften von einem CDN eingebunden.
 
@@ -113,7 +115,7 @@ Jeder Betrag ist erfunden, mit Zeitraum oder als Kaufpreis beschriftet, und auf 
 
 Der frühere Betrag 120 € pro Woche hing an „Offener Anhänger, Woche“ und ist entfallen. Das sind keine Preise von AMK. MwSt. und Transport sind darin nicht geregelt. Dieselben Angaben liegen in `data/anhaenger.js`. Eckdaten und Bildrechte stehen in `docs/bildquellen.md`. Bauzaun und Absperrung bleiben bei „Preis auf Anfrage“.
 
-Ein VDE-Badge gibt es nicht. Die gelesenen Schwarzfeller-Seiten nennen kein VDE. Der Filter „nur VDE-zertifiziert“ bleibt ausgeblendet, solange kein Artikel der sichtbaren Kategorie `data-vde="ja"` trägt. Eine Filteroption ohne Treffer, auch eine leere Kategorie im Live-Filter, wird ausgeblendet. TL steht nur an der Absperrschranke und nur für die Folie. Die Sortierung „Beliebt“ bleibt ein Platzhalter.
+Ein VDE-Badge gibt es nicht. Die gelesenen Schwarzfeller-Seiten nennen kein VDE, deshalb gibt es keinen VDE-Filter. TL steht nur an der Absperrschranke und nur für die Folie. Die Sortierung „Beliebt“ ist von den Seiten.
 
 ## Anfrage
 
