@@ -276,7 +276,7 @@ Daten: https://www.humbaur.com/de/anhaenger/neuheiten-highlights/ansicht/modell/
 
 ### Planenanhänger
 
-Foto: `images/anhaenger-plane.webp`, 720×540 px. Beispielbild: Rüdiger Müller, Wikimedia Commons, Datei PKW-Anhänger, CC BY-SA 4.0. Zeigt den Typ, nicht das Modell der Eckdaten. Kein Fahrzeug von AMK.
+Foto: `images/anhaenger-plane.webp`, 2440×1580 px. Fiver, der Hellseher, Wikimedia Commons, Datei „STEMA HP 4050 (rear)“, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:STEMA_HP_4050_(rear).jpg. Für die Seite beschnitten und als WebP gespeichert. Das frühere Foto von Rüdiger Müller ist ersetzt. Die unten stehenden Humbaur-Angaben gehören nicht zu diesem Foto und stehen nicht auf den Seiten. Kein Fahrzeug von AMK.
 
 Daten: https://stellfeld-ernst.de/Humbaur-HA132513FS-Planenanhaenger-1300-mm-Ladehoehe-1300-kg-gebremst-Alu/HA132513FS-PLANE13
 
@@ -329,7 +329,7 @@ Daten: https://www.herb-fahrzeugteile.de/unsinn-kuehlanhaenger-ukt-c6-1300-kg-25
 
 ### Kühlanhänger 2,0 t
 
-Foto: `images/kuehlanhaenger-20.webp`, 1200×900 px. Händlerfoto PKW-Anhänger-Center auf der Seite des Temared Cooler 3015/2C. Dateiname ate-2000. Kein Fahrzeug von AMK. Rechte vor Veröffentlichung klären.
+Das Händlerfoto `images/kuehlanhaenger-20.webp` (PKW-Anhänger-Center, Schriftzug www.pkw-anhaenger.center) ist aus dem Ordner entfernt und auf keiner Seite mehr verlinkt. Die Seite `produkt/kuehlanhaenger-20/` zeigt vorerst dasselbe Foto wie der andere Kühlanhänger. Die folgenden Händlerangaben stehen nicht auf den Seiten. Kein Fahrzeug von AMK.
 
 Daten: https://www.pkw-anhaenger.center/TEMARED-COOLER-3015-2C-2000kg-288x138x173cm-Kuehlanhaenger/TECOOLER30152C2T
 

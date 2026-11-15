@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
   <title>Bauzaun mieten – AMK Engelhardt</title>
-  <meta name="description" content="Bauzaun, Absperrung und Anhänger mieten bei AMK Engelhardt in Hainsfarth. Prototyp.">
+  <meta name="description" content="Bauzaun, Absperrung und Anhänger mieten bei AMK Engelhardt in Hainsfarth.">
   <link rel="icon" href="../../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../../assets/logo.png">
   <link rel="stylesheet" href="../../css/styles.css">
@@ -13,7 +13,6 @@
 <body>
   <a class="skip" href="#inhalt">Zum Inhalt</a>
   <div class="top">
-    <p class="proto">Prototyp – Testseite</p>
     <header class="site-header">
       <div class="wrap header-bar">
         <a class="brand" href="../../">
@@ -26,6 +25,7 @@
             <li><a href="../../kontakt/">Kontakt</a></li>
           </ul>
         </nav>
+        <a class="inquiry" href="../../anfrage/" aria-label="Anfrage, keine Artikel"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M6 3.5h9l4 4V20.5H6z"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M15 3.5v4.5h4.5M8.5 12h7M8.5 15.5h4.5"/></svg><span>Anfrage</span><span class="inquiry-count" data-wunsch-count data-empty="true" aria-live="polite">0</span></a>
       </div>
     </header>
   </div>
@@ -33,6 +33,7 @@
     <section class="hero hero--short">
       <div class="hero-media"><img src="../../images/bauzaun-standard.webp" width="700" height="456" alt="Bauzaun auf einer Baustelle, im Hintergrund Kran und Gerüst"></div>
       <div class="wrap hero-copy">
+        <a class="home-back" href="../../">‹ Zurück zur Startseite</a>
         <p class="eyebrow">Mieten</p>
         <h1>Bauzaun</h1>
         <p class="lead">Bauzaun für Baustelle und Gelände, nur zur Miete.</p>
@@ -159,7 +160,7 @@
       <div class="wrap">
         <details id="rechner">
           <summary>Mengenrechner</summary>
-          <p>Feldlänge des offenen Bauzauns Standard bei Schwarzfeller: 3.450 mm. Der Rechner teilt durch 3,45 m und rundet auf. XXL ist 3.500 mm breit und fällt nicht unter diese Zahl. Füße = Felder + 1 und Schellen = Stöße sind Annahmen, plus eine Schelle bei einem Tor. Die Höhe ändert die Stückzahl nicht. Quelle: schwarzfeller.de/bauzaun/offene-bauzaune/</p>
+          <p>Für den offenen Bauzaun Standard rechnen wir mit 3,45 m je Feld.</p>
           <form class="rechner" id="rechner-form" action="../../anfrage/" method="get">
             <input type="hidden" name="bereich" value="miete">
             <input type="hidden" name="produkt" value="miete:bauzaun-standard">
@@ -172,7 +173,7 @@
               <select id="hoehe" name="hoehe">
                 <option value="2.00" selected>2,00 m – Standardfeld, Schwarzfeller</option>
                 <option value="1.20">1,20 m – Feld F1, Schwarzfeller</option>
-                <option value="2.45">2,45 m – Feld XXL, Breite 3,50 m, Stückzahl hier unverändert</option>
+                <option value="2.45">2,45 m – Feld XXL</option>
               </select>
             </div>
             <fieldset class="choices">
@@ -180,10 +181,10 @@
               <label class="choice"><input type="radio" name="tor" value="nein" checked> <span>nein</span></label>
               <label class="choice"><input type="radio" name="tor" value="ja"> <span>ja</span></label>
             </fieldset>
-            <p id="rechner-ergebnis" class="price" aria-live="polite"><strong>11 Felder · 12 Füße · 10 Schellen</strong><small>Für 35 m, gerade Strecke, ohne Tor. Feld 3,45 m laut Schwarzfeller, offener Bauzaun Standard. Füße und Schellen sind Annahmen.</small></p>
+            <p id="rechner-ergebnis" class="price" aria-live="polite"><strong>11 Felder · 12 Füße · 10 Schellen</strong><small>Für 35 m, gerade Strecke, ohne Tor.</small></p>
             <button class="btn" type="submit">Übernehmen in Anfrage</button>
           </form>
-          <noscript><p>Ohne JavaScript bleibt die Beispielrechnung bei 35 m stehen. Der Button öffnet die Anfrage und hängt Länge, Höhe und Tor an die Adresse. Tragen Sie die Meter dort ins Feld Zaunlänge ein.</p></noscript>
+          <noscript><p>Ohne JavaScript bleibt die Rechnung für 35 m stehen. Der Button öffnet die Anfrage mit Länge, Höhe und Tor.</p></noscript>
         </details>
       </div>
     </section>
@@ -203,6 +204,7 @@
         <li><a href="../../ueber-uns/">Über uns</a></li>
         <li><a href="../../impressum/">Impressum</a></li>
         <li><a href="../../datenschutz/">Datenschutz</a></li>
+      <li><button type="button" class="cookie-settings" data-cookie-settings>Cookie-Einstellungen</button></li>
       </ul>
     </div>
   </footer>
@@ -210,10 +212,12 @@
 <a href="../../mieten/" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>Mieten</span></a>
 <a href="../../kaufen/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>Kaufen</span></a>
 <a href="../../kontakt/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M5 7h14v10H5zM5 8l7 5 7-5"/></svg><span>Kontakt</span></a>
-<a href="tel:+499082921777"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M8 4h3l1 4-2 1a10 10 0 0 0 5 5l1-2 4 1v3a2 2 0 0 1-2 2A14 14 0 0 1 6 6a2 2 0 0 1 2-2z"/></svg><span>Anrufen</span></a>
+<a class="inquiry" href="../../anfrage/" aria-label="Anfrage, keine Artikel"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M6 3.5h9l4 4V20.5H6z"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M15 3.5v4.5h4.5M8.5 12h7M8.5 15.5h4.5"/></svg><span>Anfrage</span><span class="inquiry-count" data-wunsch-count data-empty="true" aria-live="polite">0</span></a>
+    <a href="tel:+499082921777"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M8 4h3l1 4-2 1a10 10 0 0 0 5 5l1-2 4 1v3a2 2 0 0 1-2 2A14 14 0 0 1 6 6a2 2 0 0 1 2-2z"/></svg><span>Anrufen</span></a>
 </nav>
   <script src="../../js/nav.js"></script>
   <script src="../../js/merkzettel.js"></script>
   <script src="../../js/rechner.js"></script>
+  <script src="../../js/einwilligung.js"></script>
 </body>
 </html>

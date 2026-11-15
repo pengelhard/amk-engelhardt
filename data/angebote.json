@@ -1,31 +1,31 @@
 [
   {
     "titel": "Bauzaun",
-    "text": "Beispiel, wie eine Neuheit hier später steht. Preis auf Anfrage.",
+    "text": "Bauzaun zur Miete, mit Lieferung und Aufbau. Preis auf Anfrage.",
     "bild": "images/bauzaun-standard.webp",
     "alt": "Bauzaun auf einer Baustelle, im Hintergrund Kran und Gerüst",
     "badge": "Neu",
-    "beispiel": true,
+    "beispiel": false,
     "bis": "",
     "link": "mieten/bauzaun/"
   },
   {
     "titel": "Anhänger",
-    "text": "Beispiel, wie ein Angebot hier später steht. Preis auf Anfrage.",
+    "text": "Anhänger zum Kauf. Wir beraten zur passenden Größe. Preis auf Anfrage.",
     "bild": "images/anhaenger-offen.webp",
-    "alt": "Offener Hochlader mit Bordwänden, Beispiel eines Humbaur HU",
+    "alt": "Offener Hochlader mit Bordwänden",
     "badge": "Angebot",
-    "beispiel": true,
+    "beispiel": false,
     "bis": "",
     "link": "kaufen/"
   },
   {
-    "titel": "Abgelaufenes Beispiel",
-    "text": "Dieser Eintrag liegt vor dem Datum und erscheint nicht.",
+    "titel": "Nicht mehr aktuell",
+    "text": "Dieser Eintrag ist abgelaufen.",
     "bild": "images/bauzaun-f1.webp",
     "alt": "Niedriges offenes Bauzaunfeld",
     "badge": "Angebot",
-    "beispiel": true,
+    "beispiel": false,
     "bis": "2020-01-01",
     "link": "mieten/"
   }

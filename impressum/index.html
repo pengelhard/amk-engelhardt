@@ -13,7 +13,6 @@
 <body>
   <a class="skip" href="#inhalt">Zum Inhalt</a>
   <div class="top">
-    <p class="proto">Prototyp – Testseite</p>
     <header class="site-header">
       <div class="wrap header-bar">
         <a class="brand" href="../">
@@ -26,12 +25,14 @@
             <li><a href="../kontakt/">Kontakt</a></li>
           </ul>
         </nav>
+        <a class="inquiry" href="../anfrage/" aria-label="Anfrage, keine Artikel"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M6 3.5h9l4 4V20.5H6z"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M15 3.5v4.5h4.5M8.5 12h7M8.5 15.5h4.5"/></svg><span>Anfrage</span><span class="inquiry-count" data-wunsch-count data-empty="true" aria-live="polite">0</span></a>
       </div>
     </header>
   </div>
   <main id="inhalt">
     <section class="hero hero--band hero--field">
       <div class="wrap hero-copy">
+    <a class="home-back" href="../">‹ Zurück zur Startseite</a>
         <h1>Impressum</h1>
       </div>
     </section>
@@ -57,16 +58,15 @@
 
         <h2>Bildnachweise</h2>
         <p>Logo: AMK Engelhardt, bestehende Website bauzaun-mieten.net.</p>
-        <p>Produktfotos von Bauzaun und Absperrung: Schwarzfeller GmbH. Herstellerangaben, Rechte vor Veröffentlichung klären.</p>
+        <p>Produktfotos von Bauzaun und Absperrung: Schwarzfeller GmbH.</p>
         <ul>
           <li>Hochlader: Humbaur GmbH, Wikimedia Commons, Datei „Humbaur Hochlader HU“, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de">CC BY-SA 4.0</a>. <a href="https://commons.wikimedia.org/wiki/File:Humbaur_Hochlader_HU.jpg">Dateiseite</a></li>
-          <li>Planenanhänger: Rüdiger Müller, Wikimedia Commons, Datei „PKW-Anhänger“, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de">CC BY-SA 4.0</a>. <a href="https://commons.wikimedia.org/wiki/File:PKW-Anh%C3%A4nger.jpg">Dateiseite</a></li>
+          <li>Planenanhänger: Fiver, der Hellseher, Wikimedia Commons, Datei „STEMA HP 4050 (rear)“, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de">CC BY-SA 4.0</a>. <a href="https://commons.wikimedia.org/wiki/File:STEMA_HP_4050_(rear).jpg">Dateiseite</a>. Für diese Seite beschnitten und als WebP gespeichert.</li>
           <li>Kofferanhänger: Humbaur GmbH, Wikimedia Commons, Datei „Humbaur Kofferanhänger HKPA“, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de">CC BY-SA 4.0</a>. <a href="https://commons.wikimedia.org/wiki/File:Humbaur_Kofferanh%C3%A4nger_HKPA.jpg">Dateiseite</a></li>
           <li>Fahrzeugtransporter: Humbaur GmbH, Wikimedia Commons, Datei „Kleinfahrzeugtransporter FTK“, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de">CC BY-SA 4.0</a>. <a href="https://commons.wikimedia.org/wiki/File:Kleinfahrzeugtransporter_FTK.jpg">Dateiseite</a></li>
-          <li>Kühlanhänger 1,3 t: Händlerfoto Herb Fahrzeugteile</li>
-          <li>Kühlanhänger 2,0 t: Händlerfoto PKW-Anhänger-Center</li>
+          <li>Kühlanhänger: Händlerfoto Herb Fahrzeugteile</li>
+          <li>Karte auf der Kontaktseite: © OpenStreetMap-Mitwirkende, <a href="https://www.openstreetmap.org/copyright">OpenStreetMap-Copyright</a>, ODbL. Das ruhende Bild ist eine eigene Datei aus Kacheln von tile.openstreetmap.org. Die bewegliche Karte lädt dieselben Kacheln erst nach Einwilligung. Der Marker liegt auf dem kartierten Oberer Kesselweg in 86744 Hainsfarth (48.9541035, 10.6229489). Hausnummer 2 ist dort kein eigener Punkt. Kartenbibliothek: Leaflet 1.9.4, BSD-2-Clause, lokal ausgeliefert.</li>
         </ul>
-        <p>Die Anhängerfotos zeigen Beispielmodelle, nicht den Bestand von AMK.</p>
 
         <h2>Haftung für Links</h2>
         <p>Externe Links führen auf Seiten Dritter. Für deren Inhalt sind die jeweiligen Anbieter verantwortlich. Zum Zeitpunkt der Verlinkung waren keine Rechtsverstöße erkennbar. Wird ein Verstoß bekannt, entfernen wir den Link.</p>
@@ -88,6 +88,7 @@
         <li><a href="../ueber-uns/">Über uns</a></li>
         <li><a href="../impressum/">Impressum</a></li>
         <li><a href="../datenschutz/">Datenschutz</a></li>
+      <li><button type="button" class="cookie-settings" data-cookie-settings>Cookie-Einstellungen</button></li>
       </ul>
     </div>
   </footer>
@@ -95,9 +96,11 @@
 <a href="../mieten/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>Mieten</span></a>
 <a href="../kaufen/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>Kaufen</span></a>
 <a href="../kontakt/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M5 7h14v10H5zM5 8l7 5 7-5"/></svg><span>Kontakt</span></a>
-<a href="tel:+499082921777"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M8 4h3l1 4-2 1a10 10 0 0 0 5 5l1-2 4 1v3a2 2 0 0 1-2 2A14 14 0 0 1 6 6a2 2 0 0 1 2-2z"/></svg><span>Anrufen</span></a>
+<a class="inquiry" href="../anfrage/" aria-label="Anfrage, keine Artikel"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M6 3.5h9l4 4V20.5H6z"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M15 3.5v4.5h4.5M8.5 12h7M8.5 15.5h4.5"/></svg><span>Anfrage</span><span class="inquiry-count" data-wunsch-count data-empty="true" aria-live="polite">0</span></a>
+    <a href="tel:+499082921777"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M8 4h3l1 4-2 1a10 10 0 0 0 5 5l1-2 4 1v3a2 2 0 0 1-2 2A14 14 0 0 1 6 6a2 2 0 0 1 2-2z"/></svg><span>Anrufen</span></a>
 </nav>
   <script src="../js/nav.js"></script>
   <script src="../js/merkzettel.js"></script>
+  <script src="../js/einwilligung.js"></script>
 </body>
 </html>

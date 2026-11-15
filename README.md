@@ -2,7 +2,7 @@
 
 Statische Testseite für AMK Engelhardt (Absperrungen Mieten Kaufen), Oberer Kesselweg 2, 86744 Hainsfarth. Kein Build, kein Framework. Alle Links sind relativ und funktionieren unter `/amk-engelhardt/`, sobald GitHub Pages aus dem Branch `main` eingeschaltet wird. Eine Pages-Action und eine Vercel-Konfiguration gibt es bewusst nicht. Die Datei `.nojekyll` liegt bereit.
 
-Suchmaschinen sind ausgesperrt: `meta name="robots" content="noindex, nofollow"` auf jeder Seite und `robots.txt` mit `Disallow: /`. Oben auf jeder Seite steht „Prototyp – Testseite“. Zoomen ist nicht gesperrt (`width=device-width, initial-scale=1, viewport-fit=cover`, ohne `maximum-scale`).
+Suchmaschinen sind ausgesperrt: `meta name="robots" content="noindex, nofollow"` auf jeder Seite und `robots.txt` mit `Disallow: /`. Beides ist unsichtbar. Auf den Seiten steht kein „Prototyp“, kein „Beispiel“ und kein grüner Testbalken. Zoomen ist nicht gesperrt (`width=device-width, initial-scale=1, viewport-fit=cover`, ohne `maximum-scale`).
 
 An der bestehenden Website, an Domain, DNS oder E-Mail wurde nichts geändert.
 
@@ -20,14 +20,14 @@ Die Startadresse `index.html` ist der Einstieg. `mieten/` ist die Übersicht der
 | `kaufen/anhaenger/<slug>/` | Detail eines Verkaufsanhängers |
 | `produkt/<slug>/` | Detail eines Mietprodukts |
 | `service/` | Full Service und die zwei genannten Partner |
-| `anfrage/` | Formular, Merkzettel, `mailto` |
-| `ueber-uns/` | Firma, Standort, Team-Platzhalter |
-| `kontakt/` | Kontaktdaten, Zeiten, Terminabsprache, Anfahrt mit Karte nach Klick |
+| `anfrage/` | Anfrageliste wie ein Warenkorb, `mailto` |
+| `ueber-uns/` | Firma, Standort |
+| `kontakt/` | Kontaktdaten, Zeiten, Terminabsprache, Karte nach Einwilligung, Route in neuem Tab |
 | `impressum/`, `datenschutz/` | Angaben nach § 5 DDG und Datenschutz nur für das, was die Seite nutzt. Entwurf, vor Veröffentlichung rechtlich prüfen. Dieser Satz steht nur hier, nicht auf den Seiten. |
 
-Das Hauptmenü hat drei Punkte: Mieten, Kaufen, Kontakt. Unter 980 px ersetzt eine Fußleiste mit Mieten, Kaufen, Kontakt und Anrufen das Menü. Das Telefon steht in der Fußzeile und in der Fußleiste, nicht im Kopf. Service, Über uns, Anfrage, Impressum und Datenschutz bleiben in der Fußzeile erreichbar.
+Das Hauptmenü hat drei Punkte: Mieten, Kaufen, Kontakt. Rechts daneben liegt das Anfrage-Zeichen mit Zähler. Unter 980 px ersetzt eine Fußleiste mit Mieten, Kaufen, Kontakt, Anfrage und Anrufen das Menü; das Anfrage-Zeichen im Kopf ist dort aus. Das Telefon steht in der Fußzeile und in der Fußleiste, nicht als eigene Zeile im Kopf. Service, Über uns, Impressum und Datenschutz bleiben in der Fußzeile erreichbar.
 
-JavaScript ergänzt nur: Merkzettel in `localStorage`, Nachrechnen im Mengenrechner, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/angebote.json`. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt.
+JavaScript ergänzt nur: Merkzettel in `localStorage`, Nachrechnen im Mengenrechner, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/angebote.json`, die Einwilligung für die Karte und danach Leaflet. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt.
 
 ## Angebote und Neuheiten
 
@@ -40,19 +40,19 @@ Pflege nur in `data/angebote.json`. Eine Liste, ein Eintrag pro Karte. Felder:
 | `bild` | Pfad ab der Seitenwurzel, nur eine vorhandene Datei unter `images/`, zum Beispiel `images/bauzaun-standard.webp` |
 | `alt` | Beschreibung des Bildes |
 | `badge` | `Neu` oder `Angebot` |
-| `beispiel` | `true`, solange es kein echtes Angebot von AMK ist. Dann erscheint die Marke Beispiel |
+| `beispiel` | Wird nicht mehr als Marke ausgegeben. Sichtbare Karten sind als normale Angebote formuliert, ohne Rabatt und ohne Betrag |
 | `bis` | Leer oder `JJJJ-MM-TT`. Der genannte Tag zählt noch. Danach blendet `js/angebote.js` den Eintrag aus |
 | `link` | Relativer Pfad ab der Seitenwurzel, zum Beispiel `kaufen/` |
 
 Die Startseite und `angebote/` lesen dieselbe Datei. Unter `kaufen/` steht der Link dorthin. Kein Build, kein fremdes Bild.
 
-Die zwei sichtbaren Einträge sind Beispiele für den Prototyp: „Bauzaun“ als Neuheit und „Anhänger“ als Angebot, beide mit Preis auf Anfrage und ohne Zertifikat, Rabatt oder Betrag. Ein dritter Eintrag mit Datum 2020-01-01 bleibt in der Datei und erscheint nicht.
+Die zwei sichtbaren Einträge lesen sich als Angebote: „Bauzaun“ und „Anhänger“, beide mit Preis auf Anfrage und ohne Zertifikat, Rabatt oder Betrag. Ein dritter Eintrag mit Datum 2020-01-01 bleibt in der Datei und erscheint nicht. Echte Konditionen von AMK fehlen noch, siehe offene Fragen.
 
 ## Verkauf und Miete
 
 Nur Anhänger sind zum Kauf. Bauzaun und Absperrung haben keinen Kaufpreis und keinen Kauf-Button. Im Formular stehen unter „Kauf“ ausschließlich die Beispiel-Anhänger. Bauzaun, Absperrung und Mietpark sind Bildflächen unter `mieten/`, nicht eine Filterleiste.
 
-Kühlanhänger vermietet AMK für Events. Im Mietpark stehen „Kühlanhänger 1,3 t“ und „Kühlanhänger 2,0 t“, beide Beispiel, Preis auf Anfrage, nur zur Miete, nicht unter `kaufen/`.
+Kühlanhänger vermietet AMK für Events. Im Mietpark stehen „Kühlanhänger“ und „Kühlanhänger für Events“, Preis auf Anfrage, nur zur Miete, nicht unter `kaufen/`. Massen stehen nicht auf den Seiten.
 
 ## Von der bestehenden Website übernommen
 
@@ -98,14 +98,22 @@ Anhänger heißen nach dem Typ. Jede Anhängerkarte bleibt „Beispiel“. Foto 
 - Theme-Demoinhalte (Tectxon, englische Teamseiten, erfundene Personen, `info@example.com`, Portfolio Öl und Gas)
 - Leere Seite Aktuelles
 - AGB: die alte Seite sagt nur „Diese Seite befindet sich zur Zeit in Überarbeitung.“
-- Die alte Datenschutzerklärung (Google Analytics, YouTube, Google Fonts, reCAPTCHA, Datenschutzbeauftragter). Die neue Seite beschreibt nur Hosting, Kontakt, die Karte nach Klick und die lokale Schrift. Ein Datenschutzbeauftragter ist nicht genannt
+- Die alte Datenschutzerklärung (Google Analytics, YouTube, Google Fonts, reCAPTCHA, Datenschutzbeauftragter). Die neue Seite beschreibt nur Hosting, Kontakt, die Karte nach Einwilligung und die lokale Schrift. Ein Datenschutzbeauftragter ist nicht genannt
 - Hinweis der EU-OS-Plattform. Die Plattform ist eingestellt
 - Headerbild der alten Startseite, weil darin das Öl-Pumpen-Logo des Themes steckt
 - Alte Mini-Grafiken von 2012
 
 ## Bilder
 
-Jede verwendete Datei, ihre Quelle und die dazugehörigen Maße stehen in `docs/bildquellen.md`. Produktfotos von Schwarzfeller und Händlerfotos der Kühlanhänger sind nur für den Prototyp geladen. Wikimedia-Dateien der Anhänger tragen CC BY-SA. Das Logo bleibt das der bestehenden Website.
+Jede verwendete Datei, ihre Quelle und die dazugehörigen Maße stehen in `docs/bildquellen.md` und im Impressum. Neben den Bildern steht kein Nachweis. Produktfotos von Schwarzfeller und das Händlerfoto des Kühlanhängers sind geladen; die Rechteklärung steht bei den offenen Fragen, nicht auf den Seiten. Wikimedia-Dateien der Anhänger tragen CC BY-SA. Das Logo bleibt das der bestehenden Website.
+
+Der Planenanhänger ist `images/anhaenger-plane.webp`, 2440×1580. Quelle: Fiver, der Hellseher, Wikimedia Commons, Datei „STEMA HP 4050 (rear)“, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:STEMA_HP_4050_(rear).jpg und https://creativecommons.org/licenses/by-sa/4.0/deed.de. Für die Kachel beschnitten, Kennzeichen im Original bereits verdeckt, als WebP gespeichert. Das frühere Foto von Rüdiger Müller ist ersetzt.
+
+`images/kuehlanhaenger-20.webp` (Händlerfoto PKW-Anhänger-Center mit Schriftzug www.pkw-anhaenger.center, Schild Ahrens und Marke Cibin) ist von den Seiten und aus `images/` entfernt. Ein frei lizenziertes Foto eines PKW-Kühlanhängers mit mindestens 1600 px Breite, ohne Wasserzeichen und ohne fremde Marke im Fokus, war in den geprüften CC-Beständen nicht zu finden. Beide Kühlanhänger-Karten zeigen deshalb vorerst `images/kuehlanhaenger-13.webp` (Herb Fahrzeugteile, 540×405). Das ist kein Bestand von AMK.
+
+Die Kontaktkarte ist ohne Einwilligung `images/anfahrt-hainsfarth.webp`, 1600×900. Einmalig aus Kacheln von https://tile.openstreetmap.org/ zusammengesetzt, Zoom 16, nicht von Google. Namensnennung „© OpenStreetMap-Mitwirkende“, https://www.openstreetmap.org/copyright, ODbL. Nominatim und Photon liefern für „Oberer Kesselweg 2, 86744 Hainsfarth“ nur die Straße, nicht eine eigene Hausnummer: 48.9541035, 10.6229489 (OSM Way 91872453). Der Marker sitzt auf diesem Straßenpunkt.
+
+Nach Einwilligung ersetzt `js/einwilligung.js` das Bild durch eine Leaflet-Karte. Leaflet 1.9.4 liegt unter `assets/leaflet/` (BSD-2-Clause), es gibt keinen Abruf eines Karten-CDN und keinen Google-API-Schlüssel. Google Maps bietet `gestureHandling` nur mit Schlüssel, und der Schlüssel ist ein kostenpflichtiger Dienst. Die Kacheln kommen erst dann von https://tile.openstreetmap.org/{z}/{x}/{y}.png. Das Mausrad zoomt ohne Strg, auf dem Handy zoomen zwei Finger, verschieben geht mit einem Finger. Das entspricht `gestureHandling: "greedy"`. Die Wahl steht in `localStorage` unter `amk-karte` (`ja` oder `nein`). „Cookie-Einstellungen“ im Fuß öffnet die Leiste erneut. Ablehnen zeigt wieder das ruhende Bild, die Adresse und „Route in Google Maps öffnen“. Der Link lautet `https://www.google.com/maps/dir/?api=1&destination=Oberer+Kesselweg+2,+86744+Hainsfarth` und öffnet einen neuen Tab. Kein iframe.
 
 Nicht mehr eingebunden und aus `images/` entfernt: das alte Bauzaunfoto der bestehenden Website, das alte Sichtschutzfoto, der Motorradtransporter (Humbaur KFT) und der beladene offene Anhänger. Sie zeigten nicht den jeweiligen Typ. `images/baustelle.webp` liegt noch da und ist auf keiner Seite eingebunden.
 
@@ -113,9 +121,9 @@ Nicht mehr eingebunden und aus `images/` entfernt: das alte Bauzaunfoto der best
 
 Hauptfarbe ist ein gedecktes Tannengrün `#1F4D3A`. Weiße Schrift darauf liegt bei etwa 9,6:1. Der Hover der Flächen ist `#16382B` (Weiß darauf etwa 12,9:1). Logo-Grau `#6E6D6D` bleibt der Fließtext (etwa 5,2:1), Überschriften `#3A3939`, Absetzflächen `#F3F7F9`.
 
-Logo-Grün `#76B729` ist nur noch Akzent. Auf Weiß erreicht es etwa 2,45:1 und ist damit kein Text und keine große Fläche. Es steht auf den kleinen Marken „Beispiel“ und „TL“ (Schrift `#1A1A1A`, etwa 7,1:1), als Strich der aktiven Fußleiste, als Hover-Ring an den Buttons und als Farbe der Link-Unterstreichung. Links und der Fokusring selbst sind `#1F4D3A`, der Link-Hover `#132E22`.
+Logo-Grün `#76B729` ist nur noch Akzent. Auf Weiß erreicht es etwa 2,45:1 und ist damit kein Text und keine große Fläche. Es steht auf der kleinen Marke „TL“ (Schrift `#1A1A1A`, etwa 7,1:1), als Strich der aktiven Fußleiste, als Hover-Ring an den Buttons und als Farbe der Link-Unterstreichung. Links und der Fokusring selbst sind `#1F4D3A`, der Link-Hover `#132E22`.
 
-Unter 980 px liegt eine feste Fußleiste: Mieten, Kaufen, Kontakt, Anrufen (`tel:+499082921777`). Jede Fläche ist mindestens 48 px, die aktive Seite trägt `aria-current`, der Inhalt bekommt `padding-bottom` inklusive `env(safe-area-inset-bottom)`. Ab 980 px bleibt die Kopfnavigation mit drei Punkten, die Fußleiste ist aus.
+Unter 980 px liegt eine feste Fußleiste: Mieten, Kaufen, Kontakt, Anfrage, Anrufen (`tel:+499082921777`). Jede Fläche ist mindestens 48 px, die aktive Seite trägt `aria-current`, der Inhalt bekommt `padding-bottom` inklusive `env(safe-area-inset-bottom)`. Ab 980 px bleibt die Kopfnavigation mit drei Punkten plus Anfrage-Zeichen, die Fußleiste ist aus.
 
 Die Schrift ist Manrope, lokal als WOFF2 unter `assets/fonts/`, Lizenz SIL OFL. Es sind keine Schriften von einem CDN eingebunden. Der Kopf ist durchgehend ein weißer Balken. Logo und Menü ändern beim Scrollen weder Größe noch Form.
 
@@ -133,13 +141,13 @@ Ein VDE-Badge gibt es nicht. Die gelesenen Schwarzfeller-Seiten nennen kein VDE,
 
 ## Anfrage
 
-Sichtbar ohne JavaScript: Bereich Miete oder Kauf, Produkte, Zaunlänge, Zeitraum von/bis, Lieferadresse, Lieferung, Aufbau, Abbau, Name, Telefon, E-Mail, Nachricht, Datenschutz-Häkchen. Der Zeitraum ist für die Miete gedacht. Absenden öffnet nur `mailto:info@bauzaun-mieten.net`. Es geht nichts an einen Server oder an Dritte. Ein Hinweis auf der Seite sagt, dass das ein Prototyp ist. Der Merkzettel im Kopf zählt nur mit JavaScript.
+„Zur Anfrage hinzufügen“ legt den Artikel in `localStorage` (`amk-wunsch`) oder erhöht die Menge. Es nimmt ihn nicht wieder herunter. Ein Hinweis zeigt „Weiter umsehen“ und „Zur Anfrage“. Die Übersicht unter `anfrage/` zeigt Bild, Name, Miete oder Kauf, Menge, Entfernen und „Preis auf Anfrage“. Liegt eine Miete darin, kommen Zeitraum von/bis, die Wahl „Lieferung, Aufbau und Abbau“ oder „Selbstabholung“, Einsatzort und PLZ dazu. Bei Zaunartikeln zusätzlich Länge und Höhe, auch aus dem Mengenrechner (`laenge`, `hoehe`, `produkt`). Name, Firma (optional), Telefon, E-Mail und Nachricht bleiben. Absenden öffnet nur `mailto:info@bauzaun-mieten.net` mit der Liste. Der Satz daneben heißt „Ihr E-Mail-Programm öffnet sich“. Ohne JavaScript steht der Hinweis, an dieselbe Adresse zu schreiben. Die Angaben liegen zusätzlich unter `amk-anfrage-meta`. Das steht kurz im Datenschutz, ohne Banner.
 
 ## Offene Fragen an Peter
 
 Aus der Struktur:
 
-1. Kühlanhänger zur Miete sind bestätigt. Die Karten „Kühlanhänger 1,3 t“ (Unsinn UKT C6) und „Kühlanhänger 2,0 t“ (Temared Cooler 3015/2C) sind Beispiele mit Händlerangaben, nicht der Bestand von AMK. Welche echten Fahrzeuge, Fotos und Preise ersetzen sie?
+1. Kühlanhänger zur Miete sind bestätigt. Auf den Seiten stehen keine Massen und keine Preise. Das Foto mit dem Schriftzug pkw-anhaenger.center ist entfernt. Beide Karten nutzen vorerst das Foto von Herb Fahrzeugteile, 540 px breit. Welche echten Fahrzeuge, Fotos und Preise ersetzen das, und dürfen die Schwarzfeller- und Herb-Fotos veröffentlicht werden?
 2. Welche Produkte sind tatsächlich VDE-zertifiziert? Die gelesenen Schwarzfeller-Seiten nennen kein VDE. TL steht dort nur bei der Folie der Absperrschranke.
 3. Echte Preise fehlen. Auf der Seite steht „Preis auf Anfrage“. Welche Beträge, und sind MwSt. und Transport enthalten?
 4. Der Hero-Satz ist festgelegt: „Auf uns ist Verlass. Auf unsere Zäune auch.“

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
   <title>Kontakt – AMK Engelhardt</title>
-  <meta name="description" content="Telefon, Adresse und Zeiten von AMK Engelhardt in Hainsfarth.">
+  <meta name="description" content="AMK Engelhardt in Hainsfarth: Telefon, Mobil, E-Mail und Anfahrt. Montag bis Freitag 8 bis 17 Uhr, Besuch nach Termin.">
   <link rel="icon" href="../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../assets/logo.png">
   <link rel="stylesheet" href="../css/styles.css">
@@ -13,7 +13,6 @@
 <body>
   <a class="skip" href="#inhalt">Zum Inhalt</a>
   <div class="top">
-    <p class="proto">Prototyp – Testseite</p>
     <header class="site-header">
       <div class="wrap header-bar">
         <a class="brand" href="../">
@@ -26,54 +25,69 @@
             <li><a href="../kontakt/" aria-current="page">Kontakt</a></li>
           </ul>
         </nav>
+        <a class="inquiry" href="../anfrage/" aria-label="Anfrage, keine Artikel"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M6 3.5h9l4 4V20.5H6z"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M15 3.5v4.5h4.5M8.5 12h7M8.5 15.5h4.5"/></svg><span>Anfrage</span><span class="inquiry-count" data-wunsch-count data-empty="true" aria-live="polite">0</span></a>
       </div>
     </header>
   </div>
   <main id="inhalt">
-<section class="hero hero--short hero--field">
+    <section class="hero hero--band hero--field">
       <div class="wrap hero-copy">
+        <a class="home-back" href="../">‹ Zurück zur Startseite</a>
         <p class="eyebrow">Hainsfarth</p>
         <h1>Kontakt</h1>
-        <p class="lead">Wir sind für Sie da. Besuch bitte nur nach Termin, wir sind oft unterwegs.</p>
+        <p class="lead">Wir sind für Sie da. Besuch bitte nur nach Termin.</p>
       </div>
     </section>
-    <section>
-      <div class="wrap split">
-        <div>
-          <h2>AMK Engelhardt</h2>
-          <ul class="contact-list">
-            <li>Mobil: <a href="tel:+4915114803644">0151 14803644</a></li>
-            <li>Telefon: <a href="tel:+499082921777">09082 921777</a></li>
-            <li>Telefon II: <a href="tel:+4990823296">09082 3296</a></li>
-            <li>Fax: 09082 921102</li>
-            <li>E-Mail: <a href="mailto:info@bauzaun-mieten.net">info@bauzaun-mieten.net</a></li>
-          </ul>
-          <h2>Adresse</h2>
-          <p>Oberer Kesselweg 2<br>86744 Hainsfarth</p>
-          <p><a href="https://www.openstreetmap.org/search?query=Oberer%20Kesselweg%202%2C%2086744%20Hainsfarth">Karte bei OpenStreetMap öffnen</a></p>
-          <h2>Zeiten</h2>
-          <p>Montag bis Freitag, 8:00–17:00 Uhr. Weitere Termine nach Vereinbarung, auch am Wochenende und außerhalb der Geschäftszeiten.</p>
-        </div>
-        <div class="note">
-          <h2>Anfrage</h2>
-          <p>Für Miete oder den Kauf eines Anhängers nutzen Sie das Formular. Es öffnet nur Ihr E-Mail-Programm.</p>
-          <a class="btn" href="../anfrage/">Zur Anfrage</a>
-        </div>
-      </div>
-    </section>
-    <section class="anfahrt" id="anfahrt">
+    <section class="contact-board" aria-label="Kontaktdaten">
       <div class="wrap">
-        <h2>Anfahrt</h2>
-        <div class="anfahrt-grid">
-        <div class="map-slot" data-map="https://www.google.com/maps?q=Oberer+Kesselweg+2,+86744+Hainsfarth&amp;output=embed">
-          <div class="map-placeholder">
-            <p>Oberer Kesselweg 2<br>86744 Hainsfarth</p>
-            <button type="button" class="btn" data-map-load>Karte laden</button>
-            <p class="map-note">Beim Laden werden Daten an Google übertragen.</p>
+        <div class="contact-grid">
+          <article class="contact-card">
+            <span>Telefon</span>
+            <a class="contact-main" href="tel:+499082921777">09082 921777</a>
+            <p class="contact-sub"><a href="tel:+4990823296">09082 3296</a><a href="tel:+499082921102">Fax 09082 921102</a></p>
+          </article>
+          <a class="contact-card" href="tel:+4915114803644">
+            <span>Mobil</span>
+            <strong class="contact-main">0151 14803644</strong>
+            <p class="contact-sub">Direkt unterwegs</p>
+          </a>
+          <a class="contact-card" href="mailto:info@bauzaun-mieten.net">
+            <span>E-Mail</span>
+            <strong class="contact-main">info@bauzaun-mieten.net</strong>
+            <p class="contact-sub">Für Miete und Kauf</p>
+          </a>
+          <a class="contact-card contact-card--wide" href="#anfahrt">
+            <span>Adresse</span>
+            <strong class="contact-main">Oberer Kesselweg 2</strong>
+            <p class="contact-sub">86744 Hainsfarth</p>
+          </a>
+          <article class="contact-card contact-card--wide">
+            <span>Öffnungszeiten</span>
+            <strong class="contact-main">Mo–Fr, 8–17 Uhr</strong>
+            <p class="contact-sub">Besuch nach Vereinbarung</p>
+          </article>
+        </div>
+        <div class="actions actions--equal contact-actions">
+          <a class="btn" href="../anfrage/">Anfrage stellen</a>
+          <a class="btn btn-ghost" href="tel:+499082921777">Anrufen 09082 921777</a>
+        </div>
+      </div>
+    </section>
+    <section class="map-stage" id="anfahrt" aria-label="Anfahrt">
+      <div class="wrap">
+        <div class="map-frame">
+          <div id="karte" class="map-live" hidden></div>
+          <div class="map-fallback" data-map-fallback>
+            <img src="../images/anfahrt-hainsfarth.webp" width="1600" height="900" alt="Karte: Oberer Kesselweg, 86744 Hainsfarth">
+            <div class="map-card">
+              <span>AMK Engelhardt</span>
+              <strong>Oberer Kesselweg 2</strong>
+              <p>86744 Hainsfarth</p>
+              <a class="btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=Oberer+Kesselweg+2,+86744+Hainsfarth" target="_blank" rel="noopener noreferrer">Route in Google Maps öffnen</a>
+            </div>
           </div>
         </div>
-        <p class="map-route"><a href="https://www.google.com/maps?q=Oberer+Kesselweg+2,+86744+Hainsfarth">Route planen</a></p>
-        </div>
+        <p class="map-attrib" data-map-attrib>Kartenbild © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende</p>
       </div>
     </section>
   </main>
@@ -86,24 +100,25 @@
         <li><a href="../mieten/">Mieten</a></li>
         <li><a href="../kaufen/">Kaufen</a></li>
         <li><a href="../angebote/">Angebote</a></li>
-        <li><a href="../kontakt/">Kontakt</a></li>
+        <li><a href="../kontakt/" aria-current="page">Kontakt</a></li>
         <li><a href="../anfrage/">Anfrage</a></li>
         <li><a href="../service/">Service</a></li>
         <li><a href="../ueber-uns/">Über uns</a></li>
         <li><a href="../impressum/">Impressum</a></li>
         <li><a href="../datenschutz/">Datenschutz</a></li>
+      <li><button type="button" class="cookie-settings" data-cookie-settings>Cookie-Einstellungen</button></li>
       </ul>
     </div>
   </footer>
   <nav class="tabbar" aria-label="Schnellnavigation">
-<a href="../mieten/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>Mieten</span></a>
-<a href="../kaufen/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>Kaufen</span></a>
-<a href="../kontakt/" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M5 7h14v10H5zM5 8l7 5 7-5"/></svg><span>Kontakt</span></a>
-<a href="tel:+499082921777"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M8 4h3l1 4-2 1a10 10 0 0 0 5 5l1-2 4 1v3a2 2 0 0 1-2 2A14 14 0 0 1 6 6a2 2 0 0 1 2-2z"/></svg><span>Anrufen</span></a>
-</nav>
+    <a href="../mieten/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>Mieten</span></a>
+    <a href="../kaufen/"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>Kaufen</span></a>
+    <a href="../kontakt/" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M5 7h14v10H5zM5 8l7 5 7-5"/></svg><span>Kontakt</span></a>
+    <a class="inquiry" href="../anfrage/" aria-label="Anfrage, keine Artikel"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M6 3.5h9l4 4V20.5H6z"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M15 3.5v4.5h4.5M8.5 12h7M8.5 15.5h4.5"/></svg><span>Anfrage</span><span class="inquiry-count" data-wunsch-count data-empty="true" aria-live="polite">0</span></a>
+    <a href="tel:+499082921777"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M8 4h3l1 4-2 1a10 10 0 0 0 5 5l1-2 4 1v3a2 2 0 0 1-2 2A14 14 0 0 1 6 6a2 2 0 0 1 2-2z"/></svg><span>Anrufen</span></a>
+  </nav>
   <script src="../js/nav.js"></script>
-  <script src="../js/karte.js"></script>
   <script src="../js/merkzettel.js"></script>
-
+  <script src="../js/einwilligung.js"></script>
 </body>
 </html>
