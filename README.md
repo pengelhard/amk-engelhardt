@@ -139,7 +139,7 @@ Impressum und Datenschutz sind neu geschrieben. Eine USt-IdNr. steht auf der Sei
 
 ## Bauzaun-Konfigurator
 
-`mieten/bauzaun/` fragt Art (Standard, F1, Secure, XXL), Menge in Metern oder Feldern und den Mietzeitraum. Meter werden nicht in Felder umgerechnet: Standard und F1 sind 3.450 mm breit, Secure 3.472 mm, XXL 3.500 mm (Schwarzfeller). Betonfüße, Verbindungsschellen und Streben nach Bedarf stehen als inklusive, ohne Stückzahl. Sonderwünsche sind Häkchen mit „Aufpreis auf Anfrage“: Hochsicherheitsschellen, Bauzaunplane, Sichtschutz, Tür, Tor, Zusatzstreben. „In die Anfrage legen“ schreibt eine Position. Die Produktseiten bleiben unter „Einzelteile“, sie sind nicht mehr der Hauptweg. Die Mieten-Kachel verlinkt `bauzaun/`.
+`mieten/bauzaun/` fragt Art (Standard, F1, Secure, XXL), Menge in Metern oder Feldern und den Mietzeitraum. Meter werden nicht in Felder umgerechnet: Standard und F1 sind 3.450 mm breit, Secure 3.472 mm, XXL 3.500 mm (Schwarzfeller). Betonfüße, Verbindungsschellen und Streben nach Bedarf stehen als inklusive, ohne Stückzahl. Sonderwünsche sind Häkchen mit „Aufpreis auf Anfrage“: Hochsicherheitsschellen, Bauzaunplane, Sichtschutz, Tür, Tor, Zusatzstreben. Tür, Tor, Bauzaunplane und Zusatzstreben haben eine Anzahl, sichtbar erst nach dem Häkchen. Hochsicherheitsschellen gelten für den ganzen Zaun, Sichtschutz ist die Materialwahl, beides ohne Anzahl. Der Mietbeginn liegt nicht vor heute, das Ende nicht vor dem Beginn. Dieselbe Datumsregel gilt in Anfrage und Beratung. „In die Anfrage legen“ schreibt eine Position. Die Produktseiten bleiben unter „Einzelteile“, sie sind nicht mehr der Hauptweg. Die Mieten-Kachel verlinkt `bauzaun/`.
 
 ## Beispielpreise der Anhänger
 

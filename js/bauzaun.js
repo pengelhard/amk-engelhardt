@@ -16,6 +16,7 @@
     tor: "Tor",
     strebe: "Zusatzstreben"
   };
+  var COUNTED = { plane: 1, tuer: 1, tor: 1, strebe: 1 };
   var menge = document.getElementById("menge");
   var label = document.getElementById("mengen-label");
 
@@ -35,6 +36,50 @@
   });
   syncUnit();
 
+  function qtyField(box) {
+    var row = box.closest(".extra-row");
+    return row ? row.querySelector(".extra-qty") : null;
+  }
+
+  function syncQty(box) {
+    var qty = qtyField(box);
+    if (!qty) return;
+    var on = box.checked && COUNTED[box.value];
+    qty.hidden = !on;
+    qty.disabled = !on;
+    if (!on) qty.removeAttribute("aria-invalid");
+    if (on && (!qty.value || parseInt(qty.value, 10) < 1)) qty.value = "1";
+  }
+
+  form.querySelectorAll('input[name="extra"]').forEach(function (box) {
+    box.addEventListener("change", function () { syncQty(box); });
+    syncQty(box);
+  });
+
+  function readExtras() {
+    var extras = [];
+    var invalid = null;
+    form.querySelectorAll('input[name="extra"]:checked').forEach(function (box) {
+      if (!EXTRAS[box.value]) return;
+      if (!COUNTED[box.value]) {
+        extras.push({ name: EXTRAS[box.value] });
+        return;
+      }
+      var qty = qtyField(box);
+      var amount = qty ? parseInt(qty.value, 10) : 0;
+      if (!qty || !amount || amount < 1 || amount > 99) {
+        if (qty) {
+          qty.setAttribute("aria-invalid", "true");
+          if (!invalid) invalid = qty;
+        }
+        return;
+      }
+      qty.removeAttribute("aria-invalid");
+      extras.push({ name: EXTRAS[box.value], menge: amount });
+    });
+    return { extras: extras, invalid: invalid };
+  }
+
   function rememberPeriod(von, bis) {
     try {
       var meta = JSON.parse(localStorage.getItem("amk-anfrage-meta") || "{}");
@@ -49,6 +94,7 @@
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     var status = document.getElementById("konfig-status");
+    status.textContent = "";
     status.classList.remove("is-error");
     var artKey = (form.querySelector('input[name="art"]:checked') || {}).value;
     var raw = String(menge.value || "").trim().replace(",", ".");
@@ -68,16 +114,15 @@
       (von ? form.bis : form.von).focus();
       return;
     }
-    if (bis < von) {
-      status.textContent = "Das Ende liegt vor dem Anfang.";
+    if (window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(form.von, form.bis)) return;
+    var picked = readExtras();
+    if (picked.invalid) {
+      status.textContent = "Mindestens 1.";
       status.classList.add("is-error");
-      form.bis.focus();
+      picked.invalid.focus();
       return;
     }
-    var extras = [];
-    form.querySelectorAll('input[name="extra"]:checked').forEach(function (box) {
-      if (EXTRAS[box.value]) extras.push(EXTRAS[box.value]);
-    });
+    var extras = picked.extras;
     var shown = felder ? String(amount) : raw.replace(".", ",");
     window.AMK_WUNSCH.add({
       id: "miete:bauzaun-konfig:" + Date.now(),
@@ -96,6 +141,8 @@
     rememberPeriod(von, bis);
     form.reset();
     syncUnit();
+    form.querySelectorAll('input[name="extra"]').forEach(syncQty);
+    if (window.AMK_ZEIT) window.AMK_ZEIT.clearPair(form.von, form.bis);
     status.textContent = "In die Anfrage gelegt.";
   });
 })();
