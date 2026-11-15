@@ -60,7 +60,31 @@
   }
 
   function fencing(items) {
-    return items.some(function (item) { return fencePattern.test(item.id); });
+    return items.some(function (item) { return fencePattern.test(item.id) && !item.konfig; });
+  }
+
+  var BILD = {
+    standard: "images/bauzaun-standard.webp",
+    f1: "images/bauzaun-f1.webp",
+    secure: "images/bauzaun-secure.webp",
+    xxl: "images/bauzaun-xxl.webp"
+  };
+
+  function deDate(value) {
+    var match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ""));
+    return match ? match[3] + "." + match[2] + "." + match[1] : "";
+  }
+
+  function konfigText(item) {
+    var k = item.konfig;
+    var einheit = k.einheit === "felder" ? (k.menge === "1" ? " Feld" : " Felder") : " m";
+    var zeit = deDate(k.von) && deDate(k.bis) ? deDate(k.von) + " – " + deDate(k.bis) : "";
+    var extras = k.extras.length ? esc(k.extras.join(", ")) + " — Aufpreis auf Anfrage" : "keine";
+    return "<p>" + esc(k.menge) + einheit + "</p>" +
+      (zeit ? "<p>" + esc(zeit) + "</p>" : "") +
+      "<p>Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf</p>" +
+      "<p>Extras: " + extras + "</p>" +
+      "<p>Preis auf Anfrage</p>";
   }
 
   function render(items) {
@@ -81,11 +105,18 @@
     });
     list.innerHTML = data.map(function (item) {
       var info = CATALOG[item.id] || {};
+      var bild = item.konfig && BILD[item.konfig.key] ? BILD[item.konfig.key] : info.bild;
       var modus = String(item.id).indexOf("kauf:") === 0 ? "Kauf" : "Miete";
-      var image = info.bild ? '<img src="../' + esc(info.bild) + '" alt="" width="320" height="220">' : "";
+      var image = bild ? '<img src="../' + esc(bild) + '" alt="" width="320" height="220">' : "";
+      var body = item.konfig
+        ? konfigText(item)
+        : "<p>Preis auf Anfrage</p>";
+      var qty = item.konfig
+        ? ""
+        : '<label class="qty">Menge <input type="number" min="1" max="99" inputmode="numeric" value="' + item.qty + '" data-qty="' + esc(item.id) + '" aria-label="Menge ' + esc(item.name) + '"></label>';
       return '<li class="cart-row">' + image +
-        '<div class="cart-main"><p class="cart-kind">' + modus + "</p><strong>" + esc(item.name) + "</strong><p>Preis auf Anfrage</p></div>" +
-        '<label class="qty">Menge <input type="number" min="1" max="99" inputmode="numeric" value="' + item.qty + '" data-qty="' + esc(item.id) + '" aria-label="Menge ' + esc(item.name) + '"></label>' +
+        '<div class="cart-main"><p class="cart-kind">' + modus + "</p><strong>" + esc(item.name) + "</strong>" + body + "</div>" +
+        qty +
         '<button type="button" class="text-btn" data-remove="' + esc(item.id) + '">Entfernen<span class="visually-hidden">: ' + esc(item.name) + "</span></button>" +
         "</li>";
     }).join("");
@@ -178,6 +209,13 @@
     }
     var lines = ["Anfrage an AMK Engelhardt", ""];
     items.forEach(function (item) {
+      if (item.konfig) {
+        var k = item.konfig;
+        var einheit = k.einheit === "felder" ? (k.menge === "1" ? " Feld" : " Felder") : " m";
+        var extra = k.extras.length ? k.extras.join(", ") + " — Aufpreis auf Anfrage" : "keine";
+        lines.push(k.art + " — Miete — " + k.menge + einheit + " — Zeitraum " + (deDate(k.von) || "–") + " bis " + (deDate(k.bis) || "–") + " — Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf — Extras: " + extra + " — Preis auf Anfrage");
+        return;
+      }
       var modus = String(item.id).indexOf("kauf:") === 0 ? "Kauf" : "Miete";
       lines.push(item.name + " — " + modus + " — Menge " + item.qty + " — Preis auf Anfrage");
     });

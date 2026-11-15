@@ -1,6 +1,37 @@
 (function () {
   var KEY = "amk-wunsch";
 
+  var ART_KEYS = { standard: 1, f1: 1, secure: 1, xxl: 1 };
+  var EXTRA_NAMES = {
+    "Hochsicherheitsschellen": 1,
+    "Bauzaunplane": 1,
+    "Sichtschutz": 1,
+    "Tür": 1,
+    "Tor": 1,
+    "Zusatzstreben": 1
+  };
+
+  function cleanKonfig(konfig) {
+    if (!konfig || typeof konfig !== "object") return null;
+    var menge = String(konfig.menge || "").trim();
+    if (!menge) return null;
+    var extras = [];
+    if (Array.isArray(konfig.extras)) {
+      konfig.extras.forEach(function (name) {
+        if (EXTRA_NAMES[name] && extras.indexOf(name) === -1) extras.push(name);
+      });
+    }
+    return {
+      art: String(konfig.art || "").slice(0, 80),
+      key: ART_KEYS[konfig.key] ? konfig.key : "",
+      menge: menge.slice(0, 12),
+      einheit: konfig.einheit === "felder" ? "felder" : "m",
+      von: String(konfig.von || "").slice(0, 10),
+      bis: String(konfig.bis || "").slice(0, 10),
+      extras: extras
+    };
+  }
+
   function normalize(items) {
     if (!Array.isArray(items)) return [];
     return items.filter(function (item) {
@@ -9,7 +40,10 @@
       var qty = parseInt(item.qty, 10);
       if (!qty || qty < 1) qty = 1;
       if (qty > 99) qty = 99;
-      return { id: String(item.id), name: String(item.name || item.id), qty: qty };
+      var next = { id: String(item.id), name: String(item.name || item.id), qty: qty };
+      var konfig = cleanKonfig(item.konfig);
+      if (konfig) next.konfig = konfig;
+      return next;
     });
   }
 
@@ -86,6 +120,14 @@
     showToast();
   });
 
-  window.AMK_WUNSCH = { load: load, save: save, onChange: null };
+  function add(item) {
+    var items = load();
+    items.push(item);
+    save(items);
+    showToast();
+    return items;
+  }
+
+  window.AMK_WUNSCH = { load: load, save: save, add: add, onChange: null };
   paint(load());
 })();
