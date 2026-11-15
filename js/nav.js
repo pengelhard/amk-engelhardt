@@ -1,4 +1,18 @@
 (function () {
+  var tab = document.querySelector(".tabbar");
+
+  function pinTab() {
+    if (!tab || getComputedStyle(tab).display === "none") {
+      document.documentElement.style.removeProperty("--tabbar");
+      return;
+    }
+    document.documentElement.style.setProperty("--tabbar", tab.offsetHeight + "px");
+  }
+
+  pinTab();
+  window.addEventListener("resize", pinTab);
+  if (tab && window.ResizeObserver) new ResizeObserver(pinTab).observe(tab);
+
   var button = document.querySelector(".nav-toggle");
   var nav = document.getElementById("nav");
   if (!button || !nav) return;

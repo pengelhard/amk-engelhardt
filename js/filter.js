@@ -14,16 +14,55 @@
   window.addEventListener("resize", pinBar);
   if (topBar && window.ResizeObserver) new ResizeObserver(pinBar).observe(topBar);
 
-  function applyVde() {
-    var only = vde && vde.checked && !vde.disabled;
-    document.querySelectorAll("[data-gruppe='absperrung']").forEach(function (card) {
-      var mark = card.getAttribute("data-vde");
-      var isVde = mark === "ja";
-      card.hidden = !!(only && !isVde);
+  function visibleGroup() {
+    var current = document.querySelector("[data-live-filter][aria-current='page']");
+    if (current) return current.getAttribute("data-live-filter");
+    var open = [];
+    blocks.forEach(function (block) {
+      if (!block.hidden) open.push(block.getAttribute("data-gruppe-block"));
+    });
+    return open.length === 1 ? open[0] : "";
+  }
+
+  function cardsIn(name) {
+    return document.querySelectorAll("[data-gruppe='" + name + "']");
+  }
+
+  function hasVde(name) {
+    return Array.prototype.some.call(cardsIn(name), function (card) {
+      return card.getAttribute("data-vde") === "ja";
     });
   }
 
-  if (vde) vde.addEventListener("change", applyVde);
+  function applyVde() {
+    var toggle = vde && vde.closest(".vde-toggle");
+    var name = visibleGroup();
+    var only = !!(toggle && !toggle.hidden && vde.checked && !vde.disabled && name);
+    document.querySelectorAll("[data-gruppe]").forEach(function (card) {
+      var group = card.getAttribute("data-gruppe");
+      var isVde = card.getAttribute("data-vde") === "ja";
+      card.hidden = !!(only && group === name && !isVde);
+    });
+  }
+
+  function syncFilters() {
+    document.querySelectorAll("[data-live-filter]").forEach(function (link) {
+      var name = link.getAttribute("data-live-filter");
+      link.hidden = cardsIn(name).length === 0;
+    });
+    var toggle = vde && vde.closest(".vde-toggle");
+    if (toggle) {
+      var name = visibleGroup();
+      var show = !!(name && hasVde(name));
+      toggle.hidden = !show;
+      vde.disabled = !show;
+      if (!show) vde.checked = false;
+    }
+    applyVde();
+  }
+
+  if (vde) vde.addEventListener("change", syncFilters);
+  syncFilters();
 
   if (blocks.length < 2 || !links.length) return;
 
@@ -38,13 +77,8 @@
         if (other === link) other.setAttribute("aria-current", "page");
         else other.removeAttribute("aria-current");
       });
-      if (vde) {
-        var onFence = name === "absperrung";
-        vde.disabled = !onFence;
-        if (!onFence) vde.checked = false;
-      }
       if (rechner && name === "bauzaun") rechner.open = true;
-      applyVde();
+      syncFilters();
     });
   });
 })();

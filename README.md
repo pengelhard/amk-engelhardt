@@ -23,7 +23,7 @@ Die Startadresse `index.html` leitet ohne JavaScript auf `mieten/` weiter. `kauf
 | `kontakt/` | Kontaktdaten, Zeiten, Terminabsprache, Kartenlink |
 | `impressum/`, `datenschutz/` | Platzhalter |
 
-JavaScript ergänzt nur: Live-Filter und VDE-Häkchen, Merkzettel in `localStorage`, Nachrechnen im Mengenrechner, Zusammensetzen der `mailto`-Nachricht. Mieten und Kaufen sind echte Links. Die Filterseiten, die Produktkarten und das Formular stehen im HTML.
+JavaScript ergänzt nur: Live-Filter, das VDE-Häkchen nur wenn die sichtbare Kategorie mindestens einen VDE-Artikel hat, Merkzettel in `localStorage`, Nachrechnen im Mengenrechner, Zusammensetzen der `mailto`-Nachricht. Mieten und Kaufen sind echte Links. Die Filterseiten, die Produktkarten und das Formular stehen im HTML.
 
 ## Verkauf und Miete
 
@@ -113,7 +113,7 @@ Jeder Betrag ist erfunden, mit Zeitraum oder als Kaufpreis beschriftet, und auf 
 
 Der frühere Betrag 120 € pro Woche hing an „Offener Anhänger, Woche“ und ist entfallen. Das sind keine Preise von AMK. MwSt. und Transport sind darin nicht geregelt. Dieselben Angaben liegen in `data/anhaenger.js`. Eckdaten und Bildrechte stehen in `docs/bildquellen.md`. Bauzaun und Absperrung bleiben bei „Preis auf Anfrage“.
 
-Ein VDE-Badge gibt es nicht. Die gelesenen Schwarzfeller-Seiten nennen kein VDE. Das Häkchen „nur VDE“ blendet dann alle Absperrungen aus. TL steht nur an der Absperrschranke und nur für die Folie. Die Sortierung „Beliebt“ bleibt ein Platzhalter.
+Ein VDE-Badge gibt es nicht. Die gelesenen Schwarzfeller-Seiten nennen kein VDE. Der Filter „nur VDE-zertifiziert“ bleibt ausgeblendet, solange kein Artikel der sichtbaren Kategorie `data-vde="ja"` trägt. Eine Filteroption ohne Treffer, auch eine leere Kategorie im Live-Filter, wird ausgeblendet. TL steht nur an der Absperrschranke und nur für die Folie. Die Sortierung „Beliebt“ bleibt ein Platzhalter.
 
 ## Anfrage
 
