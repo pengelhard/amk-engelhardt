@@ -1,7 +1,7 @@
 [
   {
-    "titel": "VDE-Bauzaun",
-    "text": "Beispiel für eine Neuheit, die AMK hier später selbst einstellt. Im Katalog steht dazu kein eigener Artikel, und die gelesenen Angaben nennen kein VDE. Preis auf Anfrage.",
+    "titel": "Bauzaun",
+    "text": "Beispiel, wie eine Neuheit hier später steht. Preis auf Anfrage.",
     "bild": "images/bauzaun-standard.webp",
     "alt": "Bauzaun auf einer Baustelle, im Hintergrund Kran und Gerüst",
     "badge": "Neu",
@@ -10,8 +10,8 @@
     "link": "mieten/bauzaun/"
   },
   {
-    "titel": "Anhänger reduziert",
-    "text": "Beispiel für ein Angebot. Ohne Rabattbetrag. Preis auf Anfrage.",
+    "titel": "Anhänger",
+    "text": "Beispiel, wie ein Angebot hier später steht. Preis auf Anfrage.",
     "bild": "images/anhaenger-offen.webp",
     "alt": "Offener Hochlader mit Bordwänden, Beispiel eines Humbaur HU",
     "badge": "Angebot",

@@ -46,7 +46,7 @@ Pflege nur in `data/angebote.json`. Eine Liste, ein Eintrag pro Karte. Felder:
 
 Die Startseite und `angebote/` lesen dieselbe Datei. Unter `kaufen/` steht der Link dorthin. Kein Build, kein fremdes Bild.
 
-Die zwei sichtbaren Einträge sind Beispiele für den Prototyp: „VDE-Bauzaun“ als Neuheit und „Anhänger reduziert“ ohne Rabattbetrag, beide mit Preis auf Anfrage. Sie sind keine Zusage und keine VDE-Angabe. Ein dritter Eintrag mit Datum 2020-01-01 bleibt in der Datei und erscheint nicht.
+Die zwei sichtbaren Einträge sind Beispiele für den Prototyp: „Bauzaun“ als Neuheit und „Anhänger“ als Angebot, beide mit Preis auf Anfrage und ohne Zertifikat, Rabatt oder Betrag. Ein dritter Eintrag mit Datum 2020-01-01 bleibt in der Datei und erscheint nicht.
 
 ## Verkauf und Miete
 
@@ -119,7 +119,7 @@ Unter 980 px liegt eine feste Fußleiste: Mieten, Kaufen, Kontakt, Anrufen (`tel
 
 Die Schrift ist Manrope, lokal als WOFF2 unter `assets/fonts/`, Lizenz SIL OFL. Es sind keine Schriften von einem CDN eingebunden. Der Kopf ist durchgehend ein weißer Balken. Logo und Menü ändern beim Scrollen weder Größe noch Form.
 
-Impressum und Datenschutz sind neu geschrieben. Die USt-IdNr. steht als Platzhalter `[USt-IdNr. bitte ergänzen, falls vorhanden]`, weil die alte Seite dort leer war. Bildnachweise stehen im Impressum. Entwurf, vor Veröffentlichung rechtlich prüfen. Dieser Hinweis steht nur in dieser Datei.
+Impressum und Datenschutz sind neu geschrieben. Eine USt-IdNr. steht auf der Seite nicht: die alte Seite ließ das Feld leer, und ohne Nummer ist die Zeile nicht einschlägig. § 18 Abs. 2 MStV steht nicht im Impressum. Für eine gewerbliche Produktseite wird er hier nicht als Pflicht behauptet. Die Angabe zum EU-US Data Privacy Framework ist nur der Verweis auf die öffentliche Liste vom 15.11.2026, keine eigene Zusage. Bildnachweise stehen im Impressum. Entwurf, vor Veröffentlichung rechtlich prüfen. Dieser Hinweis steht nur in dieser Datei.
 
 ## Mengenrechner
 
@@ -127,17 +127,7 @@ Die Feldlänge ist die Breite des offenen Bauzauns Standard bei Schwarzfeller: 3
 
 ## Beispielpreise der Anhänger
 
-Jeder Betrag ist erfunden, mit Zeitraum oder als Kaufpreis beschriftet, und auf der Karte als Beispiel markiert:
-
-- Hochlader 750 kg, Miete: 25 € pro Tag, erfunden
-- Planenanhänger, Miete: 79 € pro Wochenende, erfunden
-- Kofferanhänger, Miete: auf Anfrage
-- Kühlanhänger 1,3 t und Kühlanhänger 2,0 t, Miete: auf Anfrage
-- Hochlader 750 kg, Kauf: 1.190 €, erfunden
-- Fahrzeugtransporter, Kauf: 2.450 €, erfunden
-- Kofferanhänger, Kauf: 980 €, erfunden
-
-Der frühere Betrag 120 € pro Woche hing an „Offener Anhänger, Woche“ und ist entfallen. Das sind keine Preise von AMK. MwSt. und Transport sind darin nicht geregelt. Dieselben Angaben liegen in `data/anhaenger.js`. Eckdaten und Bildrechte stehen in `docs/bildquellen.md`. Bauzaun und Absperrung bleiben bei „Preis auf Anfrage“.
+Auf den Seiten steht bei Anhängern nur „Preis auf Anfrage“. Frühere Beispielbeträge (25 € pro Tag, 79 € pro Wochenende, Kauf 1.190 €, 2.450 € und 980 €) sind erfunden und nicht mehr sichtbar. 120 € pro Woche bleibt entfallen. Maße, Zuladung, Zulassung und Lieferzeit der Anhänger stehen ebenfalls nicht auf den Seiten, solange sie nicht von AMK belegt sind. Bildrechte stehen in `docs/bildquellen.md`. Bauzaun und Absperrung bleiben bei „Preis auf Anfrage“. Die Maße dort stammen aus den gelesenen Herstellerangaben.
 
 Ein VDE-Badge gibt es nicht. Die gelesenen Schwarzfeller-Seiten nennen kein VDE, deshalb gibt es keinen VDE-Filter. TL steht nur an der Absperrschranke und nur für die Folie. Die Sortierung „Beliebt“ ist von den Seiten.
 
@@ -151,22 +141,22 @@ Aus der Struktur:
 
 1. Kühlanhänger zur Miete sind bestätigt. Die Karten „Kühlanhänger 1,3 t“ (Unsinn UKT C6) und „Kühlanhänger 2,0 t“ (Temared Cooler 3015/2C) sind Beispiele mit Händlerangaben, nicht der Bestand von AMK. Welche echten Fahrzeuge, Fotos und Preise ersetzen sie?
 2. Welche Produkte sind tatsächlich VDE-zertifiziert? Die gelesenen Schwarzfeller-Seiten nennen kein VDE. TL steht dort nur bei der Folie der Absperrschranke.
-3. Preise anzeigen (Miete pro Tag oder Woche, Kauf) oder überall „auf Anfrage“?
-4. Welchen Claim soll der Hero tragen?
+3. Echte Preise fehlen. Auf der Seite steht „Preis auf Anfrage“. Welche Beträge, und sind MwSt. und Transport enthalten?
+4. Der Hero-Satz ist festgelegt: „Auf uns ist Verlass. Auf unsere Zäune auch.“
 
 Dazu:
 
 5. Die Feldbreite 3,45 m ist die Schwarzfeller-Angabe zum Standardfeld. Stimmen Füße = Felder + 1, Schellen = Stöße und eine zusätzliche Schelle fürs Tor für die Montage von AMK? Die Höhe ändert die Stückzahl im Prototyp nicht.
-6. Die Beispielpreise (25 € pro Tag, 79 € pro Wochenende, Kauf 1.190 €, 2.450 € und 980 €) sind erfunden. 120 € pro Woche ist entfallen. Welche echten Preise sollen sie ersetzen, und sind MwSt. und Transport enthalten?
+6. Siehe Punkt 3. Erfundene Beispielbeträge stehen nicht mehr auf den Seiten.
 7. Schellen stehen jetzt mit den Schwarzfeller-Maßen als eigene Mietkarte. Bleibt das so, oder sind sie nur Zubehör zum Feld?
 8. Die Region Ries / Nordschwaben / Mittelfranken steht auf der alten Seite nicht. Dort steht Süddeutschland. Welche Formulierung soll bleiben?
 9. Das VDE-Badge ist entfernt. Die Sortierung „Beliebt“ bleibt ein Platzhalter. Gibt es eine echte Sortierung, und welches Badge außer TL an der Folie soll bleiben?
-10. Die USt-IdNr. fehlt weiterhin. Im Impressum steht der Platzhalter, keine erfundene Nummer. Impressum und Datenschutz vor Veröffentlichung rechtlich prüfen.
+10. Die USt-IdNr. ist unbekannt und steht nicht im Impressum. § 18 Abs. 2 MStV ist nicht als Pflicht gesetzt. Impressum und Datenschutz vor Veröffentlichung rechtlich prüfen. Die DPF-Zeile nur nach der Liste vom 15.11.2026, ohne eigene Zusage.
 11. AGB der alten Seite sind nur „in Überarbeitung“. Sollen sie auf die neue Seite, und in welcher Fassung?
 12. Der Link zum väterlichen Betrieb ist auf der alten Seite als `htttp://www.fahrzeugbau-engelhardt.de` geschrieben. Welche Adresse soll auf die neue Seite, falls überhaupt?
 13. Partner Bauzaun Nord und bauzaun.net weiter öffentlich nennen?
-14. Die Kennzahlen 1.000+ Kundinnen und Kunden und 200+ Produkte so lassen?
-15. Teamfotos folgen. Wer soll auf der Seite stehen?
+14. Die Zahlen 1.000+ und 200+ stehen nicht auf der Seite. Die alte Seite beschriftet sie nicht.
+15. Teamfotos gibt es nicht. Auf der Seite steht kein Platzhalter. Wer soll später zu sehen sein?
 16. Soll die Anfrage später ein richtiges Formular werden, und bleibt `info@bauzaun-mieten.net` die einzige Adresse? Der Merkzettel liegt nur im Browser.
 17. Die Karten zeigen Hersteller- und Händlerbeispiele, nicht den Bestand von AMK. Welche der Schwarzfeller-Artikel vermietet AMK wirklich, und welche Anhänger ersetzen die Beispielmodelle?
 
