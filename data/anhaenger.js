@@ -1,11 +1,11 @@
-/* Spiegelliste der Beispiel-Anhänger. Sichtbar ist das HTML. Beträge sind Beispiele. */
+/* Spiegelliste der Beispiel-Anhänger. Sichtbar ist das HTML. Beträge mit Zahl sind erfundene Beispiele. */
 window.AMK_ANHAENGER = [
-  {'id': 'miete:anhaenger-offen', 'name': 'Offener Anhänger', 'modus': 'miete', 'beispiel': true, 'preis': 'Beispiel: 25 € pro Tag'},
-  {'id': 'miete:anhaenger-plane', 'name': 'Anhänger mit Plane', 'modus': 'miete', 'beispiel': true, 'preis': 'Beispiel: 79 € pro Wochenende'},
-  {'id': 'miete:anhaenger-woche', 'name': 'Offener Anhänger, Woche', 'modus': 'miete', 'beispiel': true, 'preis': 'Beispiel: 120 € pro Woche'},
-  {'id': 'miete:kuehlanhaenger', 'name': 'Kühlanhänger', 'modus': 'miete', 'beispiel': true, 'preis': 'Preis auf Anfrage'},
-  {'id': 'miete:kuehlanhaenger-beispiel', 'name': 'Kühlanhänger, weiteres Beispiel', 'modus': 'miete', 'beispiel': true, 'preis': 'Preis auf Anfrage'},
-  {'id': 'kauf:anhaenger-offen', 'name': 'Offener Anhänger', 'modus': 'kauf', 'beispiel': true, 'preis': 'Beispiel-Kaufpreis: 1.190 €'},
-  {'id': 'kauf:anhaenger-transport', 'name': 'Fahrzeugtransporter', 'modus': 'kauf', 'beispiel': true, 'preis': 'Beispiel-Kaufpreis: 2.450 €'},
-  {'id': 'kauf:anhaenger-einsatz', 'name': 'Offener Anhänger im Einsatz', 'modus': 'kauf', 'beispiel': true, 'preis': 'Beispiel-Kaufpreis: 980 €'},
+  {'id': 'miete:hochlader', 'name': 'Hochlader 750 kg', 'modus': 'miete', 'beispiel': true, 'preis': 'Beispiel: 25 € pro Tag'},
+  {'id': 'miete:planenanhaenger', 'name': 'Planenanhänger', 'modus': 'miete', 'beispiel': true, 'preis': 'Beispiel: 79 € pro Wochenende'},
+  {'id': 'miete:kofferanhaenger', 'name': 'Kofferanhänger', 'modus': 'miete', 'beispiel': true, 'preis': 'Preis auf Anfrage'},
+  {'id': 'miete:kuehlanhaenger-13', 'name': 'Kühlanhänger 1,3 t', 'modus': 'miete', 'beispiel': true, 'preis': 'Preis auf Anfrage'},
+  {'id': 'miete:kuehlanhaenger-20', 'name': 'Kühlanhänger 2,0 t', 'modus': 'miete', 'beispiel': true, 'preis': 'Preis auf Anfrage'},
+  {'id': 'kauf:hochlader', 'name': 'Hochlader 750 kg', 'modus': 'kauf', 'beispiel': true, 'preis': 'Beispiel-Kaufpreis: 1.190 €'},
+  {'id': 'kauf:kofferanhaenger', 'name': 'Kofferanhänger', 'modus': 'kauf', 'beispiel': true, 'preis': 'Beispiel-Kaufpreis: 980 €'},
+  {'id': 'kauf:fahrzeugtransporter', 'name': 'Fahrzeugtransporter', 'modus': 'kauf', 'beispiel': true, 'preis': 'Beispiel-Kaufpreis: 2.450 €'},
 ];

@@ -10,10 +10,10 @@
     var gate = (form.querySelector('input[name="tor"]:checked') || {}).value === "ja";
     var heightLabel = height && height.selectedOptions.length ? height.selectedOptions[0].textContent : "";
     if (!value || value <= 0) {
-      out.innerHTML = "<strong>Bitte eine Länge über 0 m eintragen.</strong><small>Feldlänge 3,50 m ist eine Annahme. Die alte Website nennt kein Maß.</small>";
+      out.innerHTML = "<strong>Bitte eine Länge über 0 m eintragen.</strong><small>Feldlänge 3,45 m: Schwarzfeller, offener Bauzaun Standard, Breite 3.450 mm.</small>";
       return;
     }
-    var panels = Math.ceil(value / 3.5 - 1e-9);
+    var panels = Math.ceil(value / 3.45 - 1e-9);
     var feet = panels + 1;
     var clamps = Math.max(panels - 1, 0);
     if (gate) clamps += 1;
@@ -21,7 +21,7 @@
     var gateText = gate ? " Zusätzlich 1 Tor als Annahme, die Stückzahl der Felder bleibt die Länge." : " Ohne Tor.";
     out.innerHTML =
       "<strong>" + panels + " Felder · " + feet + " Füße · " + clamps + " Schellen</strong>" +
-      "<small>Annahme, nicht von AMK: Feld 3,50 m, gerade Strecke, Füße = Felder + 1, Schellen = Stöße" +
+      "<small>Feld 3,45 m nach Schwarzfeller, offener Bauzaun Standard. Gerade Strecke. Füße = Felder + 1 und Schellen = Stöße sind Annahmen" +
       (gate ? " plus eine Schelle fürs Tor" : "") + ". " + meterText + " m. Höhe: " + heightLabel +
       ". Die Höhe ändert die Stückzahl hier nicht." + gateText + "</small>";
   }

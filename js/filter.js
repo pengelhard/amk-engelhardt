@@ -18,7 +18,7 @@
     var only = vde && vde.checked && !vde.disabled;
     document.querySelectorAll("[data-gruppe='absperrung']").forEach(function (card) {
       var mark = card.getAttribute("data-vde");
-      var isVde = mark === "ja" || mark === "beispiel";
+      var isVde = mark === "ja";
       card.hidden = !!(only && !isVde);
     });
   }
