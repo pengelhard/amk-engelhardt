@@ -22,12 +22,12 @@ Die Startadresse `index.html` ist der Einstieg. `mieten/` ist die Übersicht der
 | `service/` | Full Service und die zwei genannten Partner |
 | `anfrage/` | Anfrageliste wie ein Warenkorb, `mailto` |
 | `ueber-uns/` | Firma, Standort |
-| `kontakt/` | Kontaktdaten, Zeiten, Terminabsprache, statische Karte, Route in neuem Tab |
+| `kontakt/` | Kontaktdaten, Zeiten, Terminabsprache, Karte nach Einwilligung, Route in neuem Tab |
 | `impressum/`, `datenschutz/` | Angaben nach § 5 DDG und Datenschutz nur für das, was die Seite nutzt. Entwurf, vor Veröffentlichung rechtlich prüfen. Dieser Satz steht nur hier, nicht auf den Seiten. |
 
 Das Hauptmenü hat drei Punkte: Mieten, Kaufen, Kontakt. Rechts daneben liegt das Anfrage-Zeichen mit Zähler. Unter 980 px ersetzt eine Fußleiste mit Mieten, Kaufen, Kontakt, Anfrage und Anrufen das Menü; das Anfrage-Zeichen im Kopf ist dort aus. Das Telefon steht in der Fußzeile und in der Fußleiste, nicht als eigene Zeile im Kopf. Service, Über uns, Impressum und Datenschutz bleiben in der Fußzeile erreichbar.
 
-JavaScript ergänzt nur: Merkzettel in `localStorage`, Nachrechnen im Mengenrechner, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/angebote.json`. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt.
+JavaScript ergänzt nur: Merkzettel in `localStorage`, Nachrechnen im Mengenrechner, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/angebote.json`, die Einwilligung für die Karte und danach Leaflet. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt.
 
 ## Angebote und Neuheiten
 
@@ -98,7 +98,7 @@ Anhänger heißen nach dem Typ. Jede Anhängerkarte bleibt „Beispiel“. Foto 
 - Theme-Demoinhalte (Tectxon, englische Teamseiten, erfundene Personen, `info@example.com`, Portfolio Öl und Gas)
 - Leere Seite Aktuelles
 - AGB: die alte Seite sagt nur „Diese Seite befindet sich zur Zeit in Überarbeitung.“
-- Die alte Datenschutzerklärung (Google Analytics, YouTube, Google Fonts, reCAPTCHA, Datenschutzbeauftragter). Die neue Seite beschreibt nur Hosting, Kontakt, die lokale Karte mit externem Routenlink und die lokale Schrift. Ein Datenschutzbeauftragter ist nicht genannt
+- Die alte Datenschutzerklärung (Google Analytics, YouTube, Google Fonts, reCAPTCHA, Datenschutzbeauftragter). Die neue Seite beschreibt nur Hosting, Kontakt, die Karte nach Einwilligung und die lokale Schrift. Ein Datenschutzbeauftragter ist nicht genannt
 - Hinweis der EU-OS-Plattform. Die Plattform ist eingestellt
 - Headerbild der alten Startseite, weil darin das Öl-Pumpen-Logo des Themes steckt
 - Alte Mini-Grafiken von 2012
@@ -111,7 +111,9 @@ Der Planenanhänger ist `images/anhaenger-plane.webp`, 2440×1580. Quelle: Fiver
 
 `images/kuehlanhaenger-20.webp` (Händlerfoto PKW-Anhänger-Center mit Schriftzug www.pkw-anhaenger.center, Schild Ahrens und Marke Cibin) ist von den Seiten und aus `images/` entfernt. Ein frei lizenziertes Foto eines PKW-Kühlanhängers mit mindestens 1600 px Breite, ohne Wasserzeichen und ohne fremde Marke im Fokus, war in den geprüften CC-Beständen nicht zu finden. Beide Kühlanhänger-Karten zeigen deshalb vorerst `images/kuehlanhaenger-13.webp` (Herb Fahrzeugteile, 540×405). Das ist kein Bestand von AMK.
 
-Die Kontaktkarte ist `images/anfahrt-hainsfarth.webp`, 1600×900. Einmalig aus Kacheln von https://tile.openstreetmap.org/ zusammengesetzt, Zoom 16, nicht von Google. Namensnennung „© OpenStreetMap-Mitwirkende“, https://www.openstreetmap.org/copyright, ODbL. Nominatim und Photon liefern für „Oberer Kesselweg 2, 86744 Hainsfarth“ nur die Straße, nicht eine eigene Hausnummer: 48.9541035, 10.6229489 (OSM Way 91872453). Der Marker sitzt auf diesem Straßenpunkt. Die Route öffnet `https://www.google.com/maps/dir/?api=1&destination=Oberer+Kesselweg+2,+86744+Hainsfarth` in einem neuen Tab. Kein iframe, kein `js/karte.js`.
+Die Kontaktkarte ist ohne Einwilligung `images/anfahrt-hainsfarth.webp`, 1600×900. Einmalig aus Kacheln von https://tile.openstreetmap.org/ zusammengesetzt, Zoom 16, nicht von Google. Namensnennung „© OpenStreetMap-Mitwirkende“, https://www.openstreetmap.org/copyright, ODbL. Nominatim und Photon liefern für „Oberer Kesselweg 2, 86744 Hainsfarth“ nur die Straße, nicht eine eigene Hausnummer: 48.9541035, 10.6229489 (OSM Way 91872453). Der Marker sitzt auf diesem Straßenpunkt.
+
+Nach Einwilligung ersetzt `js/einwilligung.js` das Bild durch eine Leaflet-Karte. Leaflet 1.9.4 liegt unter `assets/leaflet/` (BSD-2-Clause), es gibt keinen Abruf eines Karten-CDN und keinen Google-API-Schlüssel. Google Maps bietet `gestureHandling` nur mit Schlüssel, und der Schlüssel ist ein kostenpflichtiger Dienst. Die Kacheln kommen erst dann von https://tile.openstreetmap.org/{z}/{x}/{y}.png. Das Mausrad zoomt ohne Strg, auf dem Handy zoomen zwei Finger, verschieben geht mit einem Finger. Das entspricht `gestureHandling: "greedy"`. Die Wahl steht in `localStorage` unter `amk-karte` (`ja` oder `nein`). „Cookie-Einstellungen“ im Fuß öffnet die Leiste erneut. Ablehnen zeigt wieder das ruhende Bild, die Adresse und „Route in Google Maps öffnen“. Der Link lautet `https://www.google.com/maps/dir/?api=1&destination=Oberer+Kesselweg+2,+86744+Hainsfarth` und öffnet einen neuen Tab. Kein iframe.
 
 Nicht mehr eingebunden und aus `images/` entfernt: das alte Bauzaunfoto der bestehenden Website, das alte Sichtschutzfoto, der Motorradtransporter (Humbaur KFT) und der beladene offene Anhänger. Sie zeigten nicht den jeweiligen Typ. `images/baustelle.webp` liegt noch da und ist auf keiner Seite eingebunden.
 

@@ -41,44 +41,53 @@
     <section class="contact-board" aria-label="Kontaktdaten">
       <div class="wrap">
         <div class="contact-grid">
-          <div class="contact-card">
+          <article class="contact-card">
             <span>Telefon</span>
-            <strong><a href="tel:+499082921777">09082 921777</a></strong>
-            <small>Telefon II <a href="tel:+4990823296">09082 3296</a> · Fax <a href="tel:+499082921102">09082 921102</a></small>
-          </div>
+            <a class="contact-main" href="tel:+499082921777">09082 921777</a>
+            <p class="contact-sub"><a href="tel:+4990823296">09082 3296</a><a href="tel:+499082921102">Fax 09082 921102</a></p>
+          </article>
           <a class="contact-card" href="tel:+4915114803644">
             <span>Mobil</span>
-            <strong>0151 14803644</strong>
-            <small>Direkt unterwegs</small>
+            <strong class="contact-main">0151 14803644</strong>
+            <p class="contact-sub">Direkt unterwegs</p>
           </a>
           <a class="contact-card" href="mailto:info@bauzaun-mieten.net">
             <span>E-Mail</span>
-            <strong>info@bauzaun-mieten.net</strong>
-            <small>Für Miete und Kauf</small>
+            <strong class="contact-main">info@bauzaun-mieten.net</strong>
+            <p class="contact-sub">Für Miete und Kauf</p>
           </a>
-          <a class="contact-card" href="#anfahrt">
+          <a class="contact-card contact-card--wide" href="#anfahrt">
             <span>Adresse</span>
-            <strong>Oberer Kesselweg 2</strong>
-            <small>86744 Hainsfarth</small>
+            <strong class="contact-main">Oberer Kesselweg 2</strong>
+            <p class="contact-sub">86744 Hainsfarth</p>
           </a>
+          <article class="contact-card contact-card--wide">
+            <span>Öffnungszeiten</span>
+            <strong class="contact-main">Mo–Fr, 8–17 Uhr</strong>
+            <p class="contact-sub">Besuch nach Vereinbarung</p>
+          </article>
         </div>
-        <p class="hours">Montag bis Freitag, 8:00–17:00 Uhr. Weitere Termine nach Vereinbarung.</p>
+        <div class="actions actions--equal contact-actions">
+          <a class="btn" href="../anfrage/">Anfrage stellen</a>
+          <a class="btn btn-ghost" href="tel:+499082921777">Anrufen 09082 921777</a>
+        </div>
       </div>
     </section>
     <section class="map-stage" id="anfahrt" aria-label="Anfahrt">
-      <a class="map-hit" href="https://www.google.com/maps/dir/?api=1&amp;destination=Oberer+Kesselweg+2,+86744+Hainsfarth" target="_blank" rel="noopener noreferrer">
-        <img src="../images/anfahrt-hainsfarth.webp" width="1600" height="900" alt="Karte: Oberer Kesselweg, 86744 Hainsfarth">
-      </a>
-      <div class="wrap map-bar">
-        <p class="map-attrib"><a href="https://www.openstreetmap.org/copyright">© OpenStreetMap-Mitwirkende</a></p>
-        <a class="btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=Oberer+Kesselweg+2,+86744+Hainsfarth" target="_blank" rel="noopener noreferrer">Route planen</a>
-      </div>
-    </section>
-    <section class="invite">
       <div class="wrap">
-        <h2>Anfrage</h2>
-        <p>Für die Miete oder den Kauf eines Anhängers.</p>
-        <a class="btn" href="../anfrage/">Anfrage stellen</a>
+        <div class="map-frame">
+          <div id="karte" class="map-live" hidden></div>
+          <div class="map-fallback" data-map-fallback>
+            <img src="../images/anfahrt-hainsfarth.webp" width="1600" height="900" alt="Karte: Oberer Kesselweg, 86744 Hainsfarth">
+            <div class="map-card">
+              <span>AMK Engelhardt</span>
+              <strong>Oberer Kesselweg 2</strong>
+              <p>86744 Hainsfarth</p>
+              <a class="btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=Oberer+Kesselweg+2,+86744+Hainsfarth" target="_blank" rel="noopener noreferrer">Route in Google Maps öffnen</a>
+            </div>
+          </div>
+        </div>
+        <p class="map-attrib" data-map-attrib>Kartenbild © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende</p>
       </div>
     </section>
   </main>
@@ -97,6 +106,7 @@
         <li><a href="../ueber-uns/">Über uns</a></li>
         <li><a href="../impressum/">Impressum</a></li>
         <li><a href="../datenschutz/">Datenschutz</a></li>
+      <li><button type="button" class="cookie-settings" data-cookie-settings>Cookie-Einstellungen</button></li>
       </ul>
     </div>
   </footer>
@@ -109,5 +119,6 @@
   </nav>
   <script src="../js/nav.js"></script>
   <script src="../js/merkzettel.js"></script>
+  <script src="../js/einwilligung.js"></script>
 </body>
 </html>
