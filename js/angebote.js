@@ -28,7 +28,6 @@
     var open = href ? '<a class="offer" href="' + esc(root + href) + '">' : '<article class="offer">';
     var close = href ? "</a>" : "</article>";
     var badges = '<span class="badge">' + esc(entry.badge || "Angebot") + "</span>";
-    if (entry.beispiel) badges += '<span class="badge">Beispiel</span>';
     var picture = img
       ? '<img src="' + esc(root + img) + '" alt="' + esc(entry.alt || "") + '" width="1200" height="675">'
       : "";
