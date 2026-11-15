@@ -82,11 +82,23 @@
     return match ? match[3] + "." + match[2] + "." + match[1] : "";
   }
 
+  function extraLabel(entry) {
+    if (!entry) return "";
+    if (typeof entry === "string") return entry;
+    if (entry.menge) return entry.menge + " × " + entry.name;
+    return entry.name || "";
+  }
+
+  function extraList(extras) {
+    return (extras || []).map(extraLabel).filter(Boolean).join(", ");
+  }
+
   function konfigText(item) {
     var k = item.konfig;
     var einheit = k.einheit === "felder" ? (k.menge === "1" ? " Feld" : " Felder") : " m";
     var zeit = deDate(k.von) && deDate(k.bis) ? deDate(k.von) + " – " + deDate(k.bis) : "";
-    var extras = k.extras.length ? esc(k.extras.join(", ")) + " — Aufpreis auf Anfrage" : "keine";
+    var listed = extraList(k.extras);
+    var extras = listed ? esc(listed) + " — Aufpreis auf Anfrage" : "keine";
     return "<p>" + esc(k.menge) + einheit + "</p>" +
       (zeit ? "<p>" + esc(zeit) + "</p>" : "") +
       "<p>Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf</p>" +
@@ -208,10 +220,7 @@
     function val(name) { return String(fields[name] || "").trim(); }
     status.classList.remove("is-error");
     if (!items.length) return;
-    if (renting(items) && val("von") && val("bis") && val("bis") < val("von")) {
-      status.textContent = "Das Ende liegt vor dem Anfang.";
-      status.classList.add("is-error");
-      document.getElementById("bis").focus();
+    if (renting(items) && window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(document.getElementById("von"), document.getElementById("bis"))) {
       return;
     }
     var lines = ["Anfrage an AMK Engelhardt", ""];
@@ -219,7 +228,8 @@
       if (item.konfig) {
         var k = item.konfig;
         var einheit = k.einheit === "felder" ? (k.menge === "1" ? " Feld" : " Felder") : " m";
-        var extra = k.extras.length ? k.extras.join(", ") + " — Aufpreis auf Anfrage" : "keine";
+        var listed = extraList(k.extras);
+        var extra = listed ? listed + " — Aufpreis auf Anfrage" : "keine";
         lines.push(k.art + " — Miete — " + k.menge + einheit + " — Zeitraum " + (deDate(k.von) || "–") + " bis " + (deDate(k.bis) || "–") + " — Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf — Extras: " + extra + " — Preis auf Anfrage");
         return;
       }

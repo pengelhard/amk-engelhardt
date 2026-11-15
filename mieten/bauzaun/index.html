@@ -117,17 +117,33 @@
           <fieldset class="choices extra-list">
             <legend>Sonderwünsche</legend>
             <p>Aufpreis auf Anfrage.</p>
-            <label class="choice"><input type="checkbox" name="extra" value="hsschelle"> <span>Hochsicherheitsschellen</span></label>
+            <div class="extra-row">
+              <label class="choice"><input type="checkbox" name="extra" value="hsschelle"> <span>Hochsicherheitsschellen</span></label>
+            </div>
             <p class="extra-note">Lassen sich nur mit Spezialwerkzeug öffnen.</p>
-            <label class="choice"><input type="checkbox" name="extra" value="plane"> <span>Bauzaunplane</span></label>
+            <div class="extra-row">
+              <label class="choice"><input type="checkbox" name="extra" value="plane"> <span>Bauzaunplane</span></label>
+              <input class="extra-qty" type="number" min="1" max="99" value="1" inputmode="numeric" hidden disabled aria-label="Anzahl Bauzaunplanen">
+            </div>
             <p class="extra-note">Bei einer Plane steigt die Windfläche. Beplante Felder sind zu verstreben.</p>
-            <label class="choice"><input type="checkbox" name="extra" value="sichtschutz"> <span>Sichtschutz</span></label>
+            <div class="extra-row">
+              <label class="choice"><input type="checkbox" name="extra" value="sichtschutz"> <span>Sichtschutz</span></label>
+            </div>
             <p class="extra-note">Trapezblech oder Holz. Welches, klären wir.</p>
-            <label class="choice"><input type="checkbox" name="extra" value="tuer"> <span>Tür</span></label>
+            <div class="extra-row">
+              <label class="choice"><input type="checkbox" name="extra" value="tuer"> <span>Tür</span></label>
+              <input class="extra-qty" type="number" min="1" max="99" value="1" inputmode="numeric" hidden disabled aria-label="Anzahl Türen">
+            </div>
             <p class="extra-note">Bauzauntür Standard, 2.000 × 1.200 mm.</p>
-            <label class="choice"><input type="checkbox" name="extra" value="tor"> <span>Tor</span></label>
+            <div class="extra-row">
+              <label class="choice"><input type="checkbox" name="extra" value="tor"> <span>Tor</span></label>
+              <input class="extra-qty" type="number" min="1" max="99" value="1" inputmode="numeric" hidden disabled aria-label="Anzahl Tore">
+            </div>
             <p class="extra-note">Zwei Felder mit Drehgelenken, Einfahrt 7,0 m.</p>
-            <label class="choice"><input type="checkbox" name="extra" value="strebe"> <span>Zusatzstreben</span></label>
+            <div class="extra-row">
+              <label class="choice"><input type="checkbox" name="extra" value="strebe"> <span>Zusatzstreben</span></label>
+              <input class="extra-qty" type="number" min="1" max="99" value="1" inputmode="numeric" hidden disabled aria-label="Anzahl Zusatzstreben">
+            </div>
             <p class="extra-note">Weitere Streben, über den Bedarf der Strecke hinaus.</p>
           </fieldset>
           <div class="actions">
@@ -208,6 +224,7 @@
     </div>
 <script src="../../js/nav.js"></script>
   <script src="../../js/merkzettel.js"></script>
+  <script src="../../js/zeitraum.js"></script>
   <script src="../../js/bauzaun.js"></script>
   <script src="../../js/einwilligung.js"></script>
 </body>

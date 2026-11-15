@@ -10,15 +10,35 @@
     "Tor": 1,
     "Zusatzstreben": 1
   };
+  var COUNTED = { "Bauzaunplane": 1, "Tür": 1, "Tor": 1, "Zusatzstreben": 1 };
+
+  function cleanExtra(entry) {
+    var name = "";
+    var menge = 0;
+    if (typeof entry === "string") name = entry;
+    else if (entry && typeof entry === "object") {
+      name = String(entry.name || "");
+      menge = parseInt(entry.menge, 10);
+    }
+    if (!EXTRA_NAMES[name]) return null;
+    if (!COUNTED[name]) return { name: name };
+    if (!menge || menge < 1) menge = 1;
+    if (menge > 99) menge = 99;
+    return { name: name, menge: menge };
+  }
 
   function cleanKonfig(konfig) {
     if (!konfig || typeof konfig !== "object") return null;
     var menge = String(konfig.menge || "").trim();
     if (!menge) return null;
     var extras = [];
+    var seen = {};
     if (Array.isArray(konfig.extras)) {
-      konfig.extras.forEach(function (name) {
-        if (EXTRA_NAMES[name] && extras.indexOf(name) === -1) extras.push(name);
+      konfig.extras.forEach(function (entry) {
+        var extra = cleanExtra(entry);
+        if (!extra || seen[extra.name]) return;
+        seen[extra.name] = 1;
+        extras.push(extra);
       });
     }
     return {

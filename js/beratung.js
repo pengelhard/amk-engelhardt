@@ -13,12 +13,7 @@
     status.classList.remove("is-error");
     var von = val("von");
     var bis = val("bis");
-    if (von && bis && bis < von) {
-      status.textContent = "Das Ende liegt vor dem Anfang.";
-      status.classList.add("is-error");
-      form.bis.focus();
-      return;
-    }
+    if (window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(form.von, form.bis)) return;
     var lines = ["Individuelle Beratung an AMK Engelhardt", "", "Anliegen:", val("anliegen"), ""];
     lines.push("Ort: " + (val("ort") || "–"));
     function deDate(value) {

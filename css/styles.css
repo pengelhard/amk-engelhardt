@@ -1098,8 +1098,13 @@ a.contact-card:hover .contact-main { color: var(--green); }
 }
 .included { background: var(--soft); padding: 1rem 1.1rem; border-radius: 0.75rem; }
 .included p { margin: 0.4rem 0 0; }
-.extra-list .choice { align-items: center; min-height: 2.75rem; margin: 0.15rem 0 0; }
+.extra-list .choice { align-items: center; min-height: 2.75rem; margin: 0; }
+.extra-row { display: flex; align-items: center; gap: 0.65rem; min-height: 2.75rem; }
+.extra-row .choice { flex: 0 1 auto; }
+.extra-qty { width: 4.75rem; flex: 0 0 auto; text-align: center; }
 .extra-note { margin: 0.1rem 0 0.55rem 1.7rem; color: var(--gray); font-size: 0.92rem; }
+.field-error { margin: 0.15rem 0 0; color: var(--danger); font-size: 0.85rem; font-weight: 600; }
+input[aria-invalid="true"] { border-color: var(--danger); }
 .unit-hint { margin: 0.35rem 0 0; color: var(--gray); font-size: 0.92rem; }
 .konfig .btn { width: 100%; max-width: 22rem; }
 .cart-empty .actions--equal { width: 100%; }
