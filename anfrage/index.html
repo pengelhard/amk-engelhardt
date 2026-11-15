@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Anfrage – AMK Engelhardt</title>
+  <meta name="description" content="Anfrage an AMK Engelhardt. Prototyp, Versand nur über das eigene E-Mail-Programm.">
+  <link rel="icon" href="../assets/logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/logo.png">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <a class="skip" href="#inhalt">Zum Inhalt</a>
+  <div class="top">
+    <p class="proto">Prototyp – Testseite</p>
+    <header class="site-header">
+      <div class="wrap header-bar">
+        <a class="brand" href="../mieten/">
+          <img src="../assets/logo.png" width="401" height="120" alt="AMK Engelhardt – Absperrungen Mieten Kaufen">
+        </a>
+        <div class="mode" role="group" aria-label="Mieten oder Kaufen">
+          <a href="../mieten/">Mieten</a>
+          <a href="../kaufen/">Kaufen</a>
+        </div>
+        <nav id="nav" class="nav" aria-label="Hauptnavigation">
+          <ul>
+            <li><a href="../service/">Service</a></li><li><a href="../ueber-uns/">Über uns</a></li><li><a href="../kontakt/">Kontakt</a></li>
+          </ul>
+        </nav>
+        <a class="header-phone" href="tel:+499082921777">09082 921777</a>
+        <a class="btn header-cta" href="../anfrage/">Anfrage (<span data-wunsch-count>0</span>)</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav">Menü</button>
+      </div>
+    </header>
+  </div>
+  <main id="inhalt">
+<section class="hero">
+      <div class="wrap">
+        <h1>Anfrage</h1>
+        <p class="lead">Prototyp: Das Formular speichert nichts und schickt nichts an einen Server oder an Dritte. Der Button öffnet Ihr E-Mail-Programm mit einer Nachricht an info@bauzaun-mieten.net.</p>
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        <h2>Merkzettel</h2>
+        <ul id="merkzettel-liste"><li>Ohne JavaScript wählen Sie die Produkte unten selbst. Der Merkzettel im Kopf zählt dann nicht mit.</li></ul>
+        <form id="anfrage-form" action="mailto:info@bauzaun-mieten.net" method="post" enctype="text/plain">
+          <fieldset class="choices">
+            <legend>Bereich</legend>
+            <label class="choice"><input type="radio" name="bereich" value="miete" required> <span>Miete</span></label>
+            <label class="choice"><input type="radio" name="bereich" value="kauf"> <span>Kauf, nur Anhänger</span></label>
+          </fieldset>
+          <fieldset class="choices" id="feld-miete">
+            <legend>Produkte zur Miete</legend>
+            <p class="group-label">Bauzaun</p>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:bauzaunfeld"> <span>Bauzaunfeld</span></label>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:bauzaunfuesse"> <span>Bauzaunfüße</span></label>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:schellen"> <span>[Schellen]</span></label>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:bauzaun-tuer"> <span>Tür oder Tor im Bauzaun</span></label>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:sichtschutz"> <span>Sichtschutz aus Blech</span></label>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:drahtgitterzaun"> <span>Drahtgitterzaun</span></label>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:bauzaunschloss"> <span>Bauzaunschloss</span></label>
+<p class="group-label">Absperrung</p>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:hamburger-gitter"> <span>Hamburger Gitter</span></label>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:personengitter"> <span>Personen- und Demogitter</span></label>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:absturzsicherung"> <span>Absturzsicherung</span></label>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:kabelbruecke"> <span>Kabelbrücke</span></label>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:zubehoer"> <span>Zubehör Absperrung</span></label>
+<p class="group-label">Mietpark</p>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:anhaenger-offen"> <span>Offener Anhänger</span></label>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:anhaenger-plane"> <span>Anhänger mit Plane</span></label>
+<label class="choice"><input type="checkbox" name="produkt-miete" value="miete:anhaenger-woche"> <span>Offener Anhänger, Woche</span></label>
+          </fieldset>
+          <fieldset class="choices" id="feld-kauf">
+            <legend>Kauf – nur Anhänger</legend>
+            <p class="group-label">Anhänger</p>
+<label class="choice"><input type="checkbox" name="produkt-kauf" value="kauf:anhaenger-offen"> <span>Offener Anhänger</span></label>
+<label class="choice"><input type="checkbox" name="produkt-kauf" value="kauf:anhaenger-transport"> <span>Fahrzeugtransporter</span></label>
+<label class="choice"><input type="checkbox" name="produkt-kauf" value="kauf:anhaenger-einsatz"> <span>Offener Anhänger im Einsatz</span></label>
+          </fieldset>
+          <div class="form-grid">
+            <div class="field">
+              <label for="laenge">Zaunlänge in Metern</label>
+              <input id="laenge" name="laenge" type="number" min="0" step="0.1" inputmode="decimal">
+            </div>
+            <div class="field">
+              <label for="hoehe-feld">Höhe aus dem Rechner</label>
+              <input id="hoehe-feld" name="hoehe" type="text">
+            </div>
+          </div>
+          <div class="form-grid dates" id="zeitraum">
+            <div class="field">
+              <label for="von">Zeitraum von</label>
+              <input id="von" name="von" type="date">
+            </div>
+            <div class="field">
+              <label for="bis">Zeitraum bis</label>
+              <input id="bis" name="bis" type="date">
+            </div>
+          </div>
+          <p class="hint">Der Zeitraum gilt nur für die Miete. Beim Kauf der Anhänger leer lassen.</p>
+          <div class="field">
+            <label for="lieferadresse">Lieferadresse</label>
+            <input id="lieferadresse" name="lieferadresse" type="text" autocomplete="street-address">
+          </div>
+          <fieldset class="choices">
+            <legend>Leistung</legend>
+            <label class="choice"><input id="lieferung" type="checkbox" name="lieferung" value="ja"> <span>Lieferung</span></label>
+            <label class="choice"><input type="checkbox" name="aufbau" value="ja"> <span>Aufbau</span></label>
+            <label class="choice"><input type="checkbox" name="abbau" value="ja"> <span>Abbau</span></label>
+          </fieldset>
+          <div class="form-grid">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="telefon">Telefon</label>
+              <input id="telefon" name="telefon" type="tel" autocomplete="tel" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="email">E-Mail</label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="nachricht">Nachricht</label>
+            <textarea id="nachricht" name="nachricht"></textarea>
+          </div>
+          <label class="choice"><input type="checkbox" name="datenschutz" value="ja" required> <span>Ich habe den <a href="../datenschutz/">Datenschutz-Hinweis</a> gelesen. Der Prototyp sendet keine Daten an einen Server.</span></label>
+          <div class="actions">
+            <button class="btn" type="submit">Anfrage per E-Mail öffnen</button>
+          </div>
+          <p id="form-status" class="form-status" role="status"></p>
+        </form>
+        <noscript><p>Ohne JavaScript bleiben alle Felder sichtbar. Eine vorausgefüllte E-Mail öffnet sich nicht. Schreiben Sie an info@bauzaun-mieten.net.</p></noscript>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <h2>AMK Engelhardt</h2>
+        <p>Absperrungen Mieten Kaufen<br>Oberer Kesselweg 2<br>86744 Hainsfarth</p>
+      </div>
+      <div>
+        <h2>Kontakt</h2>
+        <ul>
+          <li><a href="tel:+499082921777">09082 921777</a></li>
+          <li><a href="tel:+4915114803644">0151 14803644</a></li>
+          <li><a href="mailto:info@bauzaun-mieten.net">info@bauzaun-mieten.net</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Seiten</h2>
+        <ul>
+          <li><a href="../mieten/">Mieten</a></li>
+          <li><a href="../kaufen/">Kaufen</a></li>
+          <li><a href="../service/">Service</a></li>
+          <li><a href="../ueber-uns/">Über uns</a></li>
+          <li><a href="../kontakt/">Kontakt</a></li>
+          <li><a href="../anfrage/">Anfrage</a></li>
+          <li><a href="../impressum/">Impressum</a></li>
+          <li><a href="../datenschutz/">Datenschutz</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrap">
+      <p class="fineprint">Prototyp – Testseite, nicht für Suchmaschinen. Beispielpreise bei Anhängern sind keine Angebote. Bauzaun und Absperrung nur zur Miete.</p>
+    </div>
+  </footer>
+  <script src="../js/nav.js"></script>
+  <script src="../js/merkzettel.js"></script>
+  <script src="../js/anfrage.js"></script>
+</body>
+</html>
