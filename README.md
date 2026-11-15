@@ -30,7 +30,7 @@ Der Kopf trägt auf jeder Seite oben rechts ein Hamburger-Menü. Es öffnet dass
 
 JavaScript ergänzt nur: Merkzettel in `localStorage`, das Bildkarussell auf der Startseite, die Bauzaun-Konfiguration als eine Position, Zusammensetzen der `mailto`-Nachricht, Einlesen von `data/aktuelles.json`, die Einwilligung für die Karte und danach Leaflet. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt. `js/rechner.js` ist nicht mehr eingebunden.
 
-Das Karussell liegt im Hero und lässt Slogan, Lead und die zwei Buttons stehen. Fünf vorhandene Fotos: Bauzaun Standard, Absperrschranke, Verkehrsschilder, Fahrzeugtransporter, Kühlanhänger 1,3 t. Nachweise stehen schon im Impressum. Wechsel alle 5 Sekunden, Pause bei Hover, Fokus und über den Pause-Knopf. `prefers-reduced-motion` schaltet den Automatiklauf aus. Die erste Folie lädt sofort, die übrigen erst beim Wechsel. Kein CDN.
+Das Karussell liegt im Hero und lässt Slogan und Lead stehen. Die Buttons „Anfrage stellen“ und „Anrufen“ stehen im Menü, nicht im Hero. Fünf vorhandene Fotos: Bauzaun Standard, Absperrschranke, Verkehrsschilder, Fahrzeugtransporter, Kühlanhänger 1,3 t. Nachweise stehen schon im Impressum. Wechsel alle 5 Sekunden, Pause bei Hover, Fokus und über den Pause-Knopf. `prefers-reduced-motion` schaltet den Automatiklauf aus. Die erste Folie lädt sofort, die übrigen erst beim Wechsel. Kein CDN.
 
 ## Aktuelles und Angebote
 
