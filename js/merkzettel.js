@@ -175,10 +175,7 @@
     showToast();
   });
 
-  function add(item) {
-    var items = load();
-    var incoming = normalize([item])[0];
-    if (!incoming) return items;
+  function merge(items, incoming) {
     var found = null;
     if (incoming.sammel) {
       items.forEach(function (existing) {
@@ -193,6 +190,19 @@
     }
     if (found && !incoming.sammel) found.qty = Math.min(99, found.qty + incoming.qty);
     else if (!found) items.push(incoming);
+  }
+
+  function add(item) {
+    var batch = Array.isArray(item) ? item : [item];
+    var items = load();
+    var added = 0;
+    batch.forEach(function (entry) {
+      var incoming = normalize([entry])[0];
+      if (!incoming) return;
+      merge(items, incoming);
+      added += 1;
+    });
+    if (!added) return items;
     save(items);
     showToast();
     return items;

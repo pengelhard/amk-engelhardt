@@ -11,16 +11,27 @@
   var resetBtn = document.getElementById("kauf-reset");
   if (!board || !liste || !cats || !form) return;
 
-  var KATEGORIEN = [
-    { id: "", label: "Alle" },
-    { id: "bauzaune", label: "Bauzäune" },
-    { id: "zubehoer", label: "Zaunzubehör" },
-    { id: "tore", label: "Türen & Tore" },
-    { id: "sichtschutz", label: "Sichtschutz & Planen" },
-    { id: "gitter", label: "Absperrgitter" },
-    { id: "verkehr", label: "Verkehrssicherung" },
-    { id: "anhaenger", label: "Anhänger" }
-  ];
+  var GRUPPEN = {
+    zaun: ["bauzaune", "zubehoer", "tore", "sichtschutz", "gitter"],
+    schilder: ["schilder"],
+    absperrung: ["verkehr"],
+    anhaenger: ["anhaenger"]
+  };
+  var UNTER = {
+    zaun: [
+      { id: "", label: "Alle" },
+      { id: "bauzaune", label: "Bauzäune" },
+      { id: "zubehoer", label: "Zaunzubehör" },
+      { id: "tore", label: "Türen & Tore" },
+      { id: "sichtschutz", label: "Sichtschutz & Planen" },
+      { id: "gitter", label: "Absperrgitter" }
+    ]
+  };
+  var KAT_GRUPPE = {};
+  Object.keys(GRUPPEN).forEach(function (gruppe) {
+    GRUPPEN[gruppe].forEach(function (kat) { KAT_GRUPPE[kat] = gruppe; });
+  });
+  KAT_GRUPPE.verkehr = "absperrung";
   var FACETTEN = [
     ["hoehe", "Höhe"],
     ["breite", "Breite"],
@@ -33,11 +44,14 @@
     ["fussart", "Fußart"],
     ["art", "Art"]
   ];
-  var HASH = { bauzaun: "bauzaune", verkehrssicherung: "verkehr", anhaenger: "anhaenger" };
-  var known = {};
-  KATEGORIEN.forEach(function (kat) { if (kat.id) known[kat.id] = true; });
+  var HASH = {
+    bauzaun: { gruppe: "zaun", kat: "bauzaune" },
+    verkehrssicherung: { gruppe: "absperrung", kat: "" },
+    anhaenger: { gruppe: "anhaenger", kat: "" }
+  };
 
-  var nodes = Array.prototype.slice.call(document.querySelectorAll("article.tile"));
+  var vorlage = document.getElementById("kauf-vorlage");
+  var nodes = Array.prototype.slice.call((vorlage ? vorlage.content : document).querySelectorAll("article.tile"));
   var items = nodes.map(function (el, index) {
     var order = el.querySelector("form[data-order]");
     return {
@@ -53,23 +67,31 @@
   var bySlug = {};
   items.forEach(function (item) { if (item.slug) bySlug[item.slug] = item; });
 
-  var state = { kat: "", q: "", sort: "", facets: {} };
+  var state = { gruppe: "", kat: "", q: "", sort: "", facets: {} };
+  var schilder = document.getElementById("schilder-bereich");
   var searchTimer = 0;
 
   function readUrl() {
     var params = new URLSearchParams(location.search);
+    var gruppe = params.get("gruppe") || "";
+    if (!GRUPPEN[gruppe]) gruppe = "";
     var kat = params.get("kat") || "";
-    if (!known[kat]) kat = "";
-    if (!kat && location.hash) {
+    if (kat === "verkehr") kat = "";
+    if (!KAT_GRUPPE[kat]) kat = "";
+    if (!gruppe && location.hash && HASH[location.hash.slice(1)]) {
       var mapped = HASH[location.hash.slice(1)];
-      if (mapped) kat = mapped;
+      gruppe = mapped.gruppe;
+      if (!kat) kat = mapped.kat;
     }
+    if (kat && !gruppe) gruppe = KAT_GRUPPE[kat] || "";
+    if (gruppe && kat && GRUPPEN[gruppe].indexOf(kat) === -1) kat = "";
     var facets = {};
     FACETTEN.forEach(function (pair) {
       var values = params.getAll(pair[0]);
       if (values.length) facets[pair[0]] = values;
     });
     state = {
+      gruppe: gruppe,
       kat: kat,
       q: params.get("q") || "",
       sort: params.get("sort") || "",
@@ -79,6 +101,7 @@
 
   function writeUrl(mode) {
     var params = new URLSearchParams();
+    if (state.gruppe) params.set("gruppe", state.gruppe);
     if (state.kat) params.set("kat", state.kat);
     if (state.q) params.set("q", state.q);
     if (state.sort) params.set("sort", state.sort);
@@ -101,7 +124,16 @@
     return state.facets[key] || [];
   }
 
+  function inGruppe(item) {
+    if (!state.gruppe) return !state.q ? false : item.slug !== "verkehrsschilder";
+    if (item.slug === "verkehrsschilder") return false;
+    var shops = GRUPPEN[state.gruppe] || [];
+    if (shops.indexOf(item.shop) === -1) return false;
+    return true;
+  }
+
   function matches(item, skipKey) {
+    if (!inGruppe(item)) return false;
     if (state.kat && item.shop !== state.kat) return false;
     if (state.q && hay(item).indexOf(state.q.toLocaleLowerCase("de")) < 0) return false;
     for (var i = 0; i < FACETTEN.length; i++) {
@@ -115,6 +147,7 @@
   }
 
   function inCategory(item) {
+    if (!inGruppe(item)) return false;
     return !state.kat || item.shop === state.kat;
   }
 
@@ -175,10 +208,29 @@
   }
 
   function renderChips() {
-    cats.innerHTML = KATEGORIEN.map(function (kat) {
+    var list = UNTER[state.gruppe] || [];
+    cats.hidden = !list.length;
+    cats.innerHTML = list.map(function (kat) {
       var on = state.kat === kat.id;
       return '<button type="button" class="chip" data-kat="' + kat.id + '" aria-pressed="' + (on ? "true" : "false") + '">' + kat.label + "</button>";
     }).join("");
+  }
+
+  function renderGruppen() {
+    document.querySelectorAll("[data-gruppe]").forEach(function (link) {
+      var on = link.getAttribute("data-gruppe") === state.gruppe;
+      if (on) link.setAttribute("aria-current", "true");
+      else link.removeAttribute("aria-current");
+    });
+  }
+
+  function filterSchilder() {
+    if (!schilder) return;
+    var q = state.q.toLocaleLowerCase("de");
+    schilder.querySelectorAll(".schild-row").forEach(function (row) {
+      var text = row.textContent.toLocaleLowerCase("de");
+      row.hidden = !!(q && text.indexOf(q) === -1);
+    });
   }
 
   function ordered(list) {
@@ -199,18 +251,29 @@
   }
 
   function render() {
+    var overview = !state.gruppe && !state.q;
+    var signs = state.gruppe === "schilder";
+    board.classList.toggle("is-gruppe", !overview);
+    board.classList.toggle("is-schilder", signs);
+    renderGruppen();
     renderChips();
-    renderFacets();
+    if (!state.gruppe || signs) form.innerHTML = "";
+    else renderFacets();
+    qInput.placeholder = signs ? "Nummer oder Name" : "Name oder Artikelnummer";
     qInput.value = state.q;
     sortInput.value = state.sort === "name" || state.sort === "nummer" ? state.sort : "";
     var shown = 0;
     ordered(items).forEach(function (item) {
-      var on = matches(item, null);
+      var on = !overview && !signs && matches(item, null);
       item.el.hidden = !on;
       liste.appendChild(item.el);
       if (on) shown += 1;
     });
-    empty.hidden = shown !== 0;
+    if (schilder) schilder.hidden = !signs;
+    filterSchilder();
+    var signShown = signs && schilder ? schilder.querySelectorAll(".schild-row:not([hidden])").length : 0;
+    empty.hidden = overview || (signs ? signShown !== 0 : shown !== 0);
+    countEl.hidden = overview || signs;
     countEl.textContent = shown === 1 ? "1 Artikel" : shown + " Artikel";
     document.querySelectorAll("main section.copy").forEach(function (section) {
       section.hidden = true;
@@ -257,8 +320,27 @@
     }, 200);
   });
 
+  var gruppen = document.getElementById("kauf-gruppen");
+  if (gruppen) {
+    gruppen.addEventListener("click", function (event) {
+      var link = event.target.closest("a[data-gruppe]");
+      if (!link) return;
+      event.preventDefault();
+      state.gruppe = link.getAttribute("data-gruppe") || "";
+      state.kat = "";
+      state.facets = {};
+      state.q = "";
+      state.sort = "";
+      render();
+      writeUrl("push");
+    });
+  }
+
   resetBtn.addEventListener("click", function () {
-    state = { kat: "", q: "", sort: "", facets: {} };
+    state.kat = "";
+    state.q = "";
+    state.sort = "";
+    state.facets = {};
     if (form.classList.contains("is-open")) {
       /* keep the mobile panel as the user left it */
     }
@@ -289,10 +371,8 @@
         if (product.name) item.name = product.name;
       });
       readUrl();
-      var hashKat = location.hash && HASH[location.hash.slice(1)];
       render();
-      if (hashKat && !new URLSearchParams(location.search).get("kat")) writeUrl("replace");
-      else writeUrl("replace");
+      writeUrl("replace");
     })
     .catch(function () {
       board.hidden = true;

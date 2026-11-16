@@ -9,6 +9,7 @@
   <link rel="icon" href="../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../assets/logo.png">
   <link rel="stylesheet" href="../css/styles.css">
+  <script>document.documentElement.classList.add("js-kauf")</script>
 </head>
 <body>
   <a class="skip" href="#inhalt">Zum Inhalt</a>
@@ -38,9 +39,27 @@
         <h1>Kaufen</h1>
       </div>
     </section>
-    <section class="kauf-board" hidden>
+    <section class="kauf-board">
       <div class="wrap">
-        <div class="kauf-cats" id="kauf-cats" role="navigation" aria-label="Kategorien"></div>
+        <nav class="kauf-einstieg" id="kauf-gruppen" aria-label="Hauptgruppen">
+          <a class="kauf-karte" href="?gruppe=zaun" data-gruppe="zaun">
+            <img src="../images/kk/bauzaun-10075-640.webp" width="640" height="360" alt="" decoding="async" fetchpriority="high">
+            <strong>Bauzaun &amp; Absperrgitter</strong>
+          </a>
+          <a class="kauf-karte" href="?gruppe=schilder" data-gruppe="schilder">
+            <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true"><polygon points="32,6 60,56 4,56" fill="#f0c400" stroke="#1a1a18" stroke-width="3"/></svg>
+            <strong>Verkehrsschilder</strong>
+          </a>
+          <a class="kauf-karte" href="?gruppe=absperrung" data-gruppe="absperrung">
+            <img src="../images/kk/schranke-10024-1-640.webp" width="640" height="438" alt="" decoding="async">
+            <strong>Verkehrsabsperreinrichtungen</strong>
+          </a>
+          <a class="kauf-karte" href="?gruppe=anhaenger" data-gruppe="anhaenger">
+            <img src="../images/fahrzeugtransporter.webp" width="600" height="400" alt="" decoding="async">
+            <strong>Anhänger</strong>
+          </a>
+        </nav>
+        <div class="kauf-cats" id="kauf-cats" role="navigation" aria-label="Unterkategorien" hidden></div>
         <div class="kauf-tools">
           <label class="kauf-search">Suche
             <input id="kauf-q" type="search" placeholder="Name oder Artikelnummer" autocomplete="off">
@@ -60,6 +79,11 @@
           <form id="kauf-filter" class="kauf-facets" aria-label="Filter"></form>
           <div>
             <p id="kauf-empty" class="kauf-empty" hidden>Keine Treffer.</p>
+            <form class="schilder" id="schilder-bereich" data-schilder hidden>
+              <div class="schild-liste" data-schild-liste></div>
+              <div class="field"><label for="hinweis-schilder">Größe, Folie, Ständer</label><textarea id="hinweis-schilder" name="hinweis"></textarea></div>
+              <button class="btn" type="submit">In den Anfragekorb</button>
+            </form>
             <div id="kauf-liste" class="tiles"></div>
           </div>
         </div>
@@ -68,7 +92,7 @@
     <section class="copy"><div class="wrap"><h2 id="bauzaun">Bauzaun</h2></div></section>
 <section class="copy"><div class="wrap"><h2>2,0 m</h2><div class="tiles"><article class="tile">
       <a href="../produkt/bauzaun-10075/">
-        <span class="frame"><img src="../images/kk/bauzaun-10075.webp" srcset="../images/kk/bauzaun-10075-640.webp 640w, ../images/kk/bauzaun-10075.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi 3,5 × 2,0 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10075.webp" srcset="../images/kk/bauzaun-10075-640.webp 640w, ../images/kk/bauzaun-10075.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi 3,5 × 2,0 m" decoding="async"></span>
         <h3>Bauzaun Profi 3,5 × 2,0 m</h3>
       </a>
       <p>3,5 × 2,0 m · 14 kg</p>
@@ -96,7 +120,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10075-1/">
-        <span class="frame"><img src="../images/kk/bauzaun-10075-1.webp" srcset="../images/kk/bauzaun-10075-1-640.webp 640w, ../images/kk/bauzaun-10075-1.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi engmaschig 3,5 × 2,0 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10075-1.webp" srcset="../images/kk/bauzaun-10075-1-640.webp 640w, ../images/kk/bauzaun-10075-1.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi engmaschig 3,5 × 2,0 m" decoding="async"></span>
         <h3>Bauzaun Profi engmaschig 3,5 × 2,0 m</h3>
       </a>
       <p>3,5 × 2,0 m · 18,5 kg</p>
@@ -124,7 +148,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10075-3/">
-        <span class="frame"><img src="../images/kk/bauzaun-10075-3.webp" srcset="../images/kk/bauzaun-10075-3-640.webp 640w, ../images/kk/bauzaun-10075-3.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi 3,5 × 2,0 m mit Mittelrohr" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10075-3.webp" srcset="../images/kk/bauzaun-10075-3-640.webp 640w, ../images/kk/bauzaun-10075-3.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi 3,5 × 2,0 m mit Mittelrohr" decoding="async"></span>
         <h3>Bauzaun Profi 3,5 × 2,0 m mit Mittelrohr</h3>
       </a>
       <p>3,5 × 2,0 m · 16 kg</p>
@@ -153,7 +177,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10029/">
-        <span class="frame"><img src="../images/kk/bauzaun-10029.webp" srcset="../images/kk/bauzaun-10029-640.webp 640w, ../images/kk/bauzaun-10029.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="800" alt="Bauzaun Profi 2,2 × 2,0 m Ausgleichselement" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10029.webp" srcset="../images/kk/bauzaun-10029-640.webp 640w, ../images/kk/bauzaun-10029.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="800" alt="Bauzaun Profi 2,2 × 2,0 m Ausgleichselement" decoding="async"></span>
         <h3>Bauzaun Profi 2,2 × 2,0 m Ausgleichselement</h3>
       </a>
       <p>2,2 × 2,0 m · 10 kg</p>
@@ -180,7 +204,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10029-1/">
-        <span class="frame"><img src="../images/kk/bauzaun-10029-1.webp" srcset="../images/kk/bauzaun-10029-1-640.webp 640w, ../images/kk/bauzaun-10029-1.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi engmaschig 2,2 × 2,0 m Ausgleichselement" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10029-1.webp" srcset="../images/kk/bauzaun-10029-1-640.webp 640w, ../images/kk/bauzaun-10029-1.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi engmaschig 2,2 × 2,0 m Ausgleichselement" decoding="async"></span>
         <h3>Bauzaun Profi engmaschig 2,2 × 2,0 m Ausgleichselement</h3>
       </a>
       <p>2,2 × 2,0 m · 13 kg</p>
@@ -207,7 +231,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10020/">
-        <span class="frame"><img src="../images/kk/bauzaun-10020.webp" srcset="../images/kk/bauzaun-10020-640.webp 640w, ../images/kk/bauzaun-10020.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi 2,2 × 2,0 m mit Mittelrohr Ausgleichselement" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10020.webp" srcset="../images/kk/bauzaun-10020-640.webp 640w, ../images/kk/bauzaun-10020.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi 2,2 × 2,0 m mit Mittelrohr Ausgleichselement" decoding="async"></span>
         <h3>Bauzaun Profi 2,2 × 2,0 m mit Mittelrohr Ausgleichselement</h3>
       </a>
       <p>2,2 × 2,0 m · 13 kg</p>
@@ -236,7 +260,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10076-0/">
-        <span class="frame"><img src="../images/kk/bauzaun-10076-0.webp" srcset="../images/kk/bauzaun-10076-0-640.webp 640w, ../images/kk/bauzaun-10076-0.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi Exklusiv 3,5 × 2,0 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10076-0.webp" srcset="../images/kk/bauzaun-10076-0-640.webp 640w, ../images/kk/bauzaun-10076-0.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi Exklusiv 3,5 × 2,0 m" decoding="async"></span>
         <h3>Bauzaun Profi Exklusiv 3,5 × 2,0 m</h3>
       </a>
       <p>3,5 × 2,0 m · 20,5 kg</p>
@@ -264,7 +288,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10039-3/">
-        <span class="frame"><img src="../images/kk/bauzaun-10039-3.webp" srcset="../images/kk/bauzaun-10039-3-640.webp 640w, ../images/kk/bauzaun-10039-3.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi Round 3,5 × 2,0 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10039-3.webp" srcset="../images/kk/bauzaun-10039-3-640.webp 640w, ../images/kk/bauzaun-10039-3.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi Round 3,5 × 2,0 m" decoding="async"></span>
         <h3>Bauzaun Profi Round 3,5 × 2,0 m</h3>
       </a>
       <p>3,5 × 2,0 m · 16 kg</p>
@@ -292,7 +316,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10069-5/">
-        <span class="frame"><img src="../images/kk/bauzaun-10069-5.webp" srcset="../images/kk/bauzaun-10069-5-640.webp 640w, ../images/kk/bauzaun-10069-5.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Round 3,5 × 2,0 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10069-5.webp" srcset="../images/kk/bauzaun-10069-5-640.webp 640w, ../images/kk/bauzaun-10069-5.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Round 3,5 × 2,0 m" decoding="async"></span>
         <h3>Bauzaun Round 3,5 × 2,0 m</h3>
       </a>
       <p>3,5 × 2,0 m · 14 kg</p>
@@ -320,7 +344,7 @@
     </article></div></div></section>
 <section class="copy"><div class="wrap"><h2>2,5 m</h2><div class="tiles"><article class="tile">
       <a href="../produkt/bauzaun-10044-2/">
-        <span class="frame"><img src="../images/kk/bauzaun-10044-2.webp" srcset="../images/kk/bauzaun-10044-2-640.webp 640w, ../images/kk/bauzaun-10044-2.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi Exklusiv 3,5 × 2,5 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10044-2.webp" srcset="../images/kk/bauzaun-10044-2-640.webp 640w, ../images/kk/bauzaun-10044-2.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi Exklusiv 3,5 × 2,5 m" decoding="async"></span>
         <h3>Bauzaun Profi Exklusiv 3,5 × 2,5 m</h3>
       </a>
       <p>3,5 × 2,5 m · 26,5 kg</p>
@@ -350,7 +374,7 @@
     </article></div></div></section>
 <section class="copy"><div class="wrap"><h2>Vorverzinkt</h2><div class="tiles"><article class="tile">
       <a href="../produkt/bauzaun-10069-10/">
-        <span class="frame"><img src="../images/kk/bauzaun-10069-10.webp" srcset="../images/kk/bauzaun-10069-10-640.webp 640w, ../images/kk/bauzaun-10069-10.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Bauzaun Press 3,5 × 2,0 m, 11,5 kg" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10069-10.webp" srcset="../images/kk/bauzaun-10069-10-640.webp 640w, ../images/kk/bauzaun-10069-10.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Bauzaun Press 3,5 × 2,0 m, 11,5 kg" decoding="async"></span>
         <h3>Bauzaun Press 3,5 × 2,0 m, 11,5 kg</h3>
       </a>
       <p>3,5 × 2,0 m · 11,5 kg</p>
@@ -378,7 +402,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10069-11/">
-        <span class="frame"><img src="../images/kk/bauzaun-10069-10.webp" srcset="../images/kk/bauzaun-10069-10-640.webp 640w, ../images/kk/bauzaun-10069-10.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Bauzaun Press 3,5 × 2,0 m, 13,1 kg" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10069-10.webp" srcset="../images/kk/bauzaun-10069-10-640.webp 640w, ../images/kk/bauzaun-10069-10.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Bauzaun Press 3,5 × 2,0 m, 13,1 kg" decoding="async"></span>
         <h3>Bauzaun Press 3,5 × 2,0 m, 13,1 kg</h3>
       </a>
       <p>3,5 × 2,0 m · 13,1 kg</p>
@@ -406,7 +430,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10069-12/">
-        <span class="frame"><img src="../images/kk/bauzaun-10069-10.webp" srcset="../images/kk/bauzaun-10069-10-640.webp 640w, ../images/kk/bauzaun-10069-10.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Bauzaun Press 3,5 × 2,0 m, 14,5 kg" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10069-10.webp" srcset="../images/kk/bauzaun-10069-10-640.webp 640w, ../images/kk/bauzaun-10069-10.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Bauzaun Press 3,5 × 2,0 m, 14,5 kg" decoding="async"></span>
         <h3>Bauzaun Press 3,5 × 2,0 m, 14,5 kg</h3>
       </a>
       <p>3,5 × 2,0 m · 14,5 kg</p>
@@ -434,7 +458,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10069-13/">
-        <span class="frame"><img src="../images/kk/bauzaun-10069-10.webp" srcset="../images/kk/bauzaun-10069-10-640.webp 640w, ../images/kk/bauzaun-10069-10.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Bauzaun Press 3,5 × 2,0 m, 17,1 kg" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10069-10.webp" srcset="../images/kk/bauzaun-10069-10-640.webp 640w, ../images/kk/bauzaun-10069-10.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Bauzaun Press 3,5 × 2,0 m, 17,1 kg" decoding="async"></span>
         <h3>Bauzaun Press 3,5 × 2,0 m, 17,1 kg</h3>
       </a>
       <p>3,5 × 2,0 m · 17,1 kg</p>
@@ -462,7 +486,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10069-3/">
-        <span class="frame"><img src="../images/kk/bauzaun-10069-3.webp" srcset="../images/kk/bauzaun-10069-3-640.webp 640w, ../images/kk/bauzaun-10069-3.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi Press 3,5 × 2,0 m mit Mittelrohr" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10069-3.webp" srcset="../images/kk/bauzaun-10069-3-640.webp 640w, ../images/kk/bauzaun-10069-3.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi Press 3,5 × 2,0 m mit Mittelrohr" decoding="async"></span>
         <h3>Bauzaun Profi Press 3,5 × 2,0 m mit Mittelrohr</h3>
       </a>
       <p>3,5 × 2,0 m · 14 kg</p>
@@ -491,7 +515,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10069-1/">
-        <span class="frame"><img src="../images/kk/bauzaun-10069-1.webp" srcset="../images/kk/bauzaun-10069-1-640.webp 640w, ../images/kk/bauzaun-10069-1.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi Press engmaschig 3,5 × 2,0 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10069-1.webp" srcset="../images/kk/bauzaun-10069-1-640.webp 640w, ../images/kk/bauzaun-10069-1.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi Press engmaschig 3,5 × 2,0 m" decoding="async"></span>
         <h3>Bauzaun Profi Press engmaschig 3,5 × 2,0 m</h3>
       </a>
       <p>3,5 × 2,0 m · 22 kg</p>
@@ -519,7 +543,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10069-4/">
-        <span class="frame"><img src="../images/kk/bauzaun-10069-4.webp" srcset="../images/kk/bauzaun-10069-4-640.webp 640w, ../images/kk/bauzaun-10069-4.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Round 3,5 × 2,0 m Masche 100 × 300 mm" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10069-4.webp" srcset="../images/kk/bauzaun-10069-4-640.webp 640w, ../images/kk/bauzaun-10069-4.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Round 3,5 × 2,0 m Masche 100 × 300 mm" decoding="async"></span>
         <h3>Bauzaun Round 3,5 × 2,0 m Masche 100 × 300 mm</h3>
       </a>
       <p>3,5 × 2,0 m · 14 kg</p>
@@ -547,7 +571,7 @@
     </article></div></div></section>
 <section class="copy"><div class="wrap"><h2>Sichtschutz</h2><div class="tiles"><article class="tile">
       <a href="../produkt/sichtschutz-10037-2/">
-        <span class="frame"><img src="../images/kk/sichtschutz-10037-2.webp" srcset="../images/kk/sichtschutz-10037-2-640.webp 640w, ../images/kk/sichtschutz-10037-2.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Geschlossenes Paneel 2,8 × 2,0 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/sichtschutz-10037-2.webp" srcset="../images/kk/sichtschutz-10037-2-640.webp 640w, ../images/kk/sichtschutz-10037-2.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Geschlossenes Paneel 2,8 × 2,0 m" decoding="async"></span>
         <h3>Geschlossenes Paneel 2,8 × 2,0 m</h3>
       </a>
       <p>2,8 × 2,0 m · 38 kg</p>
@@ -574,7 +598,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/plane-10012/">
-        <span class="frame"><img src="../images/kk/plane-10012.webp" srcset="../images/kk/plane-10012-640.webp 640w, ../images/kk/plane-10012.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Sichtschutzplane" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/plane-10012.webp" srcset="../images/kk/plane-10012-640.webp 640w, ../images/kk/plane-10012.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Sichtschutzplane" decoding="async"></span>
         <h3>Sichtschutzplane</h3>
       </a>
       
@@ -585,7 +609,7 @@
     </article></div></div></section>
 <section class="copy"><div class="wrap"><h2>Tore</h2><div class="tiles"><article class="tile">
       <a href="../produkt/tor-10028/">
-        <span class="frame"><img src="../images/kk/tor-10028.webp" srcset="../images/kk/tor-10028-640.webp 640w, ../images/kk/tor-10028.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Lauftor 1,2 × 2,0 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/tor-10028.webp" srcset="../images/kk/tor-10028-640.webp 640w, ../images/kk/tor-10028.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Lauftor 1,2 × 2,0 m" decoding="async"></span>
         <h3>Lauftor 1,2 × 2,0 m</h3>
       </a>
       <p>1,2 × 2,0 m · 7,5 kg</p>
@@ -612,7 +636,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/tor-10028-0/">
-        <span class="frame"><img src="../images/kk/tor-10028-0.webp" srcset="../images/kk/tor-10028-0-640.webp 640w, ../images/kk/tor-10028-0.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Tor 1,2 × 1,2 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/tor-10028-0.webp" srcset="../images/kk/tor-10028-0-640.webp 640w, ../images/kk/tor-10028-0.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Tor 1,2 × 1,2 m" decoding="async"></span>
         <h3>Tor 1,2 × 1,2 m</h3>
       </a>
       <p>1,2 × 1,2 m · 5,5 kg</p>
@@ -639,7 +663,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/tor-10028-2/">
-        <span class="frame"><img src="../images/kk/tor-10028-2.webp" srcset="../images/kk/tor-10028-2-640.webp 640w, ../images/kk/tor-10028-2.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Lauftor mit Rahmen und Schloss schwer" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/tor-10028-2.webp" srcset="../images/kk/tor-10028-2-640.webp 640w, ../images/kk/tor-10028-2.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Lauftor mit Rahmen und Schloss schwer" decoding="async"></span>
         <h3>Lauftor mit Rahmen und Schloss schwer</h3>
       </a>
       <p>89 kg</p>
@@ -661,7 +685,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/tor-10028-3/">
-        <span class="frame"><img src="../images/kk/tor-10028-3.webp" srcset="../images/kk/tor-10028-3-640.webp 640w, ../images/kk/tor-10028-3.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Lauftor mit Klinke und Zylinderschloss" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/tor-10028-3.webp" srcset="../images/kk/tor-10028-3-640.webp 640w, ../images/kk/tor-10028-3.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Lauftor mit Klinke und Zylinderschloss" decoding="async"></span>
         <h3>Lauftor mit Klinke und Zylinderschloss</h3>
       </a>
       <p>36,5 kg</p>
@@ -684,7 +708,7 @@
     </article></div></div></section>
 <section class="copy"><div class="wrap"><h2>Füße</h2><div class="tiles"><article class="tile">
       <a href="../produkt/fuss-10005/">
-        <span class="frame"><img src="../images/kk/fuss-10005.webp" srcset="../images/kk/fuss-10005-640.webp 640w, ../images/kk/fuss-10005.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Betonfuß 31 kg" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/fuss-10005.webp" srcset="../images/kk/fuss-10005-640.webp 640w, ../images/kk/fuss-10005.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Betonfuß 31 kg" decoding="async"></span>
         <h3>Betonfuß 31 kg</h3>
       </a>
       <p>31 kg</p>
@@ -707,7 +731,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/fuss-10004/">
-        <span class="frame"><img src="../images/kk/fuss-10004.webp" srcset="../images/kk/fuss-10004-640.webp 640w, ../images/kk/fuss-10004.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Kunststofffuß leicht" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/fuss-10004.webp" srcset="../images/kk/fuss-10004-640.webp 640w, ../images/kk/fuss-10004.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Kunststofffuß leicht" decoding="async"></span>
         <h3>Kunststofffuß leicht</h3>
       </a>
       <p>17 kg</p>
@@ -730,7 +754,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/fuss-10006/">
-        <span class="frame"><img src="../images/kk/fuss-10006.webp" srcset="../images/kk/fuss-10006-640.webp 640w, ../images/kk/fuss-10006.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Kunststofffuß schwer 23 kg" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/fuss-10006.webp" srcset="../images/kk/fuss-10006-640.webp 640w, ../images/kk/fuss-10006.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Kunststofffuß schwer 23 kg" decoding="async"></span>
         <h3>Kunststofffuß schwer 23 kg</h3>
       </a>
       <p>23 kg</p>
@@ -752,7 +776,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/fuss-10006-2/">
-        <span class="frame"><img src="../images/kk/fuss-10006-2.webp" srcset="../images/kk/fuss-10006-2-640.webp 640w, ../images/kk/fuss-10006-2.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="K1 Bakenfuß" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/fuss-10006-2.webp" srcset="../images/kk/fuss-10006-2-640.webp 640w, ../images/kk/fuss-10006-2.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="K1 Bakenfuß" decoding="async"></span>
         <h3>K1 Bakenfuß</h3>
       </a>
       <p>28 kg</p>
@@ -775,7 +799,7 @@
     </article></div></div></section>
 <section class="copy"><div class="wrap"><h2>Zubehör</h2><div class="tiles"><article class="tile">
       <a href="../produkt/zubehoer-10002/">
-        <span class="frame"><img src="../images/kk/zubehoer-10002.webp" srcset="../images/kk/zubehoer-10002-640.webp 640w, ../images/kk/zubehoer-10002.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Verbindungsschelle 3 mm" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10002.webp" srcset="../images/kk/zubehoer-10002-640.webp 640w, ../images/kk/zubehoer-10002.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Verbindungsschelle 3 mm" decoding="async"></span>
         <h3>Verbindungsschelle 3 mm</h3>
       </a>
       
@@ -785,7 +809,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10002-1/">
-        <span class="frame"><img src="../images/kk/zubehoer-10002.webp" srcset="../images/kk/zubehoer-10002-640.webp 640w, ../images/kk/zubehoer-10002.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Verbindungsschelle 2,5 mm" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10002.webp" srcset="../images/kk/zubehoer-10002-640.webp 640w, ../images/kk/zubehoer-10002.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Verbindungsschelle 2,5 mm" decoding="async"></span>
         <h3>Verbindungsschelle 2,5 mm</h3>
       </a>
       
@@ -795,7 +819,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10003/">
-        <span class="frame"><img src="../images/kk/zubehoer-10003.webp" srcset="../images/kk/zubehoer-10003-640.webp 640w, ../images/kk/zubehoer-10003.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Sicherheitsschelle" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10003.webp" srcset="../images/kk/zubehoer-10003-640.webp 640w, ../images/kk/zubehoer-10003.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Sicherheitsschelle" decoding="async"></span>
         <h3>Sicherheitsschelle</h3>
       </a>
       
@@ -805,7 +829,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10003-3/">
-        <span class="frame"><img src="../images/kk/zubehoer-10003-3.webp" srcset="../images/kk/zubehoer-10003-3-640.webp 640w, ../images/kk/zubehoer-10003-3.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Sicherheitsschelle Security" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10003-3.webp" srcset="../images/kk/zubehoer-10003-3-640.webp 640w, ../images/kk/zubehoer-10003-3.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Sicherheitsschelle Security" decoding="async"></span>
         <h3>Sicherheitsschelle Security</h3>
       </a>
       
@@ -815,7 +839,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10003-1/">
-        <span class="frame"><img src="../images/kk/zubehoer-10003-1.webp" srcset="../images/kk/zubehoer-10003-1-640.webp 640w, ../images/kk/zubehoer-10003-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Schlüssel zur Sicherheitsschelle" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10003-1.webp" srcset="../images/kk/zubehoer-10003-1-640.webp 640w, ../images/kk/zubehoer-10003-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Schlüssel zur Sicherheitsschelle" decoding="async"></span>
         <h3>Schlüssel zur Sicherheitsschelle</h3>
       </a>
       
@@ -825,7 +849,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10018/">
-        <span class="frame"><img src="../images/kk/zubehoer-10018.webp" srcset="../images/kk/zubehoer-10018-640.webp 640w, ../images/kk/zubehoer-10018.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Verbindungsschelle aus Edelstahl" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10018.webp" srcset="../images/kk/zubehoer-10018-640.webp 640w, ../images/kk/zubehoer-10018.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Verbindungsschelle aus Edelstahl" decoding="async"></span>
         <h3>Verbindungsschelle aus Edelstahl</h3>
       </a>
       
@@ -835,7 +859,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10027/">
-        <span class="frame"><img src="../images/kk/zubehoer-10003-1.webp" srcset="../images/kk/zubehoer-10003-1-640.webp 640w, ../images/kk/zubehoer-10003-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Erdspieß" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10003-1.webp" srcset="../images/kk/zubehoer-10003-1-640.webp 640w, ../images/kk/zubehoer-10003-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Erdspieß" decoding="async"></span>
         <h3>Erdspieß</h3>
       </a>
       
@@ -845,7 +869,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10027-1/">
-        <span class="frame"><img src="../images/kk/zubehoer-10027-1.webp" srcset="../images/kk/zubehoer-10027-1-640.webp 640w, ../images/kk/zubehoer-10027-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Erdspieß, Winkel 40°" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10027-1.webp" srcset="../images/kk/zubehoer-10027-1-640.webp 640w, ../images/kk/zubehoer-10027-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Erdspieß, Winkel 40°" decoding="async"></span>
         <h3>Erdspieß, Winkel 40°</h3>
       </a>
       
@@ -855,7 +879,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10027-3/">
-        <span class="frame"><img src="../images/kk/zubehoer-10027-3.webp" srcset="../images/kk/zubehoer-10027-3-640.webp 640w, ../images/kk/zubehoer-10027-3.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Erdspieß mit Haken" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10027-3.webp" srcset="../images/kk/zubehoer-10027-3-640.webp 640w, ../images/kk/zubehoer-10027-3.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Erdspieß mit Haken" decoding="async"></span>
         <h3>Erdspieß mit Haken</h3>
       </a>
       
@@ -865,7 +889,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10034/">
-        <span class="frame"><img src="../images/kk/zubehoer-10034.webp" srcset="../images/kk/zubehoer-10034-640.webp 640w, ../images/kk/zubehoer-10034.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Erdnagel" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10034.webp" srcset="../images/kk/zubehoer-10034-640.webp 640w, ../images/kk/zubehoer-10034.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Erdnagel" decoding="async"></span>
         <h3>Erdnagel</h3>
       </a>
       
@@ -875,7 +899,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10034-1/">
-        <span class="frame"><img src="../images/kk/zubehoer-10034-1.webp" srcset="../images/kk/zubehoer-10034-1-640.webp 640w, ../images/kk/zubehoer-10034-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Erdnagel Ø20" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10034-1.webp" srcset="../images/kk/zubehoer-10034-1-640.webp 640w, ../images/kk/zubehoer-10034-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Erdnagel Ø20" decoding="async"></span>
         <h3>Erdnagel Ø20</h3>
       </a>
       
@@ -885,7 +909,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10013/">
-        <span class="frame"><img src="../images/kk/zubehoer-10013.webp" srcset="../images/kk/zubehoer-10013-640.webp 640w, ../images/kk/zubehoer-10013.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Erdhülse" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10013.webp" srcset="../images/kk/zubehoer-10013-640.webp 640w, ../images/kk/zubehoer-10013.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Erdhülse" decoding="async"></span>
         <h3>Erdhülse</h3>
       </a>
       
@@ -895,7 +919,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10014/">
-        <span class="frame"><img src="../images/kk/zubehoer-10014.webp" srcset="../images/kk/zubehoer-10014-640.webp 640w, ../images/kk/zubehoer-10014.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Bodenplatte" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10014.webp" srcset="../images/kk/zubehoer-10014-640.webp 640w, ../images/kk/zubehoer-10014.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Bodenplatte" decoding="async"></span>
         <h3>Bodenplatte</h3>
       </a>
       
@@ -905,7 +929,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10008/">
-        <span class="frame"><img src="../images/kk/zubehoer-10008.webp" srcset="../images/kk/zubehoer-10008-640.webp 640w, ../images/kk/zubehoer-10008.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Stützstrebe" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10008.webp" srcset="../images/kk/zubehoer-10008-640.webp 640w, ../images/kk/zubehoer-10008.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Stützstrebe" decoding="async"></span>
         <h3>Stützstrebe</h3>
       </a>
       
@@ -915,7 +939,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10008-1/">
-        <span class="frame"><img src="../images/kk/zubehoer-10008-1.webp" srcset="../images/kk/zubehoer-10008-1-640.webp 640w, ../images/kk/zubehoer-10008-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Stützstrebe mit großer Platte" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10008-1.webp" srcset="../images/kk/zubehoer-10008-1-640.webp 640w, ../images/kk/zubehoer-10008-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Stützstrebe mit großer Platte" decoding="async"></span>
         <h3>Stützstrebe mit großer Platte</h3>
       </a>
       
@@ -925,7 +949,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10008-3/">
-        <span class="frame"><img src="../images/kk/zubehoer-10008-3.webp" srcset="../images/kk/zubehoer-10008-3-640.webp 640w, ../images/kk/zubehoer-10008-3.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Stützstrebe klappbar" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10008-3.webp" srcset="../images/kk/zubehoer-10008-3-640.webp 640w, ../images/kk/zubehoer-10008-3.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Stützstrebe klappbar" decoding="async"></span>
         <h3>Stützstrebe klappbar</h3>
       </a>
       
@@ -935,7 +959,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10010-0/">
-        <span class="frame"><img src="../images/kk/zubehoer-10010-0.webp" srcset="../images/kk/zubehoer-10010-0-640.webp 640w, ../images/kk/zubehoer-10010-0.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Drehtorlaufring" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10010-0.webp" srcset="../images/kk/zubehoer-10010-0-640.webp 640w, ../images/kk/zubehoer-10010-0.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Drehtorlaufring" decoding="async"></span>
         <h3>Drehtorlaufring</h3>
       </a>
       
@@ -945,7 +969,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10011/">
-        <span class="frame"><img src="../images/kk/zubehoer-10011.webp" srcset="../images/kk/zubehoer-10011-640.webp 640w, ../images/kk/zubehoer-10011.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Aushebesicherung" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10011.webp" srcset="../images/kk/zubehoer-10011-640.webp 640w, ../images/kk/zubehoer-10011.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Aushebesicherung" decoding="async"></span>
         <h3>Aushebesicherung</h3>
       </a>
       
@@ -955,7 +979,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10022-1/">
-        <span class="frame"><img src="../images/kk/zubehoer-10022-1.webp" srcset="../images/kk/zubehoer-10022-1-640.webp 640w, ../images/kk/zubehoer-10022-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Kupplung für 3 m Zaun" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10022-1.webp" srcset="../images/kk/zubehoer-10022-1-640.webp 640w, ../images/kk/zubehoer-10022-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Kupplung für 3 m Zaun" decoding="async"></span>
         <h3>Kupplung für 3 m Zaun</h3>
       </a>
       
@@ -965,7 +989,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10007/">
-        <span class="frame"><img src="../images/kk/zubehoer-10007.webp" srcset="../images/kk/zubehoer-10007-640.webp 640w, ../images/kk/zubehoer-10007.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Laufrad" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10007.webp" srcset="../images/kk/zubehoer-10007-640.webp 640w, ../images/kk/zubehoer-10007.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Laufrad" decoding="async"></span>
         <h3>Laufrad</h3>
       </a>
       
@@ -975,7 +999,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/zubehoer-10066-1/">
-        <span class="frame"><img src="../images/kk/zubehoer-10066-1.webp" srcset="../images/kk/zubehoer-10066-1-640.webp 640w, ../images/kk/zubehoer-10066-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Platte 25 × 50 cm" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/zubehoer-10066-1.webp" srcset="../images/kk/zubehoer-10066-1-640.webp 640w, ../images/kk/zubehoer-10066-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Platte 25 × 50 cm" decoding="async"></span>
         <h3>Platte 25 × 50 cm</h3>
       </a>
       
@@ -986,7 +1010,7 @@
     </article></div></div></section>
 <section class="copy"><div class="wrap"><h2>1,2 m</h2><div class="tiles"><article class="tile">
       <a href="../produkt/bauzaun-10074-0/">
-        <span class="frame"><img src="../images/kk/bauzaun-10074-0.webp" srcset="../images/kk/bauzaun-10074-0-640.webp 640w, ../images/kk/bauzaun-10074-0.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi 2,2 × 1,2 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10074-0.webp" srcset="../images/kk/bauzaun-10074-0-640.webp 640w, ../images/kk/bauzaun-10074-0.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi 2,2 × 1,2 m" decoding="async"></span>
         <h3>Bauzaun Profi 2,2 × 1,2 m</h3>
       </a>
       <p>2,2 × 1,2 m · 7,5 kg</p>
@@ -1014,7 +1038,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10042-0/">
-        <span class="frame"><img src="../images/kk/bauzaun-10042-0.webp" srcset="../images/kk/bauzaun-10042-0-640.webp 640w, ../images/kk/bauzaun-10042-0.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi 3,5 × 1,2 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10042-0.webp" srcset="../images/kk/bauzaun-10042-0-640.webp 640w, ../images/kk/bauzaun-10042-0.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi 3,5 × 1,2 m" decoding="async"></span>
         <h3>Bauzaun Profi 3,5 × 1,2 m</h3>
       </a>
       <p>3,5 × 1,2 m · 12 kg</p>
@@ -1042,7 +1066,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10038-0/">
-        <span class="frame"><img src="../images/kk/bauzaun-10038-0.webp" srcset="../images/kk/bauzaun-10038-0-640.webp 640w, ../images/kk/bauzaun-10038-0.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi Round 3,5 × 1,2 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10038-0.webp" srcset="../images/kk/bauzaun-10038-0-640.webp 640w, ../images/kk/bauzaun-10038-0.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Bauzaun Profi Round 3,5 × 1,2 m" decoding="async"></span>
         <h3>Bauzaun Profi Round 3,5 × 1,2 m</h3>
       </a>
       <p>3,5 × 1,2 m · 13 kg</p>
@@ -1070,7 +1094,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10069-6/">
-        <span class="frame"><img src="../images/kk/bauzaun-10069-6.webp" srcset="../images/kk/bauzaun-10069-6-640.webp 640w, ../images/kk/bauzaun-10069-6.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Bauzaun Round 3,5 × 1,2 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10069-6.webp" srcset="../images/kk/bauzaun-10069-6-640.webp 640w, ../images/kk/bauzaun-10069-6.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Bauzaun Round 3,5 × 1,2 m" decoding="async"></span>
         <h3>Bauzaun Round 3,5 × 1,2 m</h3>
       </a>
       <p>3,5 × 1,2 m · 11 kg</p>
@@ -1097,7 +1121,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/bauzaun-10031/">
-        <span class="frame"><img src="../images/kk/bauzaun-10031.webp" srcset="../images/kk/bauzaun-10031-640.webp 640w, ../images/kk/bauzaun-10031.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Bauzaun Handlauf 3,5 × 1,2 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/bauzaun-10031.webp" srcset="../images/kk/bauzaun-10031-640.webp 640w, ../images/kk/bauzaun-10031.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Bauzaun Handlauf 3,5 × 1,2 m" decoding="async"></span>
         <h3>Bauzaun Handlauf 3,5 × 1,2 m</h3>
       </a>
       <p>3,5 × 1,2 m · 14 kg</p>
@@ -1126,7 +1150,7 @@
     <section class="copy"><div class="wrap"><h2 id="verkehrssicherung">Verkehrssicherung</h2></div></section>
 <section class="copy"><div class="wrap"><h2>Schilder</h2><div class="tiles"><article class="tile">
       <a href="../produkt/verkehrsschilder/">
-        <span class="frame"><img src="../images/verkehrsschilder.webp" srcset="../images/verkehrsschilder.webp 600w" sizes="(min-width: 800px) 30vw, 100vw" width="600" height="697" alt="Gruppe von Verkehrsschildern" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/verkehrsschilder.webp" srcset="../images/verkehrsschilder.webp 600w" sizes="(min-width: 800px) 30vw, 100vw" width="600" height="697" alt="Gruppe von Verkehrsschildern" decoding="async"></span>
         <h3>Verkehrsschilder</h3>
       </a>
       
@@ -1138,14 +1162,10 @@
           </tbody>
         </table>
       </details>
-      <form class="order" data-order data-sammel data-slug="verkehrsschilder" data-name="Verkehrsschilder" data-bild="images/verkehrsschilder.webp" data-kat="verkehrssicherung">
-      <div class="field"><label for="bedarf-verkehrsschilder">Bedarf beschreiben (welche Schilder, wie viele, Ort)</label><textarea id="bedarf-verkehrsschilder" name="bedarf" required></textarea></div>
-      <button class="btn" type="submit">In den Anfragekorb</button>
-    </form>
     </article></div></div></section>
 <section class="copy"><div class="wrap"><h2>Schranken</h2><div class="tiles"><article class="tile">
       <a href="../produkt/schranke-10024-1/">
-        <span class="frame"><img src="../images/kk/schranke-10024-1.webp" srcset="../images/kk/schranke-10024-1-640.webp 640w, ../images/kk/schranke-10024-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Kunststoff Schrankenzaun mit Folie RA1" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/schranke-10024-1.webp" srcset="../images/kk/schranke-10024-1-640.webp 640w, ../images/kk/schranke-10024-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Kunststoff Schrankenzaun mit Folie RA1" decoding="async"></span>
         <h3>Kunststoff Schrankenzaun mit Folie RA1</h3>
       </a>
       <p>12 kg</p>
@@ -1170,7 +1190,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/schranke-10024-3/">
-        <span class="frame"><img src="../images/kk/schranke-10024-1.webp" srcset="../images/kk/schranke-10024-1-640.webp 640w, ../images/kk/schranke-10024-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Kunststoff Schrankenzaun mit Folie RA2" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/schranke-10024-1.webp" srcset="../images/kk/schranke-10024-1-640.webp 640w, ../images/kk/schranke-10024-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Kunststoff Schrankenzaun mit Folie RA2" decoding="async"></span>
         <h3>Kunststoff Schrankenzaun mit Folie RA2</h3>
       </a>
       <p>12 kg</p>
@@ -1194,7 +1214,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/schranke-10024-4/">
-        <span class="frame"><img src="../images/kk/schranke-10024-1.webp" srcset="../images/kk/schranke-10024-1-640.webp 640w, ../images/kk/schranke-10024-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Leitbake hell RA1" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/schranke-10024-1.webp" srcset="../images/kk/schranke-10024-1-640.webp 640w, ../images/kk/schranke-10024-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Leitbake hell RA1" decoding="async"></span>
         <h3>Leitbake hell RA1</h3>
       </a>
       <p>1.300 × 310 mm · 2,7 kg</p>
@@ -1220,7 +1240,7 @@
     </article></div></div></section>
 <section class="copy"><div class="wrap"><h2>Gitter</h2><div class="tiles"><article class="tile">
       <a href="../produkt/absperrung-10026/">
-        <span class="frame"><img src="../images/kk/absperrung-10026.webp" srcset="../images/kk/absperrung-10026-640.webp 640w, ../images/kk/absperrung-10026.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Absperrgitter leicht" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/absperrung-10026.webp" srcset="../images/kk/absperrung-10026-640.webp 640w, ../images/kk/absperrung-10026.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="821" alt="Absperrgitter leicht" decoding="async"></span>
         <h3>Absperrgitter leicht</h3>
       </a>
       <p>2.500 × 1.100 mm · 15,7 kg</p>
@@ -1248,7 +1268,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/absperrung-10025-0/">
-        <span class="frame"><img src="../images/kk/absperrung-10025-0.webp" srcset="../images/kk/absperrung-10025-0-640.webp 640w, ../images/kk/absperrung-10025-0.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Absperrgitter schwer" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/absperrung-10025-0.webp" srcset="../images/kk/absperrung-10025-0-640.webp 640w, ../images/kk/absperrung-10025-0.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Absperrgitter schwer" decoding="async"></span>
         <h3>Absperrgitter schwer</h3>
       </a>
       <p>2.500 × 1.100 mm · 19 kg</p>
@@ -1276,7 +1296,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/absperrung-10041/">
-        <span class="frame"><img src="../images/kk/absperrung-10041.webp" srcset="../images/kk/absperrung-10041-640.webp 640w, ../images/kk/absperrung-10041.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Absperrgitter Nordic 2,5 × 1,1 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/absperrung-10041.webp" srcset="../images/kk/absperrung-10041-640.webp 640w, ../images/kk/absperrung-10041.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Absperrgitter Nordic 2,5 × 1,1 m" decoding="async"></span>
         <h3>Absperrgitter Nordic 2,5 × 1,1 m</h3>
       </a>
       <p>2,5 × 1,1 m · 14 kg</p>
@@ -1303,7 +1323,7 @@
     </article></div></div></section>
 <section class="copy"><div class="wrap"><h2>Betonschwellen</h2><div class="tiles"><article class="tile">
       <a href="../produkt/schwelle-10005-4/">
-        <span class="frame"><img src="../images/kk/schwelle-10005-4.webp" srcset="../images/kk/schwelle-10005-4-640.webp 640w, ../images/kk/schwelle-10005-4.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Betonleitschwelle 500 kg, 2,5 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/schwelle-10005-4.webp" srcset="../images/kk/schwelle-10005-4-640.webp 640w, ../images/kk/schwelle-10005-4.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Betonleitschwelle 500 kg, 2,5 m" decoding="async"></span>
         <h3>Betonleitschwelle 500 kg, 2,5 m</h3>
       </a>
       <p>500 kg</p>
@@ -1326,7 +1346,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/schwelle-10005-2/">
-        <span class="frame"><img src="../images/kk/schwelle-10005-2.webp" srcset="../images/kk/schwelle-10005-2-640.webp 640w, ../images/kk/schwelle-10005-2.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Betonleitschwelle 900 kg, 3,5 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/schwelle-10005-2.webp" srcset="../images/kk/schwelle-10005-2-640.webp 640w, ../images/kk/schwelle-10005-2.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Betonleitschwelle 900 kg, 3,5 m" decoding="async"></span>
         <h3>Betonleitschwelle 900 kg, 3,5 m</h3>
       </a>
       <p>900 kg</p>
@@ -1350,7 +1370,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/schwelle-10005-3/">
-        <span class="frame"><img src="../images/kk/schwelle-10005-3.webp" srcset="../images/kk/schwelle-10005-3-640.webp 640w, ../images/kk/schwelle-10005-3.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Betonleitschwelle 1000 kg, 2,5 m" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/schwelle-10005-3.webp" srcset="../images/kk/schwelle-10005-3-640.webp 640w, ../images/kk/schwelle-10005-3.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Betonleitschwelle 1000 kg, 2,5 m" decoding="async"></span>
         <h3>Betonleitschwelle 1000 kg, 2,5 m</h3>
       </a>
       <p>1000 kg</p>
@@ -1375,7 +1395,7 @@
     </article></div></div></section>
 <section class="copy"><div class="wrap"><h2>Schleuse und Bühne</h2><div class="tiles"><article class="tile">
       <a href="../produkt/absperrung-10025-1/">
-        <span class="frame"><img src="../images/kk/absperrung-10025-1.webp" srcset="../images/kk/absperrung-10025-1-640.webp 640w, ../images/kk/absperrung-10025-1.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="801" alt="Eingangsschleusensystem – Schiene" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/absperrung-10025-1.webp" srcset="../images/kk/absperrung-10025-1-640.webp 640w, ../images/kk/absperrung-10025-1.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="801" alt="Eingangsschleusensystem – Schiene" decoding="async"></span>
         <h3>Eingangsschleusensystem – Schiene</h3>
       </a>
       <p>13,5 kg</p>
@@ -1394,7 +1414,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/absperrung-10025-2/">
-        <span class="frame"><img src="../images/kk/absperrung-10025-2.webp" srcset="../images/kk/absperrung-10025-2-640.webp 640w, ../images/kk/absperrung-10025-2.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Eingangsschleusensystem - Seitenteil" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/absperrung-10025-2.webp" srcset="../images/kk/absperrung-10025-2-640.webp 640w, ../images/kk/absperrung-10025-2.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Eingangsschleusensystem - Seitenteil" decoding="async"></span>
         <h3>Eingangsschleusensystem - Seitenteil</h3>
       </a>
       <p>2.200 × 1.100 mm · 13,5 kg</p>
@@ -1420,7 +1440,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/absperrung-10025-3/">
-        <span class="frame"><img src="../images/kk/absperrung-10025-3.webp" srcset="../images/kk/absperrung-10025-3-640.webp 640w, ../images/kk/absperrung-10025-3.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Eingangsschleusensystem – Kopfteil" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/absperrung-10025-3.webp" srcset="../images/kk/absperrung-10025-3-640.webp 640w, ../images/kk/absperrung-10025-3.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Eingangsschleusensystem – Kopfteil" decoding="async"></span>
         <h3>Eingangsschleusensystem – Kopfteil</h3>
       </a>
       <p>5 kg</p>
@@ -1445,7 +1465,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/absperrung-10047/">
-        <span class="frame"><img src="../images/kk/absperrung-10047.webp" srcset="../images/kk/absperrung-10047-640.webp 640w, ../images/kk/absperrung-10047.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Bühnengeländer" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/absperrung-10047.webp" srcset="../images/kk/absperrung-10047-640.webp 640w, ../images/kk/absperrung-10047.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Bühnengeländer" decoding="async"></span>
         <h3>Bühnengeländer</h3>
       </a>
       <p>45 kg</p>
@@ -1468,7 +1488,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/absperrung-10047-1/">
-        <span class="frame"><img src="../images/kk/absperrung-10047-1.webp" srcset="../images/kk/absperrung-10047-1-640.webp 640w, ../images/kk/absperrung-10047-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Bühnenschranke Eingangstor" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/absperrung-10047-1.webp" srcset="../images/kk/absperrung-10047-1-640.webp 640w, ../images/kk/absperrung-10047-1.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Bühnenschranke Eingangstor" decoding="async"></span>
         <h3>Bühnenschranke Eingangstor</h3>
       </a>
       <p>65 kg</p>
@@ -1490,7 +1510,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/absperrung-10048/">
-        <span class="frame"><img src="../images/kk/absperrung-10048.webp" srcset="../images/kk/absperrung-10048-640.webp 640w, ../images/kk/absperrung-10048.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Bühnenabsperrung Ecke" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kk/absperrung-10048.webp" srcset="../images/kk/absperrung-10048-640.webp 640w, ../images/kk/absperrung-10048.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="701" alt="Bühnenabsperrung Ecke" decoding="async"></span>
         <h3>Bühnenabsperrung Ecke</h3>
       </a>
       
@@ -1505,7 +1525,7 @@
     </article></div></div></section>
 <section class="copy"><div class="wrap"><h2 id="anhaenger">Anhänger</h2><div class="tiles"><article class="tile">
       <a href="../produkt/hochlader/">
-        <span class="frame"><img src="../images/anhaenger-offen.webp" srcset="../images/anhaenger-offen.webp 720w" sizes="(min-width: 800px) 30vw, 100vw" width="720" height="481" alt="Offener Hochlader mit Bordwänden" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/anhaenger-offen.webp" srcset="../images/anhaenger-offen.webp 720w" sizes="(min-width: 800px) 30vw, 100vw" width="720" height="481" alt="Offener Hochlader mit Bordwänden" decoding="async"></span>
         <h3>Hochlader</h3>
       </a>
       
@@ -1515,7 +1535,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/planenanhaenger/">
-        <span class="frame"><img src="../images/anhaenger-plane.webp" srcset="../images/anhaenger-plane.webp 2440w" sizes="(min-width: 800px) 30vw, 100vw" width="2440" height="1580" alt="Einachsiger Anhänger mit grauer Plane" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/anhaenger-plane.webp" srcset="../images/anhaenger-plane.webp 2440w" sizes="(min-width: 800px) 30vw, 100vw" width="2440" height="1580" alt="Einachsiger Anhänger mit grauer Plane" decoding="async"></span>
         <h3>Planenanhänger</h3>
       </a>
       
@@ -1525,7 +1545,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/kofferanhaenger/">
-        <span class="frame"><img src="../images/kofferanhaenger.webp" srcset="../images/kofferanhaenger.webp 800w" sizes="(min-width: 800px) 30vw, 100vw" width="800" height="534" alt="Geschlossener Kofferanhänger" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kofferanhaenger.webp" srcset="../images/kofferanhaenger.webp 800w" sizes="(min-width: 800px) 30vw, 100vw" width="800" height="534" alt="Geschlossener Kofferanhänger" decoding="async"></span>
         <h3>Kofferanhänger</h3>
       </a>
       
@@ -1535,7 +1555,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/fahrzeugtransporter/">
-        <span class="frame"><img src="../images/fahrzeugtransporter.webp" srcset="../images/fahrzeugtransporter.webp 800w" sizes="(min-width: 800px) 30vw, 100vw" width="800" height="534" alt="Kippbarer Autotransporter mit einem Pkw auf der Ladefläche" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/fahrzeugtransporter.webp" srcset="../images/fahrzeugtransporter.webp 800w" sizes="(min-width: 800px) 30vw, 100vw" width="800" height="534" alt="Kippbarer Autotransporter mit einem Pkw auf der Ladefläche" decoding="async"></span>
         <h3>Fahrzeugtransporter</h3>
       </a>
       
@@ -1545,7 +1565,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/kuehlanhaenger/">
-        <span class="frame"><img src="../images/kuehlanhaenger-13.webp" srcset="../images/kuehlanhaenger-13.webp 540w" sizes="(min-width: 800px) 30vw, 100vw" width="540" height="405" alt="Einachsiger Kühlanhänger mit Kühlaggregat über der Tür" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kuehlanhaenger-13.webp" srcset="../images/kuehlanhaenger-13.webp 540w" sizes="(min-width: 800px) 30vw, 100vw" width="540" height="405" alt="Einachsiger Kühlanhänger mit Kühlaggregat über der Tür" decoding="async"></span>
         <h3>Kühlanhänger</h3>
       </a>
       
@@ -1555,7 +1575,7 @@
     </form>
     </article><article class="tile">
       <a href="../produkt/kuehlanhaenger-events/">
-        <span class="frame"><img src="../images/kuehlanhaenger-13.webp" srcset="../images/kuehlanhaenger-13.webp 540w" sizes="(min-width: 800px) 30vw, 100vw" width="540" height="405" alt="Einachsiger Kühlanhänger mit Kühlaggregat über der Tür" decoding="async"></span>
+        <span class="frame"><img loading="lazy" src="../images/kuehlanhaenger-13.webp" srcset="../images/kuehlanhaenger-13.webp 540w" sizes="(min-width: 800px) 30vw, 100vw" width="540" height="405" alt="Einachsiger Kühlanhänger mit Kühlaggregat über der Tür" decoding="async"></span>
         <h3>Kühlanhänger für Events</h3>
       </a>
       
@@ -1615,6 +1635,7 @@
   <script src="../js/merkzettel.js"></script>
   <script src="../js/zeitraum.js"></script>
   <script src="../js/bestellen.js"></script>
+  <script src="../js/schilder.js"></script>
   <script src="../js/kauf.js"></script>
 </body>
 </html>

@@ -2,6 +2,19 @@
 
 75 Kaufartikel. Die Seite `kaufen/` filtert sie im Browser, ohne Gerüst. Der Anfragekorb bleibt.
 
+## Hauptgruppen
+
+Oben auf `kaufen/` stehen vier Einstiege. Die Adresse trägt `gruppe`.
+
+| `gruppe` | Anzeige | `shop` |
+| --- | --- | --- |
+| `zaun` | Bauzaun & Absperrgitter | `bauzaune`, `zubehoer`, `tore`, `sichtschutz`, `gitter` |
+| `schilder` | Verkehrsschilder | `schilder` |
+| `absperrung` | Verkehrsabsperreinrichtungen | `verkehr` |
+| `anhaenger` | Anhänger | `anhaenger` |
+
+In Bauzaun & Absperrgitter bleiben die bisherigen Unterkategorien als Chips. In den anderen Gruppen filtern die vorhandenen Attribute weiter. `#bauzaun`, `#verkehrssicherung` und `#anhaenger` öffnen die passende Hauptgruppe. `?kat=gitter` und `?kat=anhaenger` ebenfalls.
+
 ## Kategorien
 
 Die Kategorie steht in `data/katalog.json` unter `shop`. Sie folgt der bisherigen Gruppe, nichts davon ist neu erfunden.
@@ -13,10 +26,21 @@ Die Kategorie steht in `data/katalog.json` unter `shop`. Sie folgt der bisherige
 | `tore` | Türen & Tore | Tore |
 | `sichtschutz` | Sichtschutz & Planen | Sichtschutz |
 | `gitter` | Absperrgitter | Verkehrssicherung, Gruppe Gitter |
-| `verkehr` | Verkehrssicherung | übrige Verkehrssicherung |
+| `schilder` | Verkehrsschilder | bisheriger Sammelposten, jetzt die Auswahlliste |
+| `verkehr` | Verkehrsabsperreinrichtungen | Schranken, Baken, Betonschwellen, Schleusen, Bühnen |
 | `anhaenger` | Anhänger | Anhänger |
 
 Leitkegel und Leuchten kommen im Bestand nicht vor und sind keine Kategorie. Farbe und Einsatzzweck stehen auf den Produktseiten nicht und sind keine Filter.
+
+## Verkehrsschilder
+
+KK Service führt keine einzelnen Verkehrszeichen. Die Liste folgt den von Peter genannten StVO-Zeichen, mit der amtlichen Bezeichnung. Keine Artikelnummer, kein Preis, kein Bestand. Die Symbole sind eigene, schlichte SVG, keine Fremdbilder.
+
+Z 123, Z 120, Z 121-10, Z 121-20, Z 208, Z 308, Z 222, Z 250, Z 260, Z 267, Z 274 mit 30, 50 und 70, Z 276, Z 283, Z 286, Z 259, Z 454, Z 455, Z 457.
+
+Z 208 heißt amtlich „Vorrang vor dem Gegenverkehr“, Z 308 „Vorrang des Gegenverkehrs“. Z 259 heißt amtlich „Verbot für Fußgänger“. Z 625 und Leitkegel fehlen, weil sie im Sortiment nicht vorkommen.
+
+Jedes angehakte Zeichen geht mit Anzahl als eigene Zeile in den Anfragekorb (`kauf:schild:…`). Das Feld „Größe, Folie, Ständer“ liegt darunter und wird, wenn es gefüllt ist, als Hinweiszeile mitgenommen. Es steht nur in dieser Gruppe und auf `produkt/verkehrsschilder/`, nicht in der Übersicht.
 
 ## Attribute
 
@@ -29,12 +53,12 @@ Filter erscheinen erst, wenn die gewählte Kategorie mindestens zwei verschieden
 - Türen & Tore: Höhe, Maschenweite
 - Sichtschutz & Planen: Art
 - Absperrgitter: Art
-- Verkehrssicherung: Art, Länge, Höhe, Breite
+- Verkehrsabsperreinrichtungen: Art, Länge, Höhe, Breite
 - Anhänger: Art
 
 Oberfläche ist Vollfeuerverzinkt, Verzinkt oder Vorverzinkt, und nur wenn das Wort in der Artikelüberschrift, im Absatz oder in der Seitenüberschrift „Vorverzinkte Zäune“ steht. Fußart ist Beton oder Kunststoff, und nur wenn der Name das sagt. Edelstahl steht nur bei der Schelle, die so heißt.
 
-Suche trifft Name, Artikelnummer und Kennung. Sortierung ist Sortiment, Name oder Artikelnummer. Kategorie, Filter, Suche und Sortierung stehen in der Adresse (`?kat=bauzaune&masche=100+x+300`). Zurück im Browser stellt den Stand wieder her. `#bauzaun`, `#verkehrssicherung` und `#anhaenger` öffnen die passende Kategorie.
+Suche trifft Name, Artikelnummer und Kennung, bei den Schildern Nummer und Name. Sortierung ist Sortiment, Name oder Artikelnummer. Gruppe, Unterkategorie, Filter, Suche und Sortierung stehen in der Adresse (`?gruppe=zaun&kat=bauzaune&masche=100+x+300`). Zurück im Browser stellt den Stand wieder her.
 
 ## Technische Daten
 
