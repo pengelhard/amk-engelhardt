@@ -3,6 +3,17 @@
   if (!nodes.length) return;
 
   var TYPES = { "Angebot": true, "Neuheit": true, "Besonderes Produkt": true };
+  var GRUPPEN = {
+    "zaun": "zaun",
+    "schilder": "schilder",
+    "absperrung": "absperrung",
+    "anhaenger": "anhaenger",
+    "Bauzaun & Absperrgitter": "zaun",
+    "Verkehrsschilder": "schilder",
+    "Verkehrsabsperreinrichtungen": "absperrung",
+    "Anhänger": "anhaenger",
+    "Anhaenger": "anhaenger"
+  };
 
   function esc(value) {
     return String(value == null ? "" : value)
@@ -49,6 +60,31 @@
     });
   }
 
+  function wegOf(entry) {
+    var value = String(entry.weg || "").trim().toLowerCase();
+    if (value === "miete" || value === "kauf" || value === "beides") return value;
+    return "beides";
+  }
+
+  function gruppeOf(entry) {
+    var raw = String(entry.gruppe || "").trim();
+    return GRUPPEN[raw] || GRUPPEN[raw.toLowerCase()] || "";
+  }
+
+  function ways(entry, root) {
+    var weg = wegOf(entry);
+    var gruppe = gruppeOf(entry);
+    var query = gruppe ? "?gruppe=" + encodeURIComponent(gruppe) : "";
+    var links = "";
+    if (weg !== "kauf") {
+      links += '<a class="btn" href="' + esc(root + "mieten/" + query) + '" aria-label="' + esc(entry.titel + " mieten") + '">Mieten</a>';
+    }
+    if (weg !== "miete") {
+      links += '<a class="btn btn-ghost" href="' + esc(root + "kaufen/" + query) + '" aria-label="' + esc(entry.titel + " kaufen") + '">Kaufen</a>';
+    }
+    return '<div class="news-ways">' + links + "</div>";
+  }
+
   function card(entry, root) {
     var img = localPath(entry.bild);
     var title = String(entry.titel);
@@ -65,6 +101,7 @@
       "<strong>" + esc(title) + "</strong>" +
       "<p>" + esc(entry.text || "") + "</p>" +
       (price ? '<p class="news-price">' + esc(price) + "</p>" : "") +
+      ways(entry, root) +
       '<button type="button" class="btn" data-add="aktuell:' + esc(slug(title)) + '" data-name="' + esc(title) + '"' + bild + note + ">Anfragen</button>" +
       "</div></article>"
     );

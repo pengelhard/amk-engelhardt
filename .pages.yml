@@ -51,6 +51,26 @@ content:
             - Angebot
             - Neuheit
             - Besonderes Produkt
+      - name: weg
+        label: Mieten oder kaufen
+        type: select
+        required: true
+        options:
+          values:
+            - Miete
+            - Kauf
+            - Beides
+      - name: gruppe
+        label: Gruppe
+        type: select
+        required: true
+        description: Mieten und Kaufen öffnen diese Gruppe.
+        options:
+          values:
+            - Bauzaun & Absperrgitter
+            - Verkehrsschilder
+            - Verkehrsabsperreinrichtungen
+            - Anhänger
       - name: preis
         label: Preis
         type: string

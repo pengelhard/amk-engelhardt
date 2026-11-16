@@ -32,7 +32,7 @@ JavaScript ergänzt nur: Merkzettel in `localStorage`, die Bauzaun-Konfiguration
 
 Der Hero ist eine ruhige Diashow aus fünf lokalen Fotos (`images/hero/schranke`, `zeichen`, `zaun`, `baustelle`, `anhaenger`). Das erste Bild liegt im HTML und wird als AVIF vorgeladen. Die übrigen kommen nach dem Laden. `prefers-reduced-motion` bleibt beim ersten Bild. Es gibt keine Pfeile und keine Punkte. `?hero=` entfällt. Die Quellen stehen in `docs/bildquellen.md`. Slogan bleibt. Im Hero stehen Mieten und Kaufen. Kein CDN.
 
-Aktuelles & Angebote steht direkt unter dem Hero und liest weiter `data/aktuelles.json`. Ohne sichtbaren Eintrag bleibt der Abschnitt zu. Der Ablauf ist eine schmale Schrittleiste: Anfragen, Angebot, Lieferung & Aufbau, Abholung.
+Aktuelles & Angebote steht direkt unter dem Hero und liest weiter `data/aktuelles.json`. Jeder Eintrag zeigt Mieten, Kaufen oder beides und führt in die hinterlegte Gruppe. Ohne sichtbaren Eintrag bleibt der Abschnitt zu. Darunter stehen die vier Leistungsgruppen, jede mit Mieten und Kaufen. Der Ablauf ist eine schmale Schrittleiste: Anfragen, Angebot, Lieferung & Aufbau, Abholung.
 
 Unter dem Ablauf liegt ein Abschnitt für ein Teamfoto. Er bleibt unsichtbar, solange `#team-foto` kein `data-src` hat. Liegt das Foto bereit, `data-src` auf den relativen Pfad setzen, zum Beispiel `images/team.webp`. Der Abschnitt erscheint erst, wenn das Bild lädt. Ohne Bild steht dort kein Text.
 
@@ -40,7 +40,7 @@ Unter dem Ablauf liegt ein Abschnitt für ein Teamfoto. Er bleibt unsichtbar, so
 
 Michael Engelhardt pflegt nur diesen Bereich, über [Pages CMS](https://pagescms.org). Alles andere auf der Testseite pflegen wir. Pages CMS schreibt in `data/aktuelles.json`. Die Startseite und `aktuelles/` lesen dieselbe Datei, ohne Build. Eine Liste aus einzelnen Markdown-Dateien wäre ohne Build nicht auffindbar, deshalb ist die Sammlung diese eine JSON-Liste. `.pages.yml` gibt im CMS nur diese Liste und den Medienordner `images/aktuelles/` frei.
 
-Felder: Titel, Kurztext, Bild, Bildbeschreibung, Typ (Angebot, Neuheit, Besonderes Produkt), Preis (leer bleibt ohne Preiszeile), Datum, Gültig bis, Sichtbar. Abgelaufene Einträge und unsichtbare Einträge verschwinden. Der genannte Gültig-bis-Tag zählt noch. Die Startseite zeigt höchstens die drei neuesten und blendet den ganzen Bereich aus, wenn nichts sichtbar ist. Ein einzelner Eintrag wird als breites Banner gezeigt. „Anfragen“ legt den Eintrag in den Anfragekorb.
+Felder: Titel, Kurztext, Bild, Bildbeschreibung, Typ (Angebot, Neuheit, Besonderes Produkt), Mieten oder kaufen (Miete, Kauf, Beides), Gruppe (Bauzaun & Absperrgitter, Verkehrsschilder, Verkehrsabsperreinrichtungen, Anhänger), Preis (leer bleibt ohne Preiszeile), Datum, Gültig bis, Sichtbar. Abgelaufene Einträge und unsichtbare Einträge verschwinden. Der genannte Gültig-bis-Tag zählt noch. Die Startseite zeigt höchstens die drei neuesten und blendet den ganzen Bereich aus, wenn nichts sichtbar ist. Ein einzelner Eintrag wird als breites Banner gezeigt. Mieten und Kaufen öffnen die gewählte Gruppe. „Anfragen“ legt den Eintrag in den Anfragekorb.
 
 Der einzige Startinhalt ist „Fahrzeugtransporter“, mit dem vorhandenen Foto und ohne Preis. Der Nachweis steht im Impressum. Neue Bilder lädt Michael nach `images/aktuelles/` hoch, Querformat.
 
@@ -48,7 +48,7 @@ Der einzige Startinhalt ist „Fahrzeugtransporter“, mit dem vorhandenen Foto 
 
 1. Den Link in der Einladungs-Mail öffnen und anmelden. Ein GitHub-Konto ist nicht nötig.
 2. „Aktuelles & Angebote“ öffnen.
-3. Einen Eintrag hinzufügen: Titel, Kurztext, Typ und Bild. Die Bildbeschreibung ausfüllen.
+3. Einen Eintrag hinzufügen: Titel, Kurztext, Typ, Bild, Mieten oder kaufen und die Gruppe. Die Bildbeschreibung ausfüllen.
 4. Den Preis leer lassen, wenn er auf Anfrage ist. „Gültig bis“ nur setzen, wenn der Eintrag endet. „Sichtbar“ anlassen. Ein Datum setzt die Reihenfolge.
 5. Speichern. Der Eintrag steht unter Aktuelles und, wenn er zu den drei neuesten gehört, auf der Startseite.
 
