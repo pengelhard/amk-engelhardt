@@ -24,6 +24,14 @@
   window.addEventListener("scroll", pinTop, { passive: true });
   window.addEventListener("resize", pinTop);
 
+  if (bar && bar.classList.contains("top--overlay")) {
+    function solidTop() {
+      bar.classList.toggle("is-solid", window.scrollY > 24);
+    }
+    solidTop();
+    window.addEventListener("scroll", solidTop, { passive: true });
+  }
+
   var buttons = Array.prototype.slice.call(document.querySelectorAll(".nav-toggle"));
   var button = document.querySelector(".header-bar .nav-toggle") || buttons[0];
   var menu = document.getElementById("menue");

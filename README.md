@@ -139,7 +139,7 @@ Logo-Grün `#76B729` ist nur noch Akzent. Auf Weiß erreicht es etwa 2,45:1 und 
 
 Unter 980 px liegt eine feste Leiste: Anrufen (`tel:+499082921777`), Anfrage, Menü. Jede Fläche ist mindestens 48 px, der Inhalt bekommt `padding-bottom` inklusive `env(safe-area-inset-bottom)`. Ab 980 px bleibt die Kopfnavigation, die Leiste ist aus.
 
-Die Schrift ist Manrope, lokal als WOFF2 unter `assets/fonts/`, Lizenz SIL OFL. Es sind keine Schriften von einem CDN eingebunden. Der Kopf ist durchgehend ein weißer Balken. Logo und Menü ändern beim Scrollen weder Größe noch Form.
+Die Schrift ist Manrope, lokal als WOFF2 unter `assets/fonts/`, Lizenz SIL OFL. Es sind keine Schriften von einem CDN eingebunden. Auf der Startseite liegt der Kopf auf dem Bild und wird beim Scrollen weiß. Auf den übrigen Seiten ist er ein weißer Balken. Logo und Menü ändern beim Scrollen weder Größe noch Form.
 
 Impressum und Datenschutz sind neu geschrieben. Eine USt-IdNr. steht auf der Seite nicht: die alte Seite ließ das Feld leer, und ohne Nummer ist die Zeile nicht einschlägig. § 18 Abs. 2 MStV steht nicht im Impressum. Für eine gewerbliche Produktseite wird er hier nicht als Pflicht behauptet. Die Angabe zum EU-US Data Privacy Framework ist nur der Verweis auf die öffentliche Liste vom 15.11.2026, keine eigene Zusage. Bildnachweise stehen im Impressum. Entwurf, vor Veröffentlichung rechtlich prüfen. Dieser Hinweis steht nur in dieser Datei.
 
