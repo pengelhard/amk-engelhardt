@@ -82,7 +82,10 @@
       else node.innerHTML = '<p class="offer-empty">Zurzeit keine Einträge.</p>';
       return;
     }
-    if (block) block.hidden = false;
+    if (block) {
+      block.hidden = false;
+      block.classList.toggle("offers--slim", shown.length < 2);
+    }
     var layout = shown.length === 1 ? "news-banner" : "news-grid";
     node.innerHTML = '<div class="' + layout + '">' + shown.map(function (entry) {
       return card(entry, root);

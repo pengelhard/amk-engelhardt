@@ -88,7 +88,8 @@ Die Anhängerfotos sind unverändert. Sie sind Beispielbilder, kein Fahrzeug von
 | Datei | Motiv | Quelle |
 | --- | --- | --- |
 | `images/anhaenger-offen.webp` | Hochlader | Humbaur GmbH, Wikimedia Commons, Datei Humbaur Hochlader HU, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Humbaur_Hochlader_HU.jpg |
-| `images/anhaenger-plane.webp` | Planenanhänger, auch Hero | Fiver, der Hellseher, Wikimedia Commons, Datei STEMA HP 4050 (rear), CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:STEMA_HP_4050_(rear).jpg |
+| `images/anhaenger-plane.webp` | Planenanhänger | Fiver, der Hellseher, Wikimedia Commons, Datei STEMA HP 4050 (rear), CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:STEMA_HP_4050_(rear).jpg |
+| `images/bauzaun-standard.webp` | Bauzaun auf der Baustelle, Hero der Startseite, 700×456. Nutzungsrecht in Klärung | Datei lag bereits im Repository. Eine Quelle ist in den bisherigen Unterlagen nicht genannt. |
 | `images/kofferanhaenger.webp` | Kofferanhänger | Humbaur GmbH, Wikimedia Commons, Datei Humbaur Kofferanhänger HKPA, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Humbaur_Kofferanh%C3%A4nger_HKPA.jpg |
 | `images/fahrzeugtransporter.webp` | Fahrzeugtransporter, auch Aktuelles | Humbaur GmbH, Wikimedia Commons, Datei Kleinfahrzeugtransporter FTK, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Kleinfahrzeugtransporter_FTK.jpg |
 | `images/kuehlanhaenger-13.webp` | Kühlanhänger | Produktfoto Herb Fahrzeugteile, Unsinn UKT C6. Nutzungsrecht weiter offen. |

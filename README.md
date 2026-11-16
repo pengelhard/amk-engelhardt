@@ -30,7 +30,7 @@ Der Kopf trägt auf jeder Seite oben rechts ein Hamburger-Menü. Es öffnet dass
 
 JavaScript ergänzt nur: Merkzettel in `localStorage`, die Bauzaun-Konfiguration als eine Position, den Formularversand, Einlesen von `data/aktuelles.json` und auf der Kontaktseite die Karte nach „Karte laden“. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt. `js/rechner.js` und `js/karussell.js` sind nicht mehr eingebunden.
 
-Der Hero ist ein Standbild: `images/anhaenger-plane.webp`, 2440×1580, das schärfste vorhandene Motiv. `srcset` nennt nur diese Breite, die Darstellung geht nicht über 2440 px hinaus. Slogan und Lead bleiben. Die Buttons „Anfrage stellen“ und „Anrufen“ stehen im Menü, nicht im Hero. Kein CDN.
+Der Hero ist das vorhandene Einsatzfoto `images/bauzaun-standard.webp`, 700×456. Ein schärferes Foto von Zaun oder Verkehrssicherung im Einsatz fehlt. Slogan bleibt. Im Hero stehen Mieten und Kaufen. Kein CDN.
 
 Unter dem Ablauf liegt ein Abschnitt für ein Teamfoto. Er bleibt unsichtbar, solange `#team-foto` kein `data-src` hat. Liegt das Foto bereit, `data-src` auf den relativen Pfad setzen, zum Beispiel `images/team.webp`. Der Abschnitt erscheint erst, wenn das Bild lädt. Ohne Bild steht dort kein Text.
 
@@ -133,13 +133,13 @@ Nicht mehr eingebunden und aus `images/` entfernt: das alte Bauzaunfoto der best
 
 ## Farben und Kontrast
 
-Hauptfarbe ist ein gedecktes Tannengrün `#1F4D3A`. Weiße Schrift darauf liegt bei etwa 9,6:1. Der Hover der Flächen ist `#16382B` (Weiß darauf etwa 12,9:1). Der Fließtext ist `#4A4A4A` (über 7:1 auf Weiß), Überschriften `#3A3939`, Absetzflächen `#F3F7F9`.
+Fläche ist Papier `#F3F1EB`, Text `#1A1A18` und `#3A3936`. Der CTA ist Signalgelb `#E8C200` mit Schrift `#1A1A18` (etwa 10:1). `#D01212` nur als Linie und Badge, Weiß darauf etwa 5,6:1. Waldgrün `#1F4D3A` ist sekundär. Der Fokusring ist `#1A1A18`.
 
-Logo-Grün `#76B729` ist nur noch Akzent. Auf Weiß erreicht es etwa 2,45:1 und ist damit kein Text und keine große Fläche. Es steht auf der kleinen Marke „TL“ (Schrift `#1A1A1A`, etwa 7,1:1), als Strich der aktiven Fußleiste, als Hover-Ring an den Buttons und als Farbe der Link-Unterstreichung. Links und der Fokusring selbst sind `#1F4D3A`, der Link-Hover `#132E22`.
+Logo-Grün `#76B729` steht nur noch im Logo. Es ist kein Text und keine Fläche.
 
 Unter 980 px liegt eine feste Leiste: Anrufen (`tel:+499082921777`), Anfrage, Menü. Jede Fläche ist mindestens 48 px, der Inhalt bekommt `padding-bottom` inklusive `env(safe-area-inset-bottom)`. Ab 980 px bleibt die Kopfnavigation, die Leiste ist aus.
 
-Die Schrift ist Manrope, lokal als WOFF2 unter `assets/fonts/`, Lizenz SIL OFL. Es sind keine Schriften von einem CDN eingebunden. Auf der Startseite liegt der Kopf auf dem Bild und wird beim Scrollen weiß. Auf den übrigen Seiten ist er ein weißer Balken. Logo und Menü ändern beim Scrollen weder Größe noch Form.
+Überschriften sind Barlow Condensed 600/700, Text und UI sind IBM Plex Sans 400/600. Beides liegt lokal als WOFF2 unter `assets/fonts/`, latin und latin-ext, Lizenz SIL OFL. Es sind keine Schriften von einem CDN eingebunden. Der Kopf ist etwa 64 px, das Logo 44–46 px. Auf der Startseite liegt er auf dem Bild und wird beim Scrollen weiß. Auf den übrigen Seiten ist er ein weißer Balken. Logo und Menü ändern beim Scrollen weder Größe noch Form. „Anfrage“ im Kopf ist ein gelber Pill-Button.
 
 Impressum und Datenschutz sind neu geschrieben. Eine USt-IdNr. steht auf der Seite nicht: die alte Seite ließ das Feld leer, und ohne Nummer ist die Zeile nicht einschlägig. § 18 Abs. 2 MStV steht nicht im Impressum. Für eine gewerbliche Produktseite wird er hier nicht als Pflicht behauptet. Die Angabe zum EU-US Data Privacy Framework ist nur der Verweis auf die öffentliche Liste vom 15.11.2026, keine eigene Zusage. Bildnachweise stehen im Impressum. Entwurf, vor Veröffentlichung rechtlich prüfen. Dieser Hinweis steht nur in dieser Datei.
 
