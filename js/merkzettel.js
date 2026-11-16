@@ -8,7 +8,13 @@
     "Sichtschutz": 1,
     "Tür": 1,
     "Tor": 1,
-    "Zusatzstreben": 1
+    "Zusatzstreben": 1,
+    "Lauftor/Tür": 1,
+    "Einfahrtstor": 1,
+    "Sichtschutzplane": 1,
+    "Sicherheitsschellen": 1,
+    "Schwere Füße": 1,
+    "Straßenverkehr/Absicherung": 1
   };
   var COUNTED = { "Bauzaunplane": 1, "Tür": 1, "Tor": 1, "Zusatzstreben": 1 };
 
@@ -41,7 +47,7 @@
         extras.push(extra);
       });
     }
-    return {
+    var next = {
       art: String(konfig.art || "").slice(0, 80),
       key: ART_KEYS[konfig.key] ? konfig.key : "",
       menge: menge.slice(0, 12),
@@ -50,6 +56,9 @@
       bis: String(konfig.bis || "").slice(0, 10),
       extras: extras
     };
+    var bemerkung = String(konfig.bemerkung || "").trim();
+    if (bemerkung) next.bemerkung = bemerkung.slice(0, 600);
+    return next;
   }
 
   function localBild(value) {
@@ -76,6 +85,9 @@
       if (bild) next.bild = bild;
       if (note) next.note = note.slice(0, 600);
       if (item.sammel) next.sammel = true;
+      if (item.genehmigung) next.genehmigung = true;
+      var ort = String(item.ort || "").trim();
+      if (ort) next.ort = ort.slice(0, 160);
       var kat = String(item.kat || "");
       if (kat === "bauzaun" || kat === "verkehrssicherung" || kat === "anhaenger") next.kat = kat;
       if (/^\d{4}-\d{2}-\d{2}$/.test(von)) next.von = von;

@@ -92,7 +92,8 @@
 
   function editHref(item) {
     var id = String(item.id);
-    if (item.konfig || id.indexOf("bauzaun-konfig") !== -1) return "../bauzaun/konfigurator/";
+    if (item.konfig || id.indexOf("bauzaun-konfig") !== -1 || id.indexOf("bauzaun-paket") !== -1) return "../mieten/";
+    if (id.indexOf("verkehr:") !== -1) return "../mieten/verkehrssicherung/";
     if (id.indexOf("kauf:") === 0 || id.indexOf("miete:") === 0) return "../produkt/" + id.slice(id.indexOf(":") + 1).split(":")[0] + "/";
     if (id.indexOf("aktuell:") === 0) return "../aktuelles/";
     return "../anfrage/";
@@ -129,10 +130,11 @@
     var k = item.konfig;
     var einheit = k.einheit === "felder" ? (k.menge === "1" ? " Feld" : " Felder") : " m";
     var listed = extraList(k.extras);
-    var extras = listed ? esc(listed) + " — Aufpreis auf Anfrage" : "keine";
+    var extras = listed ? "<p>" + esc(listed) + "</p>" : "";
+    var note = k.bemerkung ? "<p>" + esc(k.bemerkung) + "</p>" : "";
     return "<p>" + esc(k.menge) + einheit + "</p>" +
-      "<p>Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf</p>" +
-      "<p>Extras: " + extras + "</p>";
+      "<p>Standardzubehör inklusive.</p>" +
+      extras + note;
   }
 
   function render(items) {
@@ -150,8 +152,8 @@
     if (rent) rent.hidden = !renting(data);
     if (period) period.hidden = !askPeriod;
     if (periodTitle) periodTitle.textContent = askPeriod ? "Zeitraum und Anfahrt" : "Anfahrt";
-    if (verkehr) verkehr.hidden = !verkehrOn;
-    if (einsatz) einsatz.hidden = !verkehrOn || renting(data);
+    if (verkehr) verkehr.hidden = true;
+    if (einsatz) einsatz.hidden = true;
     if (fence) fence.hidden = !fencing(data);
     var rentOn = rent && !rent.hidden;
     ["von", "bis"].forEach(function (id) {
@@ -165,23 +167,36 @@
     form.querySelectorAll('input[name="leistung"]').forEach(function (field) {
       field.required = !!rentOn;
     });
-    list.innerHTML = data.map(function (item, index) {
+    function row(item, index) {
       var info = CATALOG[item.id] || {};
       var bild = item.konfig && BILD[item.konfig.key] ? BILD[item.konfig.key] : (info.bild || item.bild);
-      var modus = kind(item.id);
       var image = bild ? '<img src="../' + esc(bild) + '" alt="" width="320" height="220">' : "";
-      var body = item.konfig
-        ? konfigText(item)
-        : (item.note ? "<p>" + esc(item.note) + "</p>" : "");
+      var bits = [];
+      if (item.konfig) bits.push(konfigText(item));
+      else if (item.note) bits.push("<p>" + esc(item.note) + "</p>");
+      if (item.ort) bits.push("<p>" + esc(item.ort) + "</p>");
+      if (item.genehmigung) bits.push("<p>Genehmigung durch AMK</p>");
       var qty = item.konfig || sammel(item)
         ? ""
         : '<label class="qty">Menge <input type="number" min="1" max="99" inputmode="numeric" value="' + item.qty + '" data-index="' + index + '" aria-label="Menge ' + esc(item.name) + '"></label>';
       return '<li class="cart-row">' + image +
-        '<div class="cart-main"><p class="cart-kind">' + modus + "</p><strong>" + esc(item.name) + "</strong>" + body + "</div>" +
+        '<div class="cart-main"><strong>' + esc(item.name) + "</strong>" + bits.join("") + "</div>" +
         qty +
         '<div class="cart-actions"><a class="text-btn" href="' + esc(editHref(item)) + '">Ändern<span class="visually-hidden">: ' + esc(item.name) + '</span></a>' +
         '<button type="button" class="text-btn" data-index="' + index + '">Entfernen<span class="visually-hidden">: ' + esc(item.name) + "</span></button></div>" +
         "</li>";
+    }
+    var groups = [
+      ["Miete", data.map(function (item, index) { return { item: item, index: index }; }).filter(function (entry) { return String(entry.item.id).indexOf("miete:") === 0; })],
+      ["Kauf", data.map(function (item, index) { return { item: item, index: index }; }).filter(function (entry) { return String(entry.item.id).indexOf("kauf:") === 0; })],
+      ["Weiteres", data.map(function (item, index) { return { item: item, index: index }; }).filter(function (entry) {
+        var id = String(entry.item.id);
+        return id.indexOf("miete:") !== 0 && id.indexOf("kauf:") !== 0;
+      })]
+    ];
+    list.innerHTML = groups.filter(function (group) { return group[1].length; }).map(function (group) {
+      return '<li class="cart-group"><h3>' + group[0] + "</h3></li>" +
+        group[1].map(function (entry) { return row(entry.item, entry.index); }).join("");
     }).join("");
   }
 
@@ -279,28 +294,34 @@
       else window.location.href = "danke/";
       return;
     }
-    var lines = ["Anfrage an AMK Engelhardt", ""];
-    items.forEach(function (item) {
+    function lineOf(item) {
       if (item.konfig) {
         var k = item.konfig;
         var einheit = k.einheit === "felder" ? (k.menge === "1" ? " Feld" : " Felder") : " m";
         var listed = extraList(k.extras);
-        var extra = listed ? listed + " — Aufpreis auf Anfrage" : "keine";
-        lines.push(k.art + " — " + kind(item.id) + " — " + k.menge + einheit + " — Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf — Extras: " + extra);
-        return;
+        return "Miete — " + k.art + " — " + k.menge + einheit + " — Standardzubehör inklusive" +
+          (listed ? " — " + listed : "") +
+          (k.bemerkung ? " — Bemerkung: " + k.bemerkung : "");
       }
-      if (sammel(item)) {
-        lines.push(item.name + " — " + kind(item.id) + (item.note ? " — " + item.note : ""));
-        return;
+      if (String(item.id).indexOf("miete:verkehr") === 0) {
+        return "Miete — Verkehrssicherung — " + (item.note || "") +
+          (item.ort ? " — Ort: " + item.ort : "") +
+          (item.genehmigung ? " — Genehmigung durch AMK" : "");
       }
-      lines.push(item.name + " — " + kind(item.id) + " — Menge " + item.qty + (item.note ? " — " + item.note : ""));
+      if (sammel(item)) return kind(item.id) + " — " + item.name + (item.note ? " — " + item.note : "");
+      return kind(item.id) + " — " + item.name + " — Menge " + item.qty + (item.note ? " — " + item.note : "");
+    }
+    var lines = ["Anfrage an AMK Engelhardt", ""];
+    ["miete:", "kauf:", ""].forEach(function (prefix) {
+      items.forEach(function (item) {
+        var id = String(item.id);
+        var match = prefix ? id.indexOf(prefix) === 0 : id.indexOf("miete:") !== 0 && id.indexOf("kauf:") !== 0;
+        if (match) lines.push(lineOf(item));
+      });
     });
     lines.push("");
     if (fencing(items) && val("laenge")) lines.push("Zaunlänge: " + val("laenge") + " m");
     if (fencing(items) && val("hoehe")) lines.push("Höhe: " + val("hoehe") + " m");
-    if (items.some(isVerkehr) && val("genehmigung") === "ja") {
-      lines.push("Genehmigung/Verkehrsrechtliche Anordnung durch AMK");
-    }
     if (renting(items)) {
       if (askPeriod) lines.push("Zeitraum: " + (deDate(val("von")) || val("von")) + " bis " + (deDate(val("bis")) || val("bis")));
       lines.push("Leistung: " + (val("leistung") === "abholung" ? "Selbstabholung" : "Lieferung, Aufbau und Abbau"));

@@ -8,24 +8,25 @@ An der bestehenden Website, an Domain, DNS oder E-Mail wurde nichts geändert.
 
 ## Seiten
 
-Die Startadresse `index.html` ist der Einstieg. Produkte stehen nach Kategorien unter `bauzaun/`, `verkehrssicherung/` und `anhaenger/`. Jedes Produkt lässt sich mieten oder kaufen. `mieten/`, `kaufen/` und `absperrung/` leiten weiter.
+Die Startadresse `index.html` ist der Einstieg, mit zwei Flächen Mieten und Kaufen. Miete ist ein Paket unter `mieten/`. Einzelteile stehen unter `kaufen/`. `bauzaun/`, `verkehrssicherung/`, `anhaenger/` und `absperrung/` leiten dorthin weiter.
 
 | URL | Inhalt |
 | --- | --- |
 | `index.html` | Einstieg: ein statisches Hero-Bild, Bildflächen, Ablauf, Aktuelles |
 | `aktuelles/` | Sonderangebote, Neuheiten und besondere Produkte aus `data/aktuelles.json` |
 | `angebote/` | Weiterleitung auf `aktuelles/` (meta refresh und canonical) |
-| `bauzaun/`, `verkehrssicherung/`, `anhaenger/` | Produktlisten. An jeder Karte: Mieten oder Kaufen und Menge. Der Zeitraum steht einmal im Anfragekorb |
-| `bauzaun/konfigurator/` | Bauzaun in einem Schritt, ebenfalls Mieten oder Kaufen |
-| `mieten/`, `kaufen/` | Weiterleitung auf die Kategorien |
-| `produkt/<slug>/` | Detail, gleiche Auswahl wie in der Liste |
+| `mieten/` | Bauzaun als Mietpaket: Zauntyp, Länge oder Felder, Standardzubehör inklusive, Sonderzubehör als Häkchen |
+| `mieten/verkehrssicherung/` | Verkehrssicherung als Mietpaket: Bedarf, Ort, Option Genehmigung durch AMK |
+| `kaufen/` | Einzelteile inkl. Zubehör und Anhänger, nur Kauf, mit Menge. Kategorien: Bauzaun (Standard 3,5 × 2,0 m zuerst, 1,2 m zuletzt), Verkehrssicherung, Anhänger |
+| `bauzaun/`, `verkehrssicherung/`, `anhaenger/`, `bauzaun/konfigurator/` | Weiterleitung auf `kaufen/` oder `mieten/` |
+| `produkt/<slug>/` | Detail zum Kauf, Menge oder bei Verkehrsschildern ein Freitext |
 | `service/` | Full Service und die zwei genannten Partner |
 | `anfrage/` | Anfrageliste. Versand über `js/form-config.js`, sonst `mailto`. Leer zusätzlich „Individuelle Beratung anfragen“. `anfrage/danke/` nach erfolgreichem Versand |
 | `ueber-uns/` | Firma, Standort |
 | `kontakt/` | Kontaktdaten, Zeiten, Terminabsprache, Karte nach Einwilligung, Route in neuem Tab |
 | `impressum/`, `datenschutz/` | Angaben nach § 5 DDG und Datenschutz nur für das, was die Seite nutzt. Entwurf, vor Veröffentlichung rechtlich prüfen. Dieser Satz steht nur hier, nicht auf den Seiten. |
 
-Der Kopf trägt auf jeder Seite oben rechts ein Hamburger-Menü. Es öffnet dasselbe Panel: Startseite, Bauzaun, Verkehrssicherung, Anhänger, Aktuelles & Angebote, Kontakt, dazu „Anrufen 09082 921777“ und „Anfrage stellen“. Die aktuelle Seite ist markiert. Ab 980 px bleiben Bauzaun, Verkehrssicherung, Anhänger, Aktuelles & Angebote und Kontakt zusätzlich sichtbar, rechts daneben das Anfrage-Zeichen mit Zähler und der Hamburger. Unter 980 px liegt eine Leiste mit Anrufen, Anfrage und Menü. Service, Über uns, Impressum und Datenschutz bleiben in der Fußzeile erreichbar. Unterseiten haben eine Brotkrume statt „Zurück“-Links.
+Der Kopf trägt auf jeder Seite oben rechts ein Hamburger-Menü. Es öffnet dasselbe Panel: Startseite, Mieten, Kaufen, Aktuelles & Angebote, Kontakt, dazu „Anrufen 09082 921777“ und „Anfrage stellen“. Die aktuelle Seite ist markiert. Ab 980 px bleiben Mieten, Kaufen, Aktuelles & Angebote und Kontakt zusätzlich sichtbar, rechts daneben das Anfrage-Zeichen mit Zähler und der Hamburger. Unter 980 px liegt eine Leiste mit Anrufen, Anfrage und Menü. Service, Über uns, Impressum und Datenschutz bleiben in der Fußzeile erreichbar. Unterseiten haben eine Brotkrume statt „Zurück“-Links.
 
 JavaScript ergänzt nur: Merkzettel in `localStorage`, die Bauzaun-Konfiguration als eine Position, den Formularversand, Einlesen von `data/aktuelles.json` und auf der Kontaktseite die Karte nach „Karte laden“. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt. `js/rechner.js` und `js/karussell.js` sind nicht mehr eingebunden.
 
@@ -59,9 +60,13 @@ Der einzige Startinhalt ist „Fahrzeugtransporter“, mit dem vorhandenen Foto 
 
 ## Verkauf und Miete
 
-Jedes Produkt kann gemietet oder gekauft werden. Die Auswahl steht an der Karte und auf der Detailseite: Mieten oder Kaufen und Menge. Verkehrsschilder sind eine Sammelposition: statt Menge ein Freitext zum Bedarf. Der Zeitraum wird einmal im Anfragekorb erfasst und gilt für alle Mietpositionen, Pflicht nur wenn eine Miete im Korb liegt. Liegt Verkehrssicherung im Korb, gibt es die Option „Genehmigung/Verkehrsrechtliche Anordnung durch AMK“ und ein Feld Einsatzort. `js/form-config.js` bleibt leer, bis Endpoint und Access-Key eingetragen sind.
+Miete und Kauf sind getrennt, weil Zubehör unterschiedlich behandelt wird. Ein Artikel hat keinen Umschalter Mieten oder Kaufen.
 
-Kühlanhänger stehen bei den Anhängern, zum Mieten oder Kaufen. Massen stehen nicht auf den Seiten.
+Mieten ist ein Paket. Beim Bauzaun sind Zauntyp (Standard 3,5 × 2,0 m vorausgewählt), Länge in Metern oder Anzahl Felder und der Satz „Standardzubehör inklusive“ das Paket. Sonderzubehör wird nur angehakt, ohne Menge: Lauftor/Tür, Einfahrtstor, Sichtschutzplane, Sicherheitsschellen, schwere Füße, Straßenverkehr/Absicherung. Darunter steht „Weiteres Zubehör auf Anfrage“ als Liste ohne Detailseiten, plus der Satz „Details stimmt AMK telefonisch oder per Mail ab.“ und ein Feld Bemerkung. Verkehrssicherung mieten fragt Bedarf und Ort und bietet „Genehmigung durch AMK“. Der Zeitraum steht einmal im Anfragekorb und ist Pflicht, sobald eine Miete im Korb liegt.
+
+Kaufen listet alle Einzelteile inklusive Zubehör und die Anhänger, mit Menge. Verkehrsschilder bleiben eine Sammelposition: statt Menge ein Freitext. Es gibt keinen Checkout, keine Zahlung und keine Preise. In `data/katalog.json` liegen `preis` und `bestand` leer, damit beides später ergänzt werden kann. Sie werden nicht angezeigt. `js/form-config.js` bleibt leer, bis Endpoint und Access-Key eingetragen sind.
+
+Ein gemischter Korb bleibt möglich. Die Übersicht trennt die Gruppen Miete und Kauf.
 
 ## Von der bestehenden Website übernommen
 
@@ -140,7 +145,7 @@ Impressum und Datenschutz sind neu geschrieben. Eine USt-IdNr. steht auf der Sei
 
 ## Bauzaun-Konfigurator
 
-`bauzaun/konfigurator/` fragt Mieten oder Kaufen, die Feldart und die Menge in Metern oder Feldern. Der Zeitraum kommt erst im Anfragekorb. Die vier Feldarten sind Profi 3,5 × 2,0 m, Profi 3,5 × 1,2 m, engmaschig 3,5 × 2,0 m und Exklusiv 3,5 × 2,5 m. Betonfüße, Verbindungsschellen und Streben nach Bedarf stehen als inklusive, ohne Stückzahl. Sonderwünsche sind Häkchen: Hochsicherheitsschellen, Bauzaunplane, Sichtschutz, Tür, Tor, Zusatzstreben. Tür, Tor, Bauzaunplane und Zusatzstreben haben eine Anzahl, sichtbar erst nach dem Häkchen. Der Beginn liegt nicht vor heute, das Ende nicht vor dem Beginn. Dieselbe Datumsregel gilt im Anfragekorb und in der Beratung. Rechts läuft auf dem Desktop „Ihre Auswahl“ mit, auf dem Handy als Leiste unten.
+`mieten/` fragt den Zauntyp und die Menge in Metern oder Feldern. Die vier Typen sind Profi 3,5 × 2,0 m, Profi 3,5 × 1,2 m, engmaschig 3,5 × 2,0 m und Exklusiv 3,5 × 2,5 m. Standardzubehör ist inklusive, ohne Stückzahl. Sonderzubehör sind Häkchen ohne Anzahl. Der Zeitraum kommt erst im Anfragekorb. Der Beginn liegt nicht vor heute, das Ende nicht vor dem Beginn. Dieselbe Datumsregel gilt im Anfragekorb und in der Beratung. Rechts läuft auf dem Desktop „Ihre Auswahl“ mit, auf dem Handy als Leiste unten. `bauzaun/konfigurator/` leitet auf `mieten/` weiter.
 
 ## Beispielpreise der Anhänger
 
@@ -150,7 +155,7 @@ Ein VDE-Badge gibt es nicht. TL steht an den Schrankenzäunen nur für die Folie
 
 ## Anfrage
 
-„In den Anfragekorb“ legt den Artikel in `localStorage` (`amk-wunsch`) oder erhöht die Menge. Ein Hinweis zeigt „Weiter umsehen“ und „Zur Anfrage“. Die Übersicht unter `anfrage/` zeigt Bild, Name, Miete oder Kauf, Menge, Ändern und Entfernen. „Preis auf Anfrage“ steht dort einmal. Eine Bauzaun-Konfiguration zeigt Art, Menge, „Inklusive“ und Extras, ohne zweiten Mengenregler. Liegt eine Miete im Korb, sind Zeitraum von/bis Pflicht, dazu Leistung, Einsatzort und PLZ. Ist der Korb leer, stehen Bauzaun, Verkehrssicherung, Anhänger und „Individuelle Beratung anfragen“. Name, Firma (optional), Telefon, E-Mail und Nachricht bleiben. Die Angaben liegen zusätzlich unter `amk-anfrage-meta`.
+„In den Anfragekorb“ legt den Artikel in `localStorage` (`amk-wunsch`) oder erhöht die Menge. Ein Hinweis zeigt „Weiter umsehen“ und „Zur Anfrage“. Die Übersicht unter `anfrage/` trennt Miete und Kauf und zeigt Bild, Name, Menge, Ändern und Entfernen. „Preis auf Anfrage“ steht dort einmal. Eine Bauzaun-Miete zeigt Länge, „Standardzubehör inklusive“ und die angehakten Sonderteile, ohne Mengenregler. Liegt eine Miete im Korb, sind Zeitraum von/bis Pflicht, dazu Leistung, Einsatzort und PLZ. Ist der Korb leer, stehen Mieten, Kaufen und „Individuelle Beratung anfragen“. Name, Firma (optional), Telefon, E-Mail und Nachricht bleiben. Die Angaben liegen zusätzlich unter `amk-anfrage-meta`.
 
 ## Formularversand
 
@@ -194,4 +199,4 @@ Dazu:
 16. Soll die Anfrage später ein richtiges Formular werden, und bleibt `info@bauzaun-mieten.net` die einzige Adresse? Der Merkzettel liegt nur im Browser.
 17. Die Karten zeigen Hersteller- und Händlerbeispiele, nicht den Bestand von AMK. Welche der Schwarzfeller-Artikel vermietet AMK wirklich, und welche Anhänger ersetzen die Beispielmodelle?
 
-Festgelegt und nicht mehr offen: keine Container, keine Dixi, keine Toilettenwagen, keine Sanitärcontainer. Bauzaun, Verkehrssicherung und Anhänger gibt es zum Mieten und zum Kaufen. Hosting ist GitHub Pages unter `/amk-engelhardt/`, eingeschaltet wird es später aus `main`.
+Festgelegt und nicht mehr offen: keine Container, keine Dixi, keine Toilettenwagen, keine Sanitärcontainer. Miete ist das Paket aus Bauzaun und Verkehrssicherung. Einzelteile, Zubehör und Anhänger stehen zum Kauf. Hosting ist GitHub Pages unter `/amk-engelhardt/`, eingeschaltet wird es später aus `main`.

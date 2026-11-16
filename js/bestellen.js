@@ -1,16 +1,10 @@
 (function () {
   if (!window.AMK_WUNSCH || typeof window.AMK_WUNSCH.add !== "function") return;
 
-  function mode(form) {
-    var checked = form.querySelector('input[type="radio"]:checked');
-    return checked && checked.value === "kauf" ? "kauf" : "miete";
-  }
-
   document.querySelectorAll("form[data-order]").forEach(function (form) {
     form.addEventListener("submit", function (event) {
       event.preventDefault();
       var sammel = form.hasAttribute("data-sammel");
-      var buy = mode(form) === "kauf";
       var qty = 1;
       var note = "";
       if (sammel) {
@@ -29,7 +23,7 @@
         }
       }
       var item = {
-        id: (buy ? "kauf:" : "miete:") + form.getAttribute("data-slug"),
+        id: "kauf:" + form.getAttribute("data-slug"),
         name: form.getAttribute("data-name") || "",
         qty: qty,
         bild: form.getAttribute("data-bild") || "",
