@@ -96,15 +96,17 @@ Die Anhängerfotos sind unverändert. Sie sind Beispielbilder, kein Fahrzeug von
 
 Das Logo bleibt das der bestehenden Website.
 
-## Hero, Testvorschläge
+## Hero
 
-Drei frei lizenzierte Fotos, kommerziell nutzbar ohne Pflicht zur Namensnennung. Die Dateien liegen lokal als WebP und AVIF in 768, 1280, 1920 und 2560 px Breite. Standard ist Vorschlag 1. `?hero=2` und `?hero=3` tauschen das Bild. Die Dateien werden nicht von Pexels eingebunden.
+Fünf frei lizenzierte Fotos, kommerziell nutzbar ohne Pflicht zur Namensnennung. Die Dateien liegen lokal als WebP und AVIF in 768, 1280, 1920 und 2560 px Breite, zugeschnitten auf 3:2. Sie werden nicht von Pexels eingebunden. Die Diashow beginnt mit der Absperrung. `?hero=` gibt es nicht mehr.
 
 | Datei | Motiv | Fotograf | Seite | Lizenz |
 | --- | --- | --- | --- | --- |
-| `images/hero/schranken-*` | Rot-weiße Absperrung mit Warnleuchten, 6000×4000, zugeschnitten auf 2560×1706 | Jan van der Wolf | https://www.pexels.com/photo/construction-safety-barriers-with-red-warning-lights-29527670/ | https://www.pexels.com/license/ |
-| `images/hero/zeichen-*` | Baustelle mit Warnzeichen, 2560×1707 | Sergei Starostin | https://www.pexels.com/photo/construction-site-with-warning-signs-and-barriers-29244130/ | https://www.pexels.com/license/ |
-| `images/hero/zaun-*` | Bauzaun entlang einer Baustelle. Ausschnitt der unteren Bildhälfte, 2560×720, damit der Zaun das Motiv ist | Mathias Reding | https://www.pexels.com/photo/steel-fence-in-the-construction-site-11692878/ | https://www.pexels.com/license/ |
+| `images/hero/schranke-*` | Rot-weiße Absperrung, 2735×3882, Ausschnitt 2735×1823 | Blue Arauz | https://www.pexels.com/photo/10065097/ | https://www.pexels.com/license/ |
+| `images/hero/zeichen-*` | Baustelle mit Warnzeichen und Verbotszeichen | Sergei Starostin | https://www.pexels.com/photo/construction-site-with-warning-signs-and-barriers-29244130/ | https://www.pexels.com/license/ |
+| `images/hero/zaun-*` | Bauzaun an einer Baustelle, 2832×4240, Ausschnitt 2832×1888 | Erik Mclean | https://www.pexels.com/photo/a-construction-site-in-a-city-16875231/ | https://www.pexels.com/license/ |
+| `images/hero/baustelle-*` | Fußgängerzeichen und rot-weiße Absperrung, 3072×4096, Ausschnitt 3072×2048 | Raoul Turmond | https://www.pexels.com/photo/31903677/ | https://www.pexels.com/license/ |
+| `images/hero/anhaenger-*` | Planenanhänger am Straßenrand, 3999×2667 | Markus Winkler | https://www.pexels.com/photo/10304035/ | https://www.pexels.com/license/ |
 
 ## Datenblätter
 

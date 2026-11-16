@@ -8,6 +8,7 @@
   <meta name="description" content="Bauzäune, Verkehrssicherung und Anhänger. Lieferung und Aufbau rund um Hainsfarth. AMK Engelhardt.">
   <link rel="preload" href="assets/fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" as="image" type="image/avif" href="images/hero/schranke-1920.avif" imagesrcset="images/hero/schranke-768.avif 768w, images/hero/schranke-1280.avif 1280w, images/hero/schranke-1920.avif 1920w, images/hero/schranke-2560.avif 2560w" imagesizes="100vw">
   <link rel="icon" href="assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/logo.png">
   <link rel="stylesheet" href="css/styles.css">
@@ -34,12 +35,12 @@
     </header>
   </div>
   <main id="inhalt">
-    <section class="hero hero--still">
+    <section class="hero hero--still hero--dia" data-dia>
       <div class="hero-media">
-        <picture>
-          <source type="image/avif" srcset="images/hero/schranken-768.avif 768w, images/hero/schranken-1280.avif 1280w, images/hero/schranken-1920.avif 1920w, images/hero/schranken-2560.avif 2560w" sizes="100vw">
-          <source type="image/webp" srcset="images/hero/schranken-768.webp 768w, images/hero/schranken-1280.webp 1280w, images/hero/schranken-1920.webp 1920w, images/hero/schranken-2560.webp 2560w" sizes="100vw">
-          <img src="images/hero/schranken-1920.webp" width="2560" height="1706" alt="Rot-weiße Absperrung mit Warnleuchten an einer Baustelle" fetchpriority="high" decoding="async">
+        <picture class="is-on">
+          <source type="image/avif" srcset="images/hero/schranke-768.avif 768w, images/hero/schranke-1280.avif 1280w, images/hero/schranke-1920.avif 1920w, images/hero/schranke-2560.avif 2560w" sizes="100vw">
+          <source type="image/webp" srcset="images/hero/schranke-768.webp 768w, images/hero/schranke-1280.webp 1280w, images/hero/schranke-1920.webp 1920w, images/hero/schranke-2560.webp 2560w" sizes="100vw">
+          <img src="images/hero/schranke-1920.webp" width="2560" height="1706" alt="Rot-weiße Absperrung an einer ruhigen Straße" fetchpriority="high" decoding="async">
         </picture>
       </div>
       <div class="wrap hero-copy hero-copy--statement">
@@ -52,6 +53,13 @@
         </div>
       </div>
     </section>
+    <section class="offers" id="aktuelles" aria-labelledby="aktuelles-titel" hidden>
+      <div class="wrap">
+        <h2 id="aktuelles-titel">Aktuelles &amp; Angebote</h2>
+        <div data-aktuelles data-home="ja" data-limit="3" data-root=""></div>
+        <p class="offer-more"><a href="aktuelles/">Alle ansehen</a></p>
+      </div>
+    </section>
     <section class="entries" aria-label="Mieten oder Kaufen">
       <a class="entry entry--rent" href="mieten/">
         <span class="eyebrow">Mieten</span>
@@ -61,6 +69,29 @@
         <span class="eyebrow">Kaufen</span>
         <strong>Einzelteile und Zubehör, Preis auf Anfrage.</strong>
       </a>
+    </section>
+    <section class="run run--rail" aria-labelledby="ablauf-titel">
+      <div class="wrap">
+        <h2 id="ablauf-titel">Ablauf</h2>
+        <ol class="rail">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M6 3.5h9l4 4V20.5H6z"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M15 3.5v4.5h4.5M8.5 12h7M8.5 15.5h5"/></svg>
+            <span>Anfragen</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M5 5.5h14v13H5z"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M8.5 10h7M8.5 13.5h4.5"/></svg>
+            <span>Angebot</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M3.5 15.5h11V8H3.5z"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M14.5 11h3.2L20.5 14v1.5h-6"/><circle cx="7" cy="17.5" r="1.4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="16.8" cy="17.5" r="1.4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+            <span>Lieferung &amp; Aufbau</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M4 8.5h11v9H4z"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M15 11h2.4L20 13.5V17.5h-5"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M8 6.2 10.2 4.1 12.4 6.2M10.2 4.4v5.2"/></svg>
+            <span>Abholung</span>
+          </li>
+        </ol>
+      </div>
     </section>
     <section class="plates" aria-labelledby="leistungen-titel">
       <div class="wrap">
@@ -89,18 +120,6 @@
         </div>
       </div>
     </section>
-    <section class="run" aria-labelledby="ablauf-titel">
-      <div class="wrap">
-        <h2 id="ablauf-titel">So läuft's</h2>
-        <ol class="steps">
-          <li><strong>Anfrage</strong><span>Sie nennen Produkt und Menge.</span></li>
-          <li><strong>Angebot</strong><span>Wir nennen den Preis.</span></li>
-          <li><strong>Lieferung &amp; Aufbau</strong><span>Wir bringen den Zaun und stellen ihn auf.</span></li>
-          <li><strong>Abholung</strong><span>Zum Ende holen wir alles wieder ab.</span></li>
-        </ol>
-        <p class="area-line">Liefergebiet. Lieferung und Aufbau rund um Hainsfarth.</p>
-      </div>
-    </section>
     <section class="team" id="team" hidden>
       <div class="wrap team-row">
         <img id="team-foto" alt="Team von AMK Engelhardt" width="1200" height="800">
@@ -112,13 +131,6 @@
         <p><strong>Full Service</strong><span>Lieferung, Aufbau, Abbau</span></p>
         <p><strong>Region</strong><span>rund um Hainsfarth</span></p>
         <p><strong>Mo–Fr 8–17 Uhr</strong><span>Besuch nach Termin</span></p>
-      </div>
-    </section>
-    <section class="offers" id="aktuelles" aria-labelledby="aktuelles-titel" hidden>
-      <div class="wrap">
-        <h2 id="aktuelles-titel">Aktuelles &amp; Angebote</h2>
-        <div data-aktuelles data-home="ja" data-limit="3" data-root=""></div>
-        <p class="offer-more"><a href="aktuelles/">Alle ansehen</a></p>
       </div>
     </section>
     <section class="close-band">
@@ -177,32 +189,8 @@
         </div>
       </div>
     </div>
-<script>
-(function () {
-  var heroes = {
-    "2": { id: "zeichen", w: 2560, h: 1708, pos: "center 40%", alt: "Absperrung mit Baustellenzeichen und einem runden Verbotszeichen" },
-    "3": { id: "zaun", w: 2560, h: 720, pos: "22% center", alt: "Bauzaun entlang einer Baustelle" }
-  };
-  var pick = heroes[new URLSearchParams(location.search).get("hero")];
-  if (!pick) return;
-  var pic = document.querySelector(".hero-media picture");
-  if (!pic) return;
-  var widths = [768, 1280, 1920, 2560];
-  pic.querySelectorAll("source").forEach(function (source) {
-    var ext = source.type === "image/avif" ? "avif" : "webp";
-    source.srcset = widths.map(function (w) {
-      return "images/hero/" + pick.id + "-" + w + "." + ext + " " + w + "w";
-    }).join(", ");
-  });
-  var img = pic.querySelector("img");
-  img.src = "images/hero/" + pick.id + "-1920.webp";
-  img.width = pick.w;
-  img.height = pick.h;
-  img.alt = pick.alt;
-  img.style.objectPosition = pick.pos;
-})();
-</script>
 <script src="js/nav.js"></script>
+<script src="js/dia.js"></script>
     <script src="js/aktuelles.js"></script>
   <script src="js/team.js"></script>
   <script src="js/merkzettel.js"></script>

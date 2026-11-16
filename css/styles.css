@@ -481,6 +481,29 @@ main { position: relative; z-index: 0; padding-top: var(--top, 5.6rem); }
 .hero--still .hero-media::after {
   background: linear-gradient(to top, rgba(26, 26, 24, 0.82) 0%, rgba(26, 26, 24, 0.42) 24%, rgba(26, 26, 24, 0.08) 46%, transparent 62%);
 }
+.hero--dia .hero-media picture {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+}
+.hero--dia .hero-media picture.is-on {
+  z-index: 1;
+  opacity: 1;
+}
+.hero--dia .hero-media picture.is-fade { transition: opacity 1.25s ease; }
+.hero--dia .hero-media::before,
+.hero--dia .hero-media::after { z-index: 2; }
+.hero--dia .hero-media::before {
+  background: linear-gradient(to bottom, rgba(26, 26, 24, 0.55) 0%, rgba(26, 26, 24, 0.12) 16%, transparent 30%);
+}
+.hero--dia .hero-media::after {
+  background: linear-gradient(to top, rgba(26, 26, 24, 0.94) 0%, rgba(26, 26, 24, 0.88) 20%, rgba(26, 26, 24, 0.72) 38%, rgba(26, 26, 24, 0.42) 54%, transparent 72%);
+}
+.hero--dia .hero-media img { object-position: center 38%; }
+@media (prefers-reduced-motion: reduce) {
+  .hero--dia .hero-media picture.is-fade { transition: none; }
+}
 .top--overlay .site-header {
   background: transparent;
   border-bottom-color: transparent;
@@ -491,7 +514,7 @@ main { position: relative; z-index: 0; padding-top: var(--top, 5.6rem); }
   padding: 0.12rem 0.4rem 0.12rem 0.2rem;
 }
 .top--overlay:not(.is-solid) .nav a,
-.top--overlay:not(.is-solid) .nav a:hover { color: var(--ink); }
+.top--overlay:not(.is-solid) .nav a:hover { color: #fff; }
 .top--overlay:not(.is-solid) .nav a[aria-current="page"] { box-shadow: inset 0 -2px 0 var(--barrier); }
 .top--overlay:not(.is-solid) .nav-toggle { background: var(--white); color: var(--ink); }
 .top--overlay.is-solid .site-header {
@@ -1326,6 +1349,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .hero--still .hero-media { display: block; background: #2a2a28; }
 .hero--still .hero-media picture { display: block; width: 100%; height: 100%; }
 .hero--still .hero-media img { width: 100%; max-width: none; height: 100%; object-fit: cover; }
+.hero--dia .hero-media picture { display: block; }
 
 .trust { padding: 3.4rem 0 1.8rem; }
 .steps { list-style: none; counter-reset: step; margin: 1.15rem 0 0; padding: 0; display: grid; gap: 0.85rem; }
@@ -1593,6 +1617,77 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .run h2 { font-size: clamp(2.25rem, 5vw, 4.5rem); }
 .run .steps { margin-top: 1.2rem; }
 .run .area-line { margin-top: 1.1rem; }
+.run--rail {
+  padding: 1.05rem 0 1.15rem;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+.run--rail h2 {
+  margin: 0 0 0.7rem;
+  font-family: var(--font);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.rail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem 0.9rem;
+}
+.rail li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+.rail svg {
+  flex: 0 0 auto;
+  width: 2.55rem;
+  height: 2.55rem;
+  padding: 0.48rem;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: var(--signal);
+  color: var(--signal-ink);
+}
+.rail span {
+  font-family: var(--display);
+  font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--ink);
+}
+@media (min-width: 800px) {
+  .rail { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.1rem; }
+  #aktuelles .news-banner .news-card { min-height: 16rem; }
+  #aktuelles .news-body { justify-content: center; padding: 1.35rem 1.5rem; }
+}
+#aktuelles {
+  padding: 1.35rem 0 1.45rem;
+  background: var(--paper);
+}
+#aktuelles h2 { font-size: clamp(2rem, 4.2vw, 3.1rem); margin-bottom: 0.15rem; }
+#aktuelles .news-card {
+  border: 0;
+  background: #fff;
+  box-shadow: 0 14px 36px rgba(26, 26, 24, 0.08);
+}
+#aktuelles .news-card strong { font-size: clamp(1.85rem, 3vw, 2.6rem); }
+#aktuelles .news-price {
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  font-weight: 700;
+  color: var(--ink);
+}
+#aktuelles .news-card .btn { width: auto; min-width: 9.5rem; }
+#aktuelles .news-banner { margin-top: 0.85rem; }
+#aktuelles .news-banner .news-card img { aspect-ratio: 16 / 10; }
+#aktuelles .news-body { padding: 1.05rem 1.1rem 1.2rem; }
 
 .close-band { background: var(--signal); color: var(--signal-ink); padding: 3.2rem 0 3.5rem; }
 .close-row {

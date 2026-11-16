@@ -12,7 +12,7 @@ Die Startadresse `index.html` ist der Einstieg, mit zwei Flächen Mieten und Kau
 
 | URL | Inhalt |
 | --- | --- |
-| `index.html` | Einstieg: ein statisches Hero-Bild, Bildflächen, Ablauf, Aktuelles |
+| `index.html` | Einstieg: Diashow, Angebote, Mieten/Kaufen, Ablauf, Leistungen |
 | `aktuelles/` | Sonderangebote, Neuheiten und besondere Produkte aus `data/aktuelles.json` |
 | `angebote/` | Weiterleitung auf `aktuelles/` (meta refresh und canonical) |
 | `mieten/` | Dieselben vier Hauptgruppen wie `kaufen/`. Bauzaun als Konfigurator mit Standardzubehör und optionalem Sonderzubehör, Absperrgitter, Schilder, Absperreinrichtungen und Anhänger zur Miete |
@@ -30,7 +30,9 @@ Der Kopf trägt auf jeder Seite oben rechts ein Hamburger-Menü. Es öffnet dass
 
 JavaScript ergänzt nur: Merkzettel in `localStorage`, die Bauzaun-Konfiguration als eine Position, den Formularversand, Einlesen von `data/aktuelles.json` und auf der Kontaktseite die Karte nach „Karte laden“. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt. `js/rechner.js` und `js/karussell.js` sind nicht mehr eingebunden.
 
-Der Hero ist ein Testvorschlag, umschaltbar mit `?hero=2` und `?hero=3`. Standard ist `images/hero/schranken-*` (Jan van der Wolf, Pexels). Die Quellen stehen in `docs/bildquellen.md`. Slogan bleibt. Im Hero stehen Mieten und Kaufen. Kein CDN.
+Der Hero ist eine ruhige Diashow aus fünf lokalen Fotos (`images/hero/schranke`, `zeichen`, `zaun`, `baustelle`, `anhaenger`). Das erste Bild liegt im HTML und wird als AVIF vorgeladen. Die übrigen kommen nach dem Laden. `prefers-reduced-motion` bleibt beim ersten Bild. Es gibt keine Pfeile und keine Punkte. `?hero=` entfällt. Die Quellen stehen in `docs/bildquellen.md`. Slogan bleibt. Im Hero stehen Mieten und Kaufen. Kein CDN.
+
+Aktuelles & Angebote steht direkt unter dem Hero und liest weiter `data/aktuelles.json`. Ohne sichtbaren Eintrag bleibt der Abschnitt zu. Der Ablauf ist eine schmale Schrittleiste: Anfragen, Angebot, Lieferung & Aufbau, Abholung.
 
 Unter dem Ablauf liegt ein Abschnitt für ein Teamfoto. Er bleibt unsichtbar, solange `#team-foto` kein `data-src` hat. Liegt das Foto bereit, `data-src` auf den relativen Pfad setzen, zum Beispiel `images/team.webp`. Der Abschnitt erscheint erst, wenn das Bild lädt. Ohne Bild steht dort kein Text.
 
