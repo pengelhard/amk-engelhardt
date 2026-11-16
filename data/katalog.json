@@ -13,24 +13,24 @@
     "kicker": "3,5 × 2,0 m · 14 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
+        "Querrohr",
+        "28 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -42,7 +42,21 @@
     "code": "10075",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "10075 ist das Spitzenmodell der Bauzäune in 2000 mm Höhe und 3500 mm Länge. Die relativ leichte Konstruktion bietet eine hervorragende Mobilität, ohne dass die Stabilität und Robustheit darunter leidet.",
+      "Die Version 10075 verfügt über Haken-Ösen-Befestigungen und ist vollfeuerverzinkt."
+    ],
+    "pdf": null
   },
   {
     "slug": "bauzaun-10075-1",
@@ -58,24 +72,24 @@
     "kicker": "3,5 × 2,0 m · 18,5 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
+        "Querrohr",
+        "28 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "45 × 300 mm"
+        "Maschenweite",
+        "45 x 300"
       ],
       [
         "Gewicht",
@@ -87,7 +101,20 @@
     "code": "10075.1",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,0 m",
+      "masche": "45 x 300",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "Im Gegensatz zum Modell 10075 enthält der Mobilzaun Profi Business 10075.1 einen dichter geschweißten Draht mit einer sehr engen Maschenweite von 45 x 300 mm. Das Business-Gitter ist außerdem feuerverzinkt, was seine Witterungsbeständigkeit erhöht."
+    ],
+    "pdf": "https://kkservice.de/download/10075.1.pdf"
   },
   {
     "slug": "bauzaun-10075-3",
@@ -103,28 +130,28 @@
     "kicker": "3,5 × 2,0 m · 16 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
+        "Querrohr",
+        "28 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
         "Mittelrohr",
-        "28 × 1,1 mm"
+        "28 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -136,7 +163,20 @@
     "code": "10075.3",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "Der Bauzaun Modell 10075.3 ist zusätzlich mit einem Mittelrohr von 28 x 1,1 mm ausgestattet, das die Stabilität des Feldes deutlich erhöht. Er hat eine Maschenweite von 100 x 300 und ist etwas schwerer – er wiegt 16 kg."
+    ],
+    "pdf": "https://kkservice.de/download/10075.3.pdf"
   },
   {
     "slug": "bauzaun-10029",
@@ -152,24 +192,24 @@
     "kicker": "2,2 × 2,0 m · 10 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
+        "Querrohr",
+        "28 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -181,7 +221,20 @@
     "code": "10029",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "2,2 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "Das durchbrochene Paneel Profi 10029 ist ein hervorragendes Beispiel für ein kleines, handliches Profil in 2000 mm Höhe und 2200 mm Breite, das in eine bestehende Anlage eingepasst werden kann und sich entsprechend anpasst. Seine Parameter unterscheiden sich, abgesehen von den Maßen, nicht von den 3500mm Modellen. Maschenweite 100×300, Gewicht 10kg."
+    ],
+    "pdf": null
   },
   {
     "slug": "bauzaun-10029-1",
@@ -197,24 +250,24 @@
     "kicker": "2,2 × 2,0 m · 13 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
+        "Querrohr",
+        "28 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "50 × 300 mm"
+        "Maschenweite",
+        "50 x 300"
       ],
       [
         "Gewicht",
@@ -226,7 +279,20 @@
     "code": "10029.1",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "2,2 m",
+      "hoehe": "2,0 m",
+      "masche": "50 x 300",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "Unter den 2m-Paneelen ist auch das Modell 10029.1 zu erwähnen – es ist die Basisversion des 2200er-Paneels mit kleinerem Maschenabstand und zusätzlich feuerverzinkt. Durch seine kürzeren Abmessungen und sein relativ geringes Gewicht – 13 kg – ist es sehr handlich und erfüllt seine Funktionen auch in anspruchsvollem Gelände."
+    ],
+    "pdf": null
   },
   {
     "slug": "bauzaun-10020",
@@ -242,28 +308,28 @@
     "kicker": "2,2 × 2,0 m · 13 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
+        "Querrohr",
+        "28 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
         "Mittelrohr",
-        "28 × 1,1 mm"
+        "28 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -275,7 +341,20 @@
     "code": "10020",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "2,2 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "Das Modell 10020 ist dem Modell 10029 sehr ähnlich, unterscheidet sich aber durch ein 28 mm x 1,1 mm großes Mittelrohr, das wesentlich zur Stabilität der Konstruktion beiträgt, und durch sein Gewicht von nur 13 kg."
+    ],
+    "pdf": "https://kkservice.de/download/10020.pdf"
   },
   {
     "slug": "bauzaun-10076-0",
@@ -291,24 +370,24 @@
     "kicker": "3,5 × 2,0 m · 20,5 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,4 mm"
+        "Querrohr",
+        "28 x 1.4 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,4 mm"
+        "Standrohr",
+        "40 x 1.4 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "4 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "4 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -320,7 +399,20 @@
     "code": "10076.0",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "4 mm",
+      "standrohr": "40 x 1.4 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "Mobilzaun Profi Exklusiv 10076.0 ist definitiv das Schwergewicht in unserem Sortiment. Das zusätzlich verstärkte Feld, für das dickere Komponenten verwendet wurden, u.a. 4mm Draht, erhöht die Festigkeit und Haltbarkeit des Zäunes. Das Paneel ist zusätzlich mit Haken/Ösen ausgestattet, die zusätzliche Möglichkeiten zur Befestigung der einzelnen Spannfelder bieten. Gewicht 20,5kg"
+    ],
+    "pdf": "https://kkservice.de/download/10076.pdf"
   },
   {
     "slug": "bauzaun-10039-3",
@@ -336,24 +428,24 @@
     "kicker": "3,5 × 2,0 m · 16 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
+        "Querrohr",
+        "28 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "4 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "4 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -365,7 +457,20 @@
     "code": "10039.3",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "4 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "Das Modell 10039.3 zeichnet sich neben der verstärkten Konstruktion und dem dickeren, geschweißten 4mm-Draht durch sein Design in Form von profilierten Ecken aus. Dieses Modell ist außerdem mit Haken/Ösen ausgestattet, um die Möglichkeit der Befestigung von Feldern zu erhöhen. Maschenweite 100×300. Gewicht 16kg."
+    ],
+    "pdf": "https://kkservice.de/download/10039.3.pdf"
   },
   {
     "slug": "bauzaun-10069-5",
@@ -381,24 +486,24 @@
     "kicker": "3,5 × 2,0 m · 14 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,0 mm"
+        "Querrohr",
+        "28 x 1.0 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,0 mm"
+        "Standrohr",
+        "40 x 1.0 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
-        "2,5 mm"
+        "vertikaler Draht",
+        "2.5 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -410,7 +515,20 @@
     "code": "10069.5",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "2.5 mm",
+      "standrohr": "40 x 1.0 mm",
+      "oberflaeche": "Verzinkt"
+    },
+    "text": [
+      "Wir bieten auch 2m-Paneele mit Haken-Ösen-Befestigung, verzinkt, in einer 3,5m-Rundversion an. Sie unterscheiden sich von ihrem Prototyp, der Business-Version, durch ihr abgerundetes Design. Das Gewicht eines Feldes beträgt 14 kg."
+    ],
+    "pdf": null
   },
   {
     "slug": "bauzaun-10044-2",
@@ -426,28 +544,28 @@
     "kicker": "3,5 × 2,5 m · 26,5 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,4 mm"
+        "Querrohr",
+        "28 x 1.4 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,4 mm"
+        "Standrohr",
+        "40 x 1.4 mm"
       ],
       [
         "Mittelrohr",
-        "28 × 1,4 mm"
+        "28 x 1.4 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "50 × 300 mm"
+        "Maschenweite",
+        "50 x 300"
       ],
       [
         "Gewicht",
@@ -459,7 +577,20 @@
     "code": "10044.2",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,5 m",
+      "masche": "50 x 300",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.4 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "Mobilzaun Profi Exklusiv 10044.2 ist auf einem Rahmen aus 28 mm x 1,1 mm horizontalem Rohr und 40 mm x 1,1 mm vertikalem Rohr aufgebaut, die zusammen mit verschweißten 3 mm dicken Drähten ein Netz von 50×300 bilden."
+    ],
+    "pdf": "https://kkservice.de/download/10044.2.pdf"
   },
   {
     "slug": "bauzaun-10069-10",
@@ -475,24 +606,24 @@
     "kicker": "3,5 × 2,0 m · 11,5 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "25 × 1,0 mm"
+        "Querrohr",
+        "25 x 1.0 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,0 mm"
+        "Standrohr",
+        "40 x 1.0 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
-        "2,5 mm"
+        "vertikaler Draht",
+        "2.5 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -504,7 +635,20 @@
     "code": "10069.10",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "2.5 mm",
+      "standrohr": "40 x 1.0 mm",
+      "oberflaeche": "Vorverzinkt"
+    },
+    "text": [
+      "10069.10 ist unser Flaggschiff unter den Zaunelementen, das im Pressverfahren hergestellt wird. Dank dieser Methode ist das durchbrochene Zaunelement um ein Vielfaches widerstandsfähiger gegen mechanische Beanspruchungen. Extrem robust, leicht und mit den Standardmaßen 3500 x 2000 mm. Gewicht: 11,5 kg"
+    ],
+    "pdf": "https://kkservice.pl/download/10069.10.pdf"
   },
   {
     "slug": "bauzaun-10069-11",
@@ -520,24 +664,24 @@
     "kicker": "3,5 × 2,0 m · 13,1 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "25 × 1,0 mm"
+        "Querrohr",
+        "25 x 1.0 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,0 mm"
+        "Standrohr",
+        "40 x 1.0 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -549,7 +693,20 @@
     "code": "10069.11",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.0 mm",
+      "oberflaeche": "Vorverzinkt"
+    },
+    "text": [
+      "Das Modell 10069.11 wird im Vergleich zu seinem Vorgängermodell ebenfalls in PRESS-Technologie gefertigt und unterscheidet sich lediglich durch die verwendete Stärke des vertikalen Drahtes – 3 mm – sowie durch das Gewicht. Ein durchbrochenes Element 1069.11 wiegt 13,1 kg."
+    ],
+    "pdf": "https://kkservice.pl/download/10069.11.pdf"
   },
   {
     "slug": "bauzaun-10069-12",
@@ -565,24 +722,24 @@
     "kicker": "3,5 × 2,0 m · 14,5 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "25 × 1,2 mm"
+        "Querrohr",
+        "25 x 1.2 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,2 mm"
+        "Standrohr",
+        "40 x 1.2 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -594,7 +751,20 @@
     "code": "10069.12",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.2 mm",
+      "oberflaeche": "Vorverzinkt"
+    },
+    "text": [
+      "Das Modell Profi PRESS economy 10069.12 ist ein weiteres Modell eines Gitterzauns, das in der PRESS-Technologie gefertigt wurde. Bei diesem Modell wurden dickere vertikale Rohre sowie vertikale Rohre mit einer Stärke von 1,2 mm verwendet. Die Maschenweite unterscheidet sich nicht von den anderen Modellen und beträgt 100 x 300 mm. Das Gewicht eines Zaunfeldes beträgt 14,5 kg."
+    ],
+    "pdf": "https://kkservice.pl/download/10069.12.pdf"
   },
   {
     "slug": "bauzaun-10069-13",
@@ -610,24 +780,24 @@
     "kicker": "3,5 × 2,0 m · 17,1 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "25 × 1,2 mm"
+        "Querrohr",
+        "25 x 1.2 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,2 mm"
+        "Standrohr",
+        "40 x 1.2 mm"
       ],
       [
-        "Draht waagerecht",
-        "3,8 mm"
+        "horizontaler Draht",
+        "3.8 mm"
       ],
       [
-        "Draht senkrecht",
-        "3,8 mm"
+        "vertikaler Draht",
+        "3.8 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -639,7 +809,20 @@
     "code": "10069.13",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "3.8 mm",
+      "standrohr": "40 x 1.2 mm",
+      "oberflaeche": "Vorverzinkt"
+    },
+    "text": [
+      "Das Modell des Gitterrosts Profi Press Economy 10069.13 ist zweifellos das stabilste Modell dieser PRESS-Serie. Die dickeren vertikalen und horizontalen Rohre – 1,2 mm – sowie der dickere vertikale und horizontale Draht – 3,8 mm – machen das Gitter extrem stabil und widerstandsfähig gegen mechanische Belastungen, wiederholte Montagen und den Transport. Die Standardmaschenweite beträgt 100 x 300 mm, das Gewicht eines Gitters beträgt 17,1 kg."
+    ],
+    "pdf": "https://kkservice.pl/download/10069.13.pdf"
   },
   {
     "slug": "bauzaun-10069-3",
@@ -655,28 +838,28 @@
     "kicker": "3,5 × 2,0 m · 14 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "25 × 1,1 mm"
+        "Querrohr",
+        "25 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
         "Mittelrohr",
-        "20 × 1 mm"
+        "20 x 1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
-        "2,5 mm"
+        "vertikaler Draht",
+        "2.5 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -688,7 +871,20 @@
     "code": "10069.3",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "2.5 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vorverzinkt"
+    },
+    "text": [
+      "Mobilzaun Profi-Economy 10069.3 ist ein sehr robuster und langlebiger Bauzaun der mit einem Mittelrohr von 25 mm Durchmesser verstärkt ist. Das zusätzliche horizontale Mittelrohr sorgt für verbesserte Stabilität. Gewicht 14kg."
+    ],
+    "pdf": "https://kkservice.de/download/10069.3.pdf"
   },
   {
     "slug": "bauzaun-10069-1",
@@ -704,24 +900,24 @@
     "kicker": "3,5 × 2,0 m · 22 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "25 × 1,1 mm"
+        "Querrohr",
+        "25 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
-        "2,5 mm"
+        "vertikaler Draht",
+        "2.5 mm"
       ],
       [
-        "Masche",
-        "35 × 150 mm"
+        "Maschenweite",
+        "35 x 150"
       ],
       [
         "Gewicht",
@@ -733,7 +929,20 @@
     "code": "10069.1",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,0 m",
+      "masche": "35 x 150",
+      "draht": "2.5 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vorverzinkt"
+    },
+    "text": [
+      "Unter allen Mobilzäunen verdient der Mobilzaun Profi Economy Plus 10069.1 besondere Aufmerksamkeit. Neben seiner Standardkonstruktion und der Zinkbeschichtung zeichnet er sich durch eine sehr kleine Masche von 35×150 aus, die vor dem Überklettern schützt. Das Gewicht eines Paneels beträgt 22 kg."
+    ],
+    "pdf": "https://kkservice.de/download/10069.1.pdf"
   },
   {
     "slug": "bauzaun-10069-4",
@@ -749,24 +958,24 @@
     "kicker": "3,5 × 2,0 m · 14 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "25 × 1,1 mm"
+        "Querrohr",
+        "25 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
-        "2,5 mm"
+        "vertikaler Draht",
+        "2.5 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -778,7 +987,20 @@
     "code": "10069.4",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "2.5 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vorverzinkt"
+    },
+    "text": [
+      "Unter den Paneelen in vorverzinkter Ausführung durfte natürlich auch ein Paneel mit konturiertem Design nicht fehlen. Dieses Modell ist Mobilzaun Round 10069.4, ein klassisches Round 3500×2000, Masche 100×300. Das Gewicht eines Feldes beträgt 14 kg."
+    ],
+    "pdf": null
   },
   {
     "slug": "sichtschutz-10037-2",
@@ -794,8 +1016,8 @@
     "kicker": "2,8 × 2,0 m · 38 kg",
     "specs": [
       [
-        "Rohr senkrecht",
-        "40 × 1,25 mm"
+        "Standrohr",
+        "40 x 1.25 mm"
       ],
       [
         "Trapezblech",
@@ -803,11 +1025,11 @@
       ],
       [
         "Oberer C-Profil",
-        "50 × 30 × 20 × 2,5"
+        "50 x 30 x 20 x 2.5"
       ],
       [
         "Unterer Rahmen",
-        "50 × 30 × 2,5"
+        "50 x 30 x 2.5"
       ],
       [
         "Gewicht",
@@ -819,7 +1041,19 @@
     "code": "10037.2",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "sichtschutz",
+    "attr": {
+      "breite": "2,8 m",
+      "hoehe": "2,0 m",
+      "standrohr": "40 x 1.25 mm",
+      "oberflaeche": "Verzinkt",
+      "art": "Paneel"
+    },
+    "text": [
+      "Der geschlossene Zaun 10037.2 ist das Schwergewicht in unserem Sortiment. Es ist das einzige Modell mit geschlossenem Feld , das anstelle von geschweißtem Drahtgeflecht eine T18-Trapezblechausfachung hat. Dank der Verzinkung sind diese Paneel sehr oft den anspruchsvollsten Wetterbedingungen ausgesetzt. Das Gewicht eines Feldes beträgt 38 kg."
+    ],
+    "pdf": "https://kkservice.de/download/10037.2.pdf"
   },
   {
     "slug": "plane-10012",
@@ -839,7 +1073,13 @@
     "code": "10012",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "sichtschutz",
+    "attr": {
+      "art": "Plane"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "tor-10028",
@@ -855,24 +1095,24 @@
     "kicker": "1,2 × 2,0 m · 7,5 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
+        "Querrohr",
+        "28 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -884,7 +1124,20 @@
     "code": "10028",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "tore",
+    "attr": {
+      "breite": "1,2 m",
+      "hoehe": "2,0 m",
+      "masche": "100 x 300",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "Das Modell 10028 ist ein einfacher Gitterzaun-Tor mit einer Höhe von 1,2 m, das zusätzlich feuerverzinkt ist, was seine Kondition und Witterungsbeständigkeit erhöht. Durch das geringe Gewicht von 7,5 kg ist die Pforte sehr handlich und kann frei innerhalb des Zaunsystems positioniert werden."
+    ],
+    "pdf": null
   },
   {
     "slug": "tor-10028-0",
@@ -900,24 +1153,24 @@
     "kicker": "1,2 × 1,2 m · 5,5 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
+        "Querrohr",
+        "28 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "100 × 245 mm"
+        "Maschenweite",
+        "100 x 245"
       ],
       [
         "Gewicht",
@@ -929,7 +1182,20 @@
     "code": "10028.0",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "tore",
+    "attr": {
+      "breite": "1,2 m",
+      "hoehe": "1,2 m",
+      "masche": "100 x 245",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "Das Modell 10028.0 unterscheidet sich von seinem Vorgänger 10028 vor allem durch seine Größe. Es ist niedriger und hat eine kleinere Maschenweite von 100×245, was sich auf das Gewicht des gesamten Tores auswirkt. Es ist eines der am häufigsten von unseren Kunden gewählten Modelle."
+    ],
+    "pdf": null
   },
   {
     "slug": "tor-10028-2",
@@ -954,7 +1220,13 @@
     "code": "10028.2",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "tore",
+    "attr": {},
+    "text": [
+      "Hochsicherheitstor. Matte 50/50/5, Panikschloss. Schwergewicht, wenn es um komplette Tore einschließlich des Rahmens geht – perfekt für Baustellen. Durchgreifschutz. Gewicht 89 kg."
+    ],
+    "pdf": null
   },
   {
     "slug": "tor-10028-3",
@@ -979,7 +1251,13 @@
     "code": "10028.3",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "tore",
+    "attr": {},
+    "text": [
+      "Komplettes durchbrochenes Gitter mit kleinem Gitterrahmen. Gewicht 36,5 kg"
+    ],
+    "pdf": null
   },
   {
     "slug": "fuss-10005",
@@ -1004,7 +1282,16 @@
     "code": "10005",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Füße",
+      "fussart": "Beton"
+    },
+    "text": [
+      "Der Betonfuß 10005 ist das Basisprodukt und das beliebteste Produkt in unserem Sortiment an Betonfüßen und -barrieren. Der handliche, stabile Betonstein ist perfekt für jedes Gelände und kann Zaunfelder jeder Größe tragen. Das Gewicht des Steines beträgt 31 kg."
+    ],
+    "pdf": "https://kkservice.de/download/10005.pdf"
   },
   {
     "slug": "fuss-10004",
@@ -1029,7 +1316,16 @@
     "code": "10004",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Füße",
+      "fussart": "Kunststoff"
+    },
+    "text": [
+      "Modell 10004 ist ein 17 Kilo schwerer Kunststofffuß mit einem einzigartigen Volumen. Der Fuß ist auf jedem Untergrund einsetzbar und eignet sich perfekt als Verbindung zwischen aufeinanderfolgenden Zaunfeldern."
+    ],
+    "pdf": "https://kkservice.de/download/10004.pdf"
   },
   {
     "slug": "fuss-10006",
@@ -1054,7 +1350,16 @@
     "code": "10006",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Füße",
+      "fussart": "Kunststoff"
+    },
+    "text": [
+      "Der 10006 ist ein leichteres Modell als der 1006.2, ebenfalls aus Kunststoff, mit einer geformten rechteckigen Struktur und einem Gewicht von 23 kg. Ein sehr vielseitiger Fuß."
+    ],
+    "pdf": null
   },
   {
     "slug": "fuss-10006-2",
@@ -1079,7 +1384,15 @@
     "code": "10006.2",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Füße"
+    },
+    "text": [
+      "Das Modell 10006.2 ist ein einfacher K1-Kunststofffuß mit einem Gewicht von 28 kg. Aufgrund seiner Form eignet er sich sehr gut für unebenes Gebiet."
+    ],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10002",
@@ -1099,7 +1412,13 @@
     "code": "10002",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Schellen"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10002-1",
@@ -1119,7 +1438,13 @@
     "code": "10002.1",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Schellen"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10003",
@@ -1139,7 +1464,13 @@
     "code": "10003",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Schellen"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10003-3",
@@ -1159,7 +1490,13 @@
     "code": "10003.3",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Schellen"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10003-1",
@@ -1179,7 +1516,13 @@
     "code": "10003.1",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Schellen"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10018",
@@ -1199,7 +1542,14 @@
     "code": "10018",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Schellen",
+      "material": "Edelstahl"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10027",
@@ -1219,7 +1569,13 @@
     "code": "10027",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Bodenhalter"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10027-1",
@@ -1239,7 +1595,13 @@
     "code": "10027.1",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Bodenhalter"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10027-3",
@@ -1259,7 +1621,13 @@
     "code": "10027.3",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Bodenhalter"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10034",
@@ -1279,7 +1647,13 @@
     "code": "10034",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Bodenhalter"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10034-1",
@@ -1299,7 +1673,13 @@
     "code": "10034.1",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Bodenhalter"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10013",
@@ -1319,7 +1699,13 @@
     "code": "10013",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Bodenhalter"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10014",
@@ -1339,7 +1725,13 @@
     "code": "10014",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Bodenhalter"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10008",
@@ -1359,7 +1751,14 @@
     "code": "10008",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "oberflaeche": "Verzinkt",
+      "art": "Streben"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10008-1",
@@ -1379,7 +1778,13 @@
     "code": "10008.1",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Streben"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10008-3",
@@ -1399,7 +1804,13 @@
     "code": "10008.3",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Streben"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10010-0",
@@ -1419,7 +1830,13 @@
     "code": "10010.0",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Drehtor"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10011",
@@ -1439,7 +1856,13 @@
     "code": "10011",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Sicherungen"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10022-1",
@@ -1459,7 +1882,13 @@
     "code": "10022.1",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Kupplung"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10007",
@@ -1479,7 +1908,13 @@
     "code": "10007",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "art": "Laufrad"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "zubehoer-10066-1",
@@ -1499,7 +1934,15 @@
     "code": "10066.1",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "zubehoer",
+    "attr": {
+      "breite": "25 cm",
+      "hoehe": "50 cm",
+      "art": "Platte"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "bauzaun-10074-0",
@@ -1515,24 +1958,24 @@
     "kicker": "2,2 × 1,2 m · 7,5 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
+        "Querrohr",
+        "28 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "100 × 245 mm"
+        "Maschenweite",
+        "100 x 245"
       ],
       [
         "Gewicht",
@@ -1544,7 +1987,20 @@
     "code": "10074.0",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "2,2 m",
+      "hoehe": "1,2 m",
+      "masche": "100 x 245",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "10074.0 Mobilzaun Profi Business ist ein relativ kleines Gitterpaneel im gesamten Sortiment. Es ist sehr leicht – nur 7,5 kg – was ihm, zusammen mit einem Haken-/Ösen-System, eine große Mobilität verleiht. Dieses Spannfeld ist sehr beliebt für die Markierung von Verkehrswegen bei Massenveranstaltungen und Festen."
+    ],
+    "pdf": "https://kkservice.de/download/10074.0.pdf"
   },
   {
     "slug": "bauzaun-10042-0",
@@ -1560,24 +2016,24 @@
     "kicker": "3,5 × 1,2 m · 12 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
+        "Querrohr",
+        "28 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "100 × 245 mm"
+        "Maschenweite",
+        "100 x 245"
       ],
       [
         "Gewicht",
@@ -1589,7 +2045,20 @@
     "code": "10042.0",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "1,2 m",
+      "masche": "100 x 245",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "Mobilzaun Profi Business 10042.0 ist ein Modell, das die ideale Mischung aus Robustheit, Stärke mit Leichtigkeit und den geschätzten Aspekten der Mobilität darstellt. Höhe 1200 mm, Maschenweite 100×250, Gewicht 12kg. Außerdem ist das Paneel mit Haken/Ösen ausgestattet."
+    ],
+    "pdf": "https://kkservice.de/download/10042.0.pdf"
   },
   {
     "slug": "bauzaun-10038-0",
@@ -1605,24 +2074,24 @@
     "kicker": "3,5 × 1,2 m · 13 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
+        "Querrohr",
+        "28 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "100 × 245 mm"
+        "Maschenweite",
+        "100 x 245"
       ],
       [
         "Gewicht",
@@ -1634,7 +2103,20 @@
     "code": "10038.0",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "1,2 m",
+      "masche": "100 x 245",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "Unter den 1200 mm hohen Paneelen verdient das Modell 10038.0, das sich durch ein Design mit abgerundeten Ecken auszeichnet, besondere Aufmerksamkeit. Das Profirund-Paneel ist zusätzlich mit einem Haken/Ösen ausgestattet, was die Möglichkeit der Stabilisierung des gesamten Zaunes weiter erhöht. Das Gewicht eines Paneels beträgt 13 kg."
+    ],
+    "pdf": "https://kkservice.de/download/10038.0.pdf"
   },
   {
     "slug": "bauzaun-10069-6",
@@ -1650,24 +2132,24 @@
     "kicker": "3,5 × 1,2 m · 11 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,0 mm"
+        "Querrohr",
+        "28 x 1.0 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,0 mm"
+        "Standrohr",
+        "40 x 1.0 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
-        "2,5 mm"
+        "vertikaler Draht",
+        "2.5 mm"
       ],
       [
-        "Masche",
-        "100 × 245 mm"
+        "Maschenweite",
+        "100 x 245"
       ],
       [
         "Gewicht",
@@ -1679,7 +2161,20 @@
     "code": "10069.6",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "1,2 m",
+      "masche": "100 x 245",
+      "draht": "2.5 mm",
+      "standrohr": "40 x 1.0 mm",
+      "oberflaeche": "Verzinkt"
+    },
+    "text": [
+      "Das Modell 10069.6 ist eine beliebte Version des Paneels mit einer Höhe von 1,2 m. Die Ausführung mit Haken und Ösen erleichtert die Befestigung der einzelnen Paneele untereinander, während die Verzinkung Langlebigkeit und Beständigkeit gegen die anspruchsvollsten Wetterbedingungen garantiert."
+    ],
+    "pdf": null
   },
   {
     "slug": "bauzaun-10031",
@@ -1695,24 +2190,24 @@
     "kicker": "3,5 × 1,2 m · 14 kg",
     "specs": [
       [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
+        "Querrohr",
+        "28 x 1.1 mm"
       ],
       [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
+        "Standrohr",
+        "40 x 1.1 mm"
       ],
       [
-        "Draht waagerecht",
+        "horizontaler Draht",
         "3 mm"
       ],
       [
-        "Draht senkrecht",
+        "vertikaler Draht",
         "3 mm"
       ],
       [
-        "Masche",
-        "100 × 300 mm"
+        "Maschenweite",
+        "100 x 300"
       ],
       [
         "Gewicht",
@@ -1724,7 +2219,20 @@
     "code": "10031",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "bauzaune",
+    "attr": {
+      "breite": "3,5 m",
+      "hoehe": "1,2 m",
+      "masche": "100 x 300",
+      "draht": "3 mm",
+      "standrohr": "40 x 1.1 mm",
+      "oberflaeche": "Vollfeuerverzinkt"
+    },
+    "text": [
+      "10031 ist ein niedriger Gitterzaun mit den Maßen 3500m x 1200mm. Dank seiner Feuerverzinkung zeichnet er sich durch eine sehr hohe Festigkeit und Widerstandsfähigkeit gegen die anspruchsvollsten Wetterbedingungen aus. Außerdem lässt sich das gesamte Zaunsystem mit Haken/Ösen leicht positionieren und befestigen."
+    ],
+    "pdf": null
   },
   {
     "slug": "verkehrsschilder",
@@ -1750,7 +2258,13 @@
     "rechte": "bisherige Quelle, Nutzungsrecht weiter offen",
     "sammel": true,
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "verkehr",
+    "attr": {
+      "art": "Schilder"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "schranke-10024-1",
@@ -1767,15 +2281,15 @@
     "specs": [
       [
         "Länge",
-        "2.100 mm"
+        "2100mm"
       ],
       [
         "Höhe",
-        "1.150 mm"
+        "1150"
       ],
       [
         "Gewicht",
-        "12 kg"
+        "12kg"
       ]
     ],
     "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10024.1-.webp",
@@ -1783,7 +2297,18 @@
     "code": "10024.1",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "verkehr",
+    "attr": {
+      "laenge": "2,1 m",
+      "hoehe": "1150",
+      "art": "Schranken"
+    },
+    "text": [
+      "TL-Absturzsicherung aus hochwertigem Kunststoff, geprüft nach TL Absperrtechnik 97, ist eine sanftere Option für die Sperrung und Absicherung von Minibaustellen, kleineren Baustellen oder die Einrichtung von sichtbaren Gehwegen. Der Zaun mit 5 fest angeblasenen Lampenstutzen ist mit reflektierendem Klebeband Oralite ausgestattet, das schon von weitem gut sichtbar ist. Das Gewicht einer Schranke beträgt 12 kg.",
+      "Von oben bis unten durchgehendes Stahlrohr für sehr hohe Stabilität. Durch den Verbindungsbügel an der Seite können die Absperrschrankengitter miteinander verbunden werden. Möglichkeiten des Aufbringens eines Logos."
+    ],
+    "pdf": null
   },
   {
     "slug": "schranke-10024-3",
@@ -1800,15 +2325,15 @@
     "specs": [
       [
         "Länge",
-        "2.100 mm"
+        "2100mm"
       ],
       [
         "Höhe",
-        "1.150 mm"
+        "1150"
       ],
       [
         "Gewicht",
-        "12 kg"
+        "12kg"
       ]
     ],
     "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10024.1-.webp",
@@ -1816,7 +2341,17 @@
     "code": "10024.3",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "verkehr",
+    "attr": {
+      "laenge": "2,1 m",
+      "hoehe": "1150",
+      "art": "Schranken"
+    },
+    "text": [
+      "Das Modell 10024.3 ist eine TL-Absturzsicherung, die sich von ihrem Vorgänger durch den dunkleren Reflex-Folientyp RA2 unterscheidet."
+    ],
+    "pdf": null
   },
   {
     "slug": "schranke-10024-4",
@@ -1837,7 +2372,7 @@
       ],
       [
         "Maße",
-        "1.300 × 310 mm"
+        "1300mm x 310 mm"
       ],
       [
         "Gewicht",
@@ -1849,7 +2384,18 @@
     "code": "10024.4",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "verkehr",
+    "attr": {
+      "breite": "1,3 m",
+      "hoehe": "0,31 m",
+      "art": "Baken"
+    },
+    "text": [
+      "Die hellere Verkehrsbake RA1 ist ein unverzichtbares Hilfsmittel zur Sicherung und Lenkung des Verkehrs . Wichtig für die Sicherheit und Sichtbarkeit für den Straßenverkehr, vielseitig einsetzbar und robust.",
+      "Mögliche Varianten: Schraffenbake, Pfeilbake rechts- oder linksweisend, einseitig oder beidseitig."
+    ],
+    "pdf": null
   },
   {
     "slug": "absperrung-10026",
@@ -1870,10 +2416,10 @@
       ],
       [
         "Maße",
-        "2.500 × 1.100 mm"
+        "2500mm x 1100 mm"
       ],
       [
-        "Rohr waagerecht",
+        "Querrohr",
         "⌀ 25"
       ],
       [
@@ -1894,7 +2440,17 @@
     "code": "10026",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "gitter",
+    "attr": {
+      "breite": "2,5 m",
+      "hoehe": "1,1 m",
+      "art": "Leicht"
+    },
+    "text": [
+      "10026 ist das Basismodell des leichten Absperrzauns in unserem Sortiment. Mit einem Gewicht von 15,7 kg ist er handlich und leicht aufzustellen. Auf besonderen Wunsch unserer Kunden kann dieses Modell zusätzlich mit einer reflektierenden Tafel ausgestattet werden."
+    ],
+    "pdf": "https://kkservice.de/download/10026.pdf"
   },
   {
     "slug": "absperrung-10025-0",
@@ -1915,10 +2471,10 @@
       ],
       [
         "Maße",
-        "2.500 × 1.100 mm"
+        "2500mm x 1100 mm"
       ],
       [
-        "Rohr waagerecht",
+        "Querrohr",
         "⌀ 38"
       ],
       [
@@ -1939,7 +2495,17 @@
     "code": "10025.0",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "gitter",
+    "attr": {
+      "breite": "2,5 m",
+      "hoehe": "1,1 m",
+      "art": "Schwer"
+    },
+    "text": [
+      "10025.0 ist die schwere Version des Absperrzauns, analog zum Modell 10026. Sie ist mehr als 3 Kilo schwerer und kann – auf besonderen Wunsch unserer Kunden – auch mit einer reflektierenden Tafel ausgestattet werden. Dieses Modell ist mit einer Haken-Öse ausgestattet, die das Aufstellen des gesamten Zaunsystems erheblich erleichtert."
+    ],
+    "pdf": "https://kkservice.de/download/10025.0.pdf"
   },
   {
     "slug": "absperrung-10041",
@@ -1955,7 +2521,7 @@
     "kicker": "2,5 × 1,1 m · 14 kg",
     "specs": [
       [
-        "Rohr waagerecht",
+        "Querrohr",
         "⌀ 38"
       ],
       [
@@ -1976,7 +2542,17 @@
     "code": "10041",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "gitter",
+    "attr": {
+      "breite": "2,5 m",
+      "hoehe": "1,1 m",
+      "art": "Nordic"
+    },
+    "text": [
+      "NORDIC Absperrgitter 2,5 m lang mit zusätzlichen Haken-/Ösen."
+    ],
+    "pdf": "https://kkservice.de/download/10041.pdf"
   },
   {
     "slug": "schwelle-10005-4",
@@ -1993,7 +2569,7 @@
     "specs": [
       [
         "Länge",
-        "2.500 mm"
+        "2500 mm"
       ],
       [
         "Gewicht",
@@ -2005,7 +2581,16 @@
     "code": "10005.4",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "verkehr",
+    "attr": {
+      "laenge": "2,5 m",
+      "art": "Betonschwellen"
+    },
+    "text": [
+      "Die erste und zugleich leichteste Betonschranke in unserem Sortiment ist die 10005.4, eine 2,5 m lange und 500 kg schwere Betonschranke, die für das Einsetzen eines Mobilzaun-Paneels konzipiert ist, wodurch ihre Stabilität zusätzlich verstärkt wird, und die für Zaunsysteme bestimmt ist, die ihre Position nicht verändern sollen."
+    ],
+    "pdf": null
   },
   {
     "slug": "schwelle-10005-2",
@@ -2022,7 +2607,7 @@
     "specs": [
       [
         "Länge",
-        "3.500 mm"
+        "3500 mm"
       ],
       [
         "Gewicht",
@@ -2034,7 +2619,16 @@
     "code": "10005.2",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "verkehr",
+    "attr": {
+      "laenge": "3,5 m",
+      "art": "Betonschwellen"
+    },
+    "text": [
+      "Das Modell 10005.2 unterscheidet sich von seinem Vorgänger in Länge und Gewicht. Diese Betonschwelle mit einem Gewicht von 900 kg ist fü Mobilzäune von 3,5 m geeignet und funktioniert nach dem gleichen Prinzip wie das Modell 500 kg/2,5 m"
+    ],
+    "pdf": "https://kkservice.de/download/10005.2.pdf"
   },
   {
     "slug": "schwelle-10005-3",
@@ -2051,7 +2645,7 @@
     "specs": [
       [
         "Länge",
-        "2.500 mm"
+        "2500 mm"
       ],
       [
         "Gewicht",
@@ -2063,7 +2657,16 @@
     "code": "10005.3",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "verkehr",
+    "attr": {
+      "laenge": "2,5 m",
+      "art": "Betonschwellen"
+    },
+    "text": [
+      "Das absolute Schwergewicht in unserem Angebot ist die Betonschwelle – Modell 10005.3. Es handelt sich um eine Betonbarriere, die für 2,5 m breite Zaunfelder geeignet ist und 1000 kg wiegt. Es ist die schwerste Schwelle in unserem Angebot, die für spezielle Aufgaben geeignet ist."
+    ],
+    "pdf": "https://kkservice.de/download/10005.3.pdf"
   },
   {
     "slug": "absperrung-10025-1",
@@ -2080,7 +2683,7 @@
     "specs": [
       [
         "Länge",
-        "1.450 mm"
+        "1450 mm"
       ],
       [
         "Gewicht",
@@ -2092,7 +2695,14 @@
     "code": "10025.1",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "verkehr",
+    "attr": {
+      "laenge": "1,45 m",
+      "art": "Schleuse"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "absperrung-10025-2",
@@ -2109,10 +2719,10 @@
     "specs": [
       [
         "Maße",
-        "2.200 × 1.100 mm"
+        "2200mm x 1100 mm"
       ],
       [
-        "Rohr waagerecht",
+        "Querrohr",
         "⌀ 38"
       ],
       [
@@ -2129,7 +2739,17 @@
     "code": "10025.2",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "verkehr",
+    "attr": {
+      "breite": "2,2 m",
+      "hoehe": "1,1 m",
+      "art": "Schleuse"
+    },
+    "text": [
+      "Das Modell 10025.2 ist eine Grundausführung des Trenngitters mit der zusätzlichen Möglichkeit, zusätzliche Felder senkrecht zu montieren. Gewicht 14 kg."
+    ],
+    "pdf": "https://kkservice.de/download/10025.2.pdf"
   },
   {
     "slug": "absperrung-10025-3",
@@ -2146,15 +2766,15 @@
     "specs": [
       [
         "Abmessungen",
-        "900 × 600 mm"
+        "900mm x 600 mm"
       ],
       [
-        "Rohr waagerecht",
+        "Querrohr",
         "⌀ 38"
       ],
       [
         "Gewicht",
-        "5 kg"
+        "5kg"
       ]
     ],
     "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10025.3-frontal-10025.3-1024x701-1.webp",
@@ -2162,7 +2782,17 @@
     "code": "10025.3",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "verkehr",
+    "attr": {
+      "breite": "0,9 m",
+      "hoehe": "0,6 m",
+      "art": "Schleuse"
+    },
+    "text": [
+      "Der Frontzaun 10025.3 ist ein sehr verbreitetes und beliebtes Element der Bühnenumzäunung oder -ausstattung für Konzerte, Festivals und Massenveranstaltungen. Er ermöglicht es, das Schema des gesamten Zaunsystems leicht zu ändern."
+    ],
+    "pdf": "https://kkservice.de/download/10025.3.pdf"
   },
   {
     "slug": "absperrung-10047",
@@ -2187,7 +2817,15 @@
     "code": "10047",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "verkehr",
+    "attr": {
+      "art": "Bühne"
+    },
+    "text": [
+      "Die Bühnenabsperrung ist das wichtigste Element zur Gewährleistung der Sicherheit bei Massenveranstaltungen und Konzerten. Sie trennt die Bühne direkt von der Menge der Teilnehmer. Dank ihres Designs und ihres angemessenen Gewichts funktioniert sie perfekt als erste Sicherheitslinie."
+    ],
+    "pdf": "https://kkservice.de/download/10047.pdf"
   },
   {
     "slug": "absperrung-10047-1",
@@ -2212,7 +2850,15 @@
     "code": "10047.1",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "verkehr",
+    "attr": {
+      "art": "Bühne"
+    },
+    "text": [
+      "Das Eingangstor der Bühnenschranke ist eine zusätzliche Option, um das Zaunsystem entsprechend zu organisieren und vorzubereiten. Sie ermöglicht es, jederzeit einen Kommunikationsdurchgang innerhalb des Geländers vorzubereiten, der den Verkehrsfluss in Ausnahmesituationen reibungsloser gestaltet."
+    ],
+    "pdf": null
   },
   {
     "slug": "absperrung-10048",
@@ -2232,7 +2878,15 @@
     "code": "10048",
     "rechte": "Nutzungsrecht in Klärung",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "verkehr",
+    "attr": {
+      "art": "Bühne"
+    },
+    "text": [
+      "Die Bühnengeländerecke ist, ähnlich wie das Bühnengeländertor, das wichtigste Zusatzelement bei Geländerzäunen. Sie ist ein integraler Bestandteil der Zaunsysteme bei Konzerten und Massenveranstaltungen."
+    ],
+    "pdf": null
   },
   {
     "slug": "hochlader",
@@ -2251,7 +2905,13 @@
     "seite": "",
     "code": "",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "anhaenger",
+    "attr": {
+      "art": "Hochlader"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "planenanhaenger",
@@ -2270,7 +2930,13 @@
     "seite": "",
     "code": "",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "anhaenger",
+    "attr": {
+      "art": "Planenanhänger"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "kofferanhaenger",
@@ -2289,7 +2955,13 @@
     "seite": "",
     "code": "",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "anhaenger",
+    "attr": {
+      "art": "Kofferanhänger"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "fahrzeugtransporter",
@@ -2308,7 +2980,13 @@
     "seite": "",
     "code": "",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "anhaenger",
+    "attr": {
+      "art": "Fahrzeugtransporter"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "kuehlanhaenger",
@@ -2327,7 +3005,13 @@
     "seite": "",
     "code": "",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "anhaenger",
+    "attr": {
+      "art": "Kühlanhänger"
+    },
+    "text": [],
+    "pdf": null
   },
   {
     "slug": "kuehlanhaenger-events",
@@ -2346,6 +3030,12 @@
     "seite": "",
     "code": "",
     "preis": null,
-    "bestand": null
+    "bestand": null,
+    "shop": "anhaenger",
+    "attr": {
+      "art": "Kühlanhänger"
+    },
+    "text": [],
+    "pdf": null
   }
 ]

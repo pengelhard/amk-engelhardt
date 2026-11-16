@@ -36,7 +36,11 @@
   <main id="inhalt">
     <section class="hero hero--still">
       <div class="hero-media">
-        <img src="images/bauzaun-standard.webp" width="700" height="456" alt="Bauzaun mit Füßen auf einer Baustelle, im Hintergrund Gerüst und Kran" fetchpriority="high" decoding="async">
+        <picture>
+          <source type="image/avif" srcset="images/hero/schranken-768.avif 768w, images/hero/schranken-1280.avif 1280w, images/hero/schranken-1920.avif 1920w, images/hero/schranken-2560.avif 2560w" sizes="100vw">
+          <source type="image/webp" srcset="images/hero/schranken-768.webp 768w, images/hero/schranken-1280.webp 1280w, images/hero/schranken-1920.webp 1920w, images/hero/schranken-2560.webp 2560w" sizes="100vw">
+          <img src="images/hero/schranken-1920.webp" width="2560" height="1706" alt="Rot-weiße Absperrung mit Warnleuchten an einer Baustelle" fetchpriority="high" decoding="async">
+        </picture>
       </div>
       <div class="wrap hero-copy hero-copy--statement">
         <p class="eyebrow">Hainsfarth · seit 2011</p>
@@ -63,17 +67,24 @@
         <h2 id="leistungen-titel">Leistungen</h2>
         <div class="plates-grid">
           <a class="plate" href="mieten/">
-            <span class="plate-img"><img src="images/kk/bauzaun-10075.webp" width="1200" height="675" alt="Bauzaunfeld aus Gitter im Rohrrahmen"></span>
             <strong>Bauzaun</strong>
+            <p>Zur Miete, mit Standardzubehör.</p>
+            <span class="plate-img"><img src="images/kk/bauzaun-10075.webp" width="1200" height="675" alt="Bauzaunfeld aus Gitter im Rohrrahmen"></span>
+          </a>
+          <a class="plate" href="kaufen/?kat=gitter">
+            <strong>Absperrungen</strong>
+            <p>Leichte und schwere Gitter.</p>
+            <span class="plate-img"><img src="images/kk/absperrung-10026.webp" width="1200" height="675" alt="Leichtes Absperrgitter aus Stahl"></span>
           </a>
           <a class="plate" href="mieten/verkehrssicherung/">
-            <span class="plate-img"><img src="images/kk/absperrung-10026.webp" width="1200" height="675" alt="Leichtes Absperrgitter aus Stahl"></span>
             <strong>Verkehrssicherung</strong>
             <p>Abstimmung mit der Behörde übernehmen wir.</p>
+            <span class="plate-img"><img src="images/kk/schranke-10024-1.webp" width="1200" height="675" alt="Rot-weiße Kunststoffschranke mit Reflektoren"></span>
           </a>
-          <a class="plate" href="kaufen/#anhaenger">
-            <span class="plate-img"><img src="images/fahrzeugtransporter.webp" width="800" height="534" alt="Fahrzeugtransporter mit einem Pkw auf der Ladefläche"></span>
+          <a class="plate" href="kaufen/?kat=anhaenger">
             <strong>Anhänger</strong>
+            <p>Zum Kauf, Preis auf Anfrage.</p>
+            <span class="plate-img plate-img--photo"><img src="images/fahrzeugtransporter.webp" width="800" height="534" alt="Fahrzeugtransporter mit einem Pkw auf der Ladefläche"></span>
           </a>
         </div>
       </div>
@@ -166,6 +177,31 @@
         </div>
       </div>
     </div>
+<script>
+(function () {
+  var heroes = {
+    "2": { id: "zeichen", w: 2560, h: 1708, pos: "center 40%", alt: "Absperrung mit Baustellenzeichen und einem runden Verbotszeichen" },
+    "3": { id: "zaun", w: 2560, h: 720, pos: "22% center", alt: "Bauzaun entlang einer Baustelle" }
+  };
+  var pick = heroes[new URLSearchParams(location.search).get("hero")];
+  if (!pick) return;
+  var pic = document.querySelector(".hero-media picture");
+  if (!pic) return;
+  var widths = [768, 1280, 1920, 2560];
+  pic.querySelectorAll("source").forEach(function (source) {
+    var ext = source.type === "image/avif" ? "avif" : "webp";
+    source.srcset = widths.map(function (w) {
+      return "images/hero/" + pick.id + "-" + w + "." + ext + " " + w + "w";
+    }).join(", ");
+  });
+  var img = pic.querySelector("img");
+  img.src = "images/hero/" + pick.id + "-1920.webp";
+  img.width = pick.w;
+  img.height = pick.h;
+  img.alt = pick.alt;
+  img.style.objectPosition = pick.pos;
+})();
+</script>
 <script src="js/nav.js"></script>
     <script src="js/aktuelles.js"></script>
   <script src="js/team.js"></script>

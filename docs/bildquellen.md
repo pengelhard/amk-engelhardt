@@ -89,9 +89,54 @@ Die Anhängerfotos sind unverändert. Sie sind Beispielbilder, kein Fahrzeug von
 | --- | --- | --- |
 | `images/anhaenger-offen.webp` | Hochlader | Humbaur GmbH, Wikimedia Commons, Datei Humbaur Hochlader HU, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Humbaur_Hochlader_HU.jpg |
 | `images/anhaenger-plane.webp` | Planenanhänger | Fiver, der Hellseher, Wikimedia Commons, Datei STEMA HP 4050 (rear), CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:STEMA_HP_4050_(rear).jpg |
-| `images/bauzaun-standard.webp` | Bauzaun auf der Baustelle, Hero der Startseite, 700×456. Nutzungsrecht in Klärung | Datei lag bereits im Repository. Eine Quelle ist in den bisherigen Unterlagen nicht genannt. |
+| `images/bauzaun-standard.webp` | Bauzaun auf der Baustelle, 700×456, nicht mehr der Hero. Nutzungsrecht in Klärung | Datei lag bereits im Repository. Eine Quelle ist in den bisherigen Unterlagen nicht genannt. |
 | `images/kofferanhaenger.webp` | Kofferanhänger | Humbaur GmbH, Wikimedia Commons, Datei Humbaur Kofferanhänger HKPA, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Humbaur_Kofferanh%C3%A4nger_HKPA.jpg |
 | `images/fahrzeugtransporter.webp` | Fahrzeugtransporter, auch Aktuelles | Humbaur GmbH, Wikimedia Commons, Datei Kleinfahrzeugtransporter FTK, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Kleinfahrzeugtransporter_FTK.jpg |
 | `images/kuehlanhaenger-13.webp` | Kühlanhänger | Produktfoto Herb Fahrzeugteile, Unsinn UKT C6. Nutzungsrecht weiter offen. |
 
 Das Logo bleibt das der bestehenden Website.
+
+## Hero, Testvorschläge
+
+Drei frei lizenzierte Fotos, kommerziell nutzbar ohne Pflicht zur Namensnennung. Die Dateien liegen lokal als WebP und AVIF in 768, 1280, 1920 und 2560 px Breite. Standard ist Vorschlag 1. `?hero=2` und `?hero=3` tauschen das Bild. Die Dateien werden nicht von Pexels eingebunden.
+
+| Datei | Motiv | Fotograf | Seite | Lizenz |
+| --- | --- | --- | --- | --- |
+| `images/hero/schranken-*` | Rot-weiße Absperrung mit Warnleuchten, 6000×4000, zugeschnitten auf 2560×1706 | Jan van der Wolf | https://www.pexels.com/photo/construction-safety-barriers-with-red-warning-lights-29527670/ | https://www.pexels.com/license/ |
+| `images/hero/zeichen-*` | Baustelle mit Warnzeichen, 2560×1707 | Sergei Starostin | https://www.pexels.com/photo/construction-site-with-warning-signs-and-barriers-29244130/ | https://www.pexels.com/license/ |
+| `images/hero/zaun-*` | Bauzaun entlang einer Baustelle. Ausschnitt der unteren Bildhälfte, 2560×720, damit der Zaun das Motiv ist | Mathias Reding | https://www.pexels.com/photo/steel-fence-in-the-construction-site-11692878/ | https://www.pexels.com/license/ |
+
+## Datenblätter
+
+Technische Daten auf den Kaufseiten stammen aus den Tabellen der jeweils genannten Produktseite. Ein Datenblatt wird nur verlinkt, wenn die Seite ein PDF zum Artikel anbietet. Die PDF-Datei liegt nicht im Repository.
+
+| Artikel | Produkt | PDF | Seite |
+| --- | --- | --- | --- |
+| 10075.1 | Bauzaun Profi engmaschig 3,5 × 2,0 m | https://kkservice.de/download/10075.1.pdf | https://kkservice.de/2m-zaune/ |
+| 10075.3 | Bauzaun Profi 3,5 × 2,0 m mit Mittelrohr | https://kkservice.de/download/10075.3.pdf | https://kkservice.de/2m-zaune/ |
+| 10020 | Bauzaun Profi 2,2 × 2,0 m mit Mittelrohr Ausgleichselement | https://kkservice.de/download/10020.pdf | https://kkservice.de/2m-zaune/ |
+| 10076.0 | Bauzaun Profi Exklusiv 3,5 × 2,0 m | https://kkservice.de/download/10076.pdf | https://kkservice.de/2m-zaune/ |
+| 10039.3 | Bauzaun Profi Round 3,5 × 2,0 m | https://kkservice.de/download/10039.3.pdf | https://kkservice.de/2m-zaune/ |
+| 10044.2 | Bauzaun Profi Exklusiv 3,5 × 2,5 m | https://kkservice.de/download/10044.2.pdf | https://kkservice.de/2-5m-zaune/ |
+| 10069.10 | Bauzaun Press 3,5 × 2,0 m, 11,5 kg | https://kkservice.pl/download/10069.10.pdf | https://kkservice.de/vorverzinkte-zaune/ |
+| 10069.11 | Bauzaun Press 3,5 × 2,0 m, 13,1 kg | https://kkservice.pl/download/10069.11.pdf | https://kkservice.de/vorverzinkte-zaune/ |
+| 10069.12 | Bauzaun Press 3,5 × 2,0 m, 14,5 kg | https://kkservice.pl/download/10069.12.pdf | https://kkservice.de/vorverzinkte-zaune/ |
+| 10069.13 | Bauzaun Press 3,5 × 2,0 m, 17,1 kg | https://kkservice.pl/download/10069.13.pdf | https://kkservice.de/vorverzinkte-zaune/ |
+| 10069.3 | Bauzaun Profi Press 3,5 × 2,0 m mit Mittelrohr | https://kkservice.de/download/10069.3.pdf | https://kkservice.de/vorverzinkte-zaune/ |
+| 10069.1 | Bauzaun Profi Press engmaschig 3,5 × 2,0 m | https://kkservice.de/download/10069.1.pdf | https://kkservice.de/vorverzinkte-zaune/ |
+| 10037.2 | Geschlossenes Paneel 2,8 × 2,0 m | https://kkservice.de/download/10037.2.pdf | https://kkservice.de/geschlossene-zaune/ |
+| 10005 | Betonfuß 31 kg | https://kkservice.de/download/10005.pdf | https://kkservice.de/betonfuse-und-betonleitschwellen/ |
+| 10004 | Kunststofffuß leicht | https://kkservice.de/download/10004.pdf | https://kkservice.de/betonfuse-und-betonleitschwellen/ |
+| 10074.0 | Bauzaun Profi 2,2 × 1,2 m | https://kkservice.de/download/10074.0.pdf | https://kkservice.de/1-2m-zaune/ |
+| 10042.0 | Bauzaun Profi 3,5 × 1,2 m | https://kkservice.de/download/10042.0.pdf | https://kkservice.de/1-2m-zaune/ |
+| 10038.0 | Bauzaun Profi Round 3,5 × 1,2 m | https://kkservice.de/download/10038.0.pdf | https://kkservice.de/1-2m-zaune/ |
+| 10026 | Absperrgitter leicht | https://kkservice.de/download/10026.pdf | https://kkservice.de/absperrgitter/ |
+| 10025.0 | Absperrgitter schwer | https://kkservice.de/download/10025.0.pdf | https://kkservice.de/absperrgitter/ |
+| 10041 | Absperrgitter Nordic 2,5 × 1,1 m | https://kkservice.de/download/10041.pdf | https://kkservice.de/absperrgitter/ |
+| 10005.2 | Betonleitschwelle 900 kg, 3,5 m | https://kkservice.de/download/10005.2.pdf | https://kkservice.de/betonfuse-und-betonleitschwellen/ |
+| 10005.3 | Betonleitschwelle 1000 kg, 2,5 m | https://kkservice.de/download/10005.3.pdf | https://kkservice.de/betonfuse-und-betonleitschwellen/ |
+| 10025.2 | Eingangsschleusensystem - Seitenteil | https://kkservice.de/download/10025.2.pdf | https://kkservice.de/absperrgitter/ |
+| 10025.3 | Eingangsschleusensystem – Kopfteil | https://kkservice.de/download/10025.3.pdf | https://kkservice.de/absperrgitter/ |
+| 10047 | Bühnengeländer | https://kkservice.de/download/10047.pdf | https://kkservice.de/absperrgitter/ |
+
+Vier Vorverzinkt-Datenblätter verlinken die deutsche Seite auf `kkservice.pl`. Es gibt dazu auf der deutschen Seite kein eigenes PDF. Zubehör ohne Tabelle bleibt ohne technische Zeilen: die Seite nennt dort nur den Namen.
