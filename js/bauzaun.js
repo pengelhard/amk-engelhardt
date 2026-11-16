@@ -3,10 +3,10 @@
   if (!form || !window.AMK_WUNSCH || typeof window.AMK_WUNSCH.add !== "function") return;
 
   var ART = {
-    standard: "Bauzaun Standard",
-    f1: "Bauzaun F1",
-    secure: "Bauzaun Secure",
-    xxl: "Bauzaun XXL"
+    standard: "Bauzaun Profi 3,5 × 2,0 m",
+    f1: "Bauzaun Profi 3,5 × 1,2 m",
+    secure: "Bauzaun Profi engmaschig 3,5 × 2,0 m",
+    xxl: "Bauzaun Profi Exklusiv 3,5 × 2,5 m"
   };
   var EXTRAS = {
     hsschelle: "Hochsicherheitsschellen",
@@ -90,25 +90,44 @@
     if (node) node.textContent = text;
   }
 
+  function modus() {
+    var checked = form.querySelector('input[name="modus"]:checked');
+    return checked && checked.value === "kauf" ? "kauf" : "miete";
+  }
+
+  function syncMode() {
+    var buy = modus() === "kauf";
+    var period = document.getElementById("konfig-zeit");
+    if (period) period.hidden = buy;
+    form.von.required = !buy;
+    form.bis.required = !buy;
+    if (buy && window.AMK_ZEIT) window.AMK_ZEIT.clearPair(form.von, form.bis);
+  }
+
   function syncSummary() {
+    syncMode();
     var artKey = (form.querySelector('input[name="art"]:checked') || {}).value;
     var art = ART[artKey] || "–";
+    var artLabel = art === "–" ? art : art + " · " + (modus() === "kauf" ? "Kauf" : "Miete");
     var raw = String(menge.value || "").trim();
     var felder = unit() === "felder";
     var amount = raw ? (felder ? raw + (raw === "1" ? " Feld" : " Felder") : raw + " m") : "–";
-    var von = deDate(form.von.value);
-    var bis = deDate(form.bis.value);
+    var buy = modus() === "kauf";
+    var von = buy ? "" : deDate(form.von.value);
+    var bis = buy ? "" : deDate(form.bis.value);
     var zeit = von && bis ? von + " – " + bis : (von || bis || "–");
+    var zeitRow = form.querySelector('[data-sum="zeit"]');
+    if (zeitRow && zeitRow.parentNode) zeitRow.parentNode.hidden = buy;
     var picked = readExtras();
     var extras = picked.extras.map(function (entry) {
       return entry.menge ? entry.menge + " × " + entry.name : entry.name;
     });
     var extraText = extras.length ? extras.join(", ") : "–";
-    put("art", art);
+    put("art", artLabel);
     put("menge", amount);
     put("zeit", zeit);
     put("extras", extraText);
-    var bits = [art];
+    var bits = [artLabel];
     if (amount !== "–") bits.push(amount);
     if (zeit !== "–") bits.push(zeit);
     if (extraText !== "–") bits.push(extraText);
@@ -144,15 +163,16 @@
       menge.focus();
       return;
     }
-    var von = form.von.value;
-    var bis = form.bis.value;
-    if (!von || !bis) {
-      status.textContent = "Bitte den Mietzeitraum angeben.";
+    var buy = modus() === "kauf";
+    var von = buy ? "" : form.von.value;
+    var bis = buy ? "" : form.bis.value;
+    if (!buy && (!von || !bis)) {
+      status.textContent = "Bitte den Zeitraum angeben.";
       status.classList.add("is-error");
       (von ? form.bis : form.von).focus();
       return;
     }
-    if (window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(form.von, form.bis)) return;
+    if (!buy && window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(form.von, form.bis)) return;
     var picked = readExtras();
     if (picked.invalid) {
       status.textContent = "Mindestens 1.";
@@ -163,7 +183,7 @@
     var extras = picked.extras;
     var shown = felder ? String(amount) : raw.replace(".", ",");
     window.AMK_WUNSCH.add({
-      id: "miete:bauzaun-konfig:" + Date.now(),
+      id: (buy ? "kauf:" : "miete:") + "bauzaun-konfig:" + Date.now(),
       name: ART[artKey],
       qty: 1,
       konfig: {
@@ -176,7 +196,7 @@
         extras: extras
       }
     });
-    rememberPeriod(von, bis);
+    if (!buy) rememberPeriod(von, bis);
     form.reset();
     syncUnit();
     form.querySelectorAll('input[name="extra"]').forEach(syncQty);

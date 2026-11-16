@@ -19,7 +19,7 @@
       window.location.href = "../danke/";
       return;
     }
-    var lines = ["Individuelle Beratung an AMK Engelhardt", "", "Anliegen:", val("anliegen"), ""];
+    var lines = ["Individuelle Beratung an AMK Engelhardt", "", "Art: " + (val("modus") === "kauf" ? "Kauf" : "Miete"), "", "Anliegen:", val("anliegen"), ""];
     lines.push("Ort: " + (val("ort") || "–"));
     function deDate(value) {
       var match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);

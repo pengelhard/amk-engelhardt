@@ -69,6 +69,7 @@
   function needsPeriod(items) {
     return items.some(function (item) {
       if (String(item.id).indexOf("miete:") !== 0) return false;
+      if (item.von && item.bis) return false;
       var config = item.konfig;
       return !(config && config.von && config.bis);
     });
@@ -76,22 +77,21 @@
 
   function editHref(item) {
     var id = String(item.id);
-    if (item.konfig || id.indexOf("miete:bauzaun-konfig") === 0) return "../mieten/bauzaun/";
-    if (id.indexOf("kauf:") === 0) return "../kaufen/anhaenger/" + id.slice(5) + "/";
-    if (id.indexOf("miete:") === 0) return "../produkt/" + id.slice(6) + "/";
+    if (item.konfig || id.indexOf("bauzaun-konfig") !== -1) return "../bauzaun/konfigurator/";
+    if (id.indexOf("kauf:") === 0 || id.indexOf("miete:") === 0) return "../produkt/" + id.slice(id.indexOf(":") + 1).split(":")[0] + "/";
     if (id.indexOf("aktuell:") === 0) return "../aktuelles/";
     return "../anfrage/";
   }
 
-  function fencing(items) {
-    return items.some(function (item) { return fencePattern.test(item.id) && !item.konfig; });
+  function fencing() {
+    return false;
   }
 
   var BILD = {
-    standard: "images/bauzaun-standard.webp",
-    f1: "images/bauzaun-f1.webp",
-    secure: "images/bauzaun-secure.webp",
-    xxl: "images/bauzaun-xxl.webp"
+    standard: "images/kk/bauzaun-10075.webp",
+    f1: "images/kk/bauzaun-10042-0.webp",
+    secure: "images/kk/bauzaun-10075-1.webp",
+    xxl: "images/kk/bauzaun-10044-2.webp"
   };
 
   function deDate(value) {
@@ -147,22 +147,23 @@
     form.querySelectorAll('input[name="leistung"]').forEach(function (field) {
       field.required = !!rentOn;
     });
-    list.innerHTML = data.map(function (item) {
+    list.innerHTML = data.map(function (item, index) {
       var info = CATALOG[item.id] || {};
       var bild = item.konfig && BILD[item.konfig.key] ? BILD[item.konfig.key] : (info.bild || item.bild);
       var modus = kind(item.id);
       var image = bild ? '<img src="../' + esc(bild) + '" alt="" width="320" height="220">' : "";
+      var zeit = !item.konfig && item.von && item.bis ? "<p>" + esc(deDate(item.von) + " – " + deDate(item.bis)) + "</p>" : "";
       var body = item.konfig
         ? konfigText(item)
         : (item.note ? "<p>" + esc(item.note) + "</p>" : "");
       var qty = item.konfig
         ? ""
-        : '<label class="qty">Menge <input type="number" min="1" max="99" inputmode="numeric" value="' + item.qty + '" data-qty="' + esc(item.id) + '" aria-label="Menge ' + esc(item.name) + '"></label>';
+        : '<label class="qty">Menge <input type="number" min="1" max="99" inputmode="numeric" value="' + item.qty + '" data-index="' + index + '" aria-label="Menge ' + esc(item.name) + '"></label>';
       return '<li class="cart-row">' + image +
-        '<div class="cart-main"><p class="cart-kind">' + modus + "</p><strong>" + esc(item.name) + "</strong>" + body + "</div>" +
+        '<div class="cart-main"><p class="cart-kind">' + modus + "</p><strong>" + esc(item.name) + "</strong>" + body + zeit + "</div>" +
         qty +
         '<div class="cart-actions"><a class="text-btn" href="' + esc(editHref(item)) + '">Ändern<span class="visually-hidden">: ' + esc(item.name) + '</span></a>' +
-        '<button type="button" class="text-btn" data-remove="' + esc(item.id) + '">Entfernen<span class="visually-hidden">: ' + esc(item.name) + "</span></button></div>" +
+        '<button type="button" class="text-btn" data-index="' + index + '">Entfernen<span class="visually-hidden">: ' + esc(item.name) + "</span></button></div>" +
         "</li>";
     }).join("");
   }
@@ -212,24 +213,23 @@
   }
 
   list.addEventListener("change", function (event) {
-    var input = event.target.closest("[data-qty]");
-    if (!input) return;
+    var input = event.target.closest("[data-index]");
+    if (!input || input.type !== "number") return;
     var qty = parseInt(input.value, 10);
     if (!qty || qty < 1) qty = 1;
     if (qty > 99) qty = 99;
     input.value = String(qty);
     var items = window.AMK_WUNSCH.load();
-    items.forEach(function (item) {
-      if (item.id === input.getAttribute("data-qty")) item.qty = qty;
-    });
+    var index = Number(input.getAttribute("data-index"));
+    if (items[index]) items[index].qty = qty;
     window.AMK_WUNSCH.save(items, true);
   });
 
   list.addEventListener("click", function (event) {
-    var button = event.target.closest("[data-remove]");
+    var button = event.target.closest("button[data-index]");
     if (!button) return;
-    var id = button.getAttribute("data-remove");
-    window.AMK_WUNSCH.save(window.AMK_WUNSCH.load().filter(function (item) { return item.id !== id; }));
+    var index = Number(button.getAttribute("data-index"));
+    window.AMK_WUNSCH.save(window.AMK_WUNSCH.load().filter(function (item, itemIndex) { return itemIndex !== index; }));
   });
 
   function remember() {
@@ -263,10 +263,12 @@
         var einheit = k.einheit === "felder" ? (k.menge === "1" ? " Feld" : " Felder") : " m";
         var listed = extraList(k.extras);
         var extra = listed ? listed + " — Aufpreis auf Anfrage" : "keine";
-        lines.push(k.art + " — Miete — " + k.menge + einheit + " — Zeitraum " + (deDate(k.von) || "–") + " bis " + (deDate(k.bis) || "–") + " — Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf — Extras: " + extra);
+        var zeit = deDate(k.von) && deDate(k.bis) ? " — Zeitraum " + deDate(k.von) + " bis " + deDate(k.bis) : "";
+        lines.push(k.art + " — " + kind(item.id) + " — " + k.menge + einheit + zeit + " — Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf — Extras: " + extra);
         return;
       }
-      lines.push(item.name + " — " + kind(item.id) + " — Menge " + item.qty + (item.note ? " — " + item.note : ""));
+      var zeit = item.von && item.bis ? " — Zeitraum " + deDate(item.von) + " bis " + deDate(item.bis) : "";
+      lines.push(item.name + " — " + kind(item.id) + " — Menge " + item.qty + zeit + (item.note ? " — " + item.note : ""));
     });
     lines.push("");
     if (fencing(items) && val("laenge")) lines.push("Zaunlänge: " + val("laenge") + " m");

@@ -71,8 +71,12 @@
       if (konfig) next.konfig = konfig;
       var bild = localBild(item.bild);
       var note = String(item.note || "").trim();
+      var von = String(item.von || "");
+      var bis = String(item.bis || "");
       if (bild) next.bild = bild;
       if (note) next.note = note.slice(0, 80);
+      if (/^\d{4}-\d{2}-\d{2}$/.test(von)) next.von = von;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(bis)) next.bis = bis;
       return next;
     });
   }
@@ -158,7 +162,17 @@
 
   function add(item) {
     var items = load();
-    items.push(item);
+    var incoming = normalize([item])[0];
+    if (!incoming) return items;
+    var found = null;
+    if (!incoming.konfig) {
+      items.forEach(function (existing) {
+        if (existing.konfig || found) return;
+        if (existing.id === incoming.id && (existing.von || "") === (incoming.von || "") && (existing.bis || "") === (incoming.bis || "")) found = existing;
+      });
+    }
+    if (found) found.qty = Math.min(99, found.qty + incoming.qty);
+    else items.push(incoming);
     save(items);
     showToast();
     return items;

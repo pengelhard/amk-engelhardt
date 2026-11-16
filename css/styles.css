@@ -1351,3 +1351,17 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   .konfig-summary .price-once { display: block; margin: 0 0 0.9rem; }
   .konfig-summary .btn { width: 100%; margin: 0; }
 }
+
+.order { display: grid; gap: 0.55rem; margin-top: 0.85rem; }
+.tile .order { margin-top: 0.75rem; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.seg label { position: relative; margin: 0; }
+.seg input { position: absolute; opacity: 0; inset: 0; margin: 0; }
+.seg span { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 0.4rem; font-weight: 600; color: var(--heading); text-align: center; }
+.seg input:checked + span { background: var(--green); color: #fff; }
+.seg input:focus-visible + span { outline: 2px solid var(--green); outline-offset: -3px; }
+.order-dates { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.order-dates .field, .order-qty { margin: 0; }
+.order-qty input { max-width: 6.5rem; }
+.order .btn { width: 100%; }
+.choices .seg { margin-top: 0.35rem; }

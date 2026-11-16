@@ -92,6 +92,9 @@
   var von = document.getElementById("von");
   var bis = document.getElementById("bis");
   if (von && bis && von.type === "date" && bis.type === "date") bindPair(von, bis);
+  document.querySelectorAll("form[data-order]").forEach(function (form) {
+    bindPair(form.querySelector('[name="von"]'), form.querySelector('[name="bis"]'));
+  });
 
   window.AMK_ZEIT = { checkPair: checkPair, clearPair: function (start, end) { clear(start); clear(end); } };
 })();
