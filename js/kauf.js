@@ -11,12 +11,13 @@
   var resetBtn = document.getElementById("kauf-reset");
   if (!board || !liste || !cats || !form) return;
 
-  var GRUPPEN = {
-    zaun: ["bauzaune", "zubehoer", "tore", "sichtschutz", "gitter"],
-    schilder: ["schilder"],
-    absperrung: ["verkehr"],
-    anhaenger: ["anhaenger"]
-  };
+  var GRUPPEN = {};
+  (window.AMK_GRUPPEN ? window.AMK_GRUPPEN.list : [
+    { id: "zaun", shops: ["bauzaune", "zubehoer", "tore", "sichtschutz", "gitter"] },
+    { id: "schilder", shops: ["schilder"] },
+    { id: "absperrung", shops: ["verkehr"] },
+    { id: "anhaenger", shops: ["anhaenger"] }
+  ]).forEach(function (gruppe) { GRUPPEN[gruppe.id] = gruppe.shops.slice(); });
   var UNTER = {
     zaun: [
       { id: "", label: "Alle" },

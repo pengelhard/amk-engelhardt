@@ -100,13 +100,15 @@
         var qty = parseInt(qtyField && qtyField.value, 10);
         if (!qty || qty < 1) qty = 1;
         if (qty > 99) qty = 99;
+        var vorgang = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
         lines.push({
-          id: "kauf:schild:" + entry.id,
+          id: vorgang + ":schild:" + entry.id,
           name: entry.nr + " " + entry.name,
           qty: qty,
           kat: "verkehrssicherung"
         });
       });
+      var vorgang = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
       var noteField = form.elements.hinweis;
       var note = noteField ? String(noteField.value || "").trim() : "";
       if (!lines.length && !note) {
@@ -116,7 +118,7 @@
       }
       if (note) {
         lines.push({
-          id: "kauf:schild:hinweis",
+          id: vorgang + ":schild:hinweis",
           name: "Verkehrsschilder",
           qty: 1,
           kat: "verkehrssicherung",

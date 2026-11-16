@@ -1700,6 +1700,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   .kauf-board.is-gruppe .kauf-einstieg { grid-template-columns: repeat(4, 1fr); }
 }
 .kauf-cats { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+#miete-unter { margin: 0.9rem 0; }
 .kauf-cats .chip {
   min-height: 44px;
   padding: 0.35rem 0.85rem;

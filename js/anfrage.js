@@ -92,9 +92,15 @@
 
   function editHref(item) {
     var id = String(item.id);
-    if (item.konfig || id.indexOf("bauzaun-konfig") !== -1 || id.indexOf("bauzaun-paket") !== -1) return "../mieten/";
+    if (item.konfig || id.indexOf("bauzaun-konfig") !== -1 || id.indexOf("bauzaun-paket") !== -1) return "../mieten/?gruppe=zaun";
     if (id.indexOf("kauf:schild:") === 0) return "../kaufen/?gruppe=schilder";
-    if (id.indexOf("verkehr:") !== -1) return "../mieten/verkehrssicherung/";
+    if (id.indexOf("miete:schild:") === 0) return "../mieten/?gruppe=schilder";
+    if (id.indexOf("verkehr:") !== -1) return "../mieten/?gruppe=absperrung";
+    if (id.indexOf("miete:") === 0 && !CATALOG[id]) {
+      if (item.kat === "anhaenger") return "../mieten/?gruppe=anhaenger";
+      if (item.kat === "verkehrssicherung") return "../mieten/?gruppe=absperrung";
+      return "../mieten/?gruppe=zaun";
+    }
     if (id.indexOf("kauf:") === 0 || id.indexOf("miete:") === 0) return "../produkt/" + id.slice(id.indexOf(":") + 1).split(":")[0] + "/";
     if (id.indexOf("aktuell:") === 0) return "../aktuelles/";
     return "../anfrage/";

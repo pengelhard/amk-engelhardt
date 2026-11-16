@@ -40,7 +40,9 @@ Z 123, Z 120, Z 121-10, Z 121-20, Z 208, Z 308, Z 222, Z 250, Z 260, Z 267, Z 27
 
 Z 208 heißt amtlich „Vorrang vor dem Gegenverkehr“, Z 308 „Vorrang des Gegenverkehrs“. Z 259 heißt amtlich „Verbot für Fußgänger“. Z 625 und Leitkegel fehlen, weil sie im Sortiment nicht vorkommen.
 
-Jedes angehakte Zeichen geht mit Anzahl als eigene Zeile in den Anfragekorb (`kauf:schild:…`). Das Feld „Größe, Folie, Ständer“ liegt darunter und wird, wenn es gefüllt ist, als Hinweiszeile mitgenommen. Es steht nur in dieser Gruppe und auf `produkt/verkehrsschilder/`, nicht in der Übersicht.
+Jedes angehakte Zeichen geht mit Anzahl als eigene Zeile in den Anfragekorb (`kauf:schild:…` oder `miete:schild:…`). Das Feld „Größe, Folie, Ständer“ liegt darunter und wird, wenn es gefüllt ist, als Hinweiszeile mitgenommen. Es steht nur in dieser Gruppe und auf `produkt/verkehrsschilder/`, nicht in der Übersicht.
+
+Die vier Gruppen und die Zeichenliste sind die gemeinsame Quelle für Miete und Kauf (`js/gruppen.js`, `js/schilder.js`). Auf `mieten/` liegt der Bauzaun-Konfigurator in Bauzaun & Absperrgitter, Standardzubehör inklusive, Sonderzubehör optional. Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger kommen aus `data/katalog.json` und gehen als Miete in denselben Korb.
 
 ## Attribute
 

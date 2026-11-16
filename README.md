@@ -15,8 +15,8 @@ Die Startadresse `index.html` ist der Einstieg, mit zwei Flächen Mieten und Kau
 | `index.html` | Einstieg: ein statisches Hero-Bild, Bildflächen, Ablauf, Aktuelles |
 | `aktuelles/` | Sonderangebote, Neuheiten und besondere Produkte aus `data/aktuelles.json` |
 | `angebote/` | Weiterleitung auf `aktuelles/` (meta refresh und canonical) |
-| `mieten/` | Bauzaun als Mietpaket: Zauntyp, Länge oder Felder, Standardzubehör inklusive, Sonderzubehör als Häkchen |
-| `mieten/verkehrssicherung/` | Verkehrssicherung als Mietpaket: Bedarf, Ort, Option Genehmigung durch AMK |
+| `mieten/` | Dieselben vier Hauptgruppen wie `kaufen/`. Bauzaun als Konfigurator mit Standardzubehör und optionalem Sonderzubehör, Absperrgitter, Schilder, Absperreinrichtungen und Anhänger zur Miete |
+| `mieten/verkehrssicherung/` | Weiterleitung auf `mieten/?gruppe=absperrung` |
 | `kaufen/` | Einzelteile inkl. Zubehör und Anhänger, nur Kauf, mit Menge. Kategorien: Bauzaun (Standard 3,5 × 2,0 m zuerst, 1,2 m zuletzt), Verkehrssicherung, Anhänger |
 | `bauzaun/`, `verkehrssicherung/`, `anhaenger/`, `bauzaun/konfigurator/` | Weiterleitung auf `kaufen/` oder `mieten/` |
 | `produkt/<slug>/` | Detail zum Kauf, Menge oder bei Verkehrsschildern ein Freitext |
