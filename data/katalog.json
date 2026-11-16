@@ -1,220 +1,5 @@
 [
   {
-    "slug": "bauzaun-10074-0",
-    "name": "Bauzaun Profi 2,2 × 1,2 m",
-    "kat": "bauzaun",
-    "gruppe": "1,2 m",
-    "lead": "Offenes Gitterfeld. Vollfeuerverzinkt. Haken und Ösen verbinden die Felder.",
-    "bild": "images/kk/bauzaun-10074-0.webp",
-    "bildSmall": "images/kk/bauzaun-10074-0-640.webp",
-    "width": 1200,
-    "height": 675,
-    "alt": "Bauzaun Profi 2,2 × 1,2 m",
-    "kicker": "2,2 × 1,2 m · 7,5 kg",
-    "specs": [
-      [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
-      ],
-      [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
-      ],
-      [
-        "Draht waagerecht",
-        "3 mm"
-      ],
-      [
-        "Draht senkrecht",
-        "3 mm"
-      ],
-      [
-        "Masche",
-        "100 × 245 mm"
-      ],
-      [
-        "Gewicht",
-        "7,5 kg"
-      ]
-    ],
-    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10074.0-1280-x-720-1.webp",
-    "seite": "https://kkservice.de/1-2m-zaune/",
-    "code": "10074.0",
-    "rechte": "Nutzungsrecht in Klärung"
-  },
-  {
-    "slug": "bauzaun-10042-0",
-    "name": "Bauzaun Profi 3,5 × 1,2 m",
-    "kat": "bauzaun",
-    "gruppe": "1,2 m",
-    "lead": "Offenes Gitterfeld. Vollfeuerverzinkt. Haken und Ösen verbinden die Felder.",
-    "bild": "images/kk/bauzaun-10042-0.webp",
-    "bildSmall": "images/kk/bauzaun-10042-0-640.webp",
-    "width": 1200,
-    "height": 675,
-    "alt": "Bauzaun Profi 3,5 × 1,2 m",
-    "kicker": "3,5 × 1,2 m · 12 kg",
-    "specs": [
-      [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
-      ],
-      [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
-      ],
-      [
-        "Draht waagerecht",
-        "3 mm"
-      ],
-      [
-        "Draht senkrecht",
-        "3 mm"
-      ],
-      [
-        "Masche",
-        "100 × 245 mm"
-      ],
-      [
-        "Gewicht",
-        "12 kg"
-      ]
-    ],
-    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10042.0-1280-x-720.webp",
-    "seite": "https://kkservice.de/1-2m-zaune/",
-    "code": "10042.0",
-    "rechte": "Nutzungsrecht in Klärung"
-  },
-  {
-    "slug": "bauzaun-10038-0",
-    "name": "Bauzaun Profi Round 3,5 × 1,2 m",
-    "kat": "bauzaun",
-    "gruppe": "1,2 m",
-    "lead": "Offenes Gitterfeld. Vollfeuerverzinkt. Haken und Ösen verbinden die Felder.",
-    "bild": "images/kk/bauzaun-10038-0.webp",
-    "bildSmall": "images/kk/bauzaun-10038-0-640.webp",
-    "width": 1200,
-    "height": 675,
-    "alt": "Bauzaun Profi Round 3,5 × 1,2 m",
-    "kicker": "3,5 × 1,2 m · 13 kg",
-    "specs": [
-      [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
-      ],
-      [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
-      ],
-      [
-        "Draht waagerecht",
-        "3 mm"
-      ],
-      [
-        "Draht senkrecht",
-        "3 mm"
-      ],
-      [
-        "Masche",
-        "100 × 245 mm"
-      ],
-      [
-        "Gewicht",
-        "13 kg"
-      ]
-    ],
-    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10038-1280-x-720.webp",
-    "seite": "https://kkservice.de/1-2m-zaune/",
-    "code": "10038.0",
-    "rechte": "Nutzungsrecht in Klärung"
-  },
-  {
-    "slug": "bauzaun-10069-6",
-    "name": "Bauzaun Round 3,5 × 1,2 m",
-    "kat": "bauzaun",
-    "gruppe": "1,2 m",
-    "lead": "Offenes Gitterfeld. Verzinkt. Haken und Ösen verbinden die Felder.",
-    "bild": "images/kk/bauzaun-10069-6.webp",
-    "bildSmall": "images/kk/bauzaun-10069-6-640.webp",
-    "width": 1200,
-    "height": 821,
-    "alt": "Bauzaun Round 3,5 × 1,2 m",
-    "kicker": "3,5 × 1,2 m · 11 kg",
-    "specs": [
-      [
-        "Rohr waagerecht",
-        "28 × 1,0 mm"
-      ],
-      [
-        "Rohr senkrecht",
-        "40 × 1,0 mm"
-      ],
-      [
-        "Draht waagerecht",
-        "3 mm"
-      ],
-      [
-        "Draht senkrecht",
-        "2,5 mm"
-      ],
-      [
-        "Masche",
-        "100 × 245 mm"
-      ],
-      [
-        "Gewicht",
-        "11 kg"
-      ]
-    ],
-    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10069.6-Panel-Round-3.5-x-1.2-ocynkowany-HU-10069.6.webp",
-    "seite": "https://kkservice.de/1-2m-zaune/",
-    "code": "10069.6",
-    "rechte": "Nutzungsrecht in Klärung"
-  },
-  {
-    "slug": "bauzaun-10031",
-    "name": "Bauzaun Handlauf 3,5 × 1,2 m",
-    "kat": "bauzaun",
-    "gruppe": "1,2 m",
-    "lead": "Offenes Gitterfeld. Vollfeuerverzinkt. Haken und Ösen verbinden die Felder. Mit Handlauf.",
-    "bild": "images/kk/bauzaun-10031.webp",
-    "bildSmall": "images/kk/bauzaun-10031-640.webp",
-    "width": 1200,
-    "height": 821,
-    "alt": "Bauzaun Handlauf 3,5 × 1,2 m",
-    "kicker": "3,5 × 1,2 m · 14 kg",
-    "specs": [
-      [
-        "Rohr waagerecht",
-        "28 × 1,1 mm"
-      ],
-      [
-        "Rohr senkrecht",
-        "40 × 1,1 mm"
-      ],
-      [
-        "Draht waagerecht",
-        "3 mm"
-      ],
-      [
-        "Draht senkrecht",
-        "3 mm"
-      ],
-      [
-        "Masche",
-        "100 × 300 mm"
-      ],
-      [
-        "Gewicht",
-        "14 kg"
-      ]
-    ],
-    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10031-Panel-Azurowy-niski-3.5-x-1.2-cynk.-ogniowo-HU-10031.webp",
-    "seite": "https://kkservice.de/1-2m-zaune/",
-    "code": "10031",
-    "rechte": "Nutzungsrecht in Klärung"
-  },
-  {
     "slug": "bauzaun-10075",
     "name": "Bauzaun Profi 3,5 × 2,0 m",
     "kat": "bauzaun",
@@ -1621,9 +1406,341 @@
     "rechte": "Nutzungsrecht in Klärung"
   },
   {
+    "slug": "bauzaun-10074-0",
+    "name": "Bauzaun Profi 2,2 × 1,2 m",
+    "kat": "bauzaun",
+    "gruppe": "1,2 m",
+    "lead": "Offenes Gitterfeld. Vollfeuerverzinkt. Haken und Ösen verbinden die Felder.",
+    "bild": "images/kk/bauzaun-10074-0.webp",
+    "bildSmall": "images/kk/bauzaun-10074-0-640.webp",
+    "width": 1200,
+    "height": 675,
+    "alt": "Bauzaun Profi 2,2 × 1,2 m",
+    "kicker": "2,2 × 1,2 m · 7,5 kg",
+    "specs": [
+      [
+        "Rohr waagerecht",
+        "28 × 1,1 mm"
+      ],
+      [
+        "Rohr senkrecht",
+        "40 × 1,1 mm"
+      ],
+      [
+        "Draht waagerecht",
+        "3 mm"
+      ],
+      [
+        "Draht senkrecht",
+        "3 mm"
+      ],
+      [
+        "Masche",
+        "100 × 245 mm"
+      ],
+      [
+        "Gewicht",
+        "7,5 kg"
+      ]
+    ],
+    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10074.0-1280-x-720-1.webp",
+    "seite": "https://kkservice.de/1-2m-zaune/",
+    "code": "10074.0",
+    "rechte": "Nutzungsrecht in Klärung"
+  },
+  {
+    "slug": "bauzaun-10042-0",
+    "name": "Bauzaun Profi 3,5 × 1,2 m",
+    "kat": "bauzaun",
+    "gruppe": "1,2 m",
+    "lead": "Offenes Gitterfeld. Vollfeuerverzinkt. Haken und Ösen verbinden die Felder.",
+    "bild": "images/kk/bauzaun-10042-0.webp",
+    "bildSmall": "images/kk/bauzaun-10042-0-640.webp",
+    "width": 1200,
+    "height": 675,
+    "alt": "Bauzaun Profi 3,5 × 1,2 m",
+    "kicker": "3,5 × 1,2 m · 12 kg",
+    "specs": [
+      [
+        "Rohr waagerecht",
+        "28 × 1,1 mm"
+      ],
+      [
+        "Rohr senkrecht",
+        "40 × 1,1 mm"
+      ],
+      [
+        "Draht waagerecht",
+        "3 mm"
+      ],
+      [
+        "Draht senkrecht",
+        "3 mm"
+      ],
+      [
+        "Masche",
+        "100 × 245 mm"
+      ],
+      [
+        "Gewicht",
+        "12 kg"
+      ]
+    ],
+    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10042.0-1280-x-720.webp",
+    "seite": "https://kkservice.de/1-2m-zaune/",
+    "code": "10042.0",
+    "rechte": "Nutzungsrecht in Klärung"
+  },
+  {
+    "slug": "bauzaun-10038-0",
+    "name": "Bauzaun Profi Round 3,5 × 1,2 m",
+    "kat": "bauzaun",
+    "gruppe": "1,2 m",
+    "lead": "Offenes Gitterfeld. Vollfeuerverzinkt. Haken und Ösen verbinden die Felder.",
+    "bild": "images/kk/bauzaun-10038-0.webp",
+    "bildSmall": "images/kk/bauzaun-10038-0-640.webp",
+    "width": 1200,
+    "height": 675,
+    "alt": "Bauzaun Profi Round 3,5 × 1,2 m",
+    "kicker": "3,5 × 1,2 m · 13 kg",
+    "specs": [
+      [
+        "Rohr waagerecht",
+        "28 × 1,1 mm"
+      ],
+      [
+        "Rohr senkrecht",
+        "40 × 1,1 mm"
+      ],
+      [
+        "Draht waagerecht",
+        "3 mm"
+      ],
+      [
+        "Draht senkrecht",
+        "3 mm"
+      ],
+      [
+        "Masche",
+        "100 × 245 mm"
+      ],
+      [
+        "Gewicht",
+        "13 kg"
+      ]
+    ],
+    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10038-1280-x-720.webp",
+    "seite": "https://kkservice.de/1-2m-zaune/",
+    "code": "10038.0",
+    "rechte": "Nutzungsrecht in Klärung"
+  },
+  {
+    "slug": "bauzaun-10069-6",
+    "name": "Bauzaun Round 3,5 × 1,2 m",
+    "kat": "bauzaun",
+    "gruppe": "1,2 m",
+    "lead": "Offenes Gitterfeld. Verzinkt. Haken und Ösen verbinden die Felder.",
+    "bild": "images/kk/bauzaun-10069-6.webp",
+    "bildSmall": "images/kk/bauzaun-10069-6-640.webp",
+    "width": 1200,
+    "height": 821,
+    "alt": "Bauzaun Round 3,5 × 1,2 m",
+    "kicker": "3,5 × 1,2 m · 11 kg",
+    "specs": [
+      [
+        "Rohr waagerecht",
+        "28 × 1,0 mm"
+      ],
+      [
+        "Rohr senkrecht",
+        "40 × 1,0 mm"
+      ],
+      [
+        "Draht waagerecht",
+        "3 mm"
+      ],
+      [
+        "Draht senkrecht",
+        "2,5 mm"
+      ],
+      [
+        "Masche",
+        "100 × 245 mm"
+      ],
+      [
+        "Gewicht",
+        "11 kg"
+      ]
+    ],
+    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10069.6-Panel-Round-3.5-x-1.2-ocynkowany-HU-10069.6.webp",
+    "seite": "https://kkservice.de/1-2m-zaune/",
+    "code": "10069.6",
+    "rechte": "Nutzungsrecht in Klärung"
+  },
+  {
+    "slug": "bauzaun-10031",
+    "name": "Bauzaun Handlauf 3,5 × 1,2 m",
+    "kat": "bauzaun",
+    "gruppe": "1,2 m",
+    "lead": "Offenes Gitterfeld. Vollfeuerverzinkt. Haken und Ösen verbinden die Felder. Mit Handlauf.",
+    "bild": "images/kk/bauzaun-10031.webp",
+    "bildSmall": "images/kk/bauzaun-10031-640.webp",
+    "width": 1200,
+    "height": 821,
+    "alt": "Bauzaun Handlauf 3,5 × 1,2 m",
+    "kicker": "3,5 × 1,2 m · 14 kg",
+    "specs": [
+      [
+        "Rohr waagerecht",
+        "28 × 1,1 mm"
+      ],
+      [
+        "Rohr senkrecht",
+        "40 × 1,1 mm"
+      ],
+      [
+        "Draht waagerecht",
+        "3 mm"
+      ],
+      [
+        "Draht senkrecht",
+        "3 mm"
+      ],
+      [
+        "Masche",
+        "100 × 300 mm"
+      ],
+      [
+        "Gewicht",
+        "14 kg"
+      ]
+    ],
+    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10031-Panel-Azurowy-niski-3.5-x-1.2-cynk.-ogniowo-HU-10031.webp",
+    "seite": "https://kkservice.de/1-2m-zaune/",
+    "code": "10031",
+    "rechte": "Nutzungsrecht in Klärung"
+  },
+  {
+    "slug": "verkehrsschilder",
+    "name": "Verkehrsschilder",
+    "kat": "verkehrssicherung",
+    "gruppe": "Schilder",
+    "lead": "Verkehrsschilder zur Absperrung.",
+    "bild": "images/verkehrsschilder.webp",
+    "bildSmall": "",
+    "width": 600,
+    "height": 697,
+    "alt": "Gruppe von Verkehrsschildern",
+    "kicker": "",
+    "specs": [
+      [
+        "Umfang",
+        "häufig angefragte Zeichen, weitere auf Nachfrage"
+      ]
+    ],
+    "quelle": "https://www.schwarzfeller.de/wp-content/uploads/verkehrsschilder600.jpg",
+    "seite": "https://www.schwarzfeller.de/verkehr/verkehrsschilder/",
+    "code": "",
+    "rechte": "bisherige Quelle, Nutzungsrecht weiter offen",
+    "sammel": true
+  },
+  {
+    "slug": "schranke-10024-1",
+    "name": "Kunststoff Schrankenzaun mit Folie RA1",
+    "kat": "verkehrssicherung",
+    "gruppe": "Schranken",
+    "lead": "Kunststoff Schrankenzaun mit Folie RA1.",
+    "bild": "images/kk/schranke-10024-1.webp",
+    "bildSmall": "images/kk/schranke-10024-1-640.webp",
+    "width": 1024,
+    "height": 701,
+    "alt": "Kunststoff Schrankenzaun mit Folie RA1",
+    "kicker": "12 kg",
+    "specs": [
+      [
+        "Länge",
+        "2.100 mm"
+      ],
+      [
+        "Höhe",
+        "1.150 mm"
+      ],
+      [
+        "Gewicht",
+        "12 kg"
+      ]
+    ],
+    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10024.1-.webp",
+    "seite": "https://kkservice.de/absperrgitter/",
+    "code": "10024.1",
+    "rechte": "Nutzungsrecht in Klärung"
+  },
+  {
+    "slug": "schranke-10024-3",
+    "name": "Kunststoff Schrankenzaun mit Folie RA2",
+    "kat": "verkehrssicherung",
+    "gruppe": "Schranken",
+    "lead": "Kunststoff Schrankenzaun mit Folie RA2.",
+    "bild": "images/kk/schranke-10024-1.webp",
+    "bildSmall": "images/kk/schranke-10024-1-640.webp",
+    "width": 1024,
+    "height": 701,
+    "alt": "Kunststoff Schrankenzaun mit Folie RA2",
+    "kicker": "12 kg",
+    "specs": [
+      [
+        "Länge",
+        "2.100 mm"
+      ],
+      [
+        "Höhe",
+        "1.150 mm"
+      ],
+      [
+        "Gewicht",
+        "12 kg"
+      ]
+    ],
+    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10024.1-.webp",
+    "seite": "https://kkservice.de/absperrgitter/",
+    "code": "10024.3",
+    "rechte": "Nutzungsrecht in Klärung"
+  },
+  {
+    "slug": "schranke-10024-4",
+    "name": "Leitbake hell RA1",
+    "kat": "verkehrssicherung",
+    "gruppe": "Schranken",
+    "lead": "Leitbake hell RA1.",
+    "bild": "images/kk/schranke-10024-1.webp",
+    "bildSmall": "images/kk/schranke-10024-1-640.webp",
+    "width": 1024,
+    "height": 701,
+    "alt": "Leitbake hell RA1",
+    "kicker": "1.300 × 310 mm · 2,7 kg",
+    "specs": [
+      [
+        "Das Paket",
+        "78"
+      ],
+      [
+        "Maße",
+        "1.300 × 310 mm"
+      ],
+      [
+        "Gewicht",
+        "2,7 kg"
+      ]
+    ],
+    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10024.1-.webp",
+    "seite": "https://kkservice.de/absperrgitter/",
+    "code": "10024.4",
+    "rechte": "Nutzungsrecht in Klärung"
+  },
+  {
     "slug": "absperrung-10026",
     "name": "Absperrgitter leicht",
-    "kat": "absperrung",
+    "kat": "verkehrssicherung",
     "gruppe": "Gitter",
     "lead": "Absperrgitter leicht.",
     "bild": "images/kk/absperrung-10026.webp",
@@ -1666,7 +1783,7 @@
   {
     "slug": "absperrung-10025-0",
     "name": "Absperrgitter schwer",
-    "kat": "absperrung",
+    "kat": "verkehrssicherung",
     "gruppe": "Gitter",
     "lead": "Absperrgitter schwer.",
     "bild": "images/kk/absperrung-10025-0.webp",
@@ -1709,7 +1826,7 @@
   {
     "slug": "absperrung-10041",
     "name": "Absperrgitter Nordic 2,5 × 1,1 m",
-    "kat": "absperrung",
+    "kat": "verkehrssicherung",
     "gruppe": "Gitter",
     "lead": "Absperrgitter Nordic 2,5 × 1,1 m.",
     "bild": "images/kk/absperrung-10041.webp",
@@ -1742,102 +1859,9 @@
     "rechte": "Nutzungsrecht in Klärung"
   },
   {
-    "slug": "schranke-10024-1",
-    "name": "Kunststoff Schrankenzaun mit Folie RA1",
-    "kat": "absperrung",
-    "gruppe": "Schranken",
-    "lead": "Kunststoff Schrankenzaun mit Folie RA1.",
-    "bild": "images/kk/schranke-10024-1.webp",
-    "bildSmall": "images/kk/schranke-10024-1-640.webp",
-    "width": 1024,
-    "height": 701,
-    "alt": "Kunststoff Schrankenzaun mit Folie RA1",
-    "kicker": "12 kg",
-    "specs": [
-      [
-        "Länge",
-        "2.100 mm"
-      ],
-      [
-        "Höhe",
-        "1.150 mm"
-      ],
-      [
-        "Gewicht",
-        "12 kg"
-      ]
-    ],
-    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10024.1-.webp",
-    "seite": "https://kkservice.de/absperrgitter/",
-    "code": "10024.1",
-    "rechte": "Nutzungsrecht in Klärung"
-  },
-  {
-    "slug": "schranke-10024-3",
-    "name": "Kunststoff Schrankenzaun mit Folie RA2",
-    "kat": "absperrung",
-    "gruppe": "Schranken",
-    "lead": "Kunststoff Schrankenzaun mit Folie RA2.",
-    "bild": "images/kk/schranke-10024-1.webp",
-    "bildSmall": "images/kk/schranke-10024-1-640.webp",
-    "width": 1024,
-    "height": 701,
-    "alt": "Kunststoff Schrankenzaun mit Folie RA2",
-    "kicker": "12 kg",
-    "specs": [
-      [
-        "Länge",
-        "2.100 mm"
-      ],
-      [
-        "Höhe",
-        "1.150 mm"
-      ],
-      [
-        "Gewicht",
-        "12 kg"
-      ]
-    ],
-    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10024.1-.webp",
-    "seite": "https://kkservice.de/absperrgitter/",
-    "code": "10024.3",
-    "rechte": "Nutzungsrecht in Klärung"
-  },
-  {
-    "slug": "schranke-10024-4",
-    "name": "Leitbake hell RA1",
-    "kat": "absperrung",
-    "gruppe": "Schranken",
-    "lead": "Leitbake hell RA1.",
-    "bild": "images/kk/schranke-10024-1.webp",
-    "bildSmall": "images/kk/schranke-10024-1-640.webp",
-    "width": 1024,
-    "height": 701,
-    "alt": "Leitbake hell RA1",
-    "kicker": "1.300 × 310 mm · 2,7 kg",
-    "specs": [
-      [
-        "Das Paket",
-        "78"
-      ],
-      [
-        "Maße",
-        "1.300 × 310 mm"
-      ],
-      [
-        "Gewicht",
-        "2,7 kg"
-      ]
-    ],
-    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/10024.1-.webp",
-    "seite": "https://kkservice.de/absperrgitter/",
-    "code": "10024.4",
-    "rechte": "Nutzungsrecht in Klärung"
-  },
-  {
     "slug": "schwelle-10005-4",
     "name": "Betonleitschwelle 500 kg, 2,5 m",
-    "kat": "absperrung",
+    "kat": "verkehrssicherung",
     "gruppe": "Betonschwellen",
     "lead": "Betonleitschwelle 500 kg, 2,5 m.",
     "bild": "images/kk/schwelle-10005-4.webp",
@@ -1864,7 +1888,7 @@
   {
     "slug": "schwelle-10005-2",
     "name": "Betonleitschwelle 900 kg, 3,5 m",
-    "kat": "absperrung",
+    "kat": "verkehrssicherung",
     "gruppe": "Betonschwellen",
     "lead": "Betonleitschwelle 900 kg, 3,5 m.",
     "bild": "images/kk/schwelle-10005-2.webp",
@@ -1891,7 +1915,7 @@
   {
     "slug": "schwelle-10005-3",
     "name": "Betonleitschwelle 1000 kg, 2,5 m",
-    "kat": "absperrung",
+    "kat": "verkehrssicherung",
     "gruppe": "Betonschwellen",
     "lead": "Betonleitschwelle 1000 kg, 2,5 m.",
     "bild": "images/kk/schwelle-10005-3.webp",
@@ -1918,7 +1942,7 @@
   {
     "slug": "absperrung-10025-1",
     "name": "Eingangsschleusensystem – Schiene",
-    "kat": "absperrung",
+    "kat": "verkehrssicherung",
     "gruppe": "Schleuse und Bühne",
     "lead": "Eingangsschleusensystem – Schiene.",
     "bild": "images/kk/absperrung-10025-1.webp",
@@ -1945,7 +1969,7 @@
   {
     "slug": "absperrung-10025-2",
     "name": "Eingangsschleusensystem - Seitenteil",
-    "kat": "absperrung",
+    "kat": "verkehrssicherung",
     "gruppe": "Schleuse und Bühne",
     "lead": "Eingangsschleusensystem - Seitenteil.",
     "bild": "images/kk/absperrung-10025-2.webp",
@@ -1980,7 +2004,7 @@
   {
     "slug": "absperrung-10025-3",
     "name": "Eingangsschleusensystem – Kopfteil",
-    "kat": "absperrung",
+    "kat": "verkehrssicherung",
     "gruppe": "Schleuse und Bühne",
     "lead": "Eingangsschleusensystem – Kopfteil.",
     "bild": "images/kk/absperrung-10025-3.webp",
@@ -2011,7 +2035,7 @@
   {
     "slug": "absperrung-10047",
     "name": "Bühnengeländer",
-    "kat": "absperrung",
+    "kat": "verkehrssicherung",
     "gruppe": "Schleuse und Bühne",
     "lead": "Bühnengeländer.",
     "bild": "images/kk/absperrung-10047.webp",
@@ -2034,7 +2058,7 @@
   {
     "slug": "absperrung-10047-1",
     "name": "Bühnenschranke Eingangstor",
-    "kat": "absperrung",
+    "kat": "verkehrssicherung",
     "gruppe": "Schleuse und Bühne",
     "lead": "Bühnenschranke Eingangstor.",
     "bild": "images/kk/absperrung-10047-1.webp",
@@ -2057,7 +2081,7 @@
   {
     "slug": "absperrung-10048",
     "name": "Bühnenabsperrung Ecke",
-    "kat": "absperrung",
+    "kat": "verkehrssicherung",
     "gruppe": "Schleuse und Bühne",
     "lead": "Bühnenabsperrung Ecke.",
     "bild": "images/kk/absperrung-10048.webp",
@@ -2071,29 +2095,6 @@
     "seite": "https://kkservice.de/absperrgitter/",
     "code": "10048",
     "rechte": "Nutzungsrecht in Klärung"
-  },
-  {
-    "slug": "verkehrsschilder",
-    "name": "Verkehrsschilder",
-    "kat": "absperrung",
-    "gruppe": "Schilder",
-    "lead": "Verkehrsschilder zur Absperrung.",
-    "bild": "images/verkehrsschilder.webp",
-    "bildSmall": "",
-    "width": 600,
-    "height": 697,
-    "alt": "Gruppe von Verkehrsschildern",
-    "kicker": "",
-    "specs": [
-      [
-        "Umfang",
-        "häufig angefragte Zeichen, weitere auf Nachfrage"
-      ]
-    ],
-    "quelle": "https://www.schwarzfeller.de/wp-content/uploads/verkehrsschilder600.jpg",
-    "seite": "https://www.schwarzfeller.de/verkehr/verkehrsschilder/",
-    "code": "",
-    "rechte": "bisherige Quelle, Nutzungsrecht weiter offen"
   },
   {
     "slug": "hochlader",

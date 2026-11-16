@@ -74,7 +74,10 @@
       var von = String(item.von || "");
       var bis = String(item.bis || "");
       if (bild) next.bild = bild;
-      if (note) next.note = note.slice(0, 80);
+      if (note) next.note = note.slice(0, 600);
+      if (item.sammel) next.sammel = true;
+      var kat = String(item.kat || "");
+      if (kat === "bauzaun" || kat === "verkehrssicherung" || kat === "anhaenger") next.kat = kat;
       if (/^\d{4}-\d{2}-\d{2}$/.test(von)) next.von = von;
       if (/^\d{4}-\d{2}-\d{2}$/.test(bis)) next.bis = bis;
       return next;
@@ -165,14 +168,19 @@
     var incoming = normalize([item])[0];
     if (!incoming) return items;
     var found = null;
-    if (!incoming.konfig) {
+    if (incoming.sammel) {
       items.forEach(function (existing) {
-        if (existing.konfig || found) return;
+        if (found || !existing.sammel) return;
+        if (existing.id === incoming.id && (existing.note || "") === (incoming.note || "")) found = existing;
+      });
+    } else if (!incoming.konfig) {
+      items.forEach(function (existing) {
+        if (existing.konfig || existing.sammel || found) return;
         if (existing.id === incoming.id && (existing.von || "") === (incoming.von || "") && (existing.bis || "") === (incoming.bis || "")) found = existing;
       });
     }
-    if (found) found.qty = Math.min(99, found.qty + incoming.qty);
-    else items.push(incoming);
+    if (found && !incoming.sammel) found.qty = Math.min(99, found.qty + incoming.qty);
+    else if (!found) items.push(incoming);
     save(items);
     showToast();
     return items;

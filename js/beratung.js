@@ -20,7 +20,10 @@
       return;
     }
     var lines = ["Individuelle Beratung an AMK Engelhardt", "", "Art: " + (val("modus") === "kauf" ? "Kauf" : "Miete"), "", "Anliegen:", val("anliegen"), ""];
-    lines.push("Ort: " + (val("ort") || "–"));
+    if (form.elements.genehmigung && form.elements.genehmigung.checked) {
+      lines.push("Genehmigung/Verkehrsrechtliche Anordnung durch AMK");
+    }
+    lines.push("Einsatzort: " + (val("ort") || "–"));
     function deDate(value) {
       var match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
       return match ? match[3] + "." + match[2] + "." + match[1] : "";

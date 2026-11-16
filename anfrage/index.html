@@ -21,7 +21,7 @@
         <nav id="nav" class="nav" aria-label="Hauptnavigation">
           <ul>
             <li><a href="../bauzaun/">Bauzaun</a></li>
-            <li><a href="../absperrung/">Absperrung</a></li>
+            <li><a href="../verkehrssicherung/">Verkehrssicherung</a></li>
             <li><a href="../anhaenger/">Anhänger</a></li>
             <li><a href="../aktuelles/">Aktuelles &amp; Angebote</a></li>
             <li><a href="../kontakt/">Kontakt</a></li>
@@ -49,7 +49,7 @@
           <h2>Noch nichts ausgewählt</h2>
           <div class="actions actions--equal">
             <a class="btn" href="../bauzaun/">Bauzaun</a>
-            <a class="btn" href="../absperrung/">Absperrung</a>
+            <a class="btn" href="../verkehrssicherung/">Verkehrssicherung</a>
             <a class="btn" href="../anhaenger/">Anhänger</a>
             <a class="btn" href="beratung/">Individuelle Beratung anfragen</a>
           </div>
@@ -60,6 +60,13 @@
           <h2>Ihre Auswahl</h2>
           <p class="price-once">Preis auf Anfrage</p>
           <ul class="cart" id="anfrage-liste"></ul>
+          <div id="anfrage-verkehr" hidden>
+            <label class="choice"><input type="checkbox" name="genehmigung" value="ja"> <span>Genehmigung/Verkehrsrechtliche Anordnung durch AMK</span></label>
+            <div class="field" id="anfrage-einsatz" hidden>
+              <label for="einsatzort">Einsatzort</label>
+              <input id="einsatzort" name="einsatzort" type="text" autocomplete="address-level2">
+            </div>
+          </div>
           <div id="anfrage-miete">
             <h2 id="anfrage-miete-titel">Zeitraum und Anfahrt</h2>
             <div id="anfrage-zeit">
@@ -143,7 +150,7 @@
       <p><a href="tel:+499082921777">09082 921777</a><br><a href="mailto:info@bauzaun-mieten.net">info@bauzaun-mieten.net</a></p>
       <ul class="footer-links">
         <li><a href="../bauzaun/">Bauzaun</a></li>
-            <li><a href="../absperrung/">Absperrung</a></li>
+            <li><a href="../verkehrssicherung/">Verkehrssicherung</a></li>
             <li><a href="../anhaenger/">Anhänger</a></li>
         <li><a href="../aktuelles/">Aktuelles</a></li>
         <li><a href="../kontakt/">Kontakt</a></li>
@@ -171,7 +178,7 @@
           <ul>
             <li><a href="../">Startseite</a></li>
             <li><a href="../bauzaun/">Bauzaun</a></li>
-            <li><a href="../absperrung/">Absperrung</a></li>
+            <li><a href="../verkehrssicherung/">Verkehrssicherung</a></li>
             <li><a href="../anhaenger/">Anhänger</a></li>
             <li><a href="../aktuelles/">Aktuelles &amp; Angebote</a></li>
             <li><a href="../kontakt/">Kontakt</a></li>

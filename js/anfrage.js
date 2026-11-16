@@ -66,13 +66,28 @@
     return items.some(function (item) { return String(item.id).indexOf("miete:") === 0; });
   }
 
+  function sammel(item) {
+    if (item.sammel) return true;
+    return String(item.id).indexOf("verkehrsschilder") !== -1;
+  }
+
+  function isVerkehr(item) {
+    if (item.kat === "verkehrssicherung") return true;
+    var slug = String(item.id);
+    var cut = slug.indexOf(":");
+    slug = (cut === -1 ? slug : slug.slice(cut + 1)).split(":")[0];
+    return slug === "verkehrsschilder" ||
+      slug.indexOf("absperrung-") === 0 ||
+      slug.indexOf("schranke-") === 0 ||
+      slug.indexOf("schwelle-") === 0 ||
+      slug === "polizeigitter" ||
+      slug === "polizeigitter-solid" ||
+      slug === "barriere" ||
+      slug === "absperrschranke";
+  }
+
   function needsPeriod(items) {
-    return items.some(function (item) {
-      if (String(item.id).indexOf("miete:") !== 0) return false;
-      if (item.von && item.bis) return false;
-      var config = item.konfig;
-      return !(config && config.von && config.bis);
-    });
+    return renting(items);
   }
 
   function editHref(item) {
@@ -113,11 +128,9 @@
   function konfigText(item) {
     var k = item.konfig;
     var einheit = k.einheit === "felder" ? (k.menge === "1" ? " Feld" : " Felder") : " m";
-    var zeit = deDate(k.von) && deDate(k.bis) ? deDate(k.von) + " – " + deDate(k.bis) : "";
     var listed = extraList(k.extras);
     var extras = listed ? esc(listed) + " — Aufpreis auf Anfrage" : "keine";
     return "<p>" + esc(k.menge) + einheit + "</p>" +
-      (zeit ? "<p>" + esc(zeit) + "</p>" : "") +
       "<p>Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf</p>" +
       "<p>Extras: " + extras + "</p>";
   }
@@ -131,9 +144,14 @@
     var period = document.getElementById("anfrage-zeit");
     var periodTitle = document.getElementById("anfrage-miete-titel");
     var askPeriod = needsPeriod(data);
+    var verkehrOn = data.some(isVerkehr);
+    var verkehr = document.getElementById("anfrage-verkehr");
+    var einsatz = document.getElementById("anfrage-einsatz");
     if (rent) rent.hidden = !renting(data);
     if (period) period.hidden = !askPeriod;
     if (periodTitle) periodTitle.textContent = askPeriod ? "Zeitraum und Anfahrt" : "Anfahrt";
+    if (verkehr) verkehr.hidden = !verkehrOn;
+    if (einsatz) einsatz.hidden = !verkehrOn || renting(data);
     if (fence) fence.hidden = !fencing(data);
     var rentOn = rent && !rent.hidden;
     ["von", "bis"].forEach(function (id) {
@@ -152,15 +170,14 @@
       var bild = item.konfig && BILD[item.konfig.key] ? BILD[item.konfig.key] : (info.bild || item.bild);
       var modus = kind(item.id);
       var image = bild ? '<img src="../' + esc(bild) + '" alt="" width="320" height="220">' : "";
-      var zeit = !item.konfig && item.von && item.bis ? "<p>" + esc(deDate(item.von) + " – " + deDate(item.bis)) + "</p>" : "";
       var body = item.konfig
         ? konfigText(item)
         : (item.note ? "<p>" + esc(item.note) + "</p>" : "");
-      var qty = item.konfig
+      var qty = item.konfig || sammel(item)
         ? ""
         : '<label class="qty">Menge <input type="number" min="1" max="99" inputmode="numeric" value="' + item.qty + '" data-index="' + index + '" aria-label="Menge ' + esc(item.name) + '"></label>';
       return '<li class="cart-row">' + image +
-        '<div class="cart-main"><p class="cart-kind">' + modus + "</p><strong>" + esc(item.name) + "</strong>" + body + zeit + "</div>" +
+        '<div class="cart-main"><p class="cart-kind">' + modus + "</p><strong>" + esc(item.name) + "</strong>" + body + "</div>" +
         qty +
         '<div class="cart-actions"><a class="text-btn" href="' + esc(editHref(item)) + '">Ändern<span class="visually-hidden">: ' + esc(item.name) + '</span></a>' +
         '<button type="button" class="text-btn" data-index="' + index + '">Entfernen<span class="visually-hidden">: ' + esc(item.name) + "</span></button></div>" +
@@ -247,8 +264,14 @@
     status.classList.remove("is-error");
     if (!items.length) return;
     var askPeriod = needsPeriod(items);
-    if (askPeriod && renting(items) && window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(document.getElementById("von"), document.getElementById("bis"))) {
-      return;
+    if (askPeriod && renting(items)) {
+      var vonField = document.getElementById("von");
+      var bisField = document.getElementById("bis");
+      if (window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(vonField, bisField)) return;
+      if (!vonField.value || !bisField.value) {
+        (vonField.value ? bisField : vonField).focus();
+        return;
+      }
     }
     var trap = form.querySelector('[name="botcheck"]');
     if (trap && String(trap.value || "").trim()) {
@@ -263,21 +286,28 @@
         var einheit = k.einheit === "felder" ? (k.menge === "1" ? " Feld" : " Felder") : " m";
         var listed = extraList(k.extras);
         var extra = listed ? listed + " — Aufpreis auf Anfrage" : "keine";
-        var zeit = deDate(k.von) && deDate(k.bis) ? " — Zeitraum " + deDate(k.von) + " bis " + deDate(k.bis) : "";
-        lines.push(k.art + " — " + kind(item.id) + " — " + k.menge + einheit + zeit + " — Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf — Extras: " + extra);
+        lines.push(k.art + " — " + kind(item.id) + " — " + k.menge + einheit + " — Inklusive: Betonfüße, Verbindungsschellen, Streben nach Bedarf — Extras: " + extra);
         return;
       }
-      var zeit = item.von && item.bis ? " — Zeitraum " + deDate(item.von) + " bis " + deDate(item.bis) : "";
-      lines.push(item.name + " — " + kind(item.id) + " — Menge " + item.qty + zeit + (item.note ? " — " + item.note : ""));
+      if (sammel(item)) {
+        lines.push(item.name + " — " + kind(item.id) + (item.note ? " — " + item.note : ""));
+        return;
+      }
+      lines.push(item.name + " — " + kind(item.id) + " — Menge " + item.qty + (item.note ? " — " + item.note : ""));
     });
     lines.push("");
     if (fencing(items) && val("laenge")) lines.push("Zaunlänge: " + val("laenge") + " m");
     if (fencing(items) && val("hoehe")) lines.push("Höhe: " + val("hoehe") + " m");
+    if (items.some(isVerkehr) && val("genehmigung") === "ja") {
+      lines.push("Genehmigung/Verkehrsrechtliche Anordnung durch AMK");
+    }
     if (renting(items)) {
-      if (askPeriod) lines.push("Zeitraum: " + val("von") + " bis " + val("bis"));
+      if (askPeriod) lines.push("Zeitraum: " + (deDate(val("von")) || val("von")) + " bis " + (deDate(val("bis")) || val("bis")));
       lines.push("Leistung: " + (val("leistung") === "abholung" ? "Selbstabholung" : "Lieferung, Aufbau und Abbau"));
       lines.push("Einsatzort: " + val("ort"));
       lines.push("PLZ: " + val("plz"));
+    } else if (items.some(isVerkehr) && val("einsatzort")) {
+      lines.push("Einsatzort: " + val("einsatzort"));
     }
     lines.push("");
     lines.push("Name: " + val("name"));

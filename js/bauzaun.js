@@ -80,11 +80,6 @@
     return { extras: extras, invalid: invalid };
   }
 
-  function deDate(value) {
-    var match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ""));
-    return match ? match[3] + "." + match[2] + "." + match[1] : "";
-  }
-
   function put(name, text) {
     var node = form.querySelector('[data-sum="' + name + '"]');
     if (node) node.textContent = text;
@@ -95,29 +90,13 @@
     return checked && checked.value === "kauf" ? "kauf" : "miete";
   }
 
-  function syncMode() {
-    var buy = modus() === "kauf";
-    var period = document.getElementById("konfig-zeit");
-    if (period) period.hidden = buy;
-    form.von.required = !buy;
-    form.bis.required = !buy;
-    if (buy && window.AMK_ZEIT) window.AMK_ZEIT.clearPair(form.von, form.bis);
-  }
-
   function syncSummary() {
-    syncMode();
     var artKey = (form.querySelector('input[name="art"]:checked') || {}).value;
     var art = ART[artKey] || "–";
     var artLabel = art === "–" ? art : art + " · " + (modus() === "kauf" ? "Kauf" : "Miete");
     var raw = String(menge.value || "").trim();
     var felder = unit() === "felder";
     var amount = raw ? (felder ? raw + (raw === "1" ? " Feld" : " Felder") : raw + " m") : "–";
-    var buy = modus() === "kauf";
-    var von = buy ? "" : deDate(form.von.value);
-    var bis = buy ? "" : deDate(form.bis.value);
-    var zeit = von && bis ? von + " – " + bis : (von || bis || "–");
-    var zeitRow = form.querySelector('[data-sum="zeit"]');
-    if (zeitRow && zeitRow.parentNode) zeitRow.parentNode.hidden = buy;
     var picked = readExtras();
     var extras = picked.extras.map(function (entry) {
       return entry.menge ? entry.menge + " × " + entry.name : entry.name;
@@ -125,28 +104,15 @@
     var extraText = extras.length ? extras.join(", ") : "–";
     put("art", artLabel);
     put("menge", amount);
-    put("zeit", zeit);
     put("extras", extraText);
     var bits = [artLabel];
     if (amount !== "–") bits.push(amount);
-    if (zeit !== "–") bits.push(zeit);
     if (extraText !== "–") bits.push(extraText);
     put("short", bits.join(" · "));
   }
 
   form.addEventListener("input", syncSummary);
   form.addEventListener("change", syncSummary);
-
-  function rememberPeriod(von, bis) {
-    try {
-      var meta = JSON.parse(localStorage.getItem("amk-anfrage-meta") || "{}");
-      if (!meta || typeof meta !== "object") meta = {};
-      if (!meta.von) meta.von = von;
-      if (!meta.bis) meta.bis = bis;
-      if (!meta.leistung) meta.leistung = "lieferung";
-      localStorage.setItem("amk-anfrage-meta", JSON.stringify(meta));
-    } catch (error) {}
-  }
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -164,15 +130,6 @@
       return;
     }
     var buy = modus() === "kauf";
-    var von = buy ? "" : form.von.value;
-    var bis = buy ? "" : form.bis.value;
-    if (!buy && (!von || !bis)) {
-      status.textContent = "Bitte den Zeitraum angeben.";
-      status.classList.add("is-error");
-      (von ? form.bis : form.von).focus();
-      return;
-    }
-    if (!buy && window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(form.von, form.bis)) return;
     var picked = readExtras();
     if (picked.invalid) {
       status.textContent = "Mindestens 1.";
@@ -186,21 +143,18 @@
       id: (buy ? "kauf:" : "miete:") + "bauzaun-konfig:" + Date.now(),
       name: ART[artKey],
       qty: 1,
+      kat: "bauzaun",
       konfig: {
         art: ART[artKey],
         key: artKey,
         menge: shown,
         einheit: felder ? "felder" : "m",
-        von: von,
-        bis: bis,
         extras: extras
       }
     });
-    if (!buy) rememberPeriod(von, bis);
     form.reset();
     syncUnit();
     form.querySelectorAll('input[name="extra"]').forEach(syncQty);
-    if (window.AMK_ZEIT) window.AMK_ZEIT.clearPair(form.von, form.bis);
     syncSummary();
     status.textContent = "";
   });
