@@ -42,7 +42,9 @@ Z 208 heißt amtlich „Vorrang vor dem Gegenverkehr“, Z 308 „Vorrang des Ge
 
 Die Zeichen stehen unter drei Pills, gebildet aus der bestehenden Liste, ohne neue Zeichen: Gefahrzeichen (Z 123, Z 120, Z 121-10, Z 121-20), Vorschriftzeichen (Z 208, Z 308, Z 222, Z 250, Z 260, Z 267, Z 274 mit 30, 50 und 70, Z 276, Z 283, Z 286, Z 259), Richtzeichen (Z 454, Z 455, Z 457, alles Umleitungen). Zusatzzeichen und Aufstellvorrichtungen kommen in der Liste nicht vor und sind keine Pills.
 
-Jedes angehakte Zeichen geht mit Anzahl als eigene Zeile in den Anfragekorb (`kauf:schild:…` oder `miete:schild:…`). Das Feld „Größe, Folie, Ständer“ liegt darunter und wird, wenn es gefüllt ist, als Hinweiszeile mitgenommen. Es steht nur in dieser Gruppe und auf `produkt/verkehrsschilder/`, nicht in der Übersicht.
+Typ-Karten sind Mehrfachauswahl. Jeder angehakte Typ bekommt direkt seine Anzahl und wird eine eigene Zeile im Anfragekorb. Abwählen nimmt diese Zeile wieder heraus. Beim Bauzaun gilt dasselbe mit Meter oder Feldern je Typ. Standardzubehör hängt an jeder Bauzaun-Position.
+
+Jedes angehakte Zeichen geht mit Anzahl als eigene Zeile in den Anfragekorb (`kauf:schild:…` oder `miete:schild:…`). Die Anzahl erscheint, sobald das Zeichen angehakt ist. Das Feld „Größe, Folie, Ständer“ liegt darunter und wird, wenn es gefüllt ist, als Hinweiszeile mitgenommen. Es steht nur in dieser Gruppe und auf `produkt/verkehrsschilder/`, nicht in der Übersicht.
 
 Die vier Gruppen und die Zeichenliste sind die gemeinsame Quelle für Miete und Kauf (`js/gruppen.js`, `js/schilder.js`, `js/auswahl.js`). Auf `mieten/` liegt der Bauzaun-Konfigurator in Bauzaun & Absperrgitter, Standardzubehör inklusive, Sonderzubehör optional. Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger kommen aus `data/katalog.json`. Die Pills folgen `attr.art`: Absperrschranken, Leitbaken, Betonleitschwellen, Schleusen, Bühne, und bei den Anhängern Hochlader, Planenanhänger, Kofferanhänger, Fahrzeugtransporter, Kühlanhänger. Bei der Miete kommt der Zeitraum dazu. Beides landet im selben Anfragekorb, Miete mit `miete:`, Kauf mit `kauf:`.
 

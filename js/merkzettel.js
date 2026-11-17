@@ -208,6 +208,32 @@
     return items;
   }
 
-  window.AMK_WUNSCH = { load: load, save: save, add: add, onChange: null };
+  function replace(item) {
+    var batch = Array.isArray(item) ? item : [item];
+    var incoming = [];
+    batch.forEach(function (entry) {
+      var next = normalize([entry])[0];
+      if (next) incoming.push(next);
+    });
+    if (!incoming.length) return load();
+    var ids = {};
+    incoming.forEach(function (entry) { ids[entry.id] = 1; });
+    var items = load().filter(function (entry) { return !ids[entry.id]; });
+    incoming.forEach(function (entry) { items.push(entry); });
+    save(items);
+    showToast();
+    return items;
+  }
+
+  function remove(id) {
+    var key = String(id || "");
+    var items = load();
+    var next = items.filter(function (entry) { return entry.id !== key; });
+    if (next.length === items.length) return next;
+    save(next);
+    return next;
+  }
+
+  window.AMK_WUNSCH = { load: load, save: save, add: add, replace: replace, remove: remove, onChange: null };
   paint(load());
 })();

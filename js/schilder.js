@@ -143,21 +143,55 @@
         '<label class="choice"><input type="checkbox" name="schild" value="' + entry.id + '"> ' +
         '<span class="schild-mark">' + mark(entry) + "</span>" +
         "<span><strong>" + esc(entry.nr) + "</strong> " + esc(entry.name) + "</span></label>" +
-        '<label class="schild-qty">Anzahl <input type="number" min="1" max="99" value="1" inputmode="numeric" data-menge="' + entry.id + '" aria-label="Anzahl ' + esc(title) + '"></label>' +
+        '<label class="schild-qty" hidden>Anzahl <input type="number" min="1" max="99" value="1" inputmode="numeric" data-menge="' + entry.id + '" aria-label="Anzahl ' + esc(title) + '"></label>' +
         "</div>";
     }).join("");
 
+    var vorgangForm = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
+    if (window.AMK_WUNSCH && window.AMK_WUNSCH.load) {
+      var saved = {};
+      window.AMK_WUNSCH.load().forEach(function (item) { saved[item.id] = item; });
+      ZEICHEN.forEach(function (entry) {
+        var item = saved[vorgangForm + ":schild:" + entry.id];
+        if (!item) return;
+        var box = form.querySelector('input[name="schild"][value="' + entry.id + '"]');
+        var qtyField = form.querySelector('[data-menge="' + entry.id + '"]');
+        if (box) box.checked = true;
+        if (qtyField) {
+          qtyField.value = String(item.qty);
+          var wrap = qtyField.closest(".schild-qty");
+          if (wrap) wrap.hidden = false;
+        }
+      });
+    }
+
+    form.addEventListener("change", function (event) {
+      var box = event.target;
+      if (!box || box.name !== "schild") return;
+      var qtyField = form.querySelector('[data-menge="' + box.value + '"]');
+      var wrap = qtyField && qtyField.closest(".schild-qty");
+      if (wrap) wrap.hidden = !box.checked;
+      if (!box.checked && window.AMK_WUNSCH && window.AMK_WUNSCH.remove) {
+        var vorgang = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
+        window.AMK_WUNSCH.remove(vorgang + ":schild:" + box.value);
+      }
+    });
+
     form.addEventListener("submit", function (event) {
       event.preventDefault();
-      if (!window.AMK_WUNSCH || typeof window.AMK_WUNSCH.add !== "function") return;
+      if (!window.AMK_WUNSCH || typeof window.AMK_WUNSCH.replace !== "function") return;
       var lines = [];
+      var invalid = null;
       ZEICHEN.forEach(function (entry) {
+        if (invalid) return;
         var box = form.querySelector('input[name="schild"][value="' + entry.id + '"]');
         if (!box || !box.checked) return;
         var qtyField = form.querySelector('[data-menge="' + entry.id + '"]');
         var qty = parseInt(qtyField && qtyField.value, 10);
-        if (!qty || qty < 1) qty = 1;
-        if (qty > 99) qty = 99;
+        if (!qty || qty < 1 || qty > 99) {
+          invalid = qtyField;
+          return;
+        }
         var vorgang = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
         lines.push({
           id: vorgang + ":schild:" + entry.id,
@@ -166,6 +200,11 @@
           kat: "verkehrssicherung"
         });
       });
+      if (invalid) {
+        invalid.setAttribute("aria-invalid", "true");
+        invalid.focus();
+        return;
+      }
       var vorgang = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
       var noteField = form.elements.hinweis;
       var note = noteField ? String(noteField.value || "").trim() : "";
@@ -184,9 +223,14 @@
           note: note
         });
       }
-      window.AMK_WUNSCH.add(lines);
-      form.querySelectorAll('input[name="schild"]').forEach(function (box) { box.checked = false; });
-      if (noteField) noteField.value = "";
+      var vorgangNow = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
+      ZEICHEN.forEach(function (entry) {
+        var box = form.querySelector('input[name="schild"][value="' + entry.id + '"]');
+        if (box && box.checked) return;
+        if (window.AMK_WUNSCH.remove) window.AMK_WUNSCH.remove(vorgangNow + ":schild:" + entry.id);
+      });
+      if (!note && window.AMK_WUNSCH.remove) window.AMK_WUNSCH.remove(vorgangNow + ":schild:hinweis");
+      if (lines.length) window.AMK_WUNSCH.replace(lines);
     });
   });
 

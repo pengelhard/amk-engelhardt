@@ -1239,6 +1239,11 @@ a.contact-card:hover .contact-main { color: var(--green); }
 }
 .pick:focus-within { outline: 2px solid var(--ink); outline-offset: 2px; }
 .pick:has(input:checked) { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.pick-block { display: grid; align-content: start; gap: 0.45rem; }
+.pick-menge { display: grid; gap: 0.45rem; }
+.pick-menge[hidden],
+.schild-qty[hidden] { display: none !important; }
+.sum-lines { display: grid; gap: 0.45rem; }
 .unit-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
 .unit-switch .choice input { margin-top: 0; }
 .unit-switch .choice {
@@ -1504,6 +1509,8 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   .sum-short { display: none; }
   .sum-full { display: grid; gap: 0.55rem; margin: 0 0 0.95rem; }
   .sum-full div { display: grid; gap: 0.08rem; }
+  .sum-full .sum-lines { gap: 0.55rem; }
+  .sum-full .sum-lines > div { gap: 0.08rem; }
   .sum-full dt { color: var(--gray); font-size: 0.95rem; }
   .sum-full dd { margin: 0; color: var(--heading); font-weight: 600; }
   .konfig-summary .price-once { display: block; margin: 0 0 0.9rem; }

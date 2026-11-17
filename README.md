@@ -15,7 +15,7 @@ Die Startadresse `index.html` ist der Einstieg, mit zwei Flächen Mieten und Kau
 | `index.html` | Einstieg: Diashow, Angebote, Mieten/Kaufen, Ablauf, Leistungen |
 | `aktuelles/` | Sonderangebote, Neuheiten und besondere Produkte aus `data/aktuelles.json` |
 | `angebote/` | Weiterleitung auf `aktuelles/` (meta refresh und canonical) |
-| `mieten/` | Dieselben vier Hauptgruppen wie `kaufen/`. Bauzaun als Konfigurator. Absperrgitter, Schilder, Absperreinrichtungen und Anhänger mit derselben Auswahl wie auf der Kaufseite: Pills, Typ-Karten, Anzahl, bei der Miete zusätzlich der Zeitraum |
+| `mieten/` | Dieselben vier Hauptgruppen wie `kaufen/`. Bauzaun als Konfigurator. Absperrgitter, Schilder, Absperreinrichtungen und Anhänger mit derselben Auswahl wie auf der Kaufseite: Pills, Typ-Karten zur Mehrfachauswahl, Anzahl je Typ, bei der Miete zusätzlich der Zeitraum |
 | `mieten/verkehrssicherung/` | Weiterleitung auf `mieten/?gruppe=absperrung` |
 | `kaufen/` | Einzelteile inkl. Zubehör und Anhänger, nur Kauf, mit Menge. Kategorien: Bauzaun (Standard 3,5 × 2,0 m zuerst, 1,2 m zuletzt), Verkehrssicherung, Anhänger |
 | `bauzaun/`, `verkehrssicherung/`, `anhaenger/`, `bauzaun/konfigurator/` | Weiterleitung auf `kaufen/` oder `mieten/` |

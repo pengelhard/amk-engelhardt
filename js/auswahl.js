@@ -68,28 +68,46 @@
     return '<img src="' + esc(root + product.bild) + '" alt="" width="' + (product.width || 640) + '" height="' + (product.height || 480) + '" decoding="async">';
   }
 
+  function cartById() {
+    var map = {};
+    if (!window.AMK_WUNSCH || !window.AMK_WUNSCH.load) return map;
+    window.AMK_WUNSCH.load().forEach(function (item) { map[item.id] = item; });
+    return map;
+  }
+
+  function chosen(form) {
+    var list = [];
+    form.querySelectorAll('input[name="typ"]:checked').forEach(function (box) {
+      var product = null;
+      (products || []).forEach(function (entry) { if (entry.slug === box.value) product = entry; });
+      if (!product) return;
+      var field = form.querySelector('[data-menge-fuer="' + box.value + '"] input');
+      var qty = parseInt(field && field.value, 10);
+      list.push({ product: product, field: field, qty: qty });
+    });
+    return list;
+  }
+
   function updateSum(node) {
     var form = node.querySelector("form");
     if (!form) return;
-    var radio = form.querySelector('input[name="typ"]:checked');
-    var product = null;
-    if (radio && products) {
-      products.forEach(function (entry) { if (entry.slug === radio.value) product = entry; });
-    }
-    var qtyField = form.elements.menge;
-    var qty = parseInt(qtyField && qtyField.value, 10);
-    if (!qty || qty < 1) qty = 1;
+    var list = chosen(form);
     var von = form.elements.von;
     var bis = form.elements.bis;
     var zeit = von && bis && von.value && bis.value ? de(von.value) + "–" + de(bis.value) : "";
-    var name = product ? product.name : "";
     var short = node.querySelector('[data-sum="short"]');
-    var typ = node.querySelector('[data-sum="typ"]');
-    var menge = node.querySelector('[data-sum="menge"]');
+    var liste = node.querySelector('[data-sum="liste"]');
     var zeitNode = node.querySelector('[data-sum="zeit"]');
-    if (short) short.textContent = name ? name + " · " + qty + (zeit ? " · " + zeit : "") : "";
-    if (typ) typ.textContent = name || "–";
-    if (menge) menge.textContent = String(qty);
+    var bits = list.map(function (entry) {
+      return entry.product.name + " · " + (entry.qty > 0 ? entry.qty : "–");
+    });
+    if (zeit) bits.push(zeit);
+    if (short) short.textContent = bits.join("; ") || "–";
+    if (liste) {
+      liste.innerHTML = list.length ? list.map(function (entry) {
+        return "<div><dt>" + esc(entry.product.name) + "</dt><dd>" + (entry.qty > 0 ? entry.qty : "–") + "</dd></div>";
+      }).join("") : "<div><dt>Typ</dt><dd>–</dd></div>";
+    }
     if (zeitNode) zeitNode.textContent = zeit || "–";
   }
 
@@ -117,41 +135,64 @@
       return;
     }
     var list = products.filter(function (product) { return matches(product, teil); });
+    var saved = cartById();
+    var keptVon = "";
+    var keptBis = "";
+    var prevVon = node.querySelector('[name="von"]');
+    var prevBis = node.querySelector('[name="bis"]');
+    if (prevVon) keptVon = prevVon.value;
+    if (prevBis) keptBis = prevBis.value;
+    if (vorgang === "miete" && (!keptVon || !keptBis)) {
+      list.forEach(function (product) {
+        var item = saved[vorgang + ":" + product.slug];
+        if (!item || !item.von || !item.bis) return;
+        if (!keptVon) keptVon = item.von;
+        if (!keptBis) keptBis = item.bis;
+      });
+    }
     var pills = teile.length > 1
       ? '<div class="kauf-cats" role="navigation" aria-label="Unterkategorien">' + teile.map(function (entry) {
         var on = entry.id === teilId;
         return '<button type="button" class="chip" data-teil="' + entry.id + '" aria-pressed="' + (on ? "true" : "false") + '">' + esc(entry.label) + "</button>";
       }).join("") + "</div>"
       : "";
-    var cards = list.map(function (product, index) {
-      return '<label class="pick">' + picture(product, root) +
-        "<span><input type=\"radio\" name=\"typ\" value=\"" + esc(product.slug) + "\"" + (index === 0 ? " checked" : "") + " required>" +
-        "<strong>" + esc(product.name) + "</strong></span></label>";
+    var cards = list.map(function (product) {
+      var existing = saved[vorgang + ":" + product.slug];
+      var on = !!existing;
+      var qty = existing && existing.qty ? existing.qty : 1;
+      var panelId = "menge-panel-" + gruppe + "-" + product.slug;
+      var inputId = "menge-" + gruppe + "-" + product.slug;
+      return '<div class="pick-block"><label class="pick">' + picture(product, root) +
+        '<span><input type="checkbox" name="typ" value="' + esc(product.slug) + '"' + (on ? " checked" : "") +
+        ' aria-controls="' + panelId + '"><strong>' + esc(product.name) + "</strong></span></label>" +
+        '<div class="pick-menge" id="' + panelId + '" data-menge-fuer="' + esc(product.slug) + '"' + (on ? "" : " hidden") + ">" +
+        '<div class="field"><label for="' + inputId + '">Anzahl</label>' +
+        '<input id="' + inputId + '" type="number" min="1" max="99" value="' + qty + '" inputmode="numeric"></div></div></div>';
     }).join("");
     var zeit = "";
     if (vorgang === "miete") {
       zeit = '<fieldset class="choices"><legend>Zeitraum</legend><div class="form-grid">' +
-        '<div class="field"><label for="von-' + gruppe + '">Von</label><input id="von-' + gruppe + '" name="von" type="date" autocomplete="off" required></div>' +
-        '<div class="field"><label for="bis-' + gruppe + '">Bis</label><input id="bis-' + gruppe + '" name="bis" type="date" autocomplete="off" required></div>' +
+        '<div class="field"><label for="von-' + gruppe + '">Von</label><input id="von-' + gruppe + '" name="von" type="date" autocomplete="off"></div>' +
+        '<div class="field"><label for="bis-' + gruppe + '">Bis</label><input id="bis-' + gruppe + '" name="bis" type="date" autocomplete="off"></div>' +
         "</div></fieldset>";
     }
     node.innerHTML = pills +
       '<form class="konfig-layout">' +
       '<div class="konfig-main">' +
       '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' + cards + "</div></fieldset>" +
-      '<fieldset class="choices"><legend id="legende-menge-' + gruppe + '">Anzahl</legend><div class="field">' +
-      '<input id="menge-' + gruppe + '" name="menge" type="number" min="1" max="99" value="1" inputmode="numeric" required aria-labelledby="legende-menge-' + gruppe + '"></div></fieldset>' +
       zeit +
       "</div>" +
       '<aside class="konfig-summary" aria-live="polite"><h2>Ihre Auswahl</h2>' +
       '<p class="sum-short" data-sum="short"></p><dl class="sum-full">' +
-      '<div><dt>Typ</dt><dd data-sum="typ">–</dd></div>' +
-      '<div><dt>Anzahl</dt><dd data-sum="menge">1</dd></div>' +
+      '<div class="sum-lines" data-sum="liste"></div>' +
       (vorgang === "miete" ? '<div><dt>Zeitraum</dt><dd data-sum="zeit">–</dd></div>' : "") +
       "</dl><p class=\"price-once\">Preis auf Anfrage</p>" +
+      '<p class="form-status" data-status role="status"></p>' +
       '<button class="btn" type="submit">In den Anfragekorb</button></aside></form>';
     var von = node.querySelector('[name="von"]');
     var bis = node.querySelector('[name="bis"]');
+    if (von && keptVon) von.value = keptVon;
+    if (bis && keptBis) bis.value = keptBis;
     if (von && bis && window.AMK_ZEIT) window.AMK_ZEIT.bindPair(von, bis);
     updateSum(node);
   }
@@ -162,38 +203,55 @@
     event.preventDefault();
     var gruppe = node.getAttribute("data-gruppe") || "";
     var vorgang = node.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
-    var radio = form.querySelector('input[name="typ"]:checked');
-    var qtyField = form.elements.menge;
-    var qty = parseInt(qtyField && qtyField.value, 10);
-    if (!radio) {
+    var status = form.querySelector("[data-status]");
+    if (status) {
+      status.textContent = "";
+      status.classList.remove("is-error");
+    }
+    var list = chosen(form);
+    if (!list.length) {
       var first = form.querySelector('input[name="typ"]');
       if (first) first.focus();
       return;
     }
-    if (!qty || qty < 1 || qty > 99) {
-      if (qtyField) qtyField.focus();
-      return;
+    var lines = [];
+    for (var i = 0; i < list.length; i++) {
+      var entry = list[i];
+      if (!entry.qty || entry.qty < 1 || entry.qty > 99) {
+        if (status) {
+          status.textContent = "Bitte die Anzahl angeben.";
+          status.classList.add("is-error");
+        }
+        if (entry.field) {
+          entry.field.setAttribute("aria-invalid", "true");
+          entry.field.focus();
+        }
+        return;
+      }
+      var item = {
+        id: vorgang + ":" + entry.product.slug,
+        name: entry.product.name,
+        qty: entry.qty,
+        bild: entry.product.bild || "",
+        kat: KAT[gruppe] || ""
+      };
+      lines.push(item);
     }
-    var product = null;
-    (products || []).forEach(function (entry) { if (entry.slug === radio.value) product = entry; });
-    if (!product) return;
-    var item = {
-      id: vorgang + ":" + product.slug,
-      name: product.name,
-      qty: qty,
-      bild: product.bild || "",
-      kat: KAT[gruppe] || ""
-    };
     if (vorgang === "miete") {
       var von = form.elements.von;
       var bis = form.elements.bis;
       if (!von.value) { von.focus(); return; }
       if (!bis.value) { bis.focus(); return; }
       if (window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(von, bis)) return;
-      item.von = von.value;
-      item.bis = bis.value;
+      lines.forEach(function (item) {
+        item.von = von.value;
+        item.bis = bis.value;
+      });
     }
-    window.AMK_WUNSCH.add(item);
+    form.querySelectorAll('input[name="typ"]').forEach(function (box) {
+      if (!box.checked && window.AMK_WUNSCH.remove) window.AMK_WUNSCH.remove(vorgang + ":" + box.value);
+    });
+    window.AMK_WUNSCH.replace(lines);
   }
 
   function bind(node) {
@@ -205,7 +263,18 @@
       document.dispatchEvent(new CustomEvent("amk-teil", { detail: button.getAttribute("data-teil") || "" }));
     });
     node.addEventListener("input", function () { updateSum(node); });
-    node.addEventListener("change", function () { updateSum(node); });
+    node.addEventListener("change", function (event) {
+      var box = event.target;
+      if (box && box.name === "typ") {
+        var panel = node.querySelector('[data-menge-fuer="' + box.value + '"]');
+        if (panel) panel.hidden = !box.checked;
+        if (!box.checked && window.AMK_WUNSCH.remove) {
+          var vorgang = node.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
+          window.AMK_WUNSCH.remove(vorgang + ":" + box.value);
+        }
+      }
+      updateSum(node);
+    });
     node.addEventListener("submit", function (event) { submit(node, event); });
   }
 

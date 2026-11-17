@@ -21,24 +21,28 @@
       fuesse: "Schwere Füße",
       strasse: "Straßenverkehr/Absicherung"
     };
-    var menge = document.getElementById("menge");
-    var label = document.getElementById("mengen-label");
+    function boxOf(key) {
+      return form.querySelector('input[name="art"][value="' + key + '"]');
+    }
 
-    function unit() {
-      var checked = form.querySelector('input[name="einheit"]:checked');
+    function unit(key) {
+      var checked = form.querySelector('input[name="einheit-' + key + '"]:checked');
       return checked ? checked.value : "m";
     }
 
-    function syncUnit() {
-      var felder = unit() === "felder";
-      menge.setAttribute("inputmode", felder ? "numeric" : "decimal");
+    function syncUnit(key) {
+      var felder = unit(key) === "felder";
+      var input = document.getElementById("menge-" + key);
+      var label = document.getElementById("label-" + key);
+      if (input) input.setAttribute("inputmode", felder ? "numeric" : "decimal");
       if (label) label.textContent = felder ? "Anzahl Felder" : "Länge in Metern";
     }
 
-    form.querySelectorAll('input[name="einheit"]').forEach(function (radio) {
-      radio.addEventListener("change", syncUnit);
-    });
-    syncUnit();
+    function syncPanel(box) {
+      var panel = document.getElementById("menge-panel-" + box.value);
+      if (panel) panel.hidden = !box.checked;
+      if (!box.checked && window.AMK_WUNSCH.remove) window.AMK_WUNSCH.remove("miete:bauzaun:" + box.value);
+    }
 
     function readExtras() {
       var extras = [];
@@ -53,66 +57,123 @@
       if (node) node.textContent = text;
     }
 
+    function selected() {
+      var list = [];
+      form.querySelectorAll('input[name="art"]:checked').forEach(function (box) {
+        var key = box.value;
+        if (!ART[key]) return;
+        var input = document.getElementById("menge-" + key);
+        var raw = String(input && input.value || "").trim();
+        var felder = unit(key) === "felder";
+        var amount = raw ? (felder ? raw + (raw === "1" ? " Feld" : " Felder") : raw + " m") : "";
+        list.push({ key: key, name: ART[key], raw: raw, amount: amount, felder: felder, input: input });
+      });
+      return list;
+    }
+
     function syncSummary() {
-      var artKey = (form.querySelector('input[name="art"]:checked') || {}).value;
-      var art = ART[artKey] || "–";
-      var raw = String(menge.value || "").trim();
-      var felder = unit() === "felder";
-      var amount = raw ? (felder ? raw + (raw === "1" ? " Feld" : " Felder") : raw + " m") : "–";
+      var list = selected();
       var extras = readExtras().map(function (entry) { return entry.name; });
       var extraText = extras.length ? extras.join(", ") : "–";
-      put("art", art);
-      put("menge", amount);
+      var liste = form.querySelector('[data-sum="liste"]');
+      if (liste) {
+        liste.innerHTML = list.length ? list.map(function (entry) {
+          return "<div><dt>" + entry.name + "</dt><dd>" + (entry.amount || "–") + "</dd></div>";
+        }).join("") : "<div><dt>Zauntyp</dt><dd>–</dd></div>";
+      }
       put("extras", extraText);
-      var bits = [];
-      if (art !== "–") bits.push(art);
-      if (amount !== "–") bits.push(amount);
+      var bits = list.map(function (entry) {
+        return entry.amount ? entry.name + " · " + entry.amount : entry.name;
+      });
       if (extraText !== "–") bits.push(extraText);
-      put("short", bits.join(" · ") || "–");
+      put("short", bits.join("; ") || "–");
     }
 
     form.addEventListener("input", syncSummary);
     form.addEventListener("change", syncSummary);
+
+    form.addEventListener("change", function (event) {
+      var box = event.target;
+      if (!box || box.name !== "art") return;
+      syncPanel(box);
+      if (box.checked) syncUnit(box.value);
+    });
+
+    function restore() {
+      if (!window.AMK_WUNSCH.load) return;
+      var items = window.AMK_WUNSCH.load();
+      var extraOn = {};
+      items.forEach(function (item) {
+        if (!item.konfig || String(item.id).indexOf("miete:bauzaun:") !== 0) return;
+        var key = item.konfig.key;
+        var box = boxOf(key);
+        if (!box || !ART[key]) return;
+        box.checked = true;
+        syncPanel(box);
+        var input = document.getElementById("menge-" + key);
+        if (input) input.value = String(item.konfig.menge || "");
+        var chosen = item.konfig.einheit === "felder" ? "felder" : "m";
+        var radio = form.querySelector('input[name="einheit-' + key + '"][value="' + chosen + '"]');
+        if (radio) radio.checked = true;
+        syncUnit(key);
+        (item.konfig.extras || []).forEach(function (extra) { if (extra && extra.name) extraOn[extra.name] = 1; });
+        if (item.konfig.bemerkung && form.elements.bemerkung && !form.elements.bemerkung.value) {
+          form.elements.bemerkung.value = item.konfig.bemerkung;
+        }
+      });
+      form.querySelectorAll('input[name="extra"]').forEach(function (box) {
+        if (EXTRAS[box.value] && extraOn[EXTRAS[box.value]]) box.checked = true;
+      });
+    }
 
     form.addEventListener("submit", function (event) {
       event.preventDefault();
       var status = document.getElementById("konfig-status");
       status.textContent = "";
       status.classList.remove("is-error");
-      var artKey = (form.querySelector('input[name="art"]:checked') || {}).value;
-      var raw = String(menge.value || "").trim().replace(",", ".");
-      var amount = Number(raw);
-      var felder = unit() === "felder";
-      if (!ART[artKey] || !raw || !isFinite(amount) || amount <= 0 || amount > 100000 || (felder && amount % 1 !== 0)) {
-        status.textContent = felder ? "Bitte die Anzahl der Felder angeben." : "Bitte die Länge in Metern angeben.";
-        status.classList.add("is-error");
-        menge.focus();
+      form.querySelectorAll("[aria-invalid]").forEach(function (field) { field.removeAttribute("aria-invalid"); });
+      var list = selected();
+      if (!list.length) {
+        var first = form.querySelector('input[name="art"]');
+        if (first) first.focus();
         return;
       }
-      var extras = readExtras();
-      var shown = felder ? String(amount) : raw.replace(".", ",");
-      var note = form.elements.bemerkung ? String(form.elements.bemerkung.value || "").trim() : "";
-      window.AMK_WUNSCH.add({
-        id: "miete:bauzaun-paket:" + Date.now(),
-        name: ART[artKey],
-        qty: 1,
-        kat: "bauzaun",
-        bild: BILD[artKey] || "",
-        konfig: {
-          art: ART[artKey],
-          key: artKey,
-          menge: shown,
-          einheit: felder ? "felder" : "m",
-          extras: extras,
-          bemerkung: note
+      var lines = [];
+      for (var i = 0; i < list.length; i++) {
+        var entry = list[i];
+        var raw = entry.raw.replace(",", ".");
+        var amount = Number(raw);
+        if (!entry.raw || !isFinite(amount) || amount <= 0 || amount > 100000 || (entry.felder && amount % 1 !== 0)) {
+          status.textContent = entry.felder ? "Bitte die Anzahl der Felder angeben." : "Bitte die Länge in Metern angeben.";
+          status.classList.add("is-error");
+          if (entry.input) {
+            entry.input.setAttribute("aria-invalid", "true");
+            entry.input.focus();
+          }
+          return;
         }
-      });
-      form.reset();
-      syncUnit();
-      syncSummary();
+        var shown = entry.felder ? String(amount) : entry.raw.replace(".", ",");
+        lines.push({
+          id: "miete:bauzaun:" + entry.key,
+          name: entry.name,
+          qty: 1,
+          kat: "bauzaun",
+          bild: BILD[entry.key] || "",
+          konfig: {
+            art: entry.name,
+            key: entry.key,
+            menge: shown,
+            einheit: entry.felder ? "felder" : "m",
+            extras: readExtras(),
+            bemerkung: form.elements.bemerkung ? String(form.elements.bemerkung.value || "").trim() : ""
+          }
+        });
+      }
+      window.AMK_WUNSCH.replace(lines);
       status.textContent = "";
     });
 
+    restore();
     syncSummary();
   }
 
