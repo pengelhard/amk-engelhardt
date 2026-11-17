@@ -27,7 +27,7 @@ Nicht eingebunden, aber im Baum: `js/dia.js`, `js/filter.js`, `js/rechner.js`, `
 - `noindex, nofollow` und `Disallow: /` bleiben. Wer das aufhebt, ändert Seiten und Prüfung im selben PR und nur mit Peters OK.
 - Ein Merge auf `main` ist live. Die Testseite zeigt danach diesen Stand.
 - Ein PR, ein Thema. Gegeneinander von aktuellem `main`.
-- PR-Text nach `.github/pull_request_template.md`. Die Vorlage kommt mit dem eigenen PR. Bis dahin gelten dieselben Abschnitte: Peters Sollverhalten wörtlich, Abnahmepunkte mit Beleg, Dateien zum Abnahmepunkt, Funktionsinventar bei Löschungen, Gefunden und nicht geändert, Was, Warum, Selbstprüfung, Offen.
+- PR-Text nach `.github/pull_request_template.md`. Der erste Abschnitt heißt `## Peters Sollverhalten (wörtlich)`. Danach Abnahmepunkte mit Beleg, Dateien zum Abnahmepunkt, Funktionsinventar bei Löschungen, Gefunden und nicht geändert, Was und warum, Selbstprüfung, Offen.
 - Funktionsinventar vor dem Löschen oder Ersetzen: Funktion, Datei, wer sie aufruft. Erst danach entfernen. Öffentliche Einstiege sind `window.AMK_TYPWAHL`, `window.AMK_AUSWAHL`, `window.AMK_WUNSCH`, `window.AMK_SCHILDER`, `window.AMK_ZEIT`, `window.AMK_GRUPPEN`, `window.AMK_FORM`, `window.AMK_FORMULAR`.
 - Keine Secrets in Seiten, Skripten, CI oder Commit-Nachrichten. `js/form-config.js` lässt `accessKey` leer.
 - HTML, CSS, JavaScript, Bilder, Inhalte, `robots.txt`, CNAME, Pages-Einstellungen und `.pages.yml` nur anfassen, wenn der Auftrag die sichtbare Seite meint.
@@ -43,7 +43,8 @@ Der Befehl prüft Lint, Tests, den statischen Stand und die Invarianten. Typeche
 - interne Links und Bildpfade, einschließlich CSS-`url()` und Pfade in `js/` und `data/`
 - gemeinsame Navigation (Kopf, Menü, Fuß, Leiste) auf allen Inhaltsseiten; Weiterleitungen mit `meta refresh` haben kein Menü
 - `noindex, nofollow` auf jeder Seite und `robots.txt` mit genau `Disallow: /`
-- keine Token, keine Secrets, keine Zugangsdaten im Dateinamen; die Prüfkette liest keine Umgebungsvariablen
+- keine Token, keine Secrets, keine Zugangsdaten im Dateinamen; die Prüfkette liest keine Zugangsdaten. Der Umfangs-Check liest in der CI nur die `GITHUB_`-Felder des Ereignisses
+- Umfang: Warnung ab 500 geänderten Zeilen, ab 15 Dateien und bei Pfaden, die der Abschnitt `## Dateien` nicht nennt. Fehlender Abschnitt `## Peters Sollverhalten (wörtlich)` lässt die Prüfung nur auf einem Pull Request fehlschlagen. Lokal ohne PR-Kontext entfällt dieser Teil
 
 GitHub Actions (`.github/workflows/verify.yml`) führt denselben Befehl auf jedem PR und jedem Push auf `main` aus. Der Workflow veröffentlicht nichts. Pages baut `main` davon unabhängig.
 
@@ -52,4 +53,3 @@ Bekannte Ausnahme, nicht geändert: `assets/leaflet/leaflet.css` verweist auf `i
 ## Offen
 
 - Ob außer GitHub Pages ein weiterer Hoster hängt, steht nicht im Repo.
-- Die PR-Vorlage als Datei und der Umfangs-Check folgen im eigenen PR.

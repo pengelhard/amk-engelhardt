@@ -420,7 +420,13 @@ export function collectInvariantIssues(start = root) {
       issues.push(`${file.rel}: Workflow liest GitHub-Secrets`);
     }
     if (file.rel.startsWith("scripts/") && file.rel.endsWith(".mjs") && !file.rel.endsWith(".test.mjs")) {
-      if (text.includes(envRead)) issues.push(`${file.rel}: Prüfkette liest Umgebungsvariablen`);
+      if (text.includes(envRead)) {
+        if (file.rel !== "scripts/check-scope.mjs") {
+          issues.push(`${file.rel}: Prüfkette liest Umgebungsvariablen`);
+        } else if (text.split(envRead).length - 1 !== 1 || text.includes(["process", "env."].join("."))) {
+          issues.push(`${file.rel}: Umfangs-Check darf nur die GITHUB_-Felder des Ereignisses lesen`);
+        }
+      }
     }
   }
 

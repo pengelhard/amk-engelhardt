@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -16,7 +17,11 @@ function run(label, script) {
 
 function runTests() {
   console.log("\n== Tests ==");
-  const result = spawnSync(process.execPath, ["--test", path.join(here, "repo.test.mjs")], {
+  const files = fs.readdirSync(here)
+    .filter((name) => name.endsWith(".test.mjs"))
+    .sort()
+    .map((name) => path.join(here, name));
+  const result = spawnSync(process.execPath, ["--test", ...files], {
     cwd: root,
     stdio: "inherit",
   });
@@ -34,6 +39,7 @@ console.log("Typecheck: entfällt (kein TypeScript im Repo)");
 const testsOk = runTests();
 const buildOk = run("Build", "build.mjs");
 const invariantsOk = run("Invarianten", "check-invariants.mjs");
+const scopeOk = run("Umfang", "check-scope.mjs");
 
 console.log("\n---");
 console.log(`Lint: ${lintOk ? "ok" : "fehlgeschlagen"}`);
@@ -41,8 +47,9 @@ console.log("Typecheck: entfällt (kein TypeScript im Repo)");
 console.log(`Tests: ${testsOk ? "ok" : "fehlgeschlagen"}`);
 console.log(`Build: ${buildOk ? "ok" : "fehlgeschlagen"}`);
 console.log(`Invarianten: ${invariantsOk ? "ok" : "fehlgeschlagen"}`);
+console.log(`Umfang: ${scopeOk ? "ok" : "fehlgeschlagen"}`);
 
-if (!lintOk || !testsOk || !buildOk || !invariantsOk) {
+if (!lintOk || !testsOk || !buildOk || !invariantsOk || !scopeOk) {
   console.error("Ergebnis: rot");
   process.exit(1);
 }
