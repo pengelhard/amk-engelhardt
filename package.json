@@ -1,0 +1,11 @@
+{
+  "name": "amk-engelhardt",
+  "private": true,
+  "description": "Statische Testseite. npm run verify prüft Syntax, Links, Navigation, noindex und Secrets, ohne Abhängigkeiten.",
+  "scripts": {
+    "verify": "node scripts/verify.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

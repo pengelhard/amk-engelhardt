@@ -34,9 +34,22 @@ Nicht eingebunden, aber im Baum: `js/dia.js`, `js/filter.js`, `js/rechner.js`, `
 
 ## Prüfung
 
-Regressionsbefehl `npm run verify` ist geplant und kommt mit dem PR für die Prüfkette. Bis dahin ist die Selbstprüfung ein `git diff --stat`, das keine der gesperrten Pfade zeigt.
+Regressionsbefehl: `npm run verify` (`node scripts/verify.mjs`, Node 20 oder neuer, keine Abhängigkeiten).
+
+Der Befehl prüft Lint, Tests, den statischen Stand und die Invarianten. Typecheck entfällt, es gibt kein TypeScript. Geprüft wird:
+
+- JavaScript-Syntax unter `js/`, dazu `data/*.js`, `scripts/*.mjs` und `assets/leaflet/leaflet.js`
+- HTML-Grundgerüst jeder Seite: Doctype, `lang="de"`, genau ein Titel, Viewport
+- interne Links und Bildpfade, einschließlich CSS-`url()` und Pfade in `js/` und `data/`
+- gemeinsame Navigation (Kopf, Menü, Fuß, Leiste) auf allen Inhaltsseiten; Weiterleitungen mit `meta refresh` haben kein Menü
+- `noindex, nofollow` auf jeder Seite und `robots.txt` mit genau `Disallow: /`
+- keine Token, keine Secrets, keine Zugangsdaten im Dateinamen; die Prüfkette liest keine Umgebungsvariablen
+
+GitHub Actions (`.github/workflows/verify.yml`) führt denselben Befehl auf jedem PR und jedem Push auf `main` aus. Der Workflow veröffentlicht nichts. Pages baut `main` davon unabhängig.
+
+Bekannte Ausnahme, nicht geändert: `assets/leaflet/leaflet.css` verweist auf `images/layers.png` und `images/layers-2x.png`. Beide Dateien fehlen. Die Kontaktkarte setzt einen eigenen Marker, keinen Ebenen-Schalter. Die Prüfung meldet das und bleibt grün.
 
 ## Offen
 
 - Ob außer GitHub Pages ein weiterer Hoster hängt, steht nicht im Repo.
-- `assets/leaflet/leaflet.css` verweist auf `layers.png` und `layers-2x.png`. Die Dateien fehlen. Die Kontaktkarte setzt einen eigenen Marker.
+- Die PR-Vorlage als Datei und der Umfangs-Check folgen im eigenen PR.
