@@ -1,5 +1,5 @@
 (function () {
-  /* Eine Auswahl für Miete und Kauf: Pills, Typ-Karten, Anzahl.
+  /* Eine Auswahl für Miete und Kauf: Pills und die gemeinsame Typ-Karte.
      Zeitraum nur bei Miete. Inhalte nur aus data/katalog.json. */
   var TEILE = {
     gitter: [
@@ -81,7 +81,7 @@
       var product = null;
       (products || []).forEach(function (entry) { if (entry.slug === box.value) product = entry; });
       if (!product) return;
-      var field = form.querySelector('[data-menge-fuer="' + box.value + '"] input');
+      var field = form.querySelector('[data-menge-fuer="' + box.value + '"] [data-menge]');
       var qty = parseInt(field && field.value, 10);
       list.push({ product: product, field: field, qty: qty });
     });
@@ -119,7 +119,7 @@
       node.innerHTML = "<p>Das Sortiment konnte nicht geladen werden.</p>";
       return;
     }
-    if (!products || !TEILE[gruppe]) return;
+    if (!products || !TEILE[gruppe] || !window.AMK_TYPWAHL) return;
     var teile = liveTeile(gruppe);
     var teilId = selectedTeil(gruppe);
     var key = gruppe + ":" + teilId + ":" + vorgang;
@@ -160,14 +160,16 @@
       var existing = saved[vorgang + ":" + product.slug];
       var on = !!existing;
       var qty = existing && existing.qty ? existing.qty : 1;
-      var panelId = "menge-panel-" + gruppe + "-" + product.slug;
-      var inputId = "menge-" + gruppe + "-" + product.slug;
-      return '<div class="pick-block"><label class="pick">' + picture(product, root) +
-        '<span><input type="checkbox" name="typ" value="' + esc(product.slug) + '"' + (on ? " checked" : "") +
-        ' aria-controls="' + panelId + '"><strong>' + esc(product.name) + "</strong></span></label>" +
-        '<div class="pick-menge" id="' + panelId + '" data-menge-fuer="' + esc(product.slug) + '"' + (on ? "" : " hidden") + ">" +
-        '<div class="field"><label for="' + inputId + '">Anzahl</label>' +
-        '<input id="' + inputId + '" type="number" min="1" max="99" value="' + qty + '" inputmode="numeric"></div></div></div>';
+      return window.AMK_TYPWAHL.card({
+        name: "typ",
+        value: product.slug,
+        title: product.name,
+        media: picture(product, root),
+        checked: on,
+        qty: qty,
+        panelId: "menge-panel-" + gruppe + "-" + product.slug,
+        inputId: "menge-" + gruppe + "-" + product.slug
+      });
     }).join("");
     var zeit = "";
     if (vorgang === "miete") {
@@ -265,13 +267,9 @@
     node.addEventListener("input", function () { updateSum(node); });
     node.addEventListener("change", function (event) {
       var box = event.target;
-      if (box && box.name === "typ") {
-        var panel = node.querySelector('[data-menge-fuer="' + box.value + '"]');
-        if (panel) panel.hidden = !box.checked;
-        if (!box.checked && window.AMK_WUNSCH.remove) {
-          var vorgang = node.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
-          window.AMK_WUNSCH.remove(vorgang + ":" + box.value);
-        }
+      if (box && box.name === "typ" && !box.checked && window.AMK_WUNSCH.remove) {
+        var vorgang = node.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
+        window.AMK_WUNSCH.remove(vorgang + ":" + box.value);
       }
       updateSum(node);
     });

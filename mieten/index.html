@@ -68,84 +68,7 @@
           <div class="konfig-main">
           <fieldset class="pick-set">
             <legend>Zauntyp</legend>
-            <div class="picks">
-            <div class="pick-block">
-              <label class="pick">
-                <img src="../images/kk/bauzaun-10075.webp" width="1200" height="675" alt="">
-                <span>
-                  <input type="checkbox" name="art" value="standard" aria-controls="menge-panel-standard">
-                  <strong>Bauzaun Profi 3,5 × 2,0 m</strong>
-                </span>
-              </label>
-              <div class="pick-menge" id="menge-panel-standard" hidden>
-                <div class="unit-switch" role="radiogroup" aria-label="Einheit für Bauzaun Profi 3,5 × 2,0 m">
-                  <label class="choice"><input type="radio" name="einheit-standard" value="m" checked> <span>Meter</span></label>
-                  <label class="choice"><input type="radio" name="einheit-standard" value="felder"> <span>Felder</span></label>
-                </div>
-                <div class="field">
-                  <label id="label-standard" for="menge-standard">Länge in Metern</label>
-                  <input id="menge-standard" name="menge-standard" type="text" inputmode="decimal" autocomplete="off">
-                </div>
-              </div>
-            </div>
-            <div class="pick-block">
-              <label class="pick">
-                <img src="../images/kk/bauzaun-10042-0.webp" width="1200" height="675" alt="">
-                <span>
-                  <input type="checkbox" name="art" value="f1" aria-controls="menge-panel-f1">
-                  <strong>Bauzaun Profi 3,5 × 1,2 m</strong>
-                </span>
-              </label>
-              <div class="pick-menge" id="menge-panel-f1" hidden>
-                <div class="unit-switch" role="radiogroup" aria-label="Einheit für Bauzaun Profi 3,5 × 1,2 m">
-                  <label class="choice"><input type="radio" name="einheit-f1" value="m" checked> <span>Meter</span></label>
-                  <label class="choice"><input type="radio" name="einheit-f1" value="felder"> <span>Felder</span></label>
-                </div>
-                <div class="field">
-                  <label id="label-f1" for="menge-f1">Länge in Metern</label>
-                  <input id="menge-f1" name="menge-f1" type="text" inputmode="decimal" autocomplete="off">
-                </div>
-              </div>
-            </div>
-            <div class="pick-block">
-              <label class="pick">
-                <img src="../images/kk/bauzaun-10075-1.webp" width="1200" height="675" alt="">
-                <span>
-                  <input type="checkbox" name="art" value="secure" aria-controls="menge-panel-secure">
-                  <strong>Bauzaun Profi engmaschig 3,5 × 2,0 m</strong>
-                </span>
-              </label>
-              <div class="pick-menge" id="menge-panel-secure" hidden>
-                <div class="unit-switch" role="radiogroup" aria-label="Einheit für Bauzaun Profi engmaschig 3,5 × 2,0 m">
-                  <label class="choice"><input type="radio" name="einheit-secure" value="m" checked> <span>Meter</span></label>
-                  <label class="choice"><input type="radio" name="einheit-secure" value="felder"> <span>Felder</span></label>
-                </div>
-                <div class="field">
-                  <label id="label-secure" for="menge-secure">Länge in Metern</label>
-                  <input id="menge-secure" name="menge-secure" type="text" inputmode="decimal" autocomplete="off">
-                </div>
-              </div>
-            </div>
-            <div class="pick-block">
-              <label class="pick">
-                <img src="../images/kk/bauzaun-10044-2.webp" width="1200" height="675" alt="">
-                <span>
-                  <input type="checkbox" name="art" value="xxl" aria-controls="menge-panel-xxl">
-                  <strong>Bauzaun Profi Exklusiv 3,5 × 2,5 m</strong>
-                </span>
-              </label>
-              <div class="pick-menge" id="menge-panel-xxl" hidden>
-                <div class="unit-switch" role="radiogroup" aria-label="Einheit für Bauzaun Profi Exklusiv 3,5 × 2,5 m">
-                  <label class="choice"><input type="radio" name="einheit-xxl" value="m" checked> <span>Meter</span></label>
-                  <label class="choice"><input type="radio" name="einheit-xxl" value="felder"> <span>Felder</span></label>
-                </div>
-                <div class="field">
-                  <label id="label-xxl" for="menge-xxl">Länge in Metern</label>
-                  <input id="menge-xxl" name="menge-xxl" type="text" inputmode="decimal" autocomplete="off">
-                </div>
-              </div>
-            </div>
-            </div>
+            <div class="picks" data-zaun-picks></div>
           </fieldset>
           <p>Standardzubehör inklusive: Füße, Schellen, Streben nach Bedarf.</p>
           <fieldset class="choices extra-list">
@@ -264,6 +187,7 @@
   </div>
   <script src="../js/nav.js"></script>
   <script src="../js/merkzettel.js"></script>
+  <script src="../js/typwahl.js"></script>
   <script src="../js/gruppen.js"></script>
   <script src="../js/schilder.js"></script>
   <script src="../js/bauzaun.js"></script>

@@ -287,7 +287,7 @@
     });
     if (schilder) schilder.hidden = !signs;
     filterSchilder();
-    var signShown = signs && schilder ? schilder.querySelectorAll(".schild-row:not([hidden])").length : 0;
+    var signShown = signs && schilder ? schilder.querySelectorAll("[data-schild]:not([hidden])").length : 0;
     empty.hidden = overview || picker || (signs ? signShown !== 0 : shown !== 0);
     countEl.hidden = overview || signs || picker;
     if (window.AMK_AUSWAHL) window.AMK_AUSWAHL.sync();

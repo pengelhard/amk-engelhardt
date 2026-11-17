@@ -56,8 +56,9 @@
         var on = button.getAttribute("data-teil") === teil;
         button.setAttribute("aria-pressed", on ? "true" : "false");
       });
-      form.querySelectorAll(".schild-row").forEach(function (row) {
-        var text = row.textContent.toLocaleLowerCase("de");
+      form.querySelectorAll("[data-schild]").forEach(function (row) {
+        var title = row.querySelector("strong");
+        var text = (title ? title.textContent : "").toLocaleLowerCase("de");
         row.hidden = row.getAttribute("data-teil") !== teil || !!(q && text.indexOf(q) === -1);
       });
     });
@@ -117,7 +118,7 @@
 
   document.querySelectorAll("[data-schilder]").forEach(function (form) {
     var list = form.querySelector("[data-schild-liste]");
-    if (!list) return;
+    if (!list || !window.AMK_TYPWAHL) return;
     var nav = document.createElement("div");
     nav.className = "kauf-cats";
     nav.setAttribute("role", "navigation");
@@ -137,15 +138,18 @@
         apply();
       }
     });
-    list.innerHTML = ZEICHEN.map(function (entry) {
-      var title = entry.nr + " " + entry.name;
-      return '<div class="schild-row" data-schild="' + entry.id + '" data-teil="' + teilOf(entry) + '">' +
-        '<label class="choice"><input type="checkbox" name="schild" value="' + entry.id + '"> ' +
-        '<span class="schild-mark">' + mark(entry) + "</span>" +
-        "<span><strong>" + esc(entry.nr) + "</strong> " + esc(entry.name) + "</span></label>" +
-        '<label class="schild-qty" hidden>Anzahl <input type="number" min="1" max="99" value="1" inputmode="numeric" data-menge="' + entry.id + '" aria-label="Anzahl ' + esc(title) + '"></label>' +
-        "</div>";
-    }).join("");
+    list.innerHTML = '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' +
+      ZEICHEN.map(function (entry) {
+        return window.AMK_TYPWAHL.card({
+          name: "schild",
+          value: entry.id,
+          title: entry.nr + " " + entry.name,
+          media: '<span class="pick-bild">' + mark(entry) + "</span>",
+          panelId: "menge-panel-schild-" + entry.id,
+          inputId: "menge-schild-" + entry.id,
+          data: { schild: entry.id, teil: teilOf(entry) }
+        });
+      }).join("") + "</div></fieldset>";
 
     var vorgangForm = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
     if (window.AMK_WUNSCH && window.AMK_WUNSCH.load) {
@@ -155,23 +159,17 @@
         var item = saved[vorgangForm + ":schild:" + entry.id];
         if (!item) return;
         var box = form.querySelector('input[name="schild"][value="' + entry.id + '"]');
-        var qtyField = form.querySelector('[data-menge="' + entry.id + '"]');
+        var qtyField = form.querySelector("#menge-schild-" + entry.id);
         if (box) box.checked = true;
-        if (qtyField) {
-          qtyField.value = String(item.qty);
-          var wrap = qtyField.closest(".schild-qty");
-          if (wrap) wrap.hidden = false;
-        }
+        if (qtyField && item.qty) qtyField.value = String(item.qty);
+        if (box && window.AMK_TYPWAHL) window.AMK_TYPWAHL.reveal(box, false);
       });
     }
 
     form.addEventListener("change", function (event) {
       var box = event.target;
-      if (!box || box.name !== "schild") return;
-      var qtyField = form.querySelector('[data-menge="' + box.value + '"]');
-      var wrap = qtyField && qtyField.closest(".schild-qty");
-      if (wrap) wrap.hidden = !box.checked;
-      if (!box.checked && window.AMK_WUNSCH && window.AMK_WUNSCH.remove) {
+      if (!box || box.name !== "schild" || box.checked) return;
+      if (window.AMK_WUNSCH && window.AMK_WUNSCH.remove) {
         var vorgang = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
         window.AMK_WUNSCH.remove(vorgang + ":schild:" + box.value);
       }
@@ -186,7 +184,7 @@
         if (invalid) return;
         var box = form.querySelector('input[name="schild"][value="' + entry.id + '"]');
         if (!box || !box.checked) return;
-        var qtyField = form.querySelector('[data-menge="' + entry.id + '"]');
+        var qtyField = form.querySelector("#menge-schild-" + entry.id);
         var qty = parseInt(qtyField && qtyField.value, 10);
         if (!qty || qty < 1 || qty > 99) {
           invalid = qtyField;
@@ -209,7 +207,7 @@
       var noteField = form.elements.hinweis;
       var note = noteField ? String(noteField.value || "").trim() : "";
       if (!lines.length && !note) {
-        var first = form.querySelector('.schild-row:not([hidden]) input[name="schild"]');
+        var first = form.querySelector('[data-schild]:not([hidden]) input[name="schild"]');
         if (first) first.focus();
         return;
       }

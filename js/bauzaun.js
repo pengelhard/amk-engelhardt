@@ -38,10 +38,27 @@
       if (label) label.textContent = felder ? "Anzahl Felder" : "Länge in Metern";
     }
 
+    function renderPicks() {
+      var host = form.querySelector("[data-zaun-picks]");
+      if (!host || !window.AMK_TYPWAHL) return;
+      host.innerHTML = Object.keys(ART).map(function (key) {
+        return window.AMK_TYPWAHL.card({
+          name: "art",
+          value: key,
+          title: ART[key],
+          media: '<img src="../' + BILD[key] + '" width="1200" height="675" alt="">',
+          mode: "laenge",
+          panelId: "menge-panel-" + key,
+          inputId: "menge-" + key,
+          labelId: "label-" + key,
+          unitName: "einheit-" + key,
+          unitLabel: "Einheit für " + ART[key]
+        });
+      }).join("");
+    }
+
     function syncPanel(box) {
-      var panel = document.getElementById("menge-panel-" + box.value);
-      if (panel) panel.hidden = !box.checked;
-      if (!box.checked && window.AMK_WUNSCH.remove) window.AMK_WUNSCH.remove("miete:bauzaun:" + box.value);
+      if (window.AMK_TYPWAHL) window.AMK_TYPWAHL.reveal(box, false);
     }
 
     function readExtras() {
@@ -95,8 +112,8 @@
     form.addEventListener("change", function (event) {
       var box = event.target;
       if (!box || box.name !== "art") return;
-      syncPanel(box);
       if (box.checked) syncUnit(box.value);
+      else if (window.AMK_WUNSCH.remove) window.AMK_WUNSCH.remove("miete:bauzaun:" + box.value);
     });
 
     function restore() {
@@ -173,6 +190,7 @@
       status.textContent = "";
     });
 
+    renderPicks();
     restore();
     syncSummary();
   }
