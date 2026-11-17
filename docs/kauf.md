@@ -13,7 +13,7 @@ Oben auf `kaufen/` stehen vier Einstiege. Die Adresse trägt `gruppe`.
 | `absperrung` | Verkehrsabsperreinrichtungen | `verkehr` |
 | `anhaenger` | Anhänger | `anhaenger` |
 
-In Bauzaun & Absperrgitter bleiben die bisherigen Unterkategorien als Chips. In den anderen Gruppen filtern die vorhandenen Attribute weiter. `#bauzaun`, `#verkehrssicherung` und `#anhaenger` öffnen die passende Hauptgruppe. `?kat=gitter` und `?kat=anhaenger` ebenfalls.
+In Bauzaun & Absperrgitter bleiben die bisherigen Unterkategorien als Chips. Bauzäune, Zaunzubehör, Türen und Sichtschutz bleiben im Filterkatalog. Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger nutzen dieselbe Auswahl wie die Miete (`js/auswahl.js`): Unterkategorie als Pills, darunter Typ-Karten mit Bild und Anzahl. `#bauzaun`, `#verkehrssicherung` und `#anhaenger` öffnen die passende Hauptgruppe. `?kat=gitter` öffnet die Typ-Karten der Absperrgitter.
 
 ## Kategorien
 
@@ -40,9 +40,11 @@ Z 123, Z 120, Z 121-10, Z 121-20, Z 208, Z 308, Z 222, Z 250, Z 260, Z 267, Z 27
 
 Z 208 heißt amtlich „Vorrang vor dem Gegenverkehr“, Z 308 „Vorrang des Gegenverkehrs“. Z 259 heißt amtlich „Verbot für Fußgänger“. Z 625 und Leitkegel fehlen, weil sie im Sortiment nicht vorkommen.
 
+Die Zeichen stehen unter drei Pills, gebildet aus der bestehenden Liste, ohne neue Zeichen: Gefahrzeichen (Z 123, Z 120, Z 121-10, Z 121-20), Vorschriftzeichen (Z 208, Z 308, Z 222, Z 250, Z 260, Z 267, Z 274 mit 30, 50 und 70, Z 276, Z 283, Z 286, Z 259), Richtzeichen (Z 454, Z 455, Z 457, alles Umleitungen). Zusatzzeichen und Aufstellvorrichtungen kommen in der Liste nicht vor und sind keine Pills.
+
 Jedes angehakte Zeichen geht mit Anzahl als eigene Zeile in den Anfragekorb (`kauf:schild:…` oder `miete:schild:…`). Das Feld „Größe, Folie, Ständer“ liegt darunter und wird, wenn es gefüllt ist, als Hinweiszeile mitgenommen. Es steht nur in dieser Gruppe und auf `produkt/verkehrsschilder/`, nicht in der Übersicht.
 
-Die vier Gruppen und die Zeichenliste sind die gemeinsame Quelle für Miete und Kauf (`js/gruppen.js`, `js/schilder.js`). Auf `mieten/` liegt der Bauzaun-Konfigurator in Bauzaun & Absperrgitter, Standardzubehör inklusive, Sonderzubehör optional. Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger kommen aus `data/katalog.json` und gehen als Miete in denselben Korb.
+Die vier Gruppen und die Zeichenliste sind die gemeinsame Quelle für Miete und Kauf (`js/gruppen.js`, `js/schilder.js`, `js/auswahl.js`). Auf `mieten/` liegt der Bauzaun-Konfigurator in Bauzaun & Absperrgitter, Standardzubehör inklusive, Sonderzubehör optional. Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger kommen aus `data/katalog.json`. Die Pills folgen `attr.art`: Absperrschranken, Leitbaken, Betonleitschwellen, Schleusen, Bühne, und bei den Anhängern Hochlader, Planenanhänger, Kofferanhänger, Fahrzeugtransporter, Kühlanhänger. Bei der Miete kommt der Zeitraum dazu. Beides landet im selben Anfragekorb, Miete mit `miete:`, Kauf mit `kauf:`.
 
 ## Attribute
 
@@ -54,13 +56,12 @@ Filter erscheinen erst, wenn die gewählte Kategorie mindestens zwei verschieden
 - Zaunzubehör: Art, Fußart
 - Türen & Tore: Höhe, Maschenweite
 - Sichtschutz & Planen: Art
-- Absperrgitter: Art
-- Verkehrsabsperreinrichtungen: Art, Länge, Höhe, Breite
-- Anhänger: Art
+
+Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger haben keine Attributfilter. Die Auswahl läuft über die Pills und die Typ-Karten.
 
 Oberfläche ist Vollfeuerverzinkt, Verzinkt oder Vorverzinkt, und nur wenn das Wort in der Artikelüberschrift, im Absatz oder in der Seitenüberschrift „Vorverzinkte Zäune“ steht. Fußart ist Beton oder Kunststoff, und nur wenn der Name das sagt. Edelstahl steht nur bei der Schelle, die so heißt.
 
-Suche trifft Name, Artikelnummer und Kennung, bei den Schildern Nummer und Name. Sortierung ist Sortiment, Name oder Artikelnummer. Gruppe, Unterkategorie, Filter, Suche und Sortierung stehen in der Adresse (`?gruppe=zaun&kat=bauzaune&masche=100+x+300`). Zurück im Browser stellt den Stand wieder her.
+Suche trifft Name, Artikelnummer und Kennung, bei den Schildern Nummer und Name. Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger haben keine Suche. Sortierung ist Sortiment, Name oder Artikelnummer. Gruppe, Unterkategorie, Filter, Suche und Sortierung stehen in der Adresse (`?gruppe=zaun&kat=bauzaune&masche=100+x+300`). Die gewählte Pill steht als `teil` in der Adresse. Zurück im Browser stellt den Stand wieder her.
 
 ## Technische Daten
 

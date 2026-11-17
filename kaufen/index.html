@@ -79,7 +79,8 @@
           <form id="kauf-filter" class="kauf-facets" aria-label="Filter"></form>
           <div>
             <p id="kauf-empty" class="kauf-empty" hidden>Keine Treffer.</p>
-            <form class="schilder" id="schilder-bereich" data-schilder hidden>
+            <div id="kauf-auswahl" data-auswahl data-vorgang="kauf" data-root="../" hidden></div>
+            <form class="schilder" id="schilder-bereich" data-schilder data-vorgang="kauf" hidden>
               <div class="schild-liste" data-schild-liste></div>
               <div class="field"><label for="hinweis-schilder">Größe, Folie, Ständer</label><textarea id="hinweis-schilder" name="hinweis"></textarea></div>
               <button class="btn" type="submit">In den Anfragekorb</button>
@@ -1637,6 +1638,7 @@
   <script src="../js/bestellen.js"></script>
   <script src="../js/gruppen.js"></script>
   <script src="../js/schilder.js"></script>
+  <script src="../js/auswahl.js"></script>
   <script src="../js/kauf.js"></script>
 </body>
 </html>

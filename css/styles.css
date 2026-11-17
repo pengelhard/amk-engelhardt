@@ -1206,14 +1206,17 @@ a.contact-card:hover .contact-main { color: var(--green); }
   cursor: pointer;
 }
 .pick { position: relative; }
-.pick img {
+.pick img,
+.pick svg.pick-fallback {
   width: 6.6rem;
   height: 4.6rem;
   object-fit: contain;
   border-radius: 0.45rem;
   background: var(--soft);
   padding: 0.25rem;
+  box-sizing: border-box;
 }
+.pick svg.pick-fallback { padding: 0.85rem; }
 .pick span {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -1798,6 +1801,17 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .kauf-board.is-schilder .kauf-facets,
 .kauf-board.is-schilder .kauf-reset { display: none; }
 .kauf-board.is-schilder .kauf-layout { display: block; }
+.kauf-board.is-auswahl .kauf-tools,
+.kauf-board.is-auswahl .kauf-facets,
+.kauf-board.is-auswahl #kauf-liste,
+.kauf-board.is-auswahl #kauf-empty { display: none; }
+.kauf-board.is-auswahl .kauf-layout { display: block; }
+[data-auswahl][hidden] { display: none !important; }
+.schilder .kauf-cats,
+[data-auswahl] .kauf-cats { margin: 0.2rem 0 0.9rem; }
+#miete-absperrung,
+#miete-anhaenger,
+#kauf-auswahl { margin-top: 0.9rem; }
 .schild-row {
   display: grid; grid-template-columns: 1fr auto; gap: 0.6rem; align-items: center;
   padding: 0.55rem 0; border-bottom: 1px solid var(--line);

@@ -10,27 +10,29 @@
   if (!board || !gruppen || !window.AMK_GRUPPEN) return;
 
   var panels = { zaun: zaun, schilder: schilder, absperrung: absperrung, anhaenger: anhaenger };
-  var lists = { gitter: gitter, verkehr: absperrung, anhaenger: anhaenger };
-  var katOf = { gitter: "bauzaun", verkehr: "verkehrssicherung", anhaenger: "anhaenger" };
   var state = { gruppe: "", teil: "zaun" };
 
-  function esc(value) {
-    return String(value == null ? "" : value)
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  function allowed(gruppe, teil) {
+    if (gruppe === "zaun") return teil === "gitter" ? "gitter" : "zaun";
+    var list = gruppe === "schilder"
+      ? window.AMK_SCHILDER_TEILE
+      : (window.AMK_AUSWAHL && window.AMK_AUSWAHL.teile[gruppe]);
+    if (list && list.indexOf(teil) !== -1) return teil;
+    return gruppe === "zaun" ? "zaun" : "";
   }
 
   function readUrl() {
     var params = new URLSearchParams(location.search);
     var gruppe = params.get("gruppe") || "";
     if (!window.AMK_GRUPPEN.byId[gruppe]) gruppe = "";
-    var teil = params.get("teil") === "gitter" ? "gitter" : "zaun";
-    state = { gruppe: gruppe, teil: gruppe === "zaun" ? teil : "zaun" };
+    state = { gruppe: gruppe, teil: allowed(gruppe, params.get("teil") || "") };
   }
 
   function writeUrl(mode) {
     var params = new URLSearchParams();
     if (state.gruppe) params.set("gruppe", state.gruppe);
     if (state.gruppe === "zaun" && state.teil === "gitter") params.set("teil", "gitter");
+    else if (state.gruppe && state.gruppe !== "zaun" && state.teil) params.set("teil", state.teil);
     var qs = params.toString();
     var url = location.pathname + (qs ? "?" + qs : "");
     if (mode === "push") history.pushState({ miete: 1 }, "", url);
@@ -54,52 +56,27 @@
       var on = button.getAttribute("data-teil") === state.teil;
       button.setAttribute("aria-pressed", on ? "true" : "false");
     });
+    if (window.AMK_AUSWAHL) window.AMK_AUSWAHL.sync();
+    if (window.AMK_SCHILDER_UI) window.AMK_SCHILDER_UI.sync();
   }
-
-  function card(product, kat) {
-    var bild = product.bild ? '<span class="frame"><img loading="lazy" src="../' + esc(product.bild) + '" alt="' + esc(product.alt || "") + '" width="' + (product.width || 640) + '" height="' + (product.height || 480) + '" decoding="async"></span>' : "";
-    return '<article class="tile"><a href="../produkt/' + esc(product.slug) + '/">' + bild + "<h3>" + esc(product.name) + "</h3></a>" +
-      '<form class="order" data-miete="' + esc(product.slug) + '" data-name="' + esc(product.name) + '" data-bild="' + esc(product.bild || "") + '" data-kat="' + kat + '">' +
-      '<div class="field order-qty"><label>Menge <input name="menge" type="number" min="1" max="99" value="1" inputmode="numeric" required></label></div>' +
-      '<button class="btn" type="submit">In den Anfragekorb</button></form></article>';
-  }
-
-  function fill(shop, products) {
-    var node = lists[shop];
-    if (!node) return;
-    var kat = katOf[shop] || "";
-    node.innerHTML = products.filter(function (product) { return product.shop === shop; }).map(function (product) {
-      return card(product, kat);
-    }).join("");
-  }
-
-  board.addEventListener("submit", function (event) {
-    var form = event.target.closest("form[data-miete]");
-    if (!form || !window.AMK_WUNSCH) return;
-    event.preventDefault();
-    var qtyField = form.elements.menge;
-    var qty = parseInt(qtyField && qtyField.value, 10);
-    if (!qty || qty < 1 || qty > 99) {
-      if (qtyField) qtyField.focus();
-      return;
-    }
-    window.AMK_WUNSCH.add({
-      id: "miete:" + form.getAttribute("data-miete"),
-      name: form.getAttribute("data-name") || "",
-      qty: qty,
-      bild: form.getAttribute("data-bild") || "",
-      kat: form.getAttribute("data-kat") || ""
-    });
-  });
 
   gruppen.addEventListener("click", function (event) {
     var link = event.target.closest("a[data-gruppe]");
     if (!link) return;
     event.preventDefault();
     state.gruppe = link.getAttribute("data-gruppe") || "";
-    state.teil = "zaun";
+    state.teil = state.gruppe === "zaun" ? "zaun" : "";
     render();
     writeUrl("push");
+  });
+
+  document.addEventListener("amk-teil", function (event) {
+    if (!state.gruppe || state.gruppe === "zaun") return;
+    var teil = allowed(state.gruppe, String(event.detail || ""));
+    if (!teil) return;
+    state.teil = teil;
+    writeUrl("push");
+    render();
   });
 
   var unter = document.getElementById("miete-unter");
@@ -122,12 +99,4 @@
   readUrl();
   render();
   if (location.search) writeUrl("replace");
-
-  fetch("../data/katalog.json")
-    .then(function (response) { return response.json(); })
-    .then(function (data) {
-      fill("gitter", data);
-      fill("verkehr", data);
-      fill("anhaenger", data);
-    });
 })();

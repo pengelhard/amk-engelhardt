@@ -140,3 +140,7 @@ Technische Daten auf den Kaufseiten stammen aus den Tabellen der jeweils genannt
 | 10047 | Bühnengeländer | https://kkservice.de/download/10047.pdf | https://kkservice.de/absperrgitter/ |
 
 Vier Vorverzinkt-Datenblätter verlinken die deutsche Seite auf `kkservice.pl`. Es gibt dazu auf der deutschen Seite kein eigenes PDF. Zubehör ohne Tabelle bleibt ohne technische Zeilen: die Seite nennt dort nur den Namen.
+
+## Platzhalter in der Typ-Auswahl
+
+Hat ein Typ in der gemeinsamen Auswahl (`js/auswahl.js`) kein Bild, zeigt die Karte ein neutrales Strich-Icon, kein Foto und kein fremdes Motiv. Im aktuellen Sortiment hat jeder Typ der Absperrgitter, der Verkehrsabsperreinrichtungen und der Anhänger ein eigenes Bild. Der Platzhalter ist deshalb nicht zu sehen. Zwei Kühlanhänger teilen sich `images/kuehlanhaenger-13.webp`. Leitbake und die beiden Kunststoff-Schrankenzäune teilen sich `images/kk/schranke-10024-1.webp`. Die Rechte daran stehen oben in diesem Dokument.

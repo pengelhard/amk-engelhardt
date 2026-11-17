@@ -90,18 +90,33 @@
     return renting(items);
   }
 
+  var GITTER = { "absperrung-10026": 1, "absperrung-10025-0": 1, "absperrung-10041": 1 };
+
+  function slugOf(id) {
+    var rest = String(id);
+    var cut = rest.indexOf(":");
+    rest = cut === -1 ? rest : rest.slice(cut + 1);
+    return rest.split(":")[0];
+  }
+
   function editHref(item) {
     var id = String(item.id);
     if (item.konfig || id.indexOf("bauzaun-konfig") !== -1 || id.indexOf("bauzaun-paket") !== -1) return "../mieten/?gruppe=zaun";
     if (id.indexOf("kauf:schild:") === 0) return "../kaufen/?gruppe=schilder";
     if (id.indexOf("miete:schild:") === 0) return "../mieten/?gruppe=schilder";
     if (id.indexOf("verkehr:") !== -1) return "../mieten/?gruppe=absperrung";
+    var slug = slugOf(id);
+    if (GITTER[slug]) {
+      return id.indexOf("kauf:") === 0 ? "../kaufen/?gruppe=zaun&kat=gitter" : "../mieten/?gruppe=zaun&teil=gitter";
+    }
     if (id.indexOf("miete:") === 0 && !CATALOG[id]) {
       if (item.kat === "anhaenger") return "../mieten/?gruppe=anhaenger";
       if (item.kat === "verkehrssicherung") return "../mieten/?gruppe=absperrung";
       return "../mieten/?gruppe=zaun";
     }
-    if (id.indexOf("kauf:") === 0 || id.indexOf("miete:") === 0) return "../produkt/" + id.slice(id.indexOf(":") + 1).split(":")[0] + "/";
+    if (id.indexOf("kauf:") === 0 && item.kat === "anhaenger") return "../kaufen/?gruppe=anhaenger";
+    if (id.indexOf("kauf:") === 0 && item.kat === "verkehrssicherung") return "../kaufen/?gruppe=absperrung";
+    if (id.indexOf("kauf:") === 0 || id.indexOf("miete:") === 0) return "../produkt/" + slug + "/";
     if (id.indexOf("aktuell:") === 0) return "../aktuelles/";
     return "../anfrage/";
   }
@@ -181,6 +196,7 @@
       var bits = [];
       if (item.konfig) bits.push(konfigText(item));
       else if (item.note) bits.push("<p>" + esc(item.note) + "</p>");
+      if (item.von && item.bis) bits.push("<p>Zeitraum: " + esc(deDate(item.von)) + " bis " + esc(deDate(item.bis)) + "</p>");
       if (item.ort) bits.push("<p>" + esc(item.ort) + "</p>");
       if (item.genehmigung) bits.push("<p>Genehmigung durch AMK</p>");
       var qty = item.konfig || sammel(item)

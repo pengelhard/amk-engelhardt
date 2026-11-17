@@ -24,6 +24,45 @@
     { id: "z457", nr: "Z 457", name: "Umleitung", art: "umleitung", symbol: "umbieg" }
   ];
 
+  var TEILE = [
+    { id: "gefahr", label: "Gefahrzeichen", art: { gefahr: 1 } },
+    { id: "vorschrift", label: "Vorschriftzeichen", art: { quadrat: 1, gebot: 1, verbot: 1, halt: 1 } },
+    { id: "richt", label: "Richtzeichen", art: { umleitung: 1 } }
+  ];
+  var query = "";
+  var localTeil = "";
+
+  function teilOf(entry) {
+    var found = TEILE[0].id;
+    TEILE.forEach(function (teil) { if (teil.art[entry.art]) found = teil.id; });
+    return found;
+  }
+
+  function teilNow() {
+    var params = new URLSearchParams(location.search);
+    if (params.get("gruppe") === "schilder") {
+      var teil = params.get("teil") || "";
+      if (TEILE.some(function (entry) { return entry.id === teil; })) return teil;
+      return TEILE[0].id;
+    }
+    return localTeil || TEILE[0].id;
+  }
+
+  function apply() {
+    var teil = teilNow();
+    var q = query.toLocaleLowerCase("de");
+    document.querySelectorAll("[data-schilder]").forEach(function (form) {
+      form.querySelectorAll(".kauf-cats [data-teil]").forEach(function (button) {
+        var on = button.getAttribute("data-teil") === teil;
+        button.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      form.querySelectorAll(".schild-row").forEach(function (row) {
+        var text = row.textContent.toLocaleLowerCase("de");
+        row.hidden = row.getAttribute("data-teil") !== teil || !!(q && text.indexOf(q) === -1);
+      });
+    });
+  }
+
   function svg(inner) {
     return '<svg viewBox="0 0 64 64" width="48" height="48" aria-hidden="true" focusable="false">' + inner + "</svg>";
   }
@@ -79,9 +118,28 @@
   document.querySelectorAll("[data-schilder]").forEach(function (form) {
     var list = form.querySelector("[data-schild-liste]");
     if (!list) return;
+    var nav = document.createElement("div");
+    nav.className = "kauf-cats";
+    nav.setAttribute("role", "navigation");
+    nav.setAttribute("aria-label", "Unterkategorien");
+    nav.innerHTML = TEILE.map(function (teil) {
+      return '<button type="button" class="chip" data-teil="' + teil.id + '" aria-pressed="false">' + esc(teil.label) + "</button>";
+    }).join("");
+    form.insertBefore(nav, list);
+    nav.addEventListener("click", function (event) {
+      var button = event.target.closest("[data-teil]");
+      if (!button) return;
+      var id = button.getAttribute("data-teil") || "";
+      if (new URLSearchParams(location.search).get("gruppe") === "schilder") {
+        document.dispatchEvent(new CustomEvent("amk-teil", { detail: id }));
+      } else {
+        localTeil = id;
+        apply();
+      }
+    });
     list.innerHTML = ZEICHEN.map(function (entry) {
       var title = entry.nr + " " + entry.name;
-      return '<div class="schild-row" data-schild="' + entry.id + '">' +
+      return '<div class="schild-row" data-schild="' + entry.id + '" data-teil="' + teilOf(entry) + '">' +
         '<label class="choice"><input type="checkbox" name="schild" value="' + entry.id + '"> ' +
         '<span class="schild-mark">' + mark(entry) + "</span>" +
         "<span><strong>" + esc(entry.nr) + "</strong> " + esc(entry.name) + "</span></label>" +
@@ -112,7 +170,7 @@
       var noteField = form.elements.hinweis;
       var note = noteField ? String(noteField.value || "").trim() : "";
       if (!lines.length && !note) {
-        var first = form.querySelector('input[name="schild"]');
+        var first = form.querySelector('.schild-row:not([hidden]) input[name="schild"]');
         if (first) first.focus();
         return;
       }
@@ -133,4 +191,13 @@
   });
 
   window.AMK_SCHILDER = ZEICHEN;
+  window.AMK_SCHILDER_TEILE = TEILE.map(function (teil) { return teil.id; });
+  window.AMK_SCHILDER_UI = {
+    sync: apply,
+    filter: function (value) {
+      query = value || "";
+      apply();
+    }
+  };
+  apply();
 })();

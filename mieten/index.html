@@ -168,15 +168,15 @@
           </aside>
         </form>
           </div>
-          <div id="miete-gitter" class="tiles" hidden></div>
+          <div id="miete-gitter" data-auswahl data-gruppe="gitter" data-vorgang="miete" data-root="../" hidden></div>
         </div>
         <form class="schilder" id="miete-schilder" data-schilder data-vorgang="miete" hidden>
           <div class="schild-liste" data-schild-liste></div>
           <div class="field"><label for="hinweis-schilder-miete">Größe, Folie, Ständer</label><textarea id="hinweis-schilder-miete" name="hinweis"></textarea></div>
           <button class="btn" type="submit">In den Anfragekorb</button>
         </form>
-        <div id="miete-absperrung" class="tiles" hidden></div>
-        <div id="miete-anhaenger" class="tiles" hidden></div>
+        <div id="miete-absperrung" data-auswahl data-gruppe="absperrung" data-vorgang="miete" data-root="../" hidden></div>
+        <div id="miete-anhaenger" data-auswahl data-gruppe="anhaenger" data-vorgang="miete" data-root="../" hidden></div>
       </div>
     </section>
 </main>
@@ -231,6 +231,8 @@
   <script src="../js/gruppen.js"></script>
   <script src="../js/schilder.js"></script>
   <script src="../js/bauzaun.js"></script>
+  <script src="../js/zeitraum.js"></script>
+  <script src="../js/auswahl.js"></script>
   <script src="../js/mieten.js"></script>
 </body>
 </html>

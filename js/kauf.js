@@ -94,10 +94,17 @@
     state = {
       gruppe: gruppe,
       kat: kat,
+      teil: params.get("teil") || "",
       q: params.get("q") || "",
       sort: params.get("sort") || "",
       facets: facets
     };
+  }
+
+  function teilList() {
+    if (state.gruppe === "schilder") return window.AMK_SCHILDER_TEILE || [];
+    var map = window.AMK_AUSWAHL && window.AMK_AUSWAHL.teile;
+    return (map && map[state.gruppe]) || [];
   }
 
   function writeUrl(mode) {
@@ -106,6 +113,7 @@
     if (state.kat) params.set("kat", state.kat);
     if (state.q) params.set("q", state.q);
     if (state.sort) params.set("sort", state.sort);
+    if (state.teil && teilList().indexOf(state.teil) !== -1) params.set("teil", state.teil);
     FACETTEN.forEach(function (pair) {
       (state.facets[pair[0]] || []).forEach(function (value) {
         params.append(pair[0], value);
@@ -127,6 +135,7 @@
 
   function inGruppe(item) {
     if (!state.gruppe) return !state.q ? false : item.slug !== "verkehrsschilder";
+    if (item.shop === "gitter" || item.shop === "verkehr" || item.shop === "anhaenger") return false;
     if (item.slug === "verkehrsschilder") return false;
     var shops = GRUPPEN[state.gruppe] || [];
     if (shops.indexOf(item.shop) === -1) return false;
@@ -226,12 +235,7 @@
   }
 
   function filterSchilder() {
-    if (!schilder) return;
-    var q = state.q.toLocaleLowerCase("de");
-    schilder.querySelectorAll(".schild-row").forEach(function (row) {
-      var text = row.textContent.toLocaleLowerCase("de");
-      row.hidden = !!(q && text.indexOf(q) === -1);
-    });
+    if (window.AMK_SCHILDER_UI) window.AMK_SCHILDER_UI.filter(state.q);
   }
 
   function ordered(list) {
@@ -254,11 +258,22 @@
   function render() {
     var overview = !state.gruppe && !state.q;
     var signs = state.gruppe === "schilder";
+    var picker = state.gruppe === "absperrung" || state.gruppe === "anhaenger" || (state.gruppe === "zaun" && state.kat === "gitter");
+    var auswahl = document.getElementById("kauf-auswahl");
     board.classList.toggle("is-gruppe", !overview);
     board.classList.toggle("is-schilder", signs);
+    board.classList.toggle("is-auswahl", picker);
     renderGruppen();
     renderChips();
-    if (!state.gruppe || signs) form.innerHTML = "";
+    if (auswahl) {
+      auswahl.hidden = !picker;
+      if (picker) auswahl.setAttribute("data-gruppe", state.gruppe === "zaun" ? "gitter" : state.gruppe);
+      else {
+        auswahl.innerHTML = "";
+        delete auswahl.dataset.key;
+      }
+    }
+    if (!state.gruppe || signs || picker) form.innerHTML = "";
     else renderFacets();
     qInput.placeholder = signs ? "Nummer oder Name" : "Name oder Artikelnummer";
     qInput.value = state.q;
@@ -273,8 +288,9 @@
     if (schilder) schilder.hidden = !signs;
     filterSchilder();
     var signShown = signs && schilder ? schilder.querySelectorAll(".schild-row:not([hidden])").length : 0;
-    empty.hidden = overview || (signs ? signShown !== 0 : shown !== 0);
-    countEl.hidden = overview || signs;
+    empty.hidden = overview || picker || (signs ? signShown !== 0 : shown !== 0);
+    countEl.hidden = overview || signs || picker;
+    if (window.AMK_AUSWAHL) window.AMK_AUSWAHL.sync();
     countEl.textContent = shown === 1 ? "1 Artikel" : shown + " Artikel";
     document.querySelectorAll("main section.copy").forEach(function (section) {
       section.hidden = true;
@@ -329,6 +345,7 @@
       event.preventDefault();
       state.gruppe = link.getAttribute("data-gruppe") || "";
       state.kat = "";
+      state.teil = "";
       state.facets = {};
       state.q = "";
       state.sort = "";
@@ -336,6 +353,14 @@
       writeUrl("push");
     });
   }
+
+  document.addEventListener("amk-teil", function (event) {
+    var teil = String(event.detail || "");
+    if (teilList().indexOf(teil) === -1) return;
+    state.teil = teil;
+    writeUrl("push");
+    render();
+  });
 
   resetBtn.addEventListener("click", function () {
     state.kat = "";

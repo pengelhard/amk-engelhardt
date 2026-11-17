@@ -96,5 +96,9 @@
     bindPair(form.querySelector('[name="von"]'), form.querySelector('[name="bis"]'));
   });
 
-  window.AMK_ZEIT = { checkPair: checkPair, clearPair: function (start, end) { clear(start); clear(end); } };
+  window.AMK_ZEIT = {
+    checkPair: checkPair,
+    bindPair: bindPair,
+    clearPair: function (start, end) { clear(start); clear(end); }
+  };
 })();
