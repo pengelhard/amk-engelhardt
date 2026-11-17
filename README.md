@@ -30,11 +30,9 @@ Der Kopf trägt auf jeder Seite oben rechts ein Hamburger-Menü. Es öffnet dass
 
 JavaScript ergänzt nur: Merkzettel in `localStorage`, die Bauzaun-Konfiguration als eine Position, den Formularversand, Einlesen von `data/aktuelles.json` und auf der Kontaktseite die Karte nach „Karte laden“. Die Seiten, die Kacheln und das Formular stehen im HTML. Ein VDE-Häkchen gibt es nicht, solange kein Artikel `data-vde="ja"` trägt. `js/rechner.js` und `js/karussell.js` sind nicht mehr eingebunden.
 
-Der Hero ist eine ruhige Diashow aus fünf lokalen Fotos (`images/hero/schranke`, `zeichen`, `zaun`, `baustelle`, `anhaenger`). Das erste Bild liegt im HTML und wird als AVIF vorgeladen. Die übrigen kommen nach dem Laden. `prefers-reduced-motion` bleibt beim ersten Bild. Es gibt keine Pfeile und keine Punkte. `?hero=` entfällt. Die Quellen stehen in `docs/bildquellen.md`. Slogan bleibt. Im Hero stehen Mieten und Kaufen. Kein CDN.
+Die Startseite hat fünf Blöcke: ein Einsatzfoto, vier Leistungskacheln, Neuheiten & Angebote, ein Vertrauensband und den Telefonabschluss. Das Hero-Foto ist `images/hero/leuchten` (AVIF und WebP, 768 bis 2560). Es wird vorgeladen. `?hero=2` tauscht es gegen `images/hero/schranke2`. Die Schatten über dem Foto fangen Klicks nicht ab: `.hero-media` bildet einen eigenen Stapel, der Text liegt darüber. Quellen in `docs/bildquellen.md`. Kein CDN.
 
-Aktuelles & Angebote steht direkt unter dem Hero und liest weiter `data/aktuelles.json`. Jeder Eintrag zeigt Mieten, Kaufen oder beides und führt in die hinterlegte Gruppe. Ohne sichtbaren Eintrag bleibt der Abschnitt zu. Darunter stehen die vier Leistungsgruppen, jede mit Mieten und Kaufen. Der Ablauf ist eine schmale Schrittleiste: Anfragen, Angebot, Lieferung & Aufbau, Abholung.
-
-Unter dem Ablauf liegt ein Abschnitt für ein Teamfoto. Er bleibt unsichtbar, solange `#team-foto` kein `data-src` hat. Liegt das Foto bereit, `data-src` auf den relativen Pfad setzen, zum Beispiel `images/team.webp`. Der Abschnitt erscheint erst, wenn das Bild lädt. Ohne Bild steht dort kein Text.
+Darunter die vier Gruppen, jede mit Mieten und Kaufen. Neuheiten & Angebote liest `data/aktuelles.json`. Jeder Eintrag zeigt Mieten, Kaufen oder beides und führt in die hinterlegte Gruppe. Ohne sichtbaren Eintrag bleibt der Abschnitt zu. Das Vertrauensband nennt den Einsatz, den Rundum-Service, das Jahr 2011 und zwei kurze Stimmen. Service, Über uns und die Karte bleiben auf ihren Unterseiten.
 
 ## Aktuelles und Angebote
 
@@ -42,7 +40,7 @@ Michael Engelhardt pflegt nur diesen Bereich, über [Pages CMS](https://pagescms
 
 Felder: Titel, Kurztext, Bild, Bildbeschreibung, Typ (Angebot, Neuheit, Besonderes Produkt), Mieten oder kaufen (Miete, Kauf, Beides), Gruppe (Bauzaun & Absperrgitter, Verkehrsschilder, Verkehrsabsperreinrichtungen, Anhänger), Preis (leer bleibt ohne Preiszeile), Datum, Gültig bis, Sichtbar. Abgelaufene Einträge und unsichtbare Einträge verschwinden. Der genannte Gültig-bis-Tag zählt noch. Die Startseite zeigt höchstens die drei neuesten und blendet den ganzen Bereich aus, wenn nichts sichtbar ist. Ein einzelner Eintrag wird als breites Banner gezeigt. Mieten und Kaufen öffnen die gewählte Gruppe. „Anfragen“ legt den Eintrag in den Anfragekorb.
 
-Der einzige Startinhalt ist „Fahrzeugtransporter“, mit dem vorhandenen Foto und ohne Preis. Der Nachweis steht im Impressum. Neue Bilder lädt Michael nach `images/aktuelles/` hoch, Querformat.
+Die Startseite zeigt zuerst „VDE-zertifizierte Bauzäune“ (Miete und Kauf, Gruppe Bauzaun & Absperrgitter) und danach den „Fahrzeugtransporter“. Beide ohne Preis. Die Nachweise stehen im Impressum. Neue Bilder lädt Michael nach `images/aktuelles/` hoch, Querformat.
 
 ### So legt Michael einen Eintrag an
 

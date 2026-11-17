@@ -96,17 +96,15 @@ Die Anhängerfotos sind unverändert. Sie sind Beispielbilder, kein Fahrzeug von
 
 Das Logo bleibt das der bestehenden Website.
 
-## Hero
+## Hero und Startkacheln
 
-Fünf frei lizenzierte Fotos, kommerziell nutzbar ohne Pflicht zur Namensnennung. Die Dateien liegen lokal als WebP und AVIF in 768, 1280, 1920 und 2560 px Breite, zugeschnitten auf 3:2. Sie werden nicht von Pexels eingebunden. Die Diashow beginnt mit der Absperrung. `?hero=` gibt es nicht mehr.
+Die Startseite nutzt ein Foto. Es liegt lokal als WebP und AVIF in 768, 1280, 1920 und 2560 px Breite, 16:9. Nichts wird von Pexels eingebunden. `?hero=2` zeigt das zweite Schranken-Foto. Die älteren Dateien `schranke`, `zeichen`, `zaun`, `baustelle` und `anhaenger` bleiben im Ordner und stehen nicht mehr auf der Startseite.
 
 | Datei | Motiv | Fotograf | Seite | Lizenz |
 | --- | --- | --- | --- | --- |
-| `images/hero/schranke-*` | Rot-weiße Absperrung, 2735×3882, Ausschnitt 2735×1823 | Blue Arauz | https://www.pexels.com/photo/10065097/ | https://www.pexels.com/license/ |
-| `images/hero/zeichen-*` | Baustelle mit Warnzeichen und Verbotszeichen | Sergei Starostin | https://www.pexels.com/photo/construction-site-with-warning-signs-and-barriers-29244130/ | https://www.pexels.com/license/ |
-| `images/hero/zaun-*` | Bauzaun an einer Baustelle, 2832×4240, Ausschnitt 2832×1888 | Erik Mclean | https://www.pexels.com/photo/a-construction-site-in-a-city-16875231/ | https://www.pexels.com/license/ |
-| `images/hero/baustelle-*` | Fußgängerzeichen und rot-weiße Absperrung, 3072×4096, Ausschnitt 3072×2048 | Raoul Turmond | https://www.pexels.com/photo/31903677/ | https://www.pexels.com/license/ |
-| `images/hero/anhaenger-*` | Planenanhänger am Straßenrand, 3999×2667 | Markus Winkler | https://www.pexels.com/photo/10304035/ | https://www.pexels.com/license/ |
+| `images/hero/leuchten-*` | Rot-weiße Schranken mit Warnleuchten, 5619×3161 | Wolfgang Weiser | https://www.pexels.com/photo/38733801/ | https://www.pexels.com/license/ |
+| `images/hero/schranke2-*` | Rot-weiße Schranken an einer Baustelle, auch die Kachel Verkehrsabsperreinrichtungen | Wolfgang Weiser | https://www.pexels.com/photo/39142590/ | https://www.pexels.com/license/ |
+| `images/kk/zaun-einsatz.webp` | Aufgestellte Zaunfelder, Kachel Bauzaun und Eintrag VDE-zertifizierte Bauzäune | KK Service | https://kkservice.at/wp-content/uploads/2026/02/1-Zaunsysteme-790x527.webp | Rechte in Klärung |
 
 ## Datenblätter
 

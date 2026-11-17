@@ -1,5 +1,18 @@
 [
   {
+    "titel": "VDE-zertifizierte Bauzäune",
+    "text": "Zur Miete und zum Kauf.",
+    "bild": "images/aktuelles/vde-bauzaun.webp",
+    "alt": "Sauber aufgestellte Zaunfelder mit Füßen und Streben",
+    "typ": "Neuheit",
+    "weg": "Beides",
+    "gruppe": "Bauzaun & Absperrgitter",
+    "preis": "",
+    "datum": "2026-11-17",
+    "bis": "",
+    "sichtbar": true
+  },
+  {
     "titel": "Fahrzeugtransporter",
     "text": "Wir beraten zur passenden Größe.",
     "bild": "images/aktuelles/fahrzeugtransporter.webp",
@@ -8,7 +21,7 @@
     "weg": "Beides",
     "gruppe": "Anhänger",
     "preis": "",
-    "datum": "",
+    "datum": "2026-11-01",
     "bis": "",
     "sichtbar": true
   }
