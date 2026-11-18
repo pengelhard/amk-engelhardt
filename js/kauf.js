@@ -86,6 +86,7 @@
     }
     if (kat && !gruppe) gruppe = KAT_GRUPPE[kat] || "";
     if (gruppe && kat && GRUPPEN[gruppe].indexOf(kat) === -1) kat = "";
+    if (!gruppe && !params.get("q")) gruppe = "zaun";
     var facets = {};
     FACETTEN.forEach(function (pair) {
       var values = params.getAll(pair[0]);

@@ -24,7 +24,7 @@
   function readUrl() {
     var params = new URLSearchParams(location.search);
     var gruppe = params.get("gruppe") || "";
-    if (!window.AMK_GRUPPEN.byId[gruppe]) gruppe = "";
+    if (!window.AMK_GRUPPEN.byId[gruppe]) gruppe = "zaun";
     state = { gruppe: gruppe, teil: allowed(gruppe, params.get("teil") || "") };
   }
 
@@ -98,5 +98,5 @@
 
   readUrl();
   render();
-  if (location.search) writeUrl("replace");
+  writeUrl("replace");
 })();

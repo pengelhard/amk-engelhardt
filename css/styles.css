@@ -1793,18 +1793,12 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .kauf-board { padding: 1.3rem 0 0.4rem; background: var(--paper); }
 .kauf-einstieg { display: grid; gap: 0.75rem; }
 .kauf-karte {
-  display: flex; flex-direction: column; justify-content: flex-end; gap: 0.7rem;
-  min-height: 9.5rem; padding: 0.85rem; background: var(--white); color: var(--ink);
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  min-height: 3.2rem; padding: 0.55rem 0.7rem; background: var(--white); color: var(--ink);
   border-bottom: 4px solid transparent; text-decoration: none;
 }
-.kauf-karte img, .kauf-karte svg { width: 100%; height: 6.5rem; object-fit: contain; }
-.kauf-karte svg { height: 4.5rem; }
-.kauf-karte strong { font-family: var(--display); font-weight: 400; font-size: clamp(1.6rem, 4vw, 2.1rem); line-height: 0.95; letter-spacing: -0.03em; }
+.kauf-karte strong { font-family: var(--display); font-weight: 400; font-size: 1.15rem; line-height: 1.05; letter-spacing: -0.03em; }
 .kauf-karte[aria-current="true"] { background: var(--signal); color: var(--signal-ink); border-bottom-color: var(--ink); }
-.kauf-board.is-gruppe .kauf-karte { min-height: 3.2rem; flex-direction: row; align-items: center; justify-content: center; text-align: center; }
-.kauf-board.is-gruppe .kauf-karte img,
-.kauf-board.is-gruppe .kauf-karte svg { display: none; }
-.kauf-board.is-gruppe .kauf-karte strong { font-size: 1.15rem; }
 .kauf-board:not(.is-gruppe) .kauf-sort,
 .kauf-board:not(.is-gruppe) .kauf-more,
 .kauf-board:not(.is-gruppe) .kauf-reset,
