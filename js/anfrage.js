@@ -102,8 +102,8 @@
   function editHref(item) {
     var id = String(item.id);
     if (item.konfig || id.indexOf("bauzaun-konfig") !== -1 || id.indexOf("bauzaun-paket") !== -1) return "../mieten/?gruppe=zaun";
-    if (id.indexOf("kauf:schild:") === 0) return "../kaufen/?gruppe=schilder";
-    if (id.indexOf("miete:schild:") === 0) return "../mieten/?gruppe=schilder";
+    if (id.indexOf("kauf:schild:") === 0) return "../kaufen/?gruppe=schilder&teil=gefahr";
+    if (id.indexOf("miete:schild:") === 0) return "../mieten/?gruppe=schilder&teil=gefahr";
     if (id.indexOf("verkehr:") !== -1) return "../mieten/?gruppe=absperrung";
     var slug = slugOf(id);
     if (GITTER[slug]) {

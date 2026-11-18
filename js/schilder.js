@@ -104,6 +104,7 @@
       var id = button.getAttribute("data-teil") || "";
       localTeil = id;
       apply();
+      document.dispatchEvent(new CustomEvent("amk-zeichen", { detail: id }));
     });
     list.innerHTML = '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' +
       ZEICHEN.map(function (entry) {

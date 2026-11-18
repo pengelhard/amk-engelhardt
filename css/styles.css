@@ -2030,6 +2030,10 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   .kauf-board.is-gruppe .kauf-einstieg { grid-template-columns: repeat(3, 1fr); }
 }
 .kauf-cats { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+#miete-schilder .kauf-cats,
+#miete-absperrung .kauf-cats,
+#schilder-bereich .kauf-cats,
+#kauf-auswahl .kauf-cats { scroll-margin-top: calc(var(--top, 5.6rem) + 0.6rem); }
 #miete-unter { margin: 0.9rem 0; }
 .kauf-cats .chip {
   min-height: 44px;

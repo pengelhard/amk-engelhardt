@@ -12,6 +12,7 @@
 
   var panels = { zaun: zaun, verkehr: verkehr, anhaenger: anhaenger };
   var state = { gruppe: "", teil: "zaun", unter: "" };
+  var zeichen = "";
   var GENEHM = "miete:genehmigung";
 
   function deviceTeile(gruppe) {
@@ -32,7 +33,9 @@
     if (!window.AMK_GRUPPEN.byId[gruppe]) gruppe = "zaun";
     var teil = params.get("teil") || "";
     var signs = window.AMK_SCHILDER_TEILE || [];
+    zeichen = "";
     if (gruppe === "verkehr" && signs.indexOf(teil) !== -1) {
+      zeichen = teil;
       if (window.AMK_SCHILDER_UI && window.AMK_SCHILDER_UI.open) window.AMK_SCHILDER_UI.open(teil);
       teil = "";
     }
@@ -45,7 +48,8 @@
   function writeUrl(mode) {
     var params = new URLSearchParams();
     if (state.gruppe) params.set("gruppe", state.gruppe);
-    if (state.gruppe === "zaun" && (state.teil === "gitter" || state.teil === "leit")) params.set("teil", state.teil);
+    if (state.gruppe === "verkehr" && zeichen) params.set("teil", zeichen);
+    else if (state.gruppe === "zaun" && (state.teil === "gitter" || state.teil === "leit")) params.set("teil", state.teil);
     else if (state.gruppe && state.gruppe !== "zaun" && state.teil) params.set("teil", state.teil);
     if (state.gruppe === "zaun" && state.teil === "leit" && state.unter) params.set("unter", state.unter);
     var qs = params.toString();
@@ -174,6 +178,7 @@
     if (!state.gruppe || state.gruppe === "zaun") return;
     var teil = allowed(state.gruppe, detail);
     if (!teil) return;
+    zeichen = "";
     state.teil = teil;
     writeUrl("push");
     render();
@@ -218,7 +223,37 @@
     });
   }
 
+  document.addEventListener("amk-zeichen", function (event) {
+    if (state.gruppe !== "verkehr") return;
+    var id = String(event.detail || "");
+    var signs = window.AMK_SCHILDER_TEILE || [];
+    if (signs.indexOf(id) === -1) return;
+    zeichen = id;
+    state.teil = "";
+    writeUrl("push");
+  });
+
+  function jumpTo(selector) {
+    var tries = 0;
+    function step() {
+      var target = document.querySelector(selector);
+      if (target && target.getBoundingClientRect().height > 0) {
+        var root = document.documentElement;
+        var previous = root.style.scrollBehavior;
+        root.style.scrollBehavior = "auto";
+        target.scrollIntoView({ block: "start" });
+        root.style.scrollBehavior = previous;
+        return;
+      }
+      tries += 1;
+      if (tries < 40) window.setTimeout(step, 50);
+    }
+    step();
+  }
+
   readUrl();
   render();
   writeUrl("replace");
+  if (state.gruppe === "verkehr" && zeichen) jumpTo("#miete-schilder .kauf-cats");
+  else if (state.gruppe === "verkehr" && state.teil) jumpTo("#miete-absperrung .kauf-cats");
 })();

@@ -104,7 +104,9 @@
     });
     var teil = params.get("teil") || "";
     var signs = window.AMK_SCHILDER_TEILE || [];
+    var zeichen = "";
     if (gruppe === "verkehr" && signs.indexOf(teil) !== -1) {
+      zeichen = teil;
       if (window.AMK_SCHILDER_UI && window.AMK_SCHILDER_UI.open) window.AMK_SCHILDER_UI.open(teil);
       teil = "";
     }
@@ -112,6 +114,7 @@
       gruppe: gruppe,
       kat: kat,
       teil: teil,
+      zeichen: zeichen,
       q: params.get("q") || "",
       sort: params.get("sort") || "",
       facets: facets
@@ -131,7 +134,8 @@
     if (state.kat) params.set("kat", state.kat);
     if (state.q) params.set("q", state.q);
     if (state.sort) params.set("sort", state.sort);
-    if (state.teil && teilList().indexOf(state.teil) !== -1) params.set("teil", state.teil);
+    if (state.gruppe === "verkehr" && state.zeichen) params.set("teil", state.zeichen);
+    else if (state.teil && teilList().indexOf(state.teil) !== -1) params.set("teil", state.teil);
     FACETTEN.forEach(function (pair) {
       (state.facets[pair[0]] || []).forEach(function (value) {
         params.append(pair[0], value);
@@ -422,6 +426,7 @@
       state.gruppe = canonGruppe(link.getAttribute("data-gruppe") || "");
       state.kat = "";
       state.teil = "";
+      state.zeichen = "";
       state.facets = {};
       state.q = "";
       state.sort = "";
@@ -433,6 +438,7 @@
   document.addEventListener("amk-teil", function (event) {
     var teil = String(event.detail || "");
     if (teilList().indexOf(teil) === -1) return;
+    state.zeichen = "";
     state.teil = teil;
     writeUrl("push");
     render();
@@ -480,6 +486,34 @@
     });
   }
 
+  document.addEventListener("amk-zeichen", function (event) {
+    if (state.gruppe !== "verkehr") return;
+    var id = String(event.detail || "");
+    var signs = window.AMK_SCHILDER_TEILE || [];
+    if (signs.indexOf(id) === -1) return;
+    state.zeichen = id;
+    state.teil = "";
+    writeUrl("push");
+  });
+
+  function jumpTo(selector) {
+    var tries = 0;
+    function step() {
+      var target = document.querySelector(selector);
+      if (target && target.getBoundingClientRect().height > 0) {
+        var root = document.documentElement;
+        var previous = root.style.scrollBehavior;
+        root.style.scrollBehavior = "auto";
+        target.scrollIntoView({ block: "start" });
+        root.style.scrollBehavior = previous;
+        return;
+      }
+      tries += 1;
+      if (tries < 40) window.setTimeout(step, 50);
+    }
+    step();
+  }
+
   fetch("../data/katalog.json")
     .then(function (response) { return response.json(); })
     .then(function (data) {
@@ -494,6 +528,8 @@
       readUrl();
       render();
       writeUrl("replace");
+      if (state.gruppe === "verkehr" && state.zeichen) jumpTo("#schilder-bereich .kauf-cats");
+      else if (state.gruppe === "verkehr" && state.teil) jumpTo("#kauf-auswahl .kauf-cats");
     })
     .catch(function () {
       board.hidden = true;
