@@ -68,7 +68,7 @@
   function eckdaten(slug) {
     var rows = window.AMK_ANHAENGER_ECKDATEN && window.AMK_ANHAENGER_ECKDATEN[slug];
     if (!rows || !rows.length) return "";
-    return '<details class="anhaenger-details"><summary>Details</summary><table class="spec-table">' +
+    return '<details class="anhaenger-details" open><summary>Details</summary><table class="spec-table">' +
       rows.map(function (row) {
         return "<tr><th scope=\"row\">" + esc(row[0]) + "</th><td>" + esc(row[1]) + "</td></tr>";
       }).join("") + "</table></details>";

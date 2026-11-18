@@ -280,6 +280,7 @@
     board.classList.toggle("is-gruppe", !overview);
     board.classList.toggle("is-schilder", false);
     board.classList.toggle("is-auswahl", picker && !verkehr);
+    board.classList.toggle("is-anhaenger", state.gruppe === "anhaenger");
     board.classList.toggle("is-verkehr", verkehr);
     if (hinweis) hinweis.hidden = !verkehr;
     renderGruppen();

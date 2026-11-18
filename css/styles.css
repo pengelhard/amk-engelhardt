@@ -1868,7 +1868,8 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 @media (max-width: 979px) {
   #miete-verkehr .konfig-summary,
   #miete-leit .konfig-summary,
-  .kauf-board.is-verkehr #kauf-auswahl .konfig-summary {
+  .kauf-board.is-verkehr #kauf-auswahl .konfig-summary,
+  .kauf-board.is-anhaenger #kauf-auswahl .konfig-summary {
     position: static;
     left: auto;
     right: auto;
