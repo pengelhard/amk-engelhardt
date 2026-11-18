@@ -79,3 +79,20 @@ Ein PDF wird als „Datenblatt (PDF)“ verlinkt, wenn die Produktseite eines zu
 4. Steht ein neues PDF auf der Produktseite, die Adresse in `docs/bildquellen.md` eintragen und auf der Seite verlinken. Die Datei nicht herunterladen.
 
 `attr` nur setzen, wenn der Wert im Namen, in `specs` oder in der genannten Seitenüberschrift steht.
+
+## Bilder und Zeichnungen
+
+Die Galerie liest `data/katalog.json`. Ohne `bilder` nimmt sie `bild` und `bildSmall`. Ein zweites Bild oder eine Zeichnung ist eine Datei plus ein Eintrag, sonst nichts.
+
+```json
+"bilder": [
+  {"src": "images/kk/bauzaun-10075.webp", "small": "images/kk/bauzaun-10075-640.webp", "w": 1200, "h": 675, "alt": "Bauzaun Profi 3,5 × 2,0 m"}
+],
+"zeichnungen": [
+  {"src": "images/kk/bauzaun-10075-zeichnung.webp", "w": 1200, "h": 800, "alt": "Zeichnung Bauzaun Profi"}
+]
+```
+
+`src` ist der Pfad ab der Wurzel. `small` ist die kleinere Datei, optional. Steht `bilder`, ersetzt die Liste das einzelne `bild`, das erste Bild also mit aufnehmen. `zeichnungen` kommen dahinter und tragen in der Galerie die Kennzeichnung Zeichnung. Fehlt beides außer `bild`, zeigt die Seite nur das eine Bild, ohne Hinweistext.
+
+Der Pflegebereich unter `.pages.yml` schreibt nur Aktuelles (`data/aktuelles.json` und `images/aktuelles/`). Produktbilder legt er nicht an. Dafür bleiben Datei und Eintrag in `data/katalog.json`.

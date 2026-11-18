@@ -2264,7 +2264,147 @@
       "art": "Schilder"
     },
     "text": [],
-    "pdf": null
+    "pdf": null,
+    "bilder": [
+      {
+        "src": "images/verkehrsschilder.webp",
+        "w": 600,
+        "h": 697,
+        "alt": "Gruppe von Verkehrsschildern"
+      },
+      {
+        "src": "images/schilder/z123.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 123 Arbeitsstelle"
+      },
+      {
+        "src": "images/schilder/z120.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 120 Verengte Fahrbahn"
+      },
+      {
+        "src": "images/schilder/z121-10.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 121-10 Einseitig verengte Fahrbahn, rechts"
+      },
+      {
+        "src": "images/schilder/z121-20.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 121-20 Einseitig verengte Fahrbahn, links"
+      },
+      {
+        "src": "images/schilder/z208.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 208 Dem Gegenverkehr Vorrang gewähren"
+      },
+      {
+        "src": "images/schilder/z308.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 308 Vorrang vor dem Gegenverkehr"
+      },
+      {
+        "src": "images/schilder/z222.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 222 Rechts vorbei"
+      },
+      {
+        "src": "images/schilder/z250.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 250 Verbot für Fahrzeuge aller Art"
+      },
+      {
+        "src": "images/schilder/z255.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 255 Verbot für Krafträder"
+      },
+      {
+        "src": "images/schilder/z267.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 267 Verbot der Einfahrt"
+      },
+      {
+        "src": "images/schilder/z274-30.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 274-30 Zulässige Höchstgeschwindigkeit 30"
+      },
+      {
+        "src": "images/schilder/z274-50.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 274-50 Zulässige Höchstgeschwindigkeit 50"
+      },
+      {
+        "src": "images/schilder/z274-70.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 274-70 Zulässige Höchstgeschwindigkeit 70"
+      },
+      {
+        "src": "images/schilder/z276.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 276 Überholverbot"
+      },
+      {
+        "src": "images/schilder/z283.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 283 Absolutes Haltverbot"
+      },
+      {
+        "src": "images/schilder/z286.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 286 Eingeschränktes Haltverbot"
+      },
+      {
+        "src": "images/schilder/z259.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 259 Verbot für Fußgänger"
+      },
+      {
+        "src": "images/schilder/z454.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 454-20 Umleitungswegweiser"
+      },
+      {
+        "src": "images/schilder/z455.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 455.1 Ankündigung der Umleitung"
+      },
+      {
+        "src": "images/schilder/z457.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 457.1 Umleitungsankündigung"
+      },
+      {
+        "src": "images/schilder/z600.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 600-30 Absperrschranke"
+      },
+      {
+        "src": "images/schilder/z605.svg",
+        "w": 200,
+        "h": 200,
+        "alt": "Z 605-10 Leitbake"
+      }
+    ]
   },
   {
     "slug": "schranke-10024-1",
