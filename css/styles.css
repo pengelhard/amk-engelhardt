@@ -1457,6 +1457,18 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 
 @media (max-width: 979px) {
+  #miete-anhaenger .konfig-summary {
+    position: static;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    display: block;
+    margin-top: 0.8rem;
+    padding: 0.9rem 1rem 1rem;
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent);
+    box-shadow: none;
+  }
   body:has(.konfig-summary) { padding-bottom: calc(var(--tabbar, 4.75rem) + 6.5rem); }
   body:has(.konfig-summary) .toast { bottom: calc(var(--tabbar, 4.75rem) + 6.4rem); }
 }

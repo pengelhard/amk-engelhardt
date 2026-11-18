@@ -82,8 +82,9 @@
       (products || []).forEach(function (entry) { if (entry.slug === box.value) product = entry; });
       if (!product) return;
       var field = form.querySelector('[data-menge-fuer="' + box.value + '"] [data-menge]');
-      var qty = parseInt(field && field.value, 10);
-      list.push({ product: product, field: field, qty: qty });
+      var ohne = !field;
+      var qty = ohne ? 1 : parseInt(field.value, 10);
+      list.push({ product: product, field: field, qty: qty, ohne: ohne });
     });
     return list;
   }
@@ -99,13 +100,15 @@
     var liste = node.querySelector('[data-sum="liste"]');
     var zeitNode = node.querySelector('[data-sum="zeit"]');
     var bits = list.map(function (entry) {
+      if (entry.ohne) return entry.product.name;
       return entry.product.name + " · " + (entry.qty > 0 ? entry.qty : "–");
     });
     if (zeit) bits.push(zeit);
     if (short) short.textContent = bits.join("; ") || "–";
     if (liste) {
       liste.innerHTML = list.length ? list.map(function (entry) {
-        return "<div><dt>" + esc(entry.product.name) + "</dt><dd>" + (entry.qty > 0 ? entry.qty : "–") + "</dd></div>";
+        var menge = entry.ohne ? "" : "<dd>" + (entry.qty > 0 ? entry.qty : "–") + "</dd>";
+        return "<div><dt>" + esc(entry.product.name) + "</dt>" + menge + "</div>";
       }).join("") : "<div><dt>Typ</dt><dd>–</dd></div>";
     }
     if (zeitNode) zeitNode.textContent = zeit || "–";
@@ -167,6 +170,7 @@
         media: picture(product, root),
         checked: on,
         qty: qty,
+        menge: !(vorgang === "miete" && gruppe === "anhaenger"),
         panelId: "menge-panel-" + gruppe + "-" + product.slug,
         inputId: "menge-" + gruppe + "-" + product.slug
       });
@@ -219,7 +223,7 @@
     var lines = [];
     for (var i = 0; i < list.length; i++) {
       var entry = list[i];
-      if (!entry.qty || entry.qty < 1 || entry.qty > 99) {
+      if (!entry.ohne && (!entry.qty || entry.qty < 1 || entry.qty > 99)) {
         if (status) {
           status.textContent = "Bitte die Anzahl angeben.";
           status.classList.add("is-error");
@@ -237,6 +241,7 @@
         bild: entry.product.bild || "",
         kat: KAT[gruppe] || ""
       };
+      if (entry.ohne) item.sammel = true;
       lines.push(item);
     }
     if (vorgang === "miete") {

@@ -40,13 +40,19 @@
     var on = !!opts.checked;
     var mode = opts.mode === "laenge" ? "laenge" : "stueck";
     var qty = opts.qty == null || opts.qty === "" ? (mode === "stueck" ? "1" : "") : opts.qty;
-    var panel = mode === "laenge" ? laenge(opts, qty) : stueck(opts.inputId, qty);
+    var withMenge = mode === "laenge" || opts.menge !== false;
+    var panel = "";
+    var controls = "";
+    if (withMenge) {
+      panel = mode === "laenge" ? laenge(opts, qty) : stueck(opts.inputId, qty);
+      controls = ' aria-controls="' + esc(opts.panelId) + '"';
+      panel = '<div class="pick-menge" id="' + esc(opts.panelId) + '" data-menge-fuer="' + esc(opts.value) + '"' + (on ? "" : " hidden") + ">" + panel + "</div>";
+    }
     return '<div class="pick-block"' + dataAttrs(opts.data) + ">" +
       '<label class="pick">' + (opts.media || "") +
       '<span><input type="checkbox" name="' + esc(opts.name) + '" value="' + esc(opts.value) + '"' +
-      (on ? " checked" : "") + ' aria-controls="' + esc(opts.panelId) + '"><strong>' + esc(opts.title) + "</strong></span></label>" +
-      '<div class="pick-menge" id="' + esc(opts.panelId) + '" data-menge-fuer="' + esc(opts.value) + '"' + (on ? "" : " hidden") + ">" +
-      panel + "</div></div>";
+      (on ? " checked" : "") + controls + "><strong>" + esc(opts.title) + "</strong></span></label>" +
+      panel + "</div>";
   }
 
   function reveal(box, focus) {
