@@ -114,7 +114,8 @@
           media: '<span class="pick-bild"><img src="' + esc(assetRoot() + entry.bild) + '" alt="" width="96" height="96"></span>',
           panelId: "menge-panel-schild-" + entry.id,
           inputId: "menge-schild-" + entry.id,
-          data: { schild: entry.id, teil: teilOf(entry) }
+          data: { schild: entry.id, teil: teilOf(entry) },
+          href: form.getAttribute("data-vorgang") === "miete" ? "" : assetRoot() + "produkt/schild-" + entry.id + "/"
         });
       }).join("") + "</div></fieldset>";
 

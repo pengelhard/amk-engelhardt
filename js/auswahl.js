@@ -209,7 +209,8 @@
           menge: !(vorgang === "miete" && gruppe === "anhaenger"),
           panelId: "menge-panel-" + gruppe + "-" + product.slug,
           inputId: "menge-" + gruppe + "-" + product.slug,
-          extra: gruppe === "anhaenger" ? eckdaten(product.slug) : ""
+          extra: gruppe === "anhaenger" ? eckdaten(product.slug) : "",
+          href: vorgang === "kauf" ? root + "produkt/" + product.slug + "/" : ""
         }) + "</div>";
       });
     });

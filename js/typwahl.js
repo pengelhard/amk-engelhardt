@@ -48,10 +48,20 @@
       controls = ' aria-controls="' + esc(opts.panelId) + '"';
       panel = '<div class="pick-menge" id="' + esc(opts.panelId) + '" data-menge-fuer="' + esc(opts.value) + '"' + (on ? "" : " hidden") + ">" + panel + "</div>";
     }
+    var box = '<input type="checkbox" name="' + esc(opts.name) + '" value="' + esc(opts.value) + '"' +
+      (on ? " checked" : "") + controls + ">";
+    if (opts.href) {
+      var href = esc(opts.href);
+      return '<div class="pick-block pick-linked"' + dataAttrs(opts.data) + ">" +
+        '<div class="pick">' +
+        '<a class="pick-media" href="' + href + '">' + (opts.media || "") + "</a>" +
+        "<span><label>" + box + '<span class="visually-hidden">' + esc(opts.title) + " auswählen</span></label>" +
+        '<a href="' + href + '"><strong>' + esc(opts.title) + "</strong></a></span></div>" +
+        panel + (opts.extra || "") + "</div>";
+    }
     return '<div class="pick-block"' + dataAttrs(opts.data) + ">" +
       '<label class="pick">' + (opts.media || "") +
-      '<span><input type="checkbox" name="' + esc(opts.name) + '" value="' + esc(opts.value) + '"' +
-      (on ? " checked" : "") + controls + "><strong>" + esc(opts.title) + "</strong></span></label>" +
+      "<span>" + box + "<strong>" + esc(opts.title) + "</strong></span></label>" +
       panel + (opts.extra || "") + "</div>";
   }
 

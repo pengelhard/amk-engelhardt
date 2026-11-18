@@ -1403,6 +1403,10 @@ a.contact-card:hover .contact-main { color: var(--green); }
   min-width: 0;
 }
 .pick strong { color: var(--heading); font-size: 1.05rem; }
+.pick-linked .pick { cursor: default; }
+.pick-linked .pick a { color: inherit; text-decoration: none; }
+.pick-linked .pick-media { display: block; width: 6.6rem; height: 4.6rem; }
+.kauf-board .tile .sheet { display: none; }
 .pick small { color: var(--gray); font-size: 0.95rem; line-height: 1.35; }
 .pick input[type="checkbox"] { align-self: center; }
 .pick:has(input:checked)::after {

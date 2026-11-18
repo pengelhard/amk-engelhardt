@@ -59,7 +59,7 @@ Filter erscheinen erst, wenn die gewählte Kategorie mindestens zwei verschieden
 - Türen & Tore: Höhe, Maschenweite
 - Sichtschutz & Planen: Art
 
-Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger haben keine Attributfilter. Die Auswahl läuft über die Pills und die Typ-Karten.
+Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger haben keine Attributfilter. Die Auswahl läuft über die Pills und die Typ-Karten. Im Kauf führen Bild und Name der Typkarte und jedes Schild auf die Produktseite. Die Checkbox bleibt die Auswahl. In der Miete gibt es diese Links nicht. Die langen Datenblöcke der Katalogkacheln bleiben im HTML und sind im Kaufbrett ausgeblendet.
 
 Oberfläche ist Vollfeuerverzinkt, Verzinkt oder Vorverzinkt, und nur wenn das Wort in der Artikelüberschrift, im Absatz oder in der Seitenüberschrift „Vorverzinkte Zäune“ steht. Fußart ist Beton oder Kunststoff, und nur wenn der Name das sagt. Edelstahl steht nur bei der Schelle, die so heißt.
 
