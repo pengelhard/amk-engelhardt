@@ -1274,6 +1274,9 @@ a.contact-card:hover .contact-main { color: var(--green); }
 .pick:focus-within { outline: 2px solid var(--ink); outline-offset: 2px; }
 .pick:has(input:checked) { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
 .pick-block { display: grid; align-content: start; gap: 0.45rem; }
+.anhaenger-details { margin: 0 0.15rem; }
+.anhaenger-details summary { font-size: 0.95rem; }
+.anhaenger-details .spec-table { margin: 0.15rem 0 0.35rem; }
 .pick-menge { display: grid; gap: 0.45rem; }
 .pick-menge[hidden] { display: none !important; }
 .sum-lines { display: grid; gap: 0.45rem; }

@@ -52,7 +52,7 @@
       '<label class="pick">' + (opts.media || "") +
       '<span><input type="checkbox" name="' + esc(opts.name) + '" value="' + esc(opts.value) + '"' +
       (on ? " checked" : "") + controls + "><strong>" + esc(opts.title) + "</strong></span></label>" +
-      panel + "</div>";
+      panel + (opts.extra || "") + "</div>";
   }
 
   function reveal(box, focus) {

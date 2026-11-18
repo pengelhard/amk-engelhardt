@@ -63,6 +63,15 @@
     return teile[0].id;
   }
 
+  function eckdaten(slug) {
+    var rows = window.AMK_ANHAENGER_ECKDATEN && window.AMK_ANHAENGER_ECKDATEN[slug];
+    if (!rows || !rows.length) return "";
+    return '<details class="anhaenger-details"><summary>Details</summary><table class="spec-table">' +
+      rows.map(function (row) {
+        return "<tr><th scope=\"row\">" + esc(row[0]) + "</th><td>" + esc(row[1]) + "</td></tr>";
+      }).join("") + "</table></details>";
+  }
+
   function picture(product, root) {
     if (!product.bild) return FALLBACK;
     return '<img src="' + esc(root + product.bild) + '" alt="" width="' + (product.width || 640) + '" height="' + (product.height || 480) + '" decoding="async">';
@@ -172,7 +181,8 @@
         qty: qty,
         menge: !(vorgang === "miete" && gruppe === "anhaenger"),
         panelId: "menge-panel-" + gruppe + "-" + product.slug,
-        inputId: "menge-" + gruppe + "-" + product.slug
+        inputId: "menge-" + gruppe + "-" + product.slug,
+        extra: gruppe === "anhaenger" ? eckdaten(product.slug) : ""
       });
     }).join("");
     var zeit = "";
