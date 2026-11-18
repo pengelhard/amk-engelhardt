@@ -293,6 +293,89 @@
   form.addEventListener("input", remember);
   form.addEventListener("change", remember);
 
+  var PFLICHT = {
+    name: "Bitte Name angeben.",
+    telefon: "Bitte Telefon angeben.",
+    email: "Bitte E-Mail angeben.",
+    datenschutz: "Bitte den Datenschutz-Hinweis bestätigen.",
+    von: "Bitte Zeitraum angeben.",
+    bis: "Bitte Zeitraum angeben."
+  };
+
+  function faultId(input) {
+    return (input.id || input.name) + "-fehler";
+  }
+
+  function faultNode(input) {
+    var id = faultId(input);
+    var node = document.getElementById(id);
+    if (node) return node;
+    node = document.createElement("p");
+    node.id = id;
+    node.className = "field-error";
+    node.hidden = true;
+    var field = input.closest(".field");
+    if (field) field.appendChild(node);
+    else {
+      var label = input.closest("label");
+      var parent = label ? label.parentNode : input.parentNode;
+      parent.insertBefore(node, label ? label.nextSibling : input.nextSibling);
+    }
+    return node;
+  }
+
+  function clearFault(input) {
+    if (!input || !input.name) return;
+    input.removeAttribute("aria-invalid");
+    var node = document.getElementById(faultId(input));
+    if (!node) return;
+    node.hidden = true;
+    node.textContent = "";
+  }
+
+  function missing(input) {
+    if (input.type === "checkbox") return !input.checked;
+    if (input.type === "email" && String(input.value || "").trim() && input.validity && input.validity.typeMismatch) return true;
+    return !String(input.value || "").trim();
+  }
+
+  function faultText(input) {
+    if (input.type === "email" && String(input.value || "").trim() && input.validity && input.validity.typeMismatch) {
+      return "Bitte eine gültige E-Mail angeben.";
+    }
+    return PFLICHT[input.name];
+  }
+
+  function guard(names) {
+    var first = null;
+    names.forEach(function (name) {
+      var input = form.elements[name];
+      if (!input || !PFLICHT[name]) return;
+      if (missing(input)) {
+        var node = faultNode(input);
+        input.setAttribute("aria-invalid", "true");
+        input.setAttribute("aria-describedby", node.id);
+        node.textContent = faultText(input);
+        node.hidden = false;
+        if (!first) first = input;
+      } else clearFault(input);
+    });
+    if (first) {
+      first.focus({ preventScroll: true });
+      first.scrollIntoView({ block: "center" });
+    }
+    return !first;
+  }
+
+  form.addEventListener("input", function (event) {
+    var input = event.target;
+    if (input && input.name && PFLICHT[input.name] && !missing(input)) clearFault(input);
+  });
+  form.addEventListener("change", function (event) {
+    var input = event.target;
+    if (input && input.name && PFLICHT[input.name] && !missing(input)) clearFault(input);
+  });
+
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     var status = document.getElementById("anfrage-status");
@@ -301,13 +384,14 @@
     function val(name) { return String(fields[name] || "").trim(); }
     status.classList.remove("is-error");
     if (!items.length) return;
+    if (!guard(["name", "telefon", "email", "datenschutz"])) return;
     var askPeriod = needsPeriod(items);
     if (askPeriod && renting(items)) {
       var vonField = document.getElementById("von");
       var bisField = document.getElementById("bis");
       if (window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(vonField, bisField)) return;
       if (!vonField.value || !bisField.value) {
-        (vonField.value ? bisField : vonField).focus();
+        guard([vonField.value ? "bis" : "von"]);
         return;
       }
     }
