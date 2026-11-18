@@ -1,11 +1,15 @@
 (function () {
   var list = [
     { id: "zaun", label: "Bauzaun & Absperrgitter", shops: ["bauzaune", "zubehoer", "tore", "sichtschutz", "gitter"] },
-    { id: "schilder", label: "Verkehrsschilder", shops: ["schilder"] },
-    { id: "absperrung", label: "Verkehrsabsperreinrichtungen", shops: ["verkehr"] },
+    { id: "verkehr", label: "Verkehrsabsicherung & Schilder", shops: ["schilder", "verkehr"] },
     { id: "anhaenger", label: "Anhänger", shops: ["anhaenger"] }
   ];
+  var alias = { schilder: "verkehr", absperrung: "verkehr" };
   var byId = {};
   list.forEach(function (gruppe) { byId[gruppe.id] = gruppe; });
-  window.AMK_GRUPPEN = { list: list, byId: byId };
+  function canon(id) {
+    var key = alias[id] || id || "";
+    return byId[key] ? key : "";
+  }
+  window.AMK_GRUPPEN = { list: list, byId: byId, canon: canon };
 })();

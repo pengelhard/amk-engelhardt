@@ -4,28 +4,38 @@
   var zaun = document.getElementById("miete-zaun");
   var konfig = document.getElementById("miete-konfig");
   var gitter = document.getElementById("miete-gitter");
-  var schilder = document.getElementById("miete-schilder");
-  var absperrung = document.getElementById("miete-absperrung");
+  var verkehr = document.getElementById("miete-verkehr");
   var anhaenger = document.getElementById("miete-anhaenger");
+  var genehmigung = document.getElementById("genehmigung-miete");
   if (!board || !gruppen || !window.AMK_GRUPPEN) return;
 
-  var panels = { zaun: zaun, schilder: schilder, absperrung: absperrung, anhaenger: anhaenger };
+  var panels = { zaun: zaun, verkehr: verkehr, anhaenger: anhaenger };
   var state = { gruppe: "", teil: "zaun" };
+  var GENEHM = "miete:genehmigung";
+
+  function deviceTeile(gruppe) {
+    if (gruppe === "verkehr") return window.AMK_AUSWAHL && window.AMK_AUSWAHL.teile.absperrung;
+    return window.AMK_AUSWAHL && window.AMK_AUSWAHL.teile[gruppe];
+  }
 
   function allowed(gruppe, teil) {
     if (gruppe === "zaun") return teil === "gitter" ? "gitter" : "zaun";
-    var list = gruppe === "schilder"
-      ? window.AMK_SCHILDER_TEILE
-      : (window.AMK_AUSWAHL && window.AMK_AUSWAHL.teile[gruppe]);
+    var list = deviceTeile(gruppe);
     if (list && list.indexOf(teil) !== -1) return teil;
     return gruppe === "zaun" ? "zaun" : "";
   }
 
   function readUrl() {
     var params = new URLSearchParams(location.search);
-    var gruppe = params.get("gruppe") || "";
+    var gruppe = window.AMK_GRUPPEN.canon(params.get("gruppe") || "");
     if (!window.AMK_GRUPPEN.byId[gruppe]) gruppe = "zaun";
-    state = { gruppe: gruppe, teil: allowed(gruppe, params.get("teil") || "") };
+    var teil = params.get("teil") || "";
+    var signs = window.AMK_SCHILDER_TEILE || [];
+    if (gruppe === "verkehr" && signs.indexOf(teil) !== -1) {
+      if (window.AMK_SCHILDER_UI && window.AMK_SCHILDER_UI.open) window.AMK_SCHILDER_UI.open(teil);
+      teil = "";
+    }
+    state = { gruppe: gruppe, teil: allowed(gruppe, teil) };
   }
 
   function writeUrl(mode) {
@@ -64,11 +74,42 @@
     var link = event.target.closest("a[data-gruppe]");
     if (!link) return;
     event.preventDefault();
-    state.gruppe = link.getAttribute("data-gruppe") || "";
+    state.gruppe = window.AMK_GRUPPEN.canon(link.getAttribute("data-gruppe") || "") || "zaun";
     state.teil = state.gruppe === "zaun" ? "zaun" : "";
     render();
     writeUrl("push");
   });
+
+  function genehmigungOn() {
+    if (!window.AMK_WUNSCH || !window.AMK_WUNSCH.load) return false;
+    return window.AMK_WUNSCH.load().some(function (item) { return item.id === GENEHM; });
+  }
+
+  function genehmigungSync() {
+    if (genehmigung) genehmigung.checked = genehmigungOn();
+  }
+
+  if (genehmigung && window.AMK_WUNSCH) {
+    genehmigung.addEventListener("change", function () {
+      if (genehmigung.checked) {
+        window.AMK_WUNSCH.replace({
+          id: GENEHM,
+          name: "Genehmigung soll AMK beantragen",
+          qty: 1,
+          sammel: true,
+          kat: "verkehrssicherung"
+        });
+      } else if (window.AMK_WUNSCH.remove) {
+        window.AMK_WUNSCH.remove(GENEHM);
+      }
+    });
+    var previous = window.AMK_WUNSCH.onChange;
+    window.AMK_WUNSCH.onChange = function (items) {
+      if (typeof previous === "function") previous(items);
+      genehmigungSync();
+    };
+    genehmigungSync();
+  }
 
   document.addEventListener("amk-teil", function (event) {
     if (!state.gruppe || state.gruppe === "zaun") return;

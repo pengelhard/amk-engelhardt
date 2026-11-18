@@ -1,33 +1,35 @@
 (function () {
-  /* StVO-Zeichen, übliche Baustellenauswahl. Keine Artikelnummern von KK:
-     der Lieferant führt keine einzelnen Schilder. Namen nach StVO. */
+  /* Amtliche StVO-Zeichen. Dateien und Lizenz: images/schilder/CREDITS.md */
   var ZEICHEN = [
-    { id: "z123", nr: "Z 123", name: "Arbeitsstelle", art: "gefahr", symbol: "arbeit" },
-    { id: "z120", nr: "Z 120", name: "Verengte Fahrbahn", art: "gefahr", symbol: "enge" },
-    { id: "z121-10", nr: "Z 121-10", name: "Einseitig verengte Fahrbahn, rechts", art: "gefahr", symbol: "rechts" },
-    { id: "z121-20", nr: "Z 121-20", name: "Einseitig verengte Fahrbahn, links", art: "gefahr", symbol: "links" },
-    { id: "z208", nr: "Z 208", name: "Vorrang vor dem Gegenverkehr", art: "quadrat", symbol: "vor" },
-    { id: "z308", nr: "Z 308", name: "Vorrang des Gegenverkehrs", art: "quadrat", symbol: "gegen" },
-    { id: "z222", nr: "Z 222", name: "Rechts vorbei", art: "gebot", symbol: "pfeil" },
-    { id: "z250", nr: "Z 250", name: "Verbot für Fahrzeuge aller Art", art: "verbot", symbol: "leer" },
-    { id: "z260", nr: "Z 260", name: "Verbot für Krafträder", art: "verbot", symbol: "rad" },
-    { id: "z267", nr: "Z 267", name: "Verbot der Einfahrt", art: "verbot", symbol: "balken" },
-    { id: "z274-30", nr: "Z 274", name: "Zulässige Höchstgeschwindigkeit 30", art: "verbot", symbol: "30" },
-    { id: "z274-50", nr: "Z 274", name: "Zulässige Höchstgeschwindigkeit 50", art: "verbot", symbol: "50" },
-    { id: "z274-70", nr: "Z 274", name: "Zulässige Höchstgeschwindigkeit 70", art: "verbot", symbol: "70" },
-    { id: "z276", nr: "Z 276", name: "Überholverbot", art: "verbot", symbol: "ueber" },
-    { id: "z283", nr: "Z 283", name: "Absolutes Haltverbot", art: "halt", symbol: "kreuz" },
-    { id: "z286", nr: "Z 286", name: "Eingeschränktes Haltverbot", art: "halt", symbol: "strich" },
-    { id: "z259", nr: "Z 259", name: "Verbot für Fußgänger", art: "verbot", symbol: "fuss" },
-    { id: "z454", nr: "Z 454", name: "Umleitungswegweiser", art: "umleitung", symbol: "umweg" },
-    { id: "z455", nr: "Z 455", name: "Umleitungsankündigung", art: "umleitung", symbol: "ankuend" },
-    { id: "z457", nr: "Z 457", name: "Umleitung", art: "umleitung", symbol: "umbieg" }
+    { id: "z123", nr: "Z 123", name: "Arbeitsstelle", art: "gefahr", bild: "images/schilder/z123.svg" },
+    { id: "z120", nr: "Z 120", name: "Verengte Fahrbahn", art: "gefahr", bild: "images/schilder/z120.svg" },
+    { id: "z121-10", nr: "Z 121-10", name: "Einseitig verengte Fahrbahn, rechts", art: "gefahr", bild: "images/schilder/z121-10.svg" },
+    { id: "z121-20", nr: "Z 121-20", name: "Einseitig verengte Fahrbahn, links", art: "gefahr", bild: "images/schilder/z121-20.svg" },
+    { id: "z208", nr: "Z 208", name: "Dem Gegenverkehr Vorrang gewähren", art: "quadrat", bild: "images/schilder/z208.svg" },
+    { id: "z308", nr: "Z 308", name: "Vorrang vor dem Gegenverkehr", art: "quadrat", bild: "images/schilder/z308.svg" },
+    { id: "z222", nr: "Z 222", name: "Rechts vorbei", art: "gebot", bild: "images/schilder/z222.svg" },
+    { id: "z250", nr: "Z 250", name: "Verbot für Fahrzeuge aller Art", art: "verbot", bild: "images/schilder/z250.svg" },
+    { id: "z255", nr: "Z 255", name: "Verbot für Krafträder", art: "verbot", bild: "images/schilder/z255.svg" },
+    { id: "z267", nr: "Z 267", name: "Verbot der Einfahrt", art: "verbot", bild: "images/schilder/z267.svg" },
+    { id: "z274-30", nr: "Z 274-30", name: "Zulässige Höchstgeschwindigkeit 30", art: "verbot", bild: "images/schilder/z274-30.svg" },
+    { id: "z274-50", nr: "Z 274-50", name: "Zulässige Höchstgeschwindigkeit 50", art: "verbot", bild: "images/schilder/z274-50.svg" },
+    { id: "z274-70", nr: "Z 274-70", name: "Zulässige Höchstgeschwindigkeit 70", art: "verbot", bild: "images/schilder/z274-70.svg" },
+    { id: "z276", nr: "Z 276", name: "Überholverbot", art: "verbot", bild: "images/schilder/z276.svg" },
+    { id: "z283", nr: "Z 283", name: "Absolutes Haltverbot", art: "halt", bild: "images/schilder/z283.svg" },
+    { id: "z286", nr: "Z 286", name: "Eingeschränktes Haltverbot", art: "halt", bild: "images/schilder/z286.svg" },
+    { id: "z259", nr: "Z 259", name: "Verbot für Fußgänger", art: "verbot", bild: "images/schilder/z259.svg" },
+    { id: "z454", nr: "Z 454-20", name: "Umleitungswegweiser", art: "umleitung", bild: "images/schilder/z454.svg" },
+    { id: "z455", nr: "Z 455.1", name: "Ankündigung der Umleitung", art: "umleitung", bild: "images/schilder/z455.svg" },
+    { id: "z457", nr: "Z 457.1", name: "Umleitungsankündigung", art: "umleitung", bild: "images/schilder/z457.svg" },
+    { id: "z600", nr: "Z 600-30", name: "Absperrschranke", art: "einrichtung", bild: "images/schilder/z600.svg" },
+    { id: "z605", nr: "Z 605-10", name: "Leitbake", art: "einrichtung", bild: "images/schilder/z605.svg" }
   ];
 
   var TEILE = [
     { id: "gefahr", label: "Gefahrzeichen", art: { gefahr: 1 } },
     { id: "vorschrift", label: "Vorschriftzeichen", art: { quadrat: 1, gebot: 1, verbot: 1, halt: 1 } },
-    { id: "richt", label: "Richtzeichen", art: { umleitung: 1 } }
+    { id: "richt", label: "Richtzeichen", art: { umleitung: 1 } },
+    { id: "einrichtung", label: "Verkehrseinrichtungen", art: { einrichtung: 1 } }
   ];
   var query = "";
   var localTeil = "";
@@ -38,12 +40,18 @@
     return found;
   }
 
+  function signGroup(value) {
+    var gruppe = value || "";
+    if (window.AMK_GRUPPEN && typeof window.AMK_GRUPPEN.canon === "function") gruppe = window.AMK_GRUPPEN.canon(gruppe);
+    return gruppe === "verkehr";
+  }
+
   function teilNow() {
     var params = new URLSearchParams(location.search);
-    if (params.get("gruppe") === "schilder") {
-      var teil = params.get("teil") || "";
-      if (TEILE.some(function (entry) { return entry.id === teil; })) return teil;
-      return TEILE[0].id;
+    var teil = params.get("teil") || "";
+    if (signGroup(params.get("gruppe")) && TEILE.some(function (entry) { return entry.id === teil; })) {
+      localTeil = teil;
+      return teil;
     }
     return localTeil || TEILE[0].id;
   }
@@ -64,52 +72,15 @@
     });
   }
 
-  function svg(inner) {
-    return '<svg viewBox="0 0 64 64" width="48" height="48" aria-hidden="true" focusable="false">' + inner + "</svg>";
-  }
-
-  function mark(entry) {
-    var s = entry.symbol;
-    if (entry.art === "gefahr") {
-      var pic = "";
-      if (s === "arbeit") pic = '<circle cx="24" cy="34" r="3.2" fill="#1a1a18"/><path d="M24 37 v8 M20 42 h8 M21 49 l3 -4 3 4 M33 33 l9 15" fill="none" stroke="#1a1a18" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';
-      if (s === "enge") pic = '<path d="M18 33 L27 51 M46 33 L37 51" fill="none" stroke="#1a1a18" stroke-width="3.2" stroke-linecap="round"/>';
-      if (s === "rechts") pic = '<path d="M16 33 H42 L34 51 H22 Z" fill="#1a1a18"/>';
-      if (s === "links") pic = '<path d="M48 33 H22 L30 51 H42 Z" fill="#1a1a18"/>';
-      return svg('<polygon points="32,6 60,56 4,56" fill="#f0c400" stroke="#1a1a18" stroke-width="3"/>' + pic);
+  function assetRoot() {
+    var nodes = document.getElementsByTagName("script");
+    var i;
+    for (i = 0; i < nodes.length; i++) {
+      var src = nodes[i].getAttribute("src") || "";
+      var at = src.indexOf("js/schilder.js");
+      if (at >= 0) return src.slice(0, at);
     }
-    if (entry.art === "gebot") {
-      return svg('<circle cx="32" cy="32" r="28" fill="#1d4e89"/><path d="M18 32 h22 M30 22 l12 10 -12 10" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>');
-    }
-    if (entry.art === "quadrat") {
-      var vor = s === "vor";
-      var up = vor ? "#1a1a18" : "#c41212";
-      var down = vor ? "#c41212" : "#1a1a18";
-      return svg('<rect x="6" y="6" width="52" height="52" fill="#fff" stroke="' + (vor ? "#1a1a18" : "#c41212") + '" stroke-width="4"/>' +
-        '<path d="M24 16 v20 M18 24 l6 -8 6 8" fill="none" stroke="' + up + '" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>' +
-        '<path d="M40 48 V28 M34 40 l6 8 6 -8" fill="none" stroke="' + down + '" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>');
-    }
-    if (entry.art === "umleitung") {
-      var arrow = s === "ankuend"
-        ? '<path d="M32 46 V22 M24 30 l8 -10 8 10" fill="none" stroke="#1a1a18" stroke-width="4" stroke-linecap="round"/>'
-        : s === "umbieg"
-          ? '<path d="M22 44 V28 h16 M30 20 l8 8 -8 8" fill="none" stroke="#1a1a18" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>'
-          : '<path d="M18 32 h24 M32 22 l10 10 -10 10" fill="none" stroke="#1a1a18" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>';
-      return svg('<rect x="4" y="14" width="56" height="36" rx="4" fill="#f0c400" stroke="#1a1a18" stroke-width="3"/>' + arrow);
-    }
-    if (entry.art === "halt") {
-      var extra = s === "kreuz"
-        ? '<path d="M22 22 l20 20 M42 22 L22 42" stroke="#c41212" stroke-width="4" stroke-linecap="round"/>'
-        : '<path d="M20 42 L44 22" stroke="#c41212" stroke-width="4" stroke-linecap="round"/>';
-      return svg('<circle cx="32" cy="32" r="26" fill="#1d4e89" stroke="#c41212" stroke-width="6"/>' + extra);
-    }
-    var inner = "";
-    if (s === "balken") inner = '<rect x="14" y="28" width="36" height="8" fill="#fff"/>';
-    else if (s === "30" || s === "50" || s === "70") inner = '<text x="32" y="40" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#1a1a18">' + s + "</text>";
-    else if (s === "ueber") inner = '<path d="M18 40 h10 l6 -8 h8 M18 28 h16" fill="none" stroke="#1a1a18" stroke-width="3" stroke-linecap="round"/><path d="M16 18 L48 48" stroke="#c41212" stroke-width="4"/>';
-    else if (s === "rad") inner = '<circle cx="24" cy="40" r="6" fill="none" stroke="#1a1a18" stroke-width="2"/><circle cx="42" cy="40" r="6" fill="none" stroke="#1a1a18" stroke-width="2"/><path d="M24 40 l8 -12 h10 l4 8" fill="none" stroke="#1a1a18" stroke-width="2"/>';
-    else if (s === "fuss") inner = '<circle cx="32" cy="24" r="4" fill="#1a1a18"/><path d="M32 28 v10 M26 34 h12 M28 48 l4 -10 4 10" fill="none" stroke="#1a1a18" stroke-width="2" stroke-linecap="round"/>';
-    return svg('<circle cx="32" cy="32" r="26" fill="#fff" stroke="#c41212" stroke-width="6"/>' + inner);
+    return "";
   }
 
   function esc(value) {
@@ -131,12 +102,8 @@
       var button = event.target.closest("[data-teil]");
       if (!button) return;
       var id = button.getAttribute("data-teil") || "";
-      if (new URLSearchParams(location.search).get("gruppe") === "schilder") {
-        document.dispatchEvent(new CustomEvent("amk-teil", { detail: id }));
-      } else {
-        localTeil = id;
-        apply();
-      }
+      localTeil = id;
+      apply();
     });
     list.innerHTML = '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' +
       ZEICHEN.map(function (entry) {
@@ -144,7 +111,7 @@
           name: "schild",
           value: entry.id,
           title: entry.nr + " " + entry.name,
-          media: '<span class="pick-bild">' + mark(entry) + "</span>",
+          media: '<span class="pick-bild"><img src="' + esc(assetRoot() + entry.bild) + '" alt="" width="96" height="96"></span>',
           panelId: "menge-panel-schild-" + entry.id,
           inputId: "menge-schild-" + entry.id,
           data: { schild: entry.id, teil: teilOf(entry) }
@@ -236,6 +203,10 @@
   window.AMK_SCHILDER_TEILE = TEILE.map(function (teil) { return teil.id; });
   window.AMK_SCHILDER_UI = {
     sync: apply,
+    open: function (id) {
+      if (TEILE.some(function (entry) { return entry.id === id; })) localTeil = id;
+      apply();
+    },
     filter: function (value) {
       query = value || "";
       apply();

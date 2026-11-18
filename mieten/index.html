@@ -42,8 +42,7 @@
       <div class="wrap">
         <nav class="kauf-einstieg" id="miete-gruppen" aria-label="Hauptgruppen">
           <a class="kauf-karte" href="?gruppe=zaun" data-gruppe="zaun"><strong>Bauzaun &amp; Absperrgitter</strong></a>
-          <a class="kauf-karte" href="?gruppe=schilder" data-gruppe="schilder"><strong>Verkehrsschilder</strong></a>
-          <a class="kauf-karte" href="?gruppe=absperrung" data-gruppe="absperrung"><strong>Verkehrsabsperreinrichtungen</strong></a>
+          <a class="kauf-karte" href="?gruppe=verkehr" data-gruppe="verkehr"><strong>Verkehrsabsicherung &amp; Schilder</strong></a>
           <a class="kauf-karte" href="?gruppe=anhaenger" data-gruppe="anhaenger"><strong>Anhänger</strong></a>
         </nav>
         <div id="miete-zaun" hidden>
@@ -117,12 +116,17 @@
           </div>
           <div id="miete-gitter" data-auswahl data-gruppe="gitter" data-vorgang="miete" data-root="../" hidden></div>
         </div>
-        <form class="schilder" id="miete-schilder" data-schilder data-vorgang="miete" hidden>
-          <div class="schild-liste" data-schild-liste></div>
-          <div class="field"><label for="hinweis-schilder-miete">Größe, Folie, Ständer</label><textarea id="hinweis-schilder-miete" name="hinweis"></textarea></div>
-          <button class="btn" type="submit">In den Anfragekorb</button>
-        </form>
-        <div id="miete-absperrung" data-auswahl data-gruppe="absperrung" data-vorgang="miete" data-root="../" hidden></div>
+        <div id="miete-verkehr" hidden>
+          <p class="verkehr-hinweis">Die verkehrsrechtliche Anordnung beantragt AMK bei der Behörde.</p>
+          <label class="choice" for="genehmigung-miete"><input id="genehmigung-miete" type="checkbox"> <span>Genehmigung soll AMK beantragen</span></label>
+          <p class="verkehr-hinweis">Ständer und Fußplatten sind beim Mieten dabei.</p>
+          <form class="schilder" id="miete-schilder" data-schilder data-vorgang="miete">
+            <div class="schild-liste" data-schild-liste></div>
+            <div class="field"><label for="hinweis-schilder-miete">Größe, Folie, Ständer</label><textarea id="hinweis-schilder-miete" name="hinweis"></textarea></div>
+            <button class="btn" type="submit">In den Anfragekorb</button>
+          </form>
+          <div id="miete-absperrung" data-auswahl data-gruppe="absperrung" data-vorgang="miete" data-root="../"></div>
+        </div>
         <div id="miete-anhaenger" data-auswahl data-gruppe="anhaenger" data-vorgang="miete" data-root="../" hidden></div>
       </div>
     </section>

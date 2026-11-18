@@ -14,8 +14,7 @@
   var GRUPPEN = {};
   (window.AMK_GRUPPEN ? window.AMK_GRUPPEN.list : [
     { id: "zaun", shops: ["bauzaune", "zubehoer", "tore", "sichtschutz", "gitter"] },
-    { id: "schilder", shops: ["schilder"] },
-    { id: "absperrung", shops: ["verkehr"] },
+    { id: "verkehr", shops: ["schilder", "verkehr"] },
     { id: "anhaenger", shops: ["anhaenger"] }
   ]).forEach(function (gruppe) { GRUPPEN[gruppe.id] = gruppe.shops.slice(); });
   var UNTER = {
@@ -32,7 +31,11 @@
   Object.keys(GRUPPEN).forEach(function (gruppe) {
     GRUPPEN[gruppe].forEach(function (kat) { KAT_GRUPPE[kat] = gruppe; });
   });
-  KAT_GRUPPE.verkehr = "absperrung";
+  function canonGruppe(id) {
+    if (window.AMK_GRUPPEN && typeof window.AMK_GRUPPEN.canon === "function") return window.AMK_GRUPPEN.canon(id);
+    if (id === "schilder" || id === "absperrung") return "verkehr";
+    return id || "";
+  }
   var FACETTEN = [
     ["hoehe", "Höhe"],
     ["breite", "Breite"],
@@ -47,7 +50,7 @@
   ];
   var HASH = {
     bauzaun: { gruppe: "zaun", kat: "bauzaune" },
-    verkehrssicherung: { gruppe: "absperrung", kat: "" },
+    verkehrssicherung: { gruppe: "verkehr", kat: "" },
     anhaenger: { gruppe: "anhaenger", kat: "" }
   };
 
@@ -74,7 +77,7 @@
 
   function readUrl() {
     var params = new URLSearchParams(location.search);
-    var gruppe = params.get("gruppe") || "";
+    var gruppe = canonGruppe(params.get("gruppe") || "");
     if (!GRUPPEN[gruppe]) gruppe = "";
     var kat = params.get("kat") || "";
     if (kat === "verkehr") kat = "";
@@ -92,10 +95,16 @@
       var values = params.getAll(pair[0]);
       if (values.length) facets[pair[0]] = values;
     });
+    var teil = params.get("teil") || "";
+    var signs = window.AMK_SCHILDER_TEILE || [];
+    if (gruppe === "verkehr" && signs.indexOf(teil) !== -1) {
+      if (window.AMK_SCHILDER_UI && window.AMK_SCHILDER_UI.open) window.AMK_SCHILDER_UI.open(teil);
+      teil = "";
+    }
     state = {
       gruppe: gruppe,
       kat: kat,
-      teil: params.get("teil") || "",
+      teil: teil,
       q: params.get("q") || "",
       sort: params.get("sort") || "",
       facets: facets
@@ -103,8 +112,8 @@
   }
 
   function teilList() {
-    if (state.gruppe === "schilder") return window.AMK_SCHILDER_TEILE || [];
     var map = window.AMK_AUSWAHL && window.AMK_AUSWAHL.teile;
+    if (state.gruppe === "verkehr") return (map && map.absperrung) || [];
     return (map && map[state.gruppe]) || [];
   }
 
@@ -258,17 +267,21 @@
 
   function render() {
     var overview = !state.gruppe && !state.q;
-    var signs = state.gruppe === "schilder";
-    var picker = state.gruppe === "absperrung" || state.gruppe === "anhaenger" || (state.gruppe === "zaun" && state.kat === "gitter");
+    var verkehr = state.gruppe === "verkehr";
+    var signs = verkehr;
+    var picker = verkehr || state.gruppe === "anhaenger" || (state.gruppe === "zaun" && state.kat === "gitter");
     var auswahl = document.getElementById("kauf-auswahl");
+    var hinweis = document.getElementById("kauf-verkehr-hinweis");
     board.classList.toggle("is-gruppe", !overview);
-    board.classList.toggle("is-schilder", signs);
-    board.classList.toggle("is-auswahl", picker);
+    board.classList.toggle("is-schilder", false);
+    board.classList.toggle("is-auswahl", picker && !verkehr);
+    board.classList.toggle("is-verkehr", verkehr);
+    if (hinweis) hinweis.hidden = !verkehr;
     renderGruppen();
     renderChips();
     if (auswahl) {
       auswahl.hidden = !picker;
-      if (picker) auswahl.setAttribute("data-gruppe", state.gruppe === "zaun" ? "gitter" : state.gruppe);
+      if (picker) auswahl.setAttribute("data-gruppe", state.gruppe === "zaun" ? "gitter" : (verkehr ? "absperrung" : state.gruppe));
       else {
         auswahl.innerHTML = "";
         delete auswahl.dataset.key;
@@ -281,7 +294,7 @@
     sortInput.value = state.sort === "name" || state.sort === "nummer" ? state.sort : "";
     var shown = 0;
     ordered(items).forEach(function (item) {
-      var on = !overview && !signs && matches(item, null);
+      var on = !overview && !signs && !picker && matches(item, null);
       item.el.hidden = !on;
       liste.appendChild(item.el);
       if (on) shown += 1;
@@ -344,7 +357,7 @@
       var link = event.target.closest("a[data-gruppe]");
       if (!link) return;
       event.preventDefault();
-      state.gruppe = link.getAttribute("data-gruppe") || "";
+      state.gruppe = canonGruppe(link.getAttribute("data-gruppe") || "");
       state.kat = "";
       state.teil = "";
       state.facets = {};
