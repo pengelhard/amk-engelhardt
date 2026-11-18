@@ -75,7 +75,7 @@
   function imgTag(slide, root, thumb) {
     var src = srcOf(slide, root);
     var small = slide.small && slide.small !== slide.src ? srcOf({ src: slide.small }, root) : "";
-    var set = !thumb && small ? ' srcset="' + esc(small) + " 640w, " + esc(src) + ' 1200w" sizes="(min-width: 800px) 46vw, 100vw"' : "";
+    var set = !thumb && small ? ' srcset="' + esc(small) + " 640w, " + esc(src) + ' 1200w" sizes="100vw"' : "";
     return '<img draggable="false" src="' + esc(src) + '"' + set + ' alt="' + esc(thumb ? "" : slide.alt) + '" width="' + esc(slide.w) + '" height="' + esc(slide.h) + '" decoding="async">';
   }
 
