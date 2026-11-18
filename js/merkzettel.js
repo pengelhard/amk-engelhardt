@@ -132,7 +132,7 @@
   }
 
   function countOf(items) {
-    return items.reduce(function (sum, item) { return sum + item.qty; }, 0);
+    return items.length;
   }
 
   function paint(items) {
