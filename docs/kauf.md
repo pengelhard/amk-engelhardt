@@ -67,7 +67,9 @@ Suche trifft Name, Artikelnummer und Kennung, bei den Schildern Nummer und Name.
 
 ## Technische Daten
 
-Auf der Kachel und auf der Artikelseite liegen die Tabellenzeilen der Produktseite unter „Technische Daten“. Ein Absatz der Produktseite liegt unter „Beschreibung“. Fehlt die Angabe, fehlt die Zeile. „Lieferumfang“ und „Passt zu“ gibt die Produktseite nicht her. „Das Paket“ ist eine Tabellenzeile mit einer Stückzahl und bleibt in der Tabelle.
+Auf der Kachel liegen die Tabellenzeilen unter „Technische Daten“, ein Absatz unter „Beschreibung“. Auf der Produktseite stehen dieselben Blöcke offen, ohne Extra-Klick (`js/produkt.js`). Fehlt die Angabe, fehlt die Zeile. „Das Paket“ bleibt eine Tabellenzeile mit einer Stückzahl.
+
+„Lieferumfang“ erscheint nur, wenn `lieferung` im Katalog eine Liste von Sätzen ist. „Passt dazu“ verlinkt die Slugs in `zubehoer` auf ihre Produktseiten. Fehlt die Liste, fehlt der Block. Kein Produkt trägt diese Listen bisher, deshalb bleibt der Block weg. Anhänger ohne Tabelle im Katalog zeigen die Eckdaten aus `data/anhaenger-eckdaten.js`, dieselbe Tabelle wie an der Typkarte.
 
 Ein PDF wird als „Datenblatt (PDF)“ verlinkt, wenn die Produktseite eines zu diesem Artikel anbietet. Die Datei wird nicht kopiert. Die Liste steht in `docs/bildquellen.md`.
 

@@ -882,6 +882,11 @@ body.galerie-open { overflow: hidden; }
 .specs strong { color: var(--heading); text-align: right; font-weight: 600; overflow-wrap: anywhere; }
 
 .sheet { margin-top: 1.3rem; }
+.detail-block { margin-top: 1.4rem; }
+.detail-block h2 { font-size: 1.15rem; margin: 0 0 0.45rem; }
+.detail-block p { margin: 0.35rem 0 0; }
+.detail-links { list-style: none; margin: 0.2rem 0 0; padding: 0; }
+.detail-links a { color: var(--green-text); font-weight: 600; text-decoration: none; }
 summary { font-weight: 600; color: var(--ink); cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; }
 .spec-table { width: 100%; border-collapse: collapse; margin: 0.35rem 0 0.15rem; }
 .spec-table th,
