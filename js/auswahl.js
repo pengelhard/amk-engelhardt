@@ -1,17 +1,20 @@
 (function () {
   /* Eine Auswahl für Miete und Kauf: Pills und die gemeinsame Typ-Karte.
      Zeitraum nur bei Miete. Inhalte nur aus data/katalog.json. */
+  var LEIT = [
+    { id: "schwellen", label: "Betonleitschwellen", shop: "verkehr", art: "Betonschwellen" },
+    { id: "schleuse", label: "Schleusen", shop: "verkehr", art: "Schleuse" },
+    { id: "buehne", label: "Bühne", shop: "verkehr", art: "Bühne" }
+  ];
   var TEILE = {
     gitter: [
       { id: "gitter", shop: "gitter" }
     ],
     absperrung: [
       { id: "schranken", label: "Absperrschranken", shop: "verkehr", art: "Schranken" },
-      { id: "baken", label: "Leitbaken", shop: "verkehr", art: "Baken" },
-      { id: "schwellen", label: "Betonleitschwellen", shop: "verkehr", art: "Betonschwellen" },
-      { id: "schleuse", label: "Schleusen", shop: "verkehr", art: "Schleuse" },
-      { id: "buehne", label: "Bühne", shop: "verkehr", art: "Bühne" }
-    ],
+      { id: "baken", label: "Leitbaken", shop: "verkehr", art: "Baken" }
+    ].concat(LEIT),
+    leit: LEIT,
     anhaenger: [
       { id: "hochlader", label: "Hochlader", shop: "anhaenger", art: "Hochlader" },
       { id: "plane", label: "Planenanhänger", shop: "anhaenger", art: "Planenanhänger" },
@@ -20,7 +23,7 @@
       { id: "kuehl", label: "Kühlanhänger", shop: "anhaenger", art: "Kühlanhänger" }
     ]
   };
-  var KAT = { gitter: "bauzaun", absperrung: "verkehrssicherung", anhaenger: "anhaenger" };
+  var KAT = { gitter: "bauzaun", absperrung: "verkehrssicherung", leit: "verkehrssicherung", anhaenger: "anhaenger" };
   var FALLBACK = '<svg class="pick-fallback" viewBox="0 0 64 48" aria-hidden="true" focusable="false"><rect x="5" y="8" width="54" height="32" rx="4" fill="none" stroke="#1a1a18" stroke-width="2"/><path d="M5 32 l16-12 10 8 8-6 20 14" fill="none" stroke="#1a1a18" stroke-width="2" stroke-linejoin="round"/></svg>';
 
   var products = null;
@@ -53,8 +56,12 @@
     var teile = liveTeile(gruppe);
     if (!teile.length) return "";
     if (teile.length === 1) return teile[0].id;
-    var want = new URLSearchParams(location.search).get("teil") || "";
-    for (var i = 0; i < teile.length; i++) if (teile[i].id === want) return want;
+    var params = new URLSearchParams(location.search);
+    var want = params.get("teil") || "";
+    var known = false;
+    for (var i = 0; i < teile.length; i++) if (teile[i].id === want) known = true;
+    if (!known) want = params.get("unter") || "";
+    for (var j = 0; j < teile.length; j++) if (teile[j].id === want) return want;
     return teile[0].id;
   }
 

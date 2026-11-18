@@ -1867,6 +1867,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .zeit-hinweis { margin: 0.35rem 0 0.8rem; max-width: 40rem; }
 @media (max-width: 979px) {
   #miete-verkehr .konfig-summary,
+  #miete-leit .konfig-summary,
   .kauf-board.is-verkehr #kauf-auswahl .konfig-summary {
     position: static;
     left: auto;

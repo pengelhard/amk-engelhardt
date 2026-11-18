@@ -4,13 +4,14 @@
   var zaun = document.getElementById("miete-zaun");
   var konfig = document.getElementById("miete-konfig");
   var gitter = document.getElementById("miete-gitter");
+  var leit = document.getElementById("miete-leit");
   var verkehr = document.getElementById("miete-verkehr");
   var anhaenger = document.getElementById("miete-anhaenger");
   var genehmigung = document.getElementById("genehmigung-miete");
   if (!board || !gruppen || !window.AMK_GRUPPEN) return;
 
   var panels = { zaun: zaun, verkehr: verkehr, anhaenger: anhaenger };
-  var state = { gruppe: "", teil: "zaun" };
+  var state = { gruppe: "", teil: "zaun", unter: "" };
   var GENEHM = "miete:genehmigung";
 
   function deviceTeile(gruppe) {
@@ -19,7 +20,7 @@
   }
 
   function allowed(gruppe, teil) {
-    if (gruppe === "zaun") return teil === "gitter" ? "gitter" : "zaun";
+    if (gruppe === "zaun") return teil === "gitter" || teil === "leit" ? teil : "zaun";
     var list = deviceTeile(gruppe);
     if (list && list.indexOf(teil) !== -1) return teil;
     return gruppe === "zaun" ? "zaun" : "";
@@ -35,14 +36,18 @@
       if (window.AMK_SCHILDER_UI && window.AMK_SCHILDER_UI.open) window.AMK_SCHILDER_UI.open(teil);
       teil = "";
     }
-    state = { gruppe: gruppe, teil: allowed(gruppe, teil) };
+    var unter = params.get("unter") || "";
+    var inner = window.AMK_AUSWAHL && window.AMK_AUSWAHL.teile && window.AMK_AUSWAHL.teile.leit;
+    state = { gruppe: gruppe, teil: allowed(gruppe, teil), unter: "" };
+    if (state.gruppe === "zaun" && state.teil === "leit" && inner && inner.indexOf(unter) !== -1) state.unter = unter;
   }
 
   function writeUrl(mode) {
     var params = new URLSearchParams();
     if (state.gruppe) params.set("gruppe", state.gruppe);
-    if (state.gruppe === "zaun" && state.teil === "gitter") params.set("teil", "gitter");
+    if (state.gruppe === "zaun" && (state.teil === "gitter" || state.teil === "leit")) params.set("teil", state.teil);
     else if (state.gruppe && state.gruppe !== "zaun" && state.teil) params.set("teil", state.teil);
+    if (state.gruppe === "zaun" && state.teil === "leit" && state.unter) params.set("unter", state.unter);
     var qs = params.toString();
     var url = location.pathname + (qs ? "?" + qs : "");
     if (mode === "push") history.pushState({ miete: 1 }, "", url);
@@ -62,6 +67,7 @@
     });
     if (konfig) konfig.hidden = state.teil !== "zaun";
     if (gitter) gitter.hidden = state.teil !== "gitter";
+    if (leit) leit.hidden = state.teil !== "leit";
     document.querySelectorAll("#miete-unter [data-teil]").forEach(function (button) {
       var on = button.getAttribute("data-teil") === state.teil;
       button.setAttribute("aria-pressed", on ? "true" : "false");
@@ -76,6 +82,7 @@
     event.preventDefault();
     state.gruppe = window.AMK_GRUPPEN.canon(link.getAttribute("data-gruppe") || "") || "zaun";
     state.teil = state.gruppe === "zaun" ? "zaun" : "";
+    state.unter = "";
     render();
     writeUrl("push");
   });
@@ -112,8 +119,17 @@
   }
 
   document.addEventListener("amk-teil", function (event) {
+    var detail = String(event.detail || "");
+    if (state.gruppe === "zaun" && state.teil === "leit") {
+      var inner = window.AMK_AUSWAHL && window.AMK_AUSWAHL.teile && window.AMK_AUSWAHL.teile.leit;
+      if (!inner || inner.indexOf(detail) === -1) return;
+      state.unter = detail;
+      writeUrl("push");
+      render();
+      return;
+    }
     if (!state.gruppe || state.gruppe === "zaun") return;
-    var teil = allowed(state.gruppe, String(event.detail || ""));
+    var teil = allowed(state.gruppe, detail);
     if (!teil) return;
     state.teil = teil;
     writeUrl("push");
@@ -126,7 +142,9 @@
       var button = event.target.closest("[data-teil]");
       if (!button) return;
       state.gruppe = "zaun";
-      state.teil = button.getAttribute("data-teil") === "gitter" ? "gitter" : "zaun";
+      var next = button.getAttribute("data-teil") || "";
+      state.teil = next === "gitter" || next === "leit" ? next : "zaun";
+      if (state.teil !== "leit") state.unter = "";
       render();
       writeUrl("push");
     });

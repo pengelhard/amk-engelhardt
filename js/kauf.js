@@ -24,7 +24,8 @@
       { id: "zubehoer", label: "Zaunzubehör" },
       { id: "tore", label: "Türen & Tore" },
       { id: "sichtschutz", label: "Sichtschutz & Planen" },
-      { id: "gitter", label: "Absperrgitter" }
+      { id: "gitter", label: "Absperrgitter" },
+      { id: "leit", label: "Leitschwellen, Schleusen & Bühnen" }
     ]
   };
   var KAT_GRUPPE = {};
@@ -81,14 +82,17 @@
     if (!GRUPPEN[gruppe]) gruppe = "";
     var kat = params.get("kat") || "";
     if (kat === "verkehr") kat = "";
-    if (!KAT_GRUPPE[kat]) kat = "";
+    if (kat === "leit") {
+      if (!gruppe) gruppe = "zaun";
+    } else if (!KAT_GRUPPE[kat]) kat = "";
     if (!gruppe && location.hash && HASH[location.hash.slice(1)]) {
       var mapped = HASH[location.hash.slice(1)];
       gruppe = mapped.gruppe;
       if (!kat) kat = mapped.kat;
     }
     if (kat && !gruppe) gruppe = KAT_GRUPPE[kat] || "";
-    if (gruppe && kat && GRUPPEN[gruppe].indexOf(kat) === -1) kat = "";
+    if (gruppe && kat && kat !== "leit" && GRUPPEN[gruppe].indexOf(kat) === -1) kat = "";
+    if (kat === "leit" && gruppe !== "zaun") kat = "";
     if (!gruppe && !params.get("q")) gruppe = "zaun";
     var facets = {};
     FACETTEN.forEach(function (pair) {
@@ -114,6 +118,7 @@
   function teilList() {
     var map = window.AMK_AUSWAHL && window.AMK_AUSWAHL.teile;
     if (state.gruppe === "verkehr") return (map && map.absperrung) || [];
+    if (state.gruppe === "zaun" && state.kat === "leit") return (map && map.leit) || [];
     return (map && map[state.gruppe]) || [];
   }
 
@@ -269,7 +274,7 @@
     var overview = !state.gruppe && !state.q;
     var verkehr = state.gruppe === "verkehr";
     var signs = verkehr;
-    var picker = verkehr || state.gruppe === "anhaenger" || (state.gruppe === "zaun" && state.kat === "gitter");
+    var picker = verkehr || state.gruppe === "anhaenger" || (state.gruppe === "zaun" && (state.kat === "gitter" || state.kat === "leit"));
     var auswahl = document.getElementById("kauf-auswahl");
     var hinweis = document.getElementById("kauf-verkehr-hinweis");
     board.classList.toggle("is-gruppe", !overview);
@@ -281,7 +286,12 @@
     renderChips();
     if (auswahl) {
       auswahl.hidden = !picker;
-      if (picker) auswahl.setAttribute("data-gruppe", state.gruppe === "zaun" ? "gitter" : (verkehr ? "absperrung" : state.gruppe));
+      if (picker) {
+        var auswahlGruppe = state.gruppe;
+        if (state.gruppe === "zaun") auswahlGruppe = state.kat === "leit" ? "leit" : "gitter";
+        else if (verkehr) auswahlGruppe = "absperrung";
+        auswahl.setAttribute("data-gruppe", auswahlGruppe);
+      }
       else {
         auswahl.innerHTML = "";
         delete auswahl.dataset.key;
