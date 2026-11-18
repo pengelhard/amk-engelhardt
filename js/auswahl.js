@@ -128,6 +128,7 @@
         return "<div><dt>" + esc(line.name) + "</dt>" + menge + "</div>";
       }).join("") : "<div><dt>Typ</dt><dd>–</dd></div>";
     }
+    aside.classList.toggle("is-leer", !rows.length);
   }
 
   function updateSum(node) {
@@ -215,7 +216,7 @@
       });
     });
     var aside = bare === "1" ? "" :
-      '<aside class="konfig-summary" aria-live="polite"><h2>Ihre Auswahl</h2>' +
+      '<aside class="konfig-summary is-leer" aria-live="polite"><h2>Ihre Auswahl</h2>' +
       '<p class="sum-short" data-sum="short"></p><dl class="sum-full">' +
       '<div class="sum-lines" data-sum="liste"></div>' +
       "</dl><p class=\"price-once\">Preis auf Anfrage</p>" +

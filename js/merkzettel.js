@@ -171,7 +171,36 @@
   toast.addEventListener("focusin", function () { window.clearTimeout(timer); });
   toast.addEventListener("pointerenter", function () { window.clearTimeout(timer); });
 
-  function showToast() {
+  function toastNames(input) {
+    var list = Array.isArray(input) ? input : [input];
+    var names = [];
+    list.forEach(function (item) {
+      if (!item) return;
+      if (typeof item === "string") {
+        if (item) names.push(item);
+        return;
+      }
+      var name = item.name || "";
+      if (item.konfig && item.konfig.menge) {
+        var unit = item.konfig.einheit === "felder"
+          ? (String(item.konfig.menge) === "1" ? " Feld" : " Felder")
+          : " m";
+        name = name + " · " + item.konfig.menge + unit;
+      }
+      if (name) names.push(name);
+    });
+    return names;
+  }
+
+  function showToast(input) {
+    var names = toastNames(input);
+    var title = toast.querySelector(".toast-title");
+    if (title) {
+      if (!names.length) title.textContent = "In die Anfrage gelegt.";
+      else if (names.length === 1) title.textContent = names[0] + " liegt in der Anfrage.";
+      else if (names.length === 2) title.textContent = names[0] + " und " + names[1] + " liegen in der Anfrage.";
+      else title.textContent = names[0] + " und " + (names.length - 1) + " weitere liegen in der Anfrage.";
+    }
     var link = document.querySelector("a.inquiry");
     var go = toast.querySelector("[data-toast-go]");
     if (link && go) go.setAttribute("href", link.getAttribute("href"));
@@ -199,7 +228,7 @@
     if (found) found.qty += 1;
     else items.push({ id: id, name: name, qty: 1, bild: node.getAttribute("data-bild") || "", note: note });
     save(items);
-    showToast();
+    showToast(name);
   });
 
   function merge(items, incoming) {
@@ -222,16 +251,16 @@
   function add(item) {
     var batch = Array.isArray(item) ? item : [item];
     var items = load();
-    var added = 0;
+    var added = [];
     batch.forEach(function (entry) {
       var incoming = normalize([entry])[0];
       if (!incoming) return;
       merge(items, incoming);
-      added += 1;
+      added.push(incoming);
     });
-    if (!added) return items;
+    if (!added.length) return items;
     save(items);
-    showToast();
+    showToast(added);
     return items;
   }
 
@@ -248,7 +277,7 @@
     var items = load().filter(function (entry) { return !ids[entry.id]; });
     incoming.forEach(function (entry) { items.push(entry); });
     save(items);
-    showToast();
+    showToast(incoming);
     return items;
   }
 

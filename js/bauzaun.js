@@ -104,6 +104,8 @@
       });
       if (extraText !== "–") bits.push(extraText);
       put("short", bits.join("; ") || "–");
+      var aside = form.querySelector(".konfig-summary");
+      if (aside) aside.classList.toggle("is-leer", !bits.length);
     }
 
     form.addEventListener("input", syncSummary);
