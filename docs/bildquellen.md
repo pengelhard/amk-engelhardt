@@ -61,7 +61,7 @@ Status jeder dieser Dateien: **Nutzungsrecht in Klärung**. Kein Logo und kein L
 | `images/kk/absperrung-10026.webp` | Absperrgitter leicht | https://kkservice.de/wp-content/uploads/2024/09/10026-_1.webp | https://kkservice.de/absperrgitter/ | Nutzungsrecht in Klärung |
 | `images/kk/absperrung-10025-0.webp` | Absperrgitter schwer | https://kkservice.de/wp-content/uploads/2024/09/10025.0-1280-x-720.webp | https://kkservice.de/absperrgitter/ | Nutzungsrecht in Klärung |
 | `images/kk/absperrung-10041.webp` | Absperrgitter Nordic 2,5 × 1,1 m | https://kkservice.de/wp-content/uploads/2024/09/10041-Absperrgitter-NORDIC-2.5m-x-1.1m-10041-1024x701-1.webp | https://kkservice.de/absperrgitter/ | Nutzungsrecht in Klärung |
-| `images/kk/schranke-10024-1.webp` | Kunststoff Schrankenzaun mit Folie RA1, Kunststoff Schrankenzaun mit Folie RA2, Leitbake hell RA1 | https://kkservice.de/wp-content/uploads/2024/09/10024.1-.webp | https://kkservice.de/absperrgitter/ | Nutzungsrecht in Klärung |
+| `images/kk/schranke-10024-1.webp` | nicht mehr auf der Seite. Vorher das gemeinsame Foto von RA1, RA2 und Leitbake | https://kkservice.de/wp-content/uploads/2024/09/10024.1-.webp | https://kkservice.de/absperrgitter/ | Nutzungsrecht in Klärung |
 | `images/kk/schwelle-10005-4.webp` | Betonleitschwelle 500 kg, 2,5 m | https://kkservice.de/wp-content/uploads/2024/09/10005.4-1280-x-720.webp | https://kkservice.de/betonfuse-und-betonleitschwellen/ | Nutzungsrecht in Klärung |
 | `images/kk/schwelle-10005-2.webp` | Betonleitschwelle 900 kg, 3,5 m | https://kkservice.de/wp-content/uploads/2024/09/10005.2-_2-1280-x-720.webp | https://kkservice.de/betonfuse-und-betonleitschwellen/ | Nutzungsrecht in Klärung |
 | `images/kk/schwelle-10005-3.webp` | Betonleitschwelle 1000 kg, 2,5 m | https://kkservice.de/wp-content/uploads/2024/09/10005.3-_2-1280-x-720.webp | https://kkservice.de/betonfuse-und-betonleitschwellen/ | Nutzungsrecht in Klärung |
@@ -143,4 +143,12 @@ Vier Vorverzinkt-Datenblätter verlinken die deutsche Seite auf `kkservice.pl`. 
 
 ## Platzhalter in der Typ-Auswahl
 
-Hat ein Typ in der gemeinsamen Auswahl (`js/auswahl.js`) kein Bild, zeigt die Karte ein neutrales Strich-Icon, kein Foto und kein fremdes Motiv. Im aktuellen Sortiment hat jeder Typ der Absperrgitter, der Verkehrsabsperreinrichtungen und der Anhänger ein eigenes Bild. Der Platzhalter ist deshalb nicht zu sehen. Zwei Kühlanhänger teilen sich `images/kuehlanhaenger-13.webp`. Leitbake und die beiden Kunststoff-Schrankenzäune teilen sich `images/kk/schranke-10024-1.webp`. Die Rechte daran stehen oben in diesem Dokument.
+Hat ein Typ in der gemeinsamen Auswahl (`js/auswahl.js`) kein Bild, zeigt die Karte ein neutrales Strich-Icon, kein Foto und kein fremdes Motiv. Im aktuellen Sortiment hat jeder Typ der Absperrgitter, der Verkehrsabsperreinrichtungen und der Anhänger ein eigenes Bild. Der Platzhalter ist deshalb nicht zu sehen. Zwei Kühlanhänger teilen sich `images/kuehlanhaenger-13.webp`.
+
+Kunststoffschrankenzaun, der Zaun mit Folie RA1 und die Leitbake haben seit dem 18.11.2026 jeweils ein eigenes, frei nutzbares Beispielbild. Es ist nicht das Foto des Lieferanten und nicht der Artikel von AMK.
+
+| Datei | Motiv | Quelle |
+| --- | --- | --- |
+| `images/schranke-folie-ra1.webp` | Kunststoff Schrankenzaun mit Folie RA1 | Acabashi, Wikimedia Commons, Datei The Stow, Harlow, Essex, England - plastic barriers, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:The_Stow,_Harlow,_Essex,_England_-_plastic_barriers.jpg |
+| `images/schranke-rotweiss.webp` | Kunststoff Schrankenzaun mit Folie RA2 | noebse, Wikimedia Commons, Datei Baustellenabsperrung mit Warnleuchten, Public domain, https://commons.wikimedia.org/wiki/File:Baustellenabsperrung_mit_Warnleuchten.JPG |
+| `images/leitbake-hell.webp` | Leitbake hell RA1 | Frank C. Müller, Wikimedia Commons, Datei Warnbake (fcm), CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Warnbake_(fcm).jpg |
