@@ -74,6 +74,49 @@
     });
     if (window.AMK_AUSWAHL) window.AMK_AUSWAHL.sync();
     if (window.AMK_SCHILDER_UI) window.AMK_SCHILDER_UI.sync();
+    verkehrLeiste();
+  }
+
+  function verkehrZeilen() {
+    var lines = [];
+    if (genehmigung && genehmigung.checked) {
+      lines.push({ name: "Anordnung durch AMK beantragen lassen", menge: "" });
+    }
+    var zeile = window.AMK_AUSWAHL && window.AMK_AUSWAHL.zeileVon;
+    var geraete = document.getElementById("miete-absperrung");
+    if (geraete && zeile) {
+      geraete.querySelectorAll('input[name="typ"]:checked').forEach(function (box) {
+        lines.push(zeile(box));
+      });
+    }
+    var schilder = document.getElementById("miete-schilder");
+    if (schilder && zeile) {
+      schilder.querySelectorAll('input[name="schild"]:checked').forEach(function (box) {
+        lines.push(zeile(box));
+      });
+      var note = schilder.elements.hinweis;
+      var text = note ? String(note.value || "").trim() : "";
+      if (text) lines.push({ name: "Größe, Folie, Ständer", menge: text });
+    }
+    return lines;
+  }
+
+  function verkehrLeiste() {
+    var aside = document.getElementById("miete-verkehr-summe");
+    if (!aside || !window.AMK_AUSWAHL || !window.AMK_AUSWAHL.fillLeiste) return;
+    window.AMK_AUSWAHL.fillLeiste(aside, verkehrZeilen());
+  }
+
+  function ersteWahl(root) {
+    if (!root) return null;
+    var boxes = root.querySelectorAll('input[name="typ"], input[name="schild"]');
+    var i;
+    for (i = 0; i < boxes.length; i++) {
+      var card = boxes[i].closest("[data-teil-karte], [data-schild]");
+      if (card && card.hidden) continue;
+      return boxes[i];
+    }
+    return null;
   }
 
   gruppen.addEventListener("click", function (event) {
@@ -154,6 +197,26 @@
     readUrl();
     render();
   });
+
+  if (verkehr) {
+    verkehr.addEventListener("change", verkehrLeiste);
+    verkehr.addEventListener("input", verkehrLeiste);
+  }
+  document.addEventListener("amk-auswahl", verkehrLeiste);
+  var korb = document.getElementById("miete-verkehr-korb");
+  if (korb) {
+    korb.addEventListener("click", function () {
+      if (!verkehrZeilen().length) {
+        var first = ersteWahl(verkehr);
+        if (first) first.focus();
+        return;
+      }
+      var device = document.querySelector("#miete-absperrung form");
+      var signs = document.getElementById("miete-schilder");
+      if (device) device.requestSubmit();
+      if (signs) signs.requestSubmit();
+    });
+  }
 
   readUrl();
   render();

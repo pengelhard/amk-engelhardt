@@ -74,6 +74,9 @@
 
   var state = { gruppe: "", kat: "", q: "", sort: "", facets: {} };
   var schilder = document.getElementById("schilder-bereich");
+  var wahl = document.getElementById("kauf-wahl");
+  var spalte = document.getElementById("kauf-spalte");
+  var verkehrSumme = document.getElementById("kauf-verkehr-summe");
   var searchTimer = 0;
 
   function readUrl() {
@@ -283,9 +286,19 @@
     board.classList.toggle("is-anhaenger", state.gruppe === "anhaenger");
     board.classList.toggle("is-verkehr", verkehr);
     if (hinweis) hinweis.hidden = !verkehr;
+    if (wahl) wahl.classList.toggle("konfig-layout", verkehr);
+    if (spalte) spalte.classList.toggle("konfig-main", verkehr);
+    if (verkehrSumme) verkehrSumme.hidden = !verkehr;
     renderGruppen();
     renderChips();
     if (auswahl) {
+      if (verkehr) {
+        auswahl.setAttribute("data-ohne-leiste", "");
+        auswahl.setAttribute("data-leer-ok", "");
+      } else {
+        auswahl.removeAttribute("data-ohne-leiste");
+        auswahl.removeAttribute("data-leer-ok");
+      }
       auswahl.hidden = !picker;
       if (picker) {
         var auswahlGruppe = state.gruppe;
@@ -316,11 +329,49 @@
     empty.hidden = overview || picker || (signs ? signShown !== 0 : shown !== 0);
     countEl.hidden = overview || signs || picker;
     if (window.AMK_AUSWAHL) window.AMK_AUSWAHL.sync();
+    kaufLeiste();
     countEl.textContent = shown === 1 ? "1 Artikel" : shown + " Artikel";
     document.querySelectorAll("main section.copy").forEach(function (section) {
       section.hidden = true;
     });
     board.hidden = false;
+  }
+
+  function kaufZeilen() {
+    var lines = [];
+    var zeile = window.AMK_AUSWAHL && window.AMK_AUSWAHL.zeileVon;
+    var geraete = document.getElementById("kauf-auswahl");
+    if (geraete && zeile && geraete.getAttribute("data-gruppe") === "absperrung") {
+      geraete.querySelectorAll('input[name="typ"]:checked').forEach(function (box) {
+        lines.push(zeile(box));
+      });
+    }
+    if (schilder && zeile) {
+      schilder.querySelectorAll('input[name="schild"]:checked').forEach(function (box) {
+        lines.push(zeile(box));
+      });
+      var note = schilder.elements.hinweis;
+      var text = note ? String(note.value || "").trim() : "";
+      if (text) lines.push({ name: "Größe, Folie, Ständer", menge: text });
+    }
+    return lines;
+  }
+
+  function kaufLeiste() {
+    if (!verkehrSumme || !window.AMK_AUSWAHL || !window.AMK_AUSWAHL.fillLeiste) return;
+    window.AMK_AUSWAHL.fillLeiste(verkehrSumme, kaufZeilen());
+  }
+
+  function ersteWahl(root) {
+    if (!root) return null;
+    var boxes = root.querySelectorAll('input[name="typ"], input[name="schild"]');
+    var i;
+    for (i = 0; i < boxes.length; i++) {
+      var card = boxes[i].closest("[data-teil-karte], [data-schild]");
+      if (card && card.hidden) continue;
+      return boxes[i];
+    }
+    return null;
   }
 
   function readFacets() {
@@ -409,6 +460,25 @@
     readUrl();
     render();
   });
+
+  if (wahl) {
+    wahl.addEventListener("change", kaufLeiste);
+    wahl.addEventListener("input", kaufLeiste);
+  }
+  document.addEventListener("amk-auswahl", kaufLeiste);
+  var kaufKorb = document.getElementById("kauf-verkehr-korb");
+  if (kaufKorb) {
+    kaufKorb.addEventListener("click", function () {
+      if (!kaufZeilen().length) {
+        var first = ersteWahl(wahl);
+        if (first) first.focus();
+        return;
+      }
+      var device = document.querySelector("#kauf-auswahl form");
+      if (device) device.requestSubmit();
+      if (schilder) schilder.requestSubmit();
+    });
+  }
 
   fetch("../data/katalog.json")
     .then(function (response) { return response.json(); })

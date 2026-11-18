@@ -167,6 +167,10 @@
       });
       if (invalid) {
         invalid.setAttribute("aria-invalid", "true");
+        var row = invalid.closest("[data-schild]");
+        if (row && row.hidden && window.AMK_SCHILDER_UI && window.AMK_SCHILDER_UI.open) {
+          window.AMK_SCHILDER_UI.open(row.getAttribute("data-teil") || "");
+        }
         invalid.focus();
         return;
       }
@@ -174,6 +178,7 @@
       var noteField = form.elements.hinweis;
       var note = noteField ? String(noteField.value || "").trim() : "";
       if (!lines.length && !note) {
+        if (form.hasAttribute("data-leer-ok")) return;
         var first = form.querySelector('[data-schild]:not([hidden]) input[name="schild"]');
         if (first) first.focus();
         return;

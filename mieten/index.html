@@ -118,16 +118,25 @@
           <div id="miete-gitter" data-auswahl data-gruppe="gitter" data-vorgang="miete" data-root="../" hidden></div>
           <div id="miete-leit" data-auswahl data-gruppe="leit" data-vorgang="miete" data-root="../" hidden></div>
         </div>
-        <div id="miete-verkehr" hidden>
+        <div id="miete-verkehr" class="konfig-layout" hidden>
+          <div class="konfig-main">
           <p class="verkehr-hinweis">Die verkehrsrechtliche Anordnung kann AMK für Sie bei der Behörde beantragen.</p>
           <label class="choice" for="genehmigung-miete"><input id="genehmigung-miete" type="checkbox"> <span>Anordnung durch AMK beantragen lassen</span></label>
-          <div id="miete-absperrung" data-auswahl data-gruppe="absperrung" data-vorgang="miete" data-root="../"></div>
+          <div id="miete-absperrung" data-auswahl data-gruppe="absperrung" data-vorgang="miete" data-root="../" data-ohne-leiste data-leer-ok></div>
           <p class="verkehr-hinweis">Ständer und Fußplatten sind beim Mieten dabei.</p>
-          <form class="schilder" id="miete-schilder" data-schilder data-vorgang="miete">
+          <form class="schilder" id="miete-schilder" data-schilder data-vorgang="miete" data-leer-ok>
             <div class="schild-liste" data-schild-liste></div>
             <div class="field"><label for="hinweis-schilder-miete">Größe, Folie, Ständer</label><textarea id="hinweis-schilder-miete" name="hinweis"></textarea></div>
-            <button class="btn" type="submit">In den Anfragekorb</button>
           </form>
+          </div>
+          <aside class="konfig-summary" id="miete-verkehr-summe" aria-live="polite">
+            <h2>Ihre Auswahl</h2>
+            <p class="sum-short" data-sum="short">–</p>
+            <dl class="sum-full"><div class="sum-lines" data-sum="liste"></div></dl>
+            <p class="price-once">Preis auf Anfrage</p>
+            <p class="form-status" data-status role="status"></p>
+            <button class="btn" type="button" id="miete-verkehr-korb">In den Anfragekorb</button>
+          </aside>
         </div>
         <div id="miete-anhaenger" data-auswahl data-gruppe="anhaenger" data-vorgang="miete" data-root="../" hidden></div>
       </div>
