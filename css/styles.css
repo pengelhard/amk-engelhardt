@@ -1864,7 +1864,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .kauf-board.is-verkehr #kauf-liste,
 .kauf-board.is-verkehr #kauf-empty { display: none; }
 .kauf-board.is-verkehr .kauf-layout { display: block; }
-.verkehr-hinweis { margin: 0.35rem 0 0.7rem; }
+.zeit-hinweis { margin: 0.35rem 0 0.8rem; max-width: 40rem; }
 @media (max-width: 979px) {
   #miete-verkehr .konfig-summary,
   .kauf-board.is-verkehr #kauf-auswahl .konfig-summary {

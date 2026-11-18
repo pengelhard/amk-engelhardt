@@ -80,8 +80,6 @@
       if (konfig) next.konfig = konfig;
       var bild = localBild(item.bild);
       var note = String(item.note || "").trim();
-      var von = String(item.von || "");
-      var bis = String(item.bis || "");
       if (bild) next.bild = bild;
       if (note) next.note = note.slice(0, 600);
       if (item.sammel) next.sammel = true;
@@ -90,15 +88,44 @@
       if (ort) next.ort = ort.slice(0, 160);
       var kat = String(item.kat || "");
       if (kat === "bauzaun" || kat === "verkehrssicherung" || kat === "anhaenger") next.kat = kat;
-      if (/^\d{4}-\d{2}-\d{2}$/.test(von)) next.von = von;
-      if (/^\d{4}-\d{2}-\d{2}$/.test(bis)) next.bis = bis;
       return next;
+    });
+  }
+
+  function migrateZeit(raw) {
+    if (!Array.isArray(raw) || !raw.some(function (item) { return item && (item.von || item.bis); })) return raw;
+    var found = null;
+    raw.forEach(function (item) {
+      if (found || !item) return;
+      var von = String(item.von || "");
+      var bis = String(item.bis || "");
+      if (/^\d{4}-\d{2}-\d{2}$/.test(von) && /^\d{4}-\d{2}-\d{2}$/.test(bis)) found = { von: von, bis: bis };
+    });
+    if (found) {
+      var meta = {};
+      try { meta = JSON.parse(localStorage.getItem("amk-anfrage-meta") || "{}") || {}; } catch (error) { meta = {}; }
+      if (!meta.von && !meta.bis) {
+        meta.von = found.von;
+        meta.bis = found.bis;
+        localStorage.setItem("amk-anfrage-meta", JSON.stringify(meta));
+      }
+    }
+    return raw.map(function (item) {
+      if (!item || (!item.von && !item.bis)) return item;
+      var copy = {};
+      Object.keys(item).forEach(function (key) {
+        if (key !== "von" && key !== "bis") copy[key] = item[key];
+      });
+      return copy;
     });
   }
 
   function load() {
     try {
-      return normalize(JSON.parse(localStorage.getItem(KEY) || "[]"));
+      var raw = JSON.parse(localStorage.getItem(KEY) || "[]");
+      var migrated = migrateZeit(raw);
+      if (migrated !== raw) localStorage.setItem(KEY, JSON.stringify(migrated));
+      return normalize(migrated);
     } catch (error) {
       return [];
     }

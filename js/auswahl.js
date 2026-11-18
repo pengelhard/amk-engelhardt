@@ -33,11 +33,6 @@
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
-  function de(value) {
-    var match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ""));
-    return match ? match[3] + "." + match[2] + "." + match[1] : "";
-  }
-
   function ids(gruppe) {
     return (TEILE[gruppe] || []).map(function (teil) { return teil.id; });
   }
@@ -102,17 +97,12 @@
     var form = node.querySelector("form");
     if (!form) return;
     var list = chosen(form);
-    var von = form.elements.von;
-    var bis = form.elements.bis;
-    var zeit = von && bis && von.value && bis.value ? de(von.value) + "–" + de(bis.value) : "";
     var short = node.querySelector('[data-sum="short"]');
     var liste = node.querySelector('[data-sum="liste"]');
-    var zeitNode = node.querySelector('[data-sum="zeit"]');
     var bits = list.map(function (entry) {
       if (entry.ohne) return entry.product.name;
       return entry.product.name + " · " + (entry.qty > 0 ? entry.qty : "–");
     });
-    if (zeit) bits.push(zeit);
     if (short) short.textContent = bits.join("; ") || "–";
     if (liste) {
       liste.innerHTML = list.length ? list.map(function (entry) {
@@ -120,7 +110,6 @@
         return "<div><dt>" + esc(entry.product.name) + "</dt>" + menge + "</div>";
       }).join("") : "<div><dt>Typ</dt><dd>–</dd></div>";
     }
-    if (zeitNode) zeitNode.textContent = zeit || "–";
   }
 
   function paint(node) {
@@ -148,20 +137,6 @@
     }
     var list = products.filter(function (product) { return matches(product, teil); });
     var saved = cartById();
-    var keptVon = "";
-    var keptBis = "";
-    var prevVon = node.querySelector('[name="von"]');
-    var prevBis = node.querySelector('[name="bis"]');
-    if (prevVon) keptVon = prevVon.value;
-    if (prevBis) keptBis = prevBis.value;
-    if (vorgang === "miete" && (!keptVon || !keptBis)) {
-      list.forEach(function (product) {
-        var item = saved[vorgang + ":" + product.slug];
-        if (!item || !item.von || !item.bis) return;
-        if (!keptVon) keptVon = item.von;
-        if (!keptBis) keptBis = item.bis;
-      });
-    }
     var pills = teile.length > 1
       ? '<div class="kauf-cats" role="navigation" aria-label="Unterkategorien">' + teile.map(function (entry) {
         var on = entry.id === teilId;
@@ -185,31 +160,17 @@
         extra: gruppe === "anhaenger" ? eckdaten(product.slug) : ""
       });
     }).join("");
-    var zeit = "";
-    if (vorgang === "miete") {
-      zeit = '<fieldset class="choices"><legend>Zeitraum</legend><div class="form-grid">' +
-        '<div class="field"><label for="von-' + gruppe + '">Von</label><input id="von-' + gruppe + '" name="von" type="date" autocomplete="off"></div>' +
-        '<div class="field"><label for="bis-' + gruppe + '">Bis</label><input id="bis-' + gruppe + '" name="bis" type="date" autocomplete="off"></div>' +
-        "</div></fieldset>";
-    }
     node.innerHTML = pills +
       '<form class="konfig-layout">' +
       '<div class="konfig-main">' +
       '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' + cards + "</div></fieldset>" +
-      zeit +
       "</div>" +
       '<aside class="konfig-summary" aria-live="polite"><h2>Ihre Auswahl</h2>' +
       '<p class="sum-short" data-sum="short"></p><dl class="sum-full">' +
       '<div class="sum-lines" data-sum="liste"></div>' +
-      (vorgang === "miete" ? '<div><dt>Zeitraum</dt><dd data-sum="zeit">–</dd></div>' : "") +
       "</dl><p class=\"price-once\">Preis auf Anfrage</p>" +
       '<p class="form-status" data-status role="status"></p>' +
       '<button class="btn" type="submit">In den Anfragekorb</button></aside></form>';
-    var von = node.querySelector('[name="von"]');
-    var bis = node.querySelector('[name="bis"]');
-    if (von && keptVon) von.value = keptVon;
-    if (bis && keptBis) bis.value = keptBis;
-    if (von && bis && window.AMK_ZEIT) window.AMK_ZEIT.bindPair(von, bis);
     updateSum(node);
   }
 
@@ -253,17 +214,6 @@
       };
       if (entry.ohne) item.sammel = true;
       lines.push(item);
-    }
-    if (vorgang === "miete") {
-      var von = form.elements.von;
-      var bis = form.elements.bis;
-      if (!von.value) { von.focus(); return; }
-      if (!bis.value) { bis.focus(); return; }
-      if (window.AMK_ZEIT && !window.AMK_ZEIT.checkPair(von, bis)) return;
-      lines.forEach(function (item) {
-        item.von = von.value;
-        item.bis = bis.value;
-      });
     }
     form.querySelectorAll('input[name="typ"]').forEach(function (box) {
       if (!box.checked && window.AMK_WUNSCH.remove) window.AMK_WUNSCH.remove(vorgang + ":" + box.value);
