@@ -94,7 +94,7 @@
       if (genehmigung.checked) {
         window.AMK_WUNSCH.replace({
           id: GENEHM,
-          name: "Genehmigung soll AMK beantragen",
+          name: "Anordnung durch AMK beantragen lassen",
           qty: 1,
           sammel: true,
           kat: "verkehrssicherung"
