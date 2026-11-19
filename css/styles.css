@@ -2593,7 +2593,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .beispiel-step input::-webkit-inner-spin-button { appearance: none; margin: 0; }
 .beispiel-auswahl { margin: 0; }
 .beispiel-auswahl h2 { margin: 0 0 0.5rem; font-size: 1.15rem; }
-#beispiel-liste { display: grid; gap: 0.9rem; }
+#beispiel-liste { display: grid; gap: 0.9rem; position: relative; }
 .beispiel-block h3 { margin: 0; font-size: 1.05rem; line-height: 1.3; }
 .beispiel-block-kopf {
   display: grid;
@@ -2814,6 +2814,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
     z-index: 2;
     max-height: calc(100dvh - var(--top, 5.6rem) - 1.5rem);
     overflow: hidden;
+    overflow: clip;
     background: #fff;
     border: 1px solid var(--line);
     border-radius: 1rem;
@@ -2826,6 +2827,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
     flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
+    overflow: clip;
   }
   .beispiel-korb .beispiel-auswahl h2 { flex: 0 0 auto; }
   .beispiel-korb #beispiel-liste {
