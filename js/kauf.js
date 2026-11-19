@@ -705,6 +705,7 @@
       section.hidden = true;
     });
     board.hidden = false;
+    liesSchnell();
     nachPaint();
   }
 
@@ -719,24 +720,36 @@
         });
       });
     }
-    if (katalogAn()) {
-      document.querySelectorAll("#kauf-liste .kauf-schnell[data-slug]").forEach(function (block) {
-        if (block.hidden || elternVersteckt(block)) return;
-        var titel = block.parentElement ? block.parentElement.querySelector("h3") : null;
-        var name = titel ? titel.textContent.replace(/\s+/g, " ").trim() : "";
-        var felder = schnellZahl(block, "felder");
-        var details = block.querySelector(".kauf-schnell-details");
-        var href = details ? details.getAttribute("href") : "";
-        var slug = block.getAttribute("data-slug") || "";
-        if (state.modus === "miete") {
-          if (felder > 0) lines.push({ name: name, menge: String(felder), qty: felder, href: href, ziel: "felder:" + slug });
-        } else {
-          var stand = window.AMK_WUNSCH && window.AMK_WUNSCH.load ? zeileMenge(window.AMK_WUNSCH.load(), "kauf:" + slug + ":im:staender") : 0;
-          if (stand > 0) lines.push({ name: name, menge: String(stand), qty: stand, block: "Im Komplett-Ständer enthalten", href: href, ziel: "staender:" + slug });
-          if (felder > 0) lines.push({ name: name, menge: String(felder), qty: felder, block: "Zusätzlich", href: href, ziel: "felder:" + slug });
+    document.querySelectorAll("#kauf-liste .kauf-schnell[data-slug]").forEach(function (block) {
+      if (block.hidden || elternVersteckt(block)) return;
+      var titel = block.parentElement ? block.parentElement.querySelector("h3") : null;
+      var name = titel ? titel.textContent.replace(/\s+/g, " ").trim() : "";
+      var details = block.querySelector(".kauf-schnell-details");
+      var link = block.parentElement ? block.parentElement.querySelector("a[href*='/produkt/']") : null;
+      var href = details ? details.getAttribute("href") : (link ? link.getAttribute("href") : "");
+      var slug = block.getAttribute("data-slug") || "";
+      if (block.getAttribute("data-art") === "menge") {
+        var menge = schnellZahl(block, "menge");
+        if (menge > 0) lines.push({ name: name, menge: String(menge), qty: menge, href: href, ziel: "menge:" + slug });
+        return;
+      }
+      var felder = schnellZahl(block, "felder");
+      if (state.modus === "miete") {
+        if (felder > 0) {
+          lines.push({ name: name, menge: String(felder), qty: felder, href: href, ziel: "felder:" + slug });
+          if (slug === MIETE_ZAUN) {
+            var schelle = produktVon(AUTO_SCHELLE, { name: "Verbindungsschelle 2,5 mm" });
+            var fuss = produktVon(AUTO_FUSS, { name: "Kunststofffuß schwer 23 kg" });
+            lines.push({ name: schelle.name, qty: felder, block: "Automatisch dazu", fest: true });
+            lines.push({ name: fuss.name, qty: Math.min(9999, felder + 1), block: "Automatisch dazu", fest: true });
+          }
         }
-      });
-    }
+      } else {
+        var stand = window.AMK_WUNSCH && window.AMK_WUNSCH.load ? zeileMenge(window.AMK_WUNSCH.load(), "kauf:" + slug + ":im:staender") : 0;
+        if (stand > 0) lines.push({ name: name, menge: String(stand), qty: stand, block: "Im Komplett-Ständer enthalten", href: href, ziel: "staender:" + slug });
+        if (felder > 0) lines.push({ name: name, menge: String(felder), qty: felder, block: "Zusätzlich", href: href, ziel: "felder:" + slug });
+      }
+    });
     var genehmigung = document.getElementById("kauf-genehmigung");
     var genehmigungZeile = document.getElementById("kauf-genehmigung-zeile");
     if (genehmigung && genehmigungZeile && !genehmigungZeile.hidden && genehmigung.checked) {
@@ -1135,7 +1148,7 @@
       }
       return;
     }
-    if (kind === "staender" || kind === "felder") {
+    if (kind === "staender" || kind === "felder" || kind === "menge") {
       var block = document.querySelector('#kauf-liste .kauf-schnell[data-slug="' + safe + '"]');
       var field = block && block.querySelector('[data-schnell="' + kind + '"]');
       if (field) {
@@ -1309,6 +1322,51 @@
     return bySlug[slug] || fallback || { name: slug, bild: "", kat: "bauzaun" };
   }
 
+  var MIETE_ZAUN = "bauzaun-10075";
+  var AUTO_SCHELLE = "zubehoer-10002-1";
+  var AUTO_FUSS = "fuss-10006";
+
+  function autoZeile(parentSlug, teilSlug, qty) {
+    var item = produktVon(teilSlug, { name: teilSlug, bild: "", kat: "bauzaun" });
+    return {
+      id: "miete:" + parentSlug + ":auto:" + teilSlug,
+      name: item.name || teilSlug,
+      qty: qty,
+      bild: item.bild || "",
+      kat: item.kat || "bauzaun",
+      note: "automatisch",
+      herkunft: "auto"
+    };
+  }
+
+  function mengeKachel(item) {
+    var slug = item.slug || "";
+    return '<div class="kauf-schnell kauf-schnell--menge" data-art="menge" data-slug="' + window.AMK_BAUSTEINE.esc(slug) + '">' +
+      '<div class="kauf-schnell-zeile"><span>Anzahl</span>' +
+      window.AMK_BAUSTEINE.mengeSchritt({
+        id: "schnell-menge-" + slug,
+        value: "0",
+        label: "Anzahl " + (item.name || ""),
+        min: 0,
+        merk: "menge"
+      }) + "</div></div>";
+  }
+
+  function schreibMenge(block) {
+    var slug = block.getAttribute("data-slug") || "";
+    var item = bySlug[slug];
+    if (!item) return;
+    var qty = mengeAus(schnellFeld(block, "menge"));
+    if (qty == null) return;
+    var id = (state.modus === "miete" ? "miete:" : "kauf:") + slug;
+    var items = window.AMK_WUNSCH.load().filter(function (line) { return line.id !== id; });
+    if (qty > 0) items.push({ id: id, name: item.name, qty: qty, bild: item.bild || "", kat: item.kat || "" });
+    speichere(items);
+    var kreis = block.parentElement ? block.parentElement.querySelector("[data-kreis]") : null;
+    if (kreis) kreis.checked = qty > 0;
+    kaufLeiste();
+  }
+
   function schreibStand(items, item, stand) {
     var slug = item.slug;
     var prefix = "kauf:" + slug + ":";
@@ -1355,6 +1413,10 @@
 
   function schreibSchnell(block) {
     if (schnellStill || !block || !window.AMK_WUNSCH || !window.AMK_WUNSCH.load) return;
+    if (block.getAttribute("data-art") === "menge") {
+      schreibMenge(block);
+      return;
+    }
     var slug = block.getAttribute("data-slug") || "";
     var item = bySlug[slug];
     if (!item) return;
@@ -1362,8 +1424,18 @@
     if (felder == null) return;
     if (state.modus === "miete") {
       var mieteId = "miete:" + slug;
-      var mieteItems = window.AMK_WUNSCH.load().filter(function (line) { return line.id !== mieteId; });
-      if (felder > 0) mieteItems.push({ id: mieteId, name: item.name, qty: felder, bild: item.bild || "", kat: item.kat || "bauzaun" });
+      var autoSchelle = mieteId + ":auto:" + AUTO_SCHELLE;
+      var autoFuss = mieteId + ":auto:" + AUTO_FUSS;
+      var mieteItems = window.AMK_WUNSCH.load().filter(function (line) {
+        return line.id !== mieteId && line.id !== autoSchelle && line.id !== autoFuss;
+      });
+      if (felder > 0) {
+        mieteItems.push({ id: mieteId, name: item.name, qty: felder, bild: item.bild || "", kat: item.kat || "bauzaun" });
+        if (slug === MIETE_ZAUN) {
+          mieteItems.push(autoZeile(slug, AUTO_SCHELLE, felder));
+          mieteItems.push(autoZeile(slug, AUTO_FUSS, Math.min(9999, felder + 1)));
+        }
+      }
       speichere(mieteItems);
       var mieteKreis = block.parentElement ? block.parentElement.querySelector("[data-kreis='bauzaun']") : null;
       if (mieteKreis) mieteKreis.checked = felder > 0;
@@ -1395,6 +1467,14 @@
     var items = window.AMK_WUNSCH.load();
     document.querySelectorAll(".kauf-schnell[data-slug]").forEach(function (block) {
       var slug = block.getAttribute("data-slug") || "";
+      if (block.getAttribute("data-art") === "menge") {
+        var mengeFeld = schnellFeld(block, "menge");
+        var mengeId = (state.modus === "miete" ? "miete:" : "kauf:") + slug;
+        if (mengeFeld) mengeFeld.value = String(zeileMenge(items, mengeId));
+        var mengeKreis = block.parentElement ? block.parentElement.querySelector("[data-kreis]") : null;
+        if (mengeKreis) mengeKreis.checked = (parseInt(mengeFeld && mengeFeld.value, 10) || 0) > 0;
+        return;
+      }
       if (state.modus === "miete") {
         var mieteFeld = schnellFeld(block, "felder");
         if (mieteFeld) mieteFeld.value = String(zeileMenge(items, "miete:" + slug));
@@ -1424,15 +1504,18 @@
     if (!window.AMK_BAUSTEINE || !window.AMK_BAUSTEINE.schnell) return;
     items.forEach(function (item) {
       if (item.el.querySelector(".kauf-schnell")) return;
+      var art = item.shop === "bauzaune" ? "bauzaun" : "kachel";
+      if (!item.el.querySelector("[data-kreis]")) {
+        item.el.insertAdjacentHTML("afterbegin", '<label class="beispiel-wahl"><input type="checkbox" data-kreis="' + art + '" aria-label="' +
+          String(item.name || "").replace(/"/g, "") + ' auswählen"><span class="beispiel-kreis kachel-kreis"></span></label>');
+      }
       if (item.shop === "bauzaune") {
-        if (!item.el.querySelector("[data-kreis='bauzaun']")) {
-          item.el.insertAdjacentHTML("afterbegin", '<label class="beispiel-wahl"><input type="checkbox" data-kreis="bauzaun" aria-label="' +
-            item.name.replace(/"/g, "") + ' auswählen"><span class="beispiel-kreis kachel-kreis"></span></label>');
-        }
         item.el.insertAdjacentHTML("beforeend", window.AMK_BAUSTEINE.schnell({
           slug: item.slug,
           href: "../produkt/" + item.slug + "/"
         }));
+      } else if (item.slug) {
+        item.el.insertAdjacentHTML("beforeend", mengeKachel(item));
       } else {
         item.el.insertAdjacentHTML("beforeend", window.AMK_BAUSTEINE.schnellLeer());
       }
@@ -1461,12 +1544,13 @@
 
   liste.addEventListener("change", function (event) {
     var box = event.target;
-    if (box && box.matches && box.matches("[data-kreis='bauzaun']")) {
+    if (box && box.matches && box.matches("[data-kreis]")) {
       var tile = box.closest("article");
       var block = tile ? tile.querySelector(".kauf-schnell") : null;
-      var feldField = schnellFeld(block, "felder");
+      var merk = block && block.getAttribute("data-art") === "menge" ? "menge" : "felder";
+      var feldField = schnellFeld(block, merk);
       var slug = block ? block.getAttribute("data-slug") || "" : "";
-      var standNow = state.modus === "miete" ? 0 : (window.AMK_WUNSCH && window.AMK_WUNSCH.load ? zeileMenge(window.AMK_WUNSCH.load(), "kauf:" + slug + ":im:staender") : 0);
+      var standNow = merk === "menge" || state.modus === "miete" ? 0 : (window.AMK_WUNSCH && window.AMK_WUNSCH.load ? zeileMenge(window.AMK_WUNSCH.load(), "kauf:" + slug + ":im:staender") : 0);
       var feldNow = parseInt(feldField && feldField.value, 10) || 0;
       if (box.checked) {
         if (standNow < 1 && feldNow < 1 && feldField) feldField.value = "1";

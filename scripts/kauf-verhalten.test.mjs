@@ -17,7 +17,7 @@ function box(el) {
   return { w: Math.round(r.width), h: Math.round(r.height) };
 }
 
-test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
+test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
   const { chromium } = createRequire(playwrightPkg)("playwright-core");
   const port = 8899;
   const server = spawn("python3", ["-m", "http.server", String(port), "--bind", "127.0.0.1"], { cwd: root, stdio: "ignore" });
@@ -929,11 +929,77 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     const bauMiete = await open(1280, "/kaufen/?modus=miete&gruppe=zaun&kat=bauzaune");
     await bauMiete.page.locator("#schnell-felder-bauzaun-10075").fill("3");
     await bauMiete.page.locator("#schnell-felder-bauzaun-10075").dispatchEvent("input");
-    const bauKorb = await bauMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));
+    const bauKorb = await bauMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty + ":" + (item.note || "")));
     const bauBox = await bauMiete.page.locator("#kauf-verkehr-summe").innerText();
     const bauHinweis = await bauMiete.page.locator("#kauf-miete-bauzaun").innerText();
-    point("Bauzaun mieten", bauKorb.indexOf("miete:bauzaun-10075:3") !== -1 && bauKorb.every((id) => id.indexOf(":im:") === -1) && !/Komplett-Ständer/.test(bauBox) && /Füße und Schellen/.test(bauHinweis), bauKorb.join(", ") + " | " + bauBox.replace(/\s+/g, " "));
+    const bauFest = await bauMiete.page.evaluate(() => {
+      const block = document.getElementById("kauf-verkehr-summe");
+      const posten = [...block.querySelectorAll(".beispiel-post--fest")];
+      return {
+        n: posten.length,
+        texte: posten.map((el) => el.innerText.replace(/\s+/g, " ").trim()),
+        eingabe: posten.some((el) => el.querySelector("input, button"))
+      };
+    });
+    point("Bauzaun mieten", bauKorb.indexOf("miete:bauzaun-10075:3:") !== -1 && bauKorb.indexOf("miete:bauzaun-10075:auto:zubehoer-10002-1:3:automatisch") !== -1 && bauKorb.indexOf("miete:bauzaun-10075:auto:fuss-10006:4:automatisch") !== -1 && bauKorb.every((id) => id.indexOf(":im:") === -1) && !/Komplett-Ständer/.test(bauBox) && /Verbindungsschellen/.test(bauHinweis) && /Automatisch dazu/.test(bauBox) && bauFest.n === 2 && !bauFest.eingabe, bauKorb.join(", ") + " | " + bauBox.replace(/\s+/g, " ") + " | " + JSON.stringify(bauFest));
+    await bauMiete.page.locator("#schnell-felder-bauzaun-10075").fill("5");
+    await bauMiete.page.locator("#schnell-felder-bauzaun-10075").dispatchEvent("input");
+    const fuenf = await bauMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));
+    await bauMiete.page.locator("#schnell-felder-bauzaun-10075").fill("3");
+    await bauMiete.page.locator("#schnell-felder-bauzaun-10075").dispatchEvent("input");
+    const drei = await bauMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));
+    await bauMiete.page.locator("#schnell-felder-bauzaun-10075").fill("0");
+    await bauMiete.page.locator("#schnell-felder-bauzaun-10075").dispatchEvent("input");
+    const nullWeg = await bauMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id));
+    point("Miete passt Schelle und Fuß an", fuenf.indexOf("miete:bauzaun-10075:auto:zubehoer-10002-1:5") !== -1 && fuenf.indexOf("miete:bauzaun-10075:auto:fuss-10006:6") !== -1 && drei.indexOf("miete:bauzaun-10075:auto:zubehoer-10002-1:3") !== -1 && drei.indexOf("miete:bauzaun-10075:auto:fuss-10006:4") !== -1 && nullWeg.every((id) => id.indexOf("miete:bauzaun-10075") !== 0), JSON.stringify({ fuenf, drei, nullWeg }));
+    const bauQuer = await bauMiete.page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    point("Konsole Bauzaun mieten", bauMiete.errors.length === 0 && bauQuer <= 1, bauMiete.errors.join(" | ") + " quer " + bauQuer);
     await bauMiete.page.close();
+    const bauHandy = await open(390, "/kaufen/?modus=miete&gruppe=zaun&kat=bauzaune");
+    await bauHandy.page.locator("#schnell-felder-bauzaun-10075").fill("5");
+    await bauHandy.page.locator("#schnell-felder-bauzaun-10075").dispatchEvent("input");
+    await bauHandy.page.locator("#kauf-verkehr-summe [data-sum='kurz']").click();
+    const handyBild = await bauHandy.page.evaluate(() => ({
+      quer: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      text: document.getElementById("kauf-verkehr-summe").innerText.replace(/\s+/g, " "),
+      korb: JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty)
+    }));
+    point("Miete Handy", handyBild.quer <= 1 && /Automatisch dazu/.test(handyBild.text) && /Kunststofffuß/.test(handyBild.text) && handyBild.korb.indexOf("miete:bauzaun-10075:auto:fuss-10006:6") !== -1 && bauHandy.errors.length === 0, JSON.stringify(handyBild) + " " + bauHandy.errors.join(" | "));
+    await bauHandy.page.close();
+
+    const kreisSeiten = [
+      ["/kaufen/?gruppe=zaun&kat=bauzaune", "Kauf Bauzaun"],
+      ["/kaufen/?gruppe=zaun&kat=zubehoer", "Kauf Zubehör"],
+      ["/kaufen/?gruppe=zaun&kat=sichtschutz", "Kauf Sichtschutz"],
+      ["/kaufen/?gruppe=zaun&kat=tore", "Kauf Tore"],
+      ["/kaufen/?modus=miete&gruppe=zaun&kat=zubehoer", "Miete Zubehör"],
+      ["/kaufen/?modus=miete&gruppe=zaun&kat=sichtschutz", "Miete Sichtschutz"]
+    ];
+    for (const [url, name] of kreisSeiten) {
+      const seite = await open(1280, url);
+      const bild = await seite.page.evaluate(() => {
+        const kacheln = [...document.querySelectorAll("#kauf-liste article.tile")].filter((el) => !el.hidden && !el.closest("[hidden]") && el.getBoundingClientRect().height > 0);
+        const ohne = kacheln.filter((el) => {
+          const kreis = el.querySelector(".beispiel-kreis");
+          const plus = el.querySelector(".beispiel-step button[data-step='1']");
+          const minus = el.querySelector(".beispiel-step button[data-step='-1']");
+          return !(kreis && plus && minus && getComputedStyle(kreis).borderRadius !== "0px");
+        }).map((el) => (el.querySelector("h3") || {}).textContent || "");
+        return { n: kacheln.length, ohne };
+      });
+      point("Kreis " + name, bild.n > 0 && bild.ohne.length === 0, JSON.stringify(bild));
+      await seite.page.close();
+    }
+
+    const plane = await open(1280, "/kaufen/?modus=miete&gruppe=zaun&kat=sichtschutz");
+    await plane.page.evaluate(() => localStorage.removeItem("amk-wunsch"));
+    await plane.page.reload({ waitUntil: "networkidle" });
+    await plane.page.locator("#schnell-menge-plane-10012").fill("2");
+    await plane.page.locator("#schnell-menge-plane-10012").dispatchEvent("input");
+    const planeKorb = await plane.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));
+    const planeKreis = await plane.page.locator("#kauf-liste article.tile:not([hidden]) [data-kreis='kachel']").first().isChecked();
+    point("Plane bleibt frei", planeKorb.length === 1 && planeKorb[0] === "miete:plane-10012:2" && planeKreis, planeKorb.join(", "));
+    await plane.page.close();
 
     const anhMiete = await open(1280, "/kaufen/?modus=miete&gruppe=anhaenger&teil=hochlader");
     const anhFeld = await anhMiete.page.locator("#kauf-teil-hochlader [data-menge]").count();
@@ -964,7 +1030,16 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     await detailMiete.page.locator("#menge-einfach").fill("2");
     await detailMiete.page.locator("#menge-einfach").dispatchEvent("input");
     const detailKorb = await detailMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));
-    point("Detail mieten", ohneStand === 0 && detailKorb.indexOf("miete:bauzaun-10075:2") !== -1 && detailKorb.every((id) => id.indexOf(":im:") === -1), detailKorb.join(", "));
+    const detailAuto = await detailMiete.page.evaluate(() => {
+      const block = document.getElementById("block-auto");
+      const fest = block ? [...block.querySelectorAll(".beispiel-post--fest")] : [];
+      return {
+        da: !!block,
+        texte: fest.map((el) => el.innerText.replace(/\s+/g, " ").trim()),
+        eingabe: fest.some((el) => el.querySelector("input, button"))
+      };
+    });
+    point("Detail mieten", ohneStand === 0 && detailKorb.indexOf("miete:bauzaun-10075:2") !== -1 && detailKorb.indexOf("miete:bauzaun-10075:auto:zubehoer-10002-1:2") !== -1 && detailKorb.indexOf("miete:bauzaun-10075:auto:fuss-10006:3") !== -1 && detailKorb.every((id) => id.indexOf(":im:") === -1) && detailAuto.da && !detailAuto.eingabe && detailAuto.texte.length === 2, detailKorb.join(", ") + " | " + JSON.stringify(detailAuto));
     point("Konsole Detail mieten", detailMiete.errors.length === 0, detailMiete.errors.join(" | "));
     await detailMiete.page.close();
 
@@ -990,6 +1065,38 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     const korbText = await korbModus.page.locator("body").innerText();
     point("Korb trennt Modus", korbModusLinks.some((href) => href.endsWith("/produkt/bauzaun-10075/?modus=miete")) && korbModusLinks.some((href) => href.endsWith("/produkt/fuss-10006/")) && korbModusLinks.some((href) => href.indexOf("/mieten/?gruppe=schilder") !== -1) && /Miete/.test(korbText) && /Kauf/.test(korbText), korbModusLinks.join(" | "));
     await korbModus.page.close();
+
+    const autoKorb = await open(390, "/anfrage/");
+    await autoKorb.page.evaluate(() => {
+      localStorage.setItem("amk-wunsch", JSON.stringify([
+        { id: "miete:bauzaun-10075", name: "Bauzaun Profi 3,5 × 2,0 m", qty: 5, kat: "bauzaun", bild: "images/kk/bauzaun-10075.webp" },
+        { id: "miete:bauzaun-10075:auto:zubehoer-10002-1", name: "Verbindungsschelle 2,5 mm", qty: 5, kat: "bauzaun", note: "automatisch", herkunft: "auto", bild: "images/kk/zubehoer-10002.webp" },
+        { id: "miete:bauzaun-10075:auto:fuss-10006", name: "Kunststofffuß schwer 23 kg", qty: 6, kat: "bauzaun", note: "automatisch", herkunft: "auto", bild: "images/kk/fuss-10006.webp" },
+        { id: "miete:plane-10012", name: "Sichtschutzplane", qty: 2, kat: "bauzaun", bild: "images/kk/plane-10012.webp" }
+      ]));
+    });
+    await autoKorb.page.reload({ waitUntil: "networkidle" });
+    const autoAnsicht = await autoKorb.page.evaluate(() => {
+      const zeilen = [...document.querySelectorAll("#anfrage-liste .cart-row")];
+      const zaun = zeilen.find((el) => /Bauzaun Profi/.test(el.innerText));
+      const teile = zaun ? [...zaun.querySelectorAll("[data-auto]")].map((el) => el.innerText.replace(/\s+/g, " ").trim()) : [];
+      return {
+        zeilen: zeilen.length,
+        teile,
+        schelleWeg: !!(zaun && zaun.querySelector("[data-auto='schelle'] button")),
+        fussFeld: !!(zaun && zaun.querySelector("[data-auto='fuss'] input")),
+        plane: zeilen.some((el) => /Sichtschutzplane/.test(el.innerText) && el.querySelector("input")),
+        quer: document.documentElement.scrollWidth - document.documentElement.clientWidth
+      };
+    });
+    await autoKorb.page.locator("input[aria-label='Menge Bauzaun Profi 3,5 × 2,0 m']").fill("3");
+    await autoKorb.page.locator("input[aria-label='Menge Bauzaun Profi 3,5 × 2,0 m']").dispatchEvent("change");
+    const autoNach = await autoKorb.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));
+    await autoKorb.page.locator("button[data-index]", { hasText: "Entfernen" }).first().click();
+    const autoWeg = await autoKorb.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id));
+    point("Korb Automatik", autoAnsicht.zeilen === 2 && autoAnsicht.teile.length === 2 && /5×/.test(autoAnsicht.teile[0]) && /6×/.test(autoAnsicht.teile[1]) && !autoAnsicht.schelleWeg && !autoAnsicht.fussFeld && autoAnsicht.plane && autoAnsicht.quer <= 1 && autoNach.indexOf("miete:bauzaun-10075:3") !== -1 && autoNach.indexOf("miete:bauzaun-10075:auto:zubehoer-10002-1:3") !== -1 && autoNach.indexOf("miete:bauzaun-10075:auto:fuss-10006:4") !== -1 && autoNach.indexOf("miete:plane-10012:2") !== -1 && autoWeg.indexOf("miete:bauzaun-10075") === -1 && autoWeg.indexOf("miete:bauzaun-10075:auto:fuss-10006") === -1 && autoWeg.indexOf("miete:plane-10012") !== -1, JSON.stringify({ autoAnsicht, autoNach, autoWeg, fehler: autoKorb.errors }));
+    point("Konsole Korb Automatik", autoKorb.errors.length === 0, autoKorb.errors.join(" | "));
+    await autoKorb.page.close();
 
     const sprungAlt = await open(1280, "/mieten/bauzaun/");
     await sprungAlt.page.waitForURL(/modus=miete/);

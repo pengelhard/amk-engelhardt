@@ -171,6 +171,14 @@
           flush();
           last = block;
         }
+        if (line.fest) {
+          buf += window.AMK_BAUSTEINE.auswahlPost({
+            name: line.name,
+            fest: true,
+            menge: String(line.qty == null ? "" : line.qty)
+          });
+          return;
+        }
         var qty = line.qty;
         var step = "";
         if (typeof qty === "number") {

@@ -228,11 +228,26 @@
     "kuehlanhaenger-events": 1
   };
 
+  function istAuto(item) {
+    return String(item && item.id || "").indexOf(":auto:") !== -1;
+  }
+
+  function autoEltern(id) {
+    var text = String(id || "");
+    var at = text.indexOf(":auto:");
+    return at > 0 ? text.slice(0, at) : "";
+  }
+
   function artikelHref(item) {
     var id = String(item && item.id || "");
     if (id === "miete:genehmigung") return "../kaufen/?modus=miete&gruppe=verkehr&teil=schranken";
     if (id.indexOf("kauf:") === 0) return kaufSeite(item);
     if (id.indexOf("miete:") === 0) {
+      var autoAt = id.indexOf(":auto:");
+      if (autoAt !== -1) {
+        var teilSlug = id.slice(autoAt + 6);
+        if (teilSlug && teilSlug.indexOf(":") === -1) return "../produkt/" + teilSlug + "/?modus=miete";
+      }
       var slug = id.slice("miete:".length);
       if (slug && slug.indexOf(":") === -1 && MIETE_SLUG[slug]) return "../produkt/" + slug + "/?modus=miete";
     }
@@ -409,22 +424,36 @@
     form.querySelectorAll('input[name="leistung"]').forEach(function (field) {
       field.required = !!rentOn;
     });
-    function row(item, index) {
+    function autoListe(kinder) {
+      return (kinder || []).map(function (item) {
+        var teil = String(item.id).split(":auto:")[1] || "";
+        var art = teil.indexOf("fuss-") === 0 ? "fuss" : "schelle";
+        return '<li data-auto="' + art + '"><span data-auto-menge>' + item.qty + "×</span> " +
+          '<a class="cart-link" href="' + esc(artikelHref(item)) + '">' + esc(item.name) + "</a> automatisch</li>";
+      }).join("");
+    }
+    function row(item, index, kinder) {
       var info = CATALOG[item.id] || {};
       var bild = item.konfig && BILD[item.konfig.key] ? BILD[item.konfig.key] : (info.bild || item.bild);
       var href = artikelHref(item);
       var image = bildLink(href, bild, item.name);
       var bits = [];
       if (item.konfig) bits.push(konfigText(item));
-      else if (item.note) bits.push("<p>" + esc(item.note) + "</p>");
+      else if (item.note && !istAuto(item)) bits.push("<p>" + esc(item.note) + "</p>");
+      if (istAuto(item)) bits.push("<p>automatisch</p>");
       if (item.von && item.bis) bits.push("<p>Zeitraum: " + esc(deDate(item.von)) + " bis " + esc(deDate(item.bis)) + "</p>");
       if (item.ort) bits.push("<p>" + esc(item.ort) + "</p>");
       if (item.genehmigung) bits.push("<p>Genehmigung durch AMK</p>");
+      var dabei = kinder && kinder.length ? '<ul class="cart-stand-teile">' + autoListe(kinder) + "</ul>" : "";
+      if (istAuto(item)) {
+        return '<li class="cart-row">' + image +
+          '<div class="cart-main"><strong><a class="cart-link" href="' + esc(href) + '">' + esc(item.qty) + "× " + esc(item.name) + "</a></strong>" + bits.join("") + "</div></li>";
+      }
       var qty = item.konfig || sammel(item)
         ? ""
         : '<label class="qty">Menge <input type="number" min="1" max="9999" inputmode="numeric" value="' + item.qty + '" data-index="' + index + '" aria-label="Menge ' + esc(item.name) + '"></label>';
       return '<li class="cart-row">' + image +
-        '<div class="cart-main"><strong><a class="cart-link" href="' + esc(href) + '">' + esc(item.name) + "</a></strong>" + bits.join("") + "</div>" +
+        '<div class="cart-main"><strong><a class="cart-link" href="' + esc(href) + '">' + esc(item.name) + "</a></strong>" + bits.join("") + dabei + "</div>" +
         qty +
         '<div class="cart-actions"><a class="text-btn" href="' + esc(editHref(item)) + '">Ändern<span class="visually-hidden">: ' + esc(item.name) + '</span></a>' +
         '<button type="button" class="text-btn" data-index="' + index + '">Entfernen<span class="visually-hidden">: ' + esc(item.name) + "</span></button></div>" +
@@ -438,12 +467,34 @@
         return id.indexOf("miete:") !== 0 && id.indexOf("kauf:") !== 0;
       })]
     ];
+    var kinder = {};
+    var eltern = {};
+    data.forEach(function (item) {
+      if (!item || !item.id) return;
+      eltern[item.id] = 1;
+    });
+    data.forEach(function (item) {
+      if (!istAuto(item)) return;
+      var parent = autoEltern(item.id);
+      if (!eltern[parent]) return;
+      if (!kinder[parent]) kinder[parent] = [];
+      kinder[parent].push(item);
+    });
     list.innerHTML = groups.filter(function (group) { return group[1].length; }).map(function (group) {
-      var body = group[1].map(function (entry) { return row(entry.item, entry.index); }).join("");
+      function zeilen(entries) {
+        return entries.filter(function (entry) {
+          return !istAuto(entry.item) || !eltern[autoEltern(entry.item.id)];
+        }).map(function (entry) {
+          var dazu = (kinder[entry.item.id] || []).slice().sort(function (a, b) {
+            return (String(a.id).indexOf("fuss-") !== -1) - (String(b.id).indexOf("fuss-") !== -1);
+          });
+          return row(entry.item, entry.index, dazu);
+        }).join("");
+      }
+      var body = zeilen(group[1]);
       if (group[0] === "Kauf") {
         var rest = group[1].filter(function (entry) { return !isIm(entry.item); });
-        body = standGroups(group[1].map(function (entry) { return entry.item; })).map(standRow).join("") +
-          rest.map(function (entry) { return row(entry.item, entry.index); }).join("");
+        body = standGroups(group[1].map(function (entry) { return entry.item; })).map(standRow).join("") + zeilen(rest);
       }
       return '<li class="cart-group"><h3>' + group[0] + "</h3></li>" + body;
     }).join("");
@@ -517,7 +568,19 @@
     input.value = String(qty);
     var items = window.AMK_WUNSCH.load();
     var index = Number(input.getAttribute("data-index"));
-    if (items[index]) items[index].qty = qty;
+    if (items[index]) {
+      items[index].qty = qty;
+      var parentId = items[index].id;
+      items.forEach(function (item) {
+        if (autoEltern(item.id) !== parentId) return;
+        item.qty = String(item.id).indexOf(":auto:fuss-10006") !== -1 ? Math.min(9999, qty + 1) : qty;
+      });
+      var rowNode = input.closest(".cart-row");
+      if (rowNode) {
+        rowNode.querySelectorAll("[data-auto='schelle'] [data-auto-menge]").forEach(function (node) { node.textContent = qty + "×"; });
+        rowNode.querySelectorAll("[data-auto='fuss'] [data-auto-menge]").forEach(function (node) { node.textContent = Math.min(9999, qty + 1) + "×"; });
+      }
+    }
     window.AMK_WUNSCH.save(items, true);
   });
 
@@ -541,7 +604,13 @@
     var button = event.target.closest("button[data-index]");
     if (!button) return;
     var index = Number(button.getAttribute("data-index"));
-    window.AMK_WUNSCH.save(window.AMK_WUNSCH.load().filter(function (item, itemIndex) { return itemIndex !== index; }));
+    var vorhanden = window.AMK_WUNSCH.load();
+    var wegId = vorhanden[index] ? vorhanden[index].id : "";
+    window.AMK_WUNSCH.save(vorhanden.filter(function (item, itemIndex) {
+      if (itemIndex === index) return false;
+      if (wegId && autoEltern(item.id) === wegId) return false;
+      return true;
+    }));
   });
 
   function remember() {

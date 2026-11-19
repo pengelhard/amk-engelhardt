@@ -144,6 +144,13 @@
     function prefix() { return (mieteModus() ? "miete:" : "kauf:") + slug + ":"; }
     function plainId() { return (mieteModus() ? "miete:" : "kauf:") + slug; }
     function standOn() { return !!paket && !mieteModus(); }
+    function mieteZaun() { return mieteModus() && slug === "bauzaun-10075" && !standOn(); }
+    function autoLine(teilSlug, name, qty) {
+      var item = itemOf(teilSlug, { name: name, slug: teilSlug });
+      var line = lineOf(prefix() + "auto:" + teilSlug, item.name || name, qty, item.bild, item.kat || product.kat, "automatisch");
+      line.herkunft = "auto";
+      return line;
+    }
 
     function setListe(open) {
       var box = document.getElementById("beispiel-auswahl");
@@ -283,6 +290,15 @@
         });
       });
       if (extra) html += '<section class="beispiel-block" id="block-zusatz"><h3>Zusätzlich</h3><ul>' + extra + "</ul></section>";
+      if (mieteZaun() && feldZahl() > 0) {
+        var schelleName = itemOf("zubehoer-10002-1", { name: "Verbindungsschelle 2,5 mm" }).name;
+        var fussName = itemOf("fuss-10006", { name: "Kunststofffuß schwer 23 kg" }).name;
+        var autoN = feldZahl();
+        html += '<section class="beispiel-block" id="block-auto"><h3>Automatisch dazu</h3><ul>' +
+          post({ name: schelleName, fest: true, menge: String(autoN) }) +
+          post({ name: fussName, fest: true, menge: String(Math.min(9999, autoN + 1)) }) +
+          "</ul></section>";
+      }
       if (!html) html = '<p class="kauf-auswahl-leer">' + esc(window.AMK_KAUF_STORE ? window.AMK_KAUF_STORE.leer : "Noch nichts ausgewählt.") + "</p>";
       var active = document.activeElement;
       var typing = active && active.tagName === "INPUT" && list.contains(active);
@@ -324,7 +340,13 @@
         }
       } else {
         var einfach = feldZahl();
-        if (einfach > 0) lines.push(lineOf(plainId(), product.name, einfach, product.bild, product.kat, ""));
+        if (einfach > 0) {
+          lines.push(lineOf(plainId(), product.name, einfach, product.bild, product.kat, ""));
+          if (mieteZaun()) {
+            lines.push(autoLine("zubehoer-10002-1", "Verbindungsschelle 2,5 mm", einfach));
+            lines.push(autoLine("fuss-10006", "Kunststofffuß schwer 23 kg", Math.min(9999, einfach + 1)));
+          }
+        }
       }
       form.querySelectorAll('input[name="zubehoer"]:checked').forEach(function (box) {
         var item = bySlug[box.value];
@@ -362,6 +384,8 @@
           found.kat = line.kat || "";
           if (line.note) found.note = line.note;
           else delete found.note;
+          if (line.herkunft) found.herkunft = line.herkunft;
+          else delete found.herkunft;
         } else items.push(line);
       });
       if (window.AMK_KAUF_STORE && window.AMK_KAUF_STORE.save) window.AMK_KAUF_STORE.save(items);
@@ -593,7 +617,7 @@
     var kit = new Promise(function (resolve) {
       if (window.AMK_BAUSTEINE) { resolve(); return; }
       var script = document.createElement("script");
-      script.src = root + "js/kauf-bausteine.js?v=av";
+      script.src = root + "js/kauf-bausteine.js?v=ax";
       script.onload = function () { resolve(); };
       script.onerror = function () { resolve(); };
       document.head.appendChild(script);

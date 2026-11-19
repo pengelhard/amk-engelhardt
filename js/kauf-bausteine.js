@@ -91,15 +91,18 @@
   function auswahlPost(opts) {
     var live = opts.live ? ' data-live="' + esc(opts.live) + '"' : "";
     var nameId = opts.nameId ? ' id="' + esc(opts.nameId) + '"' : "";
-    var weg = opts.weg
+    var fest = !!opts.fest;
+    var weg = !fest && opts.weg
       ? '<button type="button" class="beispiel-weg" data-weg="' + esc(opts.weg) + '" aria-label="' + esc(opts.wegLabel || ((opts.name || "") + " entfernen")) + '">×</button>'
       : "";
     var attrs = "";
     if (opts.id) attrs += ' id="' + esc(opts.id) + '"';
     if (opts.ziel) attrs += ' data-ziel="' + esc(opts.ziel) + '"';
-    return '<li class="beispiel-post"' + attrs + ">" +
-      '<p class="beispiel-post-text"><strong' + nameId + live + ">" + esc(opts.name) + "</strong></p>" +
-      weg + (opts.step || "") + (opts.extra || "") + "</li>";
+    var menge = fest ? '<p class="beispiel-post-fest">' + esc(opts.menge == null ? "" : opts.menge) + "</p>" : "";
+    var art = fest ? '<span class="beispiel-post-art">automatisch</span>' : "";
+    return '<li class="beispiel-post' + (fest ? " beispiel-post--fest" : "") + '"' + attrs + ">" +
+      '<p class="beispiel-post-text"><strong' + nameId + live + ">" + esc(opts.name) + "</strong>" + art + "</p>" +
+      weg + menge + (fest ? "" : (opts.step || "")) + (opts.extra || "") + "</li>";
   }
 
   window.AMK_BAUSTEINE = {
