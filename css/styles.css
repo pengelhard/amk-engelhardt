@@ -2198,20 +2198,11 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 }
 .kauf-karte[aria-current="true"] strong { background: var(--signal); color: var(--signal-ink); }
 .kauf-karte:hover { transform: translate(3px, 3px); box-shadow: var(--kachel-schatten-ruhe); }
-.kauf-board:not(.is-gruppe) .kauf-sort,
-.kauf-board:not(.is-gruppe) .kauf-reset,
-.kauf-board:not(.is-gruppe) .kauf-count,
 .kauf-board:not(.is-gruppe) .kauf-layout { display: none; }
-.kauf-board.is-schilder .kauf-sort,
-.kauf-board.is-schilder .kauf-reset { display: none; }
 .kauf-board.is-schilder .kauf-layout { display: block; }
-.kauf-board.is-auswahl .kauf-tools,
 .kauf-board.is-auswahl #kauf-liste,
 .kauf-board.is-auswahl #kauf-empty { display: none; }
 .kauf-board.is-auswahl .kauf-layout { display: block; }
-.kauf-board.is-verkehr .kauf-sort,
-.kauf-board.is-verkehr .kauf-reset,
-.kauf-board.is-verkehr .kauf-count,
 .kauf-board.is-verkehr #kauf-liste,
 .kauf-board.is-verkehr #kauf-empty { display: none; }
 .kauf-board.is-verkehr .kauf-layout { display: block; }
@@ -2301,6 +2292,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
     align-self: start;
     width: auto;
     margin: 0;
+    top: calc(var(--top, 6rem) + var(--kauf-schrift, 3.15rem) + 0.65rem);
   }
 }
 .js-kauf .tiles > [data-teil-karte] {
@@ -2364,6 +2356,11 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 }
 .kauf-leiste-link[aria-current="true"] { background: var(--signal); color: var(--signal-ink); }
 .kauf-abschnitt { scroll-margin-top: calc(var(--top, 6rem) + var(--kauf-leiste, 3.4rem) + 0.6rem); }
+@media (min-width: 980px) {
+  .js-kauf { --kauf-schrift: 3.15rem; }
+  .js-kauf .kauf-abschnitt { scroll-margin-top: calc(var(--top, 6rem) + var(--kauf-schrift, 3.15rem) + 0.6rem); }
+  .js-kauf .kauf-leiste { display: none; }
+}
 .kauf-abschnitt h2 {
   margin: 1.15rem 0 0.15rem;
   font-family: var(--display);
@@ -2372,8 +2369,19 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   letter-spacing: -0.03em;
   line-height: 1.05;
 }
-@media (min-width: 980px) {
-  .js-kauf .kauf-board.is-stapel .kauf-leiste { width: calc(100% - var(--korb-breite) - var(--korb-luecke)); }
+@media (max-width: 979px) {
+  .js-kauf .kauf-leiste-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: visible;
+  }
+  .js-kauf .kauf-leiste-link {
+    flex: none;
+    max-width: none;
+    min-width: 0;
+    min-height: 44px;
+  }
+  .js-kauf .kauf-leiste-link span { min-width: 0; overflow-wrap: anywhere; }
 }
 .js-kauf .kauf-board.is-stapel #kauf-liste { display: none; }
 .js-kauf .kauf-schnell {
@@ -2466,27 +2474,46 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 }
 .kauf-cats .chip:hover { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
 .kauf-cats .chip[aria-pressed="true"] { background: var(--signal); color: var(--signal-ink); }
-.kauf-tools {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 0.7rem 1rem;
-  margin-top: 0.9rem;
+.kauf-schrift { display: none; }
+@media (min-width: 980px) {
+  .js-kauf .kauf-schrift {
+    position: fixed;
+    z-index: 39;
+    top: var(--top, 6rem);
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0.4rem 1.2rem;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+  .js-kauf .kauf-schrift.is-weg { visibility: hidden; pointer-events: none; }
+  .js-kauf .kauf-schrift a {
+    flex: 1 1 0;
+    max-width: 22rem;
+    min-height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem 0.75rem;
+    border: 2px solid var(--ink);
+    background: var(--white);
+    color: var(--ink);
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    text-align: center;
+    text-decoration: none;
+  }
+  .js-kauf .kauf-schrift a[aria-current="true"] { background: var(--signal); color: var(--signal-ink); }
+  .js-kauf .kauf-schrift a:hover,
+  .js-kauf .kauf-schrift a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 }
-.kauf-search, .kauf-sort { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.8rem; font-weight: 600; }
-.kauf-search input, .kauf-sort select { min-width: 14rem; }
-.kauf-reset {
-  min-height: 44px;
-  padding: 0.35rem 0.2rem;
-  border: 0;
-  background: transparent;
-  color: var(--ink);
-  font: 600 1rem/1.2 var(--font);
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 0.18em;
-}
-.kauf-count { margin: 0; min-height: 44px; display: flex; align-items: center; }
 .kauf-layout { margin-top: 0.4rem; }
 .kauf-empty { margin: 1rem 0; }
 

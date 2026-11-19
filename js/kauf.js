@@ -1,12 +1,8 @@
 (function () {
-  /* Navigation und Liste: Oberkacheln, Hover-Panel, Suche, Sortierung, Adresse. */
+  /* Navigation und Liste: Oberkacheln, Schriftzug-Leiste, Hover-Panel, Adresse. */
   var board = document.querySelector(".kauf-board");
   var liste = document.getElementById("kauf-liste");
   var empty = document.getElementById("kauf-empty");
-  var countEl = document.getElementById("kauf-count");
-  var qInput = document.getElementById("kauf-q");
-  var sortInput = document.getElementById("kauf-sort");
-  var resetBtn = document.getElementById("kauf-reset");
   if (!board || !liste) return;
 
   var GRUPPEN = {};
@@ -80,12 +76,11 @@
     if (form) form.remove();
   });
 
-  var state = { gruppe: "", kat: "", q: "", sort: "" };
+  var state = { gruppe: "", kat: "" };
   var schilder = document.getElementById("schilder-bereich");
   var wahl = document.getElementById("kauf-wahl");
   var spalte = document.getElementById("kauf-spalte");
   var verkehrSumme = document.getElementById("kauf-verkehr-summe");
-  var searchTimer = 0;
 
   function readUrl() {
     var params = new URLSearchParams(location.search);
@@ -115,7 +110,7 @@
     }
     if (kat && !gruppe) gruppe = EBENE[kat] ? "zaun" : (KAT_GRUPPE[kat] || "");
     if (gruppe && kat && !EBENE[kat] && GRUPPEN[gruppe].indexOf(kat) === -1) kat = "";
-    if (!gruppe && !params.get("q")) gruppe = "zaun";
+    if (!gruppe) gruppe = "zaun";
     var signs = window.AMK_SCHILDER_TEILE || [];
     var zeichen = "";
     if (gruppe === "verkehr" && signs.indexOf(teil) !== -1) {
@@ -127,9 +122,7 @@
       gruppe: gruppe,
       kat: kat,
       teil: teil,
-      zeichen: zeichen,
-      q: params.get("q") || "",
-      sort: params.get("sort") || ""
+      zeichen: zeichen
     };
     if (state.gruppe === "verkehr" && !state.zeichen && !state.teil) state.teil = "schranken";
     if (state.gruppe === "anhaenger" && !state.teil) state.teil = "hochlader";
@@ -149,8 +142,6 @@
     var params = new URLSearchParams();
     if (state.gruppe) params.set("gruppe", state.gruppe);
     if (state.kat) params.set("kat", state.kat);
-    if (state.q) params.set("q", state.q);
-    if (state.sort) params.set("sort", state.sort);
     if (state.gruppe === "verkehr" && state.zeichen) params.set("teil", state.zeichen);
     else if (state.teil && teilList().indexOf(state.teil) !== -1) params.set("teil", state.teil);
     var qs = params.toString();
@@ -159,12 +150,8 @@
     else history.replaceState({ kauf: 1 }, "", url);
   }
 
-  function hay(item) {
-    return (item.name + " " + item.code + " " + item.slug).toLocaleLowerCase("de");
-  }
-
   function inGruppe(item) {
-    if (!state.gruppe) return !state.q ? false : item.slug !== "verkehrsschilder";
+    if (!state.gruppe) return false;
     if (item.shop === "gitter" || item.shop === "verkehr" || item.shop === "anhaenger") return false;
     if (item.slug === "verkehrsschilder") return false;
     var shops = GRUPPEN[state.gruppe] || [];
@@ -175,7 +162,6 @@
   function matches(item) {
     if (!inGruppe(item)) return false;
     if (state.kat && item.shop !== state.kat) return false;
-    if (state.q && hay(item).indexOf(state.q.toLocaleLowerCase("de")) < 0) return false;
     return true;
   }
 
@@ -258,25 +244,8 @@
     });
   }
 
-  function filterSchilder() {
-    if (window.AMK_SCHILDER_UI) window.AMK_SCHILDER_UI.filter(state.q);
-  }
-
   function ordered(list) {
-    var copy = list.slice();
-    if (state.sort === "name") {
-      copy.sort(function (a, b) { return a.name.localeCompare(b.name, "de"); });
-    } else if (state.sort === "nummer") {
-      copy.sort(function (a, b) {
-        if (!a.code && !b.code) return a.index - b.index;
-        if (!a.code) return 1;
-        if (!b.code) return -1;
-        return a.code.localeCompare(b.code, "de", { numeric: true });
-      });
-    } else {
-      copy.sort(function (a, b) { return a.index - b.index; });
-    }
-    return copy;
+    return list.slice().sort(function (a, b) { return a.index - b.index; });
   }
 
   var sprung = false;
@@ -301,7 +270,9 @@
   function kopfAbstand() {
     var kopf = document.querySelector(".top");
     var bar = document.getElementById("kauf-leiste");
-    return (kopf ? kopf.offsetHeight : 0) + (bar && !bar.hidden ? bar.offsetHeight : 0) + 8;
+    var schrift = document.getElementById("kauf-schrift");
+    var schriftHoch = schrift && window.matchMedia("(min-width: 980px)").matches ? schrift.offsetHeight : 0;
+    return (kopf ? kopf.offsetHeight : 0) + (bar && !bar.hidden ? bar.offsetHeight : 0) + schriftHoch + 8;
   }
 
   function elternVersteckt(el) {
@@ -359,41 +330,6 @@
     document.documentElement.style.setProperty("--kauf-leiste", bar.offsetHeight + "px");
   }
 
-  function filterStapel() {
-    if (!stapelAn()) return;
-    var q = (state.q || "").toLocaleLowerCase("de");
-    document.querySelectorAll("#kauf-stapel .kauf-abschnitt").forEach(function (section) {
-      if (elternVersteckt(section)) return;
-      var wraps = section.querySelectorAll("[data-teil-karte]");
-      var n = 0;
-      wraps.forEach(function (el) {
-        var text = (el.getAttribute("data-suche") || "").toLocaleLowerCase("de");
-        var on = !q || text.indexOf(q) !== -1;
-        el.hidden = !on;
-        if (on) n += 1;
-      });
-      section.hidden = n === 0;
-    });
-  }
-
-  function sortiereStapel() {
-    if (state.sort !== "name" && state.sort !== "nummer") return;
-    document.querySelectorAll("#kauf-stapel .tiles, #schilder-bereich .kauf-abschnitt .tiles").forEach(function (grid) {
-      var items = Array.prototype.slice.call(grid.children);
-      items.sort(function (a, b) {
-        var ah = a.querySelector("h3");
-        var bh = b.querySelector("h3");
-        var an = ah ? ah.textContent : "";
-        var bn = bh ? bh.textContent : "";
-        if (state.sort === "nummer") {
-          return (a.getAttribute("data-code") || an).localeCompare(b.getAttribute("data-code") || bn, "de", { numeric: true });
-        }
-        return an.localeCompare(bn, "de");
-      });
-      items.forEach(function (el) { grid.appendChild(el); });
-    });
-  }
-
   function aktuelle() {
     if (sprung || pendingSprung || !stapelAn()) return;
     var nodes = [];
@@ -427,6 +363,15 @@
     var ende = function () {
       if (fertig) return;
       fertig = true;
+      var top = ziel.getBoundingClientRect().top;
+      var line = kopfAbstand() + 24;
+      if (Math.abs(top - line) > 90) {
+        var root = document.documentElement;
+        var previous = root.style.scrollBehavior;
+        root.style.scrollBehavior = "auto";
+        ziel.scrollIntoView({ behavior: "auto", block: "start" });
+        root.style.scrollBehavior = previous;
+      }
       sprung = false;
       aktuelle();
     };
@@ -494,21 +439,15 @@
   }
 
   function nachPaint() {
-    filterStapel();
-    if (window.AMK_SCHILDER_UI) window.AMK_SCHILDER_UI.filter(state.q);
-    sortiereStapel();
     if (stapelAn()) {
       var n = 0;
       document.querySelectorAll("#kauf-stapel article.kauf-produkt, #schilder-bereich article.kauf-produkt").forEach(function (el) {
         if (!el.hidden && !elternVersteckt(el)) n += 1;
       });
       if (empty) empty.hidden = n !== 0;
-      if (countEl) {
-        countEl.hidden = false;
-        countEl.textContent = n === 1 ? "1 Artikel" : n + " Artikel";
-      }
     }
     maleLeiste();
+    schriftSync();
     if (pendingSprung) {
       var id = pendingSprung.id;
       var mode = pendingSprung.mode;
@@ -526,7 +465,7 @@
   }
 
   function render(opts) {
-    var overview = !state.gruppe && !state.q;
+    var overview = !state.gruppe;
     var verkehr = state.gruppe === "verkehr";
     var signs = verkehr;
     var stapel = stapelAn();
@@ -548,6 +487,7 @@
     renderGruppen();
     renderEbene();
     renderHinweis();
+    schriftMarke();
     if (auswahl) auswahl.hidden = true;
     var stapelBox = document.getElementById("kauf-stapel");
     if (stapelBox) stapelBox.hidden = !stapel;
@@ -557,9 +497,6 @@
       var on = stapel && ((name === "zaun" && state.gruppe === "zaun") || (name === "verkehr" && verkehr) || (name === "anhaenger" && state.gruppe === "anhaenger"));
       block.hidden = !on;
     });
-    qInput.placeholder = signs ? "Nummer oder Name" : "Name oder Artikelnummer";
-    qInput.value = state.q;
-    sortInput.value = state.sort === "name" || state.sort === "nummer" ? state.sort : "";
     var shown = 0;
     ordered(items).forEach(function (item) {
       var on = !overview && !signs && !picker && matches(item);
@@ -569,8 +506,6 @@
     });
     if (schilder) schilder.hidden = !verkehr;
     empty.hidden = overview || stapel || shown !== 0;
-    countEl.hidden = overview;
-    if (!stapel) countEl.textContent = shown === 1 ? "1 Artikel" : shown + " Artikel";
     if (window.AMK_AUSWAHL) window.AMK_AUSWAHL.sync();
     document.querySelectorAll("main section.copy").forEach(function (section) {
       section.hidden = true;
@@ -652,24 +587,10 @@
     });
   });
 
-  sortInput.addEventListener("change", function () {
-    state.sort = sortInput.value;
-    render();
-    writeUrl("push");
-  });
-
-  qInput.addEventListener("input", function () {
-    state.q = qInput.value.trim();
-    window.clearTimeout(searchTimer);
-    searchTimer = window.setTimeout(function () {
-      render();
-      writeUrl("replace");
-    }, 200);
-  });
-
   var drops = document.getElementById("kauf-drops");
   var gruppen = document.getElementById("kauf-gruppen");
   var offen = "";
+  var panelAnker = "kachel";
   var closeTimer = 0;
   var focusQuiet = false;
   var fromPointer = false;
@@ -681,9 +602,29 @@
 
   function placePanel(id) {
     if (!drops) return;
-    var link = document.querySelector('#kauf-gruppen a[data-gruppe="' + id + '"]');
     var nav = document.querySelector('.kauf-ebene[data-fuer="' + id + '"]');
-    if (!link || !nav) return;
+    if (!nav) return;
+    if (panelAnker === "schrift") {
+      var bar = document.getElementById("kauf-schrift");
+      var wrap = document.querySelector(".kauf-board .wrap");
+      if (!bar || !wrap) return;
+      var band = bar.getBoundingClientRect();
+      var box = wrap.getBoundingClientRect();
+      nav.style.position = "fixed";
+      nav.style.top = band.bottom + "px";
+      nav.style.left = box.left + "px";
+      nav.style.right = "auto";
+      nav.style.width = box.width + "px";
+      nav.style.zIndex = "37";
+      return;
+    }
+    var link = document.querySelector('#kauf-gruppen a[data-gruppe="' + id + '"]');
+    if (!link) return;
+    nav.style.position = "";
+    nav.style.left = "";
+    nav.style.right = "";
+    nav.style.width = "";
+    nav.style.zIndex = "";
     nav.style.top = (link.offsetTop + link.offsetHeight + 4) + "px";
   }
 
@@ -693,13 +634,15 @@
       nav.hidden = !on;
       if (on) placePanel(offen);
     });
-    document.querySelectorAll("#kauf-gruppen a[data-gruppe]").forEach(function (link) {
+    document.querySelectorAll("#kauf-gruppen a[data-gruppe], #kauf-schrift a[data-gruppe]").forEach(function (link) {
       link.setAttribute("aria-expanded", link.getAttribute("data-gruppe") === offen ? "true" : "false");
     });
   }
 
-  function openPanel(id) {
+  function openPanel(id, anker) {
     window.clearTimeout(closeTimer);
+    if (anker) panelAnker = anker;
+    else if (offen !== id) panelAnker = "kachel";
     offen = id;
     paintPanel();
   }
@@ -791,7 +734,7 @@
     if (event.key !== "Escape" || !offen) return;
     event.preventDefault();
     var id = offen;
-    var trigger = document.querySelector('#kauf-gruppen a[data-gruppe="' + id + '"]');
+    var trigger = document.querySelector((panelAnker === "schrift" ? "#kauf-schrift" : "#kauf-gruppen") + ' a[data-gruppe="' + id + '"]');
     focusQuiet = true;
     closePanel();
     if (trigger) trigger.focus();
@@ -823,12 +766,73 @@
     render();
   });
 
-  resetBtn.addEventListener("click", function () {
-    state.q = "";
-    state.sort = "";
-    render();
-    writeUrl("push");
-  });
+  function schriftMarke() {
+    var bar = document.getElementById("kauf-schrift");
+    if (!bar) return;
+    bar.querySelectorAll("a[data-gruppe]").forEach(function (link) {
+      if (link.getAttribute("data-gruppe") === state.gruppe) link.setAttribute("aria-current", "true");
+      else link.removeAttribute("aria-current");
+    });
+  }
+
+  function schriftSync() {
+    var bar = document.getElementById("kauf-schrift");
+    if (!bar) return;
+    var desktop = window.matchMedia("(min-width: 980px)").matches;
+    var tiles = document.getElementById("kauf-gruppen");
+    var header = document.querySelector(".top");
+    var limit = header ? header.getBoundingClientRect().bottom : 0;
+    var show = !!(desktop && tiles && tiles.getBoundingClientRect().bottom <= limit + 1);
+    bar.classList.toggle("is-weg", !show);
+    bar.setAttribute("aria-hidden", show ? "false" : "true");
+    bar.querySelectorAll("a").forEach(function (link) {
+      if (show) link.removeAttribute("tabindex");
+      else link.setAttribute("tabindex", "-1");
+    });
+    if (!show && panelAnker === "schrift" && offen) closePanel();
+    var hoch = bar.offsetHeight;
+    if (hoch) document.documentElement.style.setProperty("--kauf-schrift", hoch + "px");
+    if (show && offen && panelAnker === "schrift") placePanel(offen);
+  }
+
+  var schrift = document.getElementById("kauf-schrift");
+  if (schrift) {
+    schrift.addEventListener("click", function (event) {
+      var link = event.target.closest("a[data-gruppe]");
+      if (!link || !schrift.contains(link)) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+      event.preventDefault();
+      var id = canonGruppe(link.getAttribute("data-gruppe") || "");
+      setzeUnter(id, gemerkteUnter(id));
+      auswahlHalt = true;
+      closePanel();
+      writeUrl("push");
+      render({ sprung: true, sanft: true });
+    });
+    schrift.querySelectorAll("a[data-gruppe]").forEach(function (link) {
+      var id = link.getAttribute("data-gruppe") || "";
+      link.addEventListener("mouseenter", function () {
+        if (auswahlHalt || !hoverFein()) return;
+        openPanel(id, "schrift");
+      });
+      link.addEventListener("mouseleave", function () {
+        if (hoverFein()) scheduleClose();
+      });
+      link.addEventListener("focus", function () {
+        if (focusQuiet || fromPointer) return;
+        openPanel(id, "schrift");
+      });
+      link.addEventListener("keydown", function (event) {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        openPanel(id, "schrift");
+        var first = document.querySelector('.kauf-ebene[data-fuer="' + id + '"] a');
+        if (first) first.focus();
+      });
+    });
+  }
+  window.addEventListener("scroll", schriftSync, { passive: true });
+  window.addEventListener("resize", schriftSync);
 
   window.addEventListener("popstate", function () {
     readUrl();

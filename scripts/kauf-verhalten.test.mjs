@@ -182,7 +182,14 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
           const summary = document.getElementById("kauf-verkehr-summe");
           const top = summary.getBoundingClientRect().top;
           const header = document.querySelector(".top").getBoundingClientRect().bottom;
-          return { top: Math.round(top), header: Math.round(header) };
+          const bar = document.getElementById("kauf-schrift");
+          const band = bar.getBoundingClientRect().bottom;
+          return {
+            top: Math.round(top),
+            header: Math.round(header),
+            band: Math.round(band),
+            unter: !bar.classList.contains("is-weg") && top >= band - 2 && top < band + 40
+          };
         });
         await page.goto(base + "/kaufen/?gruppe=anhaenger&teil=hochlader", { waitUntil: "networkidle" });
         const anhBox = await page.evaluate(() => {
@@ -199,7 +206,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
             treffer: !!(hit && hit.closest("#kauf-verkehr-summe"))
           };
         });
-        point(`Auswahl rechts ${width}`, bauBox.sticky === "sticky" && bauBox.neben && bauBox.bündig && bauBox.hoehe > 40 && bauBox.treffer && verkehrBox.sticky === "sticky" && verkehrBox.neben && verkehrBox.oben && verkehrBox.hoehe > 40 && verkehrBox.treffer && haengt.top > 40 && haengt.top < haengt.header + 40 && anhBox.sticky === "sticky" && anhBox.neben && anhBox.oben && anhBox.hoehe > 40 && anhBox.treffer, JSON.stringify({ bauBox, verkehrBox, haengt, anhBox }));
+        point(`Auswahl rechts ${width}`, bauBox.sticky === "sticky" && bauBox.neben && bauBox.bündig && bauBox.hoehe > 40 && bauBox.treffer && verkehrBox.sticky === "sticky" && verkehrBox.neben && verkehrBox.oben && verkehrBox.hoehe > 40 && verkehrBox.treffer && haengt.unter && anhBox.sticky === "sticky" && anhBox.neben && anhBox.oben && anhBox.hoehe > 40 && anhBox.treffer, JSON.stringify({ bauBox, verkehrBox, haengt, anhBox }));
       }
       await page.close();
     }
@@ -209,18 +216,15 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     const desktop = await open(1280, "/kaufen/?gruppe=zaun&kat=bauzaune");
     const html = await desktop.page.content();
     point("Cache-Busting", /styles\.css\?v=/.test(html) && /kauf\.js\?v=/.test(html), "");
-    const namesBefore = await desktop.page.locator("#kauf-liste article.tile:not(.kauf-produkt) h3").allTextContents();
-    await desktop.page.locator("#kauf-sort").selectOption("name");
-    await desktop.page.waitForTimeout(50);
-    const namesAfter = await desktop.page.locator("#kauf-liste article.tile:not(.kauf-produkt):not([hidden]) h3").allTextContents();
-    const sorted = await desktop.page.evaluate((names) => names.join("\n") === names.slice().sort((a, b) => a.localeCompare(b, "de")).join("\n"), namesAfter);
-    point("Sortierung", sorted && namesAfter.join("\n") !== namesBefore.join("\n"), namesAfter.slice(0, 3).join(", "));
-    await desktop.page.locator("#kauf-q").fill("engmaschig");
-    await desktop.page.waitForTimeout(300);
-    const found = await desktop.page.locator("#kauf-liste article.tile:not(.kauf-produkt):not([hidden]) h3").allTextContents();
-    point("Suche", found.length > 0 && found.every((name) => /engmaschig/i.test(name)), found.join(", "));
+    const werkzeug = await desktop.page.evaluate(() => ({
+      suche: !!document.getElementById("kauf-q"),
+      sort: !!document.getElementById("kauf-sort"),
+      reset: !!document.getElementById("kauf-reset"),
+      zahl: !!document.getElementById("kauf-count")
+    }));
+    point("Suche und Sortierung weg", !werkzeug.suche && !werkzeug.sort && !werkzeug.reset && !werkzeug.zahl, JSON.stringify(werkzeug));
     const url = new URL(desktop.page.url());
-    point("URL-Parameter", url.searchParams.get("gruppe") === "zaun" && url.searchParams.get("kat") === "bauzaune", url.search);
+    point("URL-Parameter", url.searchParams.get("gruppe") === "zaun" && url.searchParams.get("kat") === "bauzaune" && !url.searchParams.get("q") && !url.searchParams.get("sort"), url.search);
 
     const card = desktop.page.locator('#kauf-gruppen a[data-gruppe="verkehr"]');
     const cardBox = await card.boundingBox();
@@ -276,16 +280,26 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
       const zr = ziel.getBoundingClientRect();
       const adresse = new URL(location.href);
       const aktuell = leiste.querySelector("[aria-current='true']");
+      const row = leiste.querySelector(".kauf-leiste-row");
+      const knoepfe = [...leiste.querySelectorAll("a")];
+      const breiten = knoepfe.map((el) => Math.round(el.getBoundingClientRect().width));
+      const hoehen = knoepfe.map((el) => el.getBoundingClientRect().height);
+      const schrift = document.getElementById("kauf-schrift");
       return {
         panelZu: nav.hidden,
         gruppe: adresse.searchParams.get("gruppe"),
         teil: adresse.searchParams.get("teil"),
         leiste: !leiste.hidden && getComputedStyle(leiste).position === "sticky",
         marke: aktuell ? aktuell.textContent.replace(/\s+/g, " ").trim() : "",
-        kopfFrei: zr.top >= kopf - 2
+        kopfFrei: zr.top >= kopf - 2,
+        umbruch: row && getComputedStyle(row).overflowX !== "auto" && getComputedStyle(row).overflowX !== "scroll",
+        gleich: breiten.length > 1 && Math.max(...breiten) - Math.min(...breiten) <= 1,
+        tast: hoehen.length > 0 && Math.min(...hoehen) >= 44,
+        imBild: knoepfe.every((el) => el.getBoundingClientRect().right <= window.innerWidth + 1),
+        schriftWeg: schrift && getComputedStyle(schrift).display === "none"
       };
     });
-    point("Tap springt zur Überschrift", tapped.panelZu && tapped.gruppe === "anhaenger" && tapped.teil === "hochlader" && tapped.leiste && /Hochlader/.test(tapped.marke) && tapped.kopfFrei, JSON.stringify(tapped));
+    point("Tap springt zur Überschrift", tapped.panelZu && tapped.gruppe === "anhaenger" && tapped.teil === "hochlader" && tapped.leiste && /Hochlader/.test(tapped.marke) && tapped.kopfFrei && tapped.umbruch && tapped.gleich && tapped.tast && tapped.imBild && tapped.schriftWeg, JSON.stringify(tapped));
     await phone.page.close();
 
     const sprache = await open(1280, "/kaufen/");
@@ -342,37 +356,67 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     point("Zaun ohne Bauzaun untereinander", ["Absperrgitter", "Bodenleitschwellen", "Schleusen", "Bühnen"].every((name) => zaunSeite.ueberschriften.indexOf(name) !== -1), zaunSeite.ueberschriften.join(", "));
     point("Bauzaun-Katalog eigenständig", katalog.ueberschriften.length === 0 && katalog.geraete.length === 0, String(katalog.ueberschriften.length));
 
-    const sprung = await open(1280, "/kaufen/?gruppe=verkehr");
-    await sprung.page.locator("#kauf-leiste a[data-teil='einrichtung']").click();
+    const sprung = await open(1280, "/kaufen/");
+    await sprung.page.evaluate(() => sessionStorage.removeItem("amk-kauf-unter"));
+    const ruhe = await sprung.page.evaluate(() => {
+      const bar = document.getElementById("kauf-schrift");
+      const tiles = document.getElementById("kauf-gruppen").getBoundingClientRect();
+      return { weg: bar.classList.contains("is-weg"), kacheln: tiles.bottom > 80, bilder: bar.querySelectorAll("img").length };
+    });
+    await sprung.page.evaluate(() => window.scrollTo(0, 1400));
+    await sprung.page.waitForTimeout(40);
+    const band = await sprung.page.evaluate(() => {
+      const bar = document.getElementById("kauf-schrift");
+      const link = bar.querySelector("a[aria-current='true']");
+      return {
+        weg: bar.classList.contains("is-weg"),
+        n: bar.querySelectorAll("a").length,
+        bilder: bar.querySelectorAll("img").length,
+        gruen: link ? getComputedStyle(link).backgroundColor : "",
+        text: link ? link.textContent.replace(/\s+/g, " ").trim() : "",
+        leiste: getComputedStyle(document.getElementById("kauf-leiste")).display
+      };
+    });
+    point("Schriftzug-Leiste", ruhe.weg && ruhe.kacheln && ruhe.bilder === 0 && !band.weg && band.n === 3 && band.bilder === 0 && band.gruen === "rgb(118, 183, 41)" && /Bauzaun/.test(band.text) && band.leiste === "none", JSON.stringify({ ruhe, band }));
+    const schriftKarte = sprung.page.locator("#kauf-schrift a[data-gruppe='verkehr']");
+    const schriftBox = await schriftKarte.boundingBox();
+    await sprung.page.mouse.move(schriftBox.x + schriftBox.width / 2, schriftBox.y + schriftBox.height / 2);
+    await sprung.page.waitForTimeout(80);
+    const schriftPanel = await sprung.page.evaluate(() => {
+      const nav = document.getElementById("kauf-ebene-verkehr");
+      const bar = document.getElementById("kauf-schrift").getBoundingClientRect();
+      const nr = nav.getBoundingClientRect();
+      return { open: !nav.hidden, n: nav.querySelectorAll("a").length, unter: Math.abs(nr.top - bar.bottom) <= 2, bg: getComputedStyle(nav).backgroundColor };
+    });
+    point("Schriftzug-Panel", schriftPanel.open && schriftPanel.n === 6 && schriftPanel.unter && schriftPanel.bg === "rgb(255, 255, 255)", JSON.stringify(schriftPanel));
+    await sprung.page.locator("#kauf-ebene-verkehr a[data-teil='einrichtung']").click();
     await sprung.page.waitForTimeout(900);
     const lage = await sprung.page.evaluate(() => {
       const ziel = document.getElementById("kauf-teil-einrichtung");
-      const kopf = document.querySelector(".top").getBoundingClientRect().bottom;
-      const bar = document.getElementById("kauf-leiste").getBoundingClientRect();
+      const bar = document.getElementById("kauf-schrift").getBoundingClientRect();
       const zr = ziel.getBoundingClientRect();
-      const aktuell = document.querySelector("#kauf-leiste [aria-current='true']");
+      const nav = document.getElementById("kauf-ebene-verkehr");
       return {
         teil: new URL(location.href).searchParams.get("teil"),
-        frei: zr.top >= kopf - 2 && zr.top >= bar.bottom - 8,
-        marke: aktuell ? aktuell.getAttribute("data-teil") : ""
+        frei: zr.top >= bar.bottom - 8,
+        panelZu: nav.hidden
       };
     });
-    point("Klick springt zur Überschrift", lage.teil === "einrichtung" && lage.frei && lage.marke === "einrichtung", JSON.stringify(lage));
-    await sprung.page.locator("#kauf-q").fill("Folie");
-    await sprung.page.waitForTimeout(350);
-    const sucheStapel = await sprung.page.evaluate(() => {
-      function offen(id) {
-        const el = document.getElementById(id);
-        return !!(el && !el.hidden && !el.closest("[hidden]"));
-      }
-      const n = [...document.querySelectorAll("article.kauf-produkt")].filter((el) => !el.hidden && !el.closest("[hidden]")).length;
-      return { schranken: offen("kauf-teil-schranken"), gefahr: offen("kauf-teil-gefahr"), n };
-    });
-    point("Suche blendet leere Abschnitte aus", sucheStapel.schranken && !sucheStapel.gefahr && sucheStapel.n === 2, JSON.stringify(sucheStapel));
+    point("Klick springt zur Überschrift", lage.teil === "einrichtung" && lage.frei && lage.panelZu, JSON.stringify(lage));
     await sprung.page.goBack();
     await sprung.page.waitForTimeout(200);
-    const zurueck = new URL(sprung.page.url()).searchParams.get("teil");
-    point("Zurück", zurueck === "schranken", sprung.page.url());
+    const zurueck = new URL(sprung.page.url());
+    point("Zurück", zurueck.searchParams.get("gruppe") === "zaun" && !zurueck.searchParams.get("teil"), sprung.page.url());
+    await sprung.page.evaluate(() => window.scrollTo(0, 0));
+    await sprung.page.waitForTimeout(40);
+    const wieder = await sprung.page.evaluate(() => document.getElementById("kauf-schrift").classList.contains("is-weg"));
+    point("Leiste verschwindet", wieder, "");
+    await sprung.page.evaluate(() => window.scrollTo(0, 1400));
+    await sprung.page.waitForTimeout(40);
+    await sprung.page.locator("#kauf-schrift a[data-gruppe='zaun']").click();
+    await sprung.page.waitForTimeout(40);
+    const wieKachel = new URL(sprung.page.url());
+    point("Schriftzug wie Oberkachel", wieKachel.searchParams.get("gruppe") === "zaun" && wieKachel.searchParams.get("kat") === "bauzaune", wieKachel.search);
     await sprung.page.close();
 
     const leiste = await open(390, "/kaufen/?gruppe=anhaenger&teil=hochlader");

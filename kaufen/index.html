@@ -8,7 +8,7 @@
   <meta name="description" content="Einzelteile, Zubehör und Anhänger zum Kauf.">
   <link rel="icon" href="../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../assets/logo.png">
-  <link rel="stylesheet" href="../css/styles.css?v=aq">
+  <link rel="stylesheet" href="../css/styles.css?v=as">
   <script>document.documentElement.classList.add("js-kauf")</script>
 </head>
 <body>
@@ -73,22 +73,13 @@
           <a class="kauf-karte kachel kachel--unter" href="?gruppe=anhaenger&amp;teil=kuehl" data-teil="kuehl"><img src="../images/kuehlanhaenger-13.webp" width="540" height="405" alt="" decoding="async"><strong>Kühl&shy;anhänger</strong></a>
         </nav>
         </div>
+        <nav id="kauf-schrift" class="kauf-schrift is-weg" aria-label="Hauptgruppen" aria-hidden="true">
+          <a href="?gruppe=zaun" data-gruppe="zaun" aria-expanded="false" aria-controls="kauf-ebene" tabindex="-1">Bauzaun &amp; Absperrgitter</a>
+          <a href="?gruppe=verkehr" data-gruppe="verkehr" aria-expanded="false" aria-controls="kauf-ebene-verkehr" tabindex="-1">Verkehrsabsicherung &amp; Schilder</a>
+          <a href="?gruppe=anhaenger" data-gruppe="anhaenger" aria-expanded="false" aria-controls="kauf-ebene-anhaenger" tabindex="-1">Anhänger</a>
+        </nav>
         <nav id="kauf-leiste" class="kauf-leiste" aria-label="Kategorien" hidden></nav>
         <p class="kauf-hinweis" id="kauf-hinweis" hidden></p>
-        <div class="kauf-tools">
-          <label class="kauf-search">Suche
-            <input id="kauf-q" type="search" placeholder="Name oder Artikelnummer" autocomplete="off">
-          </label>
-          <label class="kauf-sort">Sortierung
-            <select id="kauf-sort">
-              <option value="">Sortiment</option>
-              <option value="name">Name</option>
-              <option value="nummer">Artikelnummer</option>
-            </select>
-          </label>
-          <p class="kauf-count" id="kauf-count" aria-live="polite"></p>
-          <button type="button" class="kauf-reset" id="kauf-reset">Zurücksetzen</button>
-        </div>
         <div class="kauf-layout">
           <div id="kauf-wahl">
             <div id="kauf-spalte">
@@ -1680,6 +1671,6 @@
   <script src="../js/schilder.js?v=ap"></script>
   <script src="../data/anhaenger-eckdaten.js"></script>
   <script src="../js/auswahl.js?v=ap"></script>
-  <script src="../js/kauf.js?v=aq"></script>
+  <script src="../js/kauf.js?v=as"></script>
 </body>
 </html>
