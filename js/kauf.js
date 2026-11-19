@@ -532,8 +532,10 @@
         var name = titel ? titel.textContent.replace(/\s+/g, " ").trim() : "";
         var stand = schnellZahl(block, "staender");
         var felder = schnellZahl(block, "felder");
-        if (stand > 0) lines.push({ name: name + " · Ständer", menge: String(stand) });
-        if (felder > 0) lines.push({ name: name + " · Einzelfelder", menge: String(felder) });
+        var details = block.querySelector(".kauf-schnell-details");
+        var href = details ? details.getAttribute("href") : "";
+        if (stand > 0) lines.push({ name: name, menge: stand + " Ständer", block: "Im Komplett-Ständer enthalten", href: href });
+        if (felder > 0) lines.push({ name: name, menge: felder + " Einzelfelder", block: "Zusätzlich", href: href });
       });
     }
     if (schilder && zeile) {
@@ -834,6 +836,13 @@
   window.addEventListener("scroll", schriftSync, { passive: true });
   window.addEventListener("resize", schriftSync);
 
+  document.addEventListener("amk-wunsch-frisch", function () {
+    if (window.AMK_AUSWAHL && window.AMK_AUSWAHL.lies) window.AMK_AUSWAHL.lies();
+    if (window.AMK_SCHILDER_UI && window.AMK_SCHILDER_UI.lies) window.AMK_SCHILDER_UI.lies();
+    liesSchnell();
+    kaufLeiste();
+  });
+
   window.addEventListener("popstate", function () {
     readUrl();
     render({ sprung: true, sanft: false });
@@ -1005,8 +1014,11 @@
     }
     items = setzeZeile(items, prefix + "zusatz:felder", item.name, felder, item.bild, item.kat);
     items = items.filter(function (line) { return line.id !== "kauf:" + slug; });
-    window.AMK_WUNSCH.save(items, true);
+    if (window.AMK_KAUF_STORE && window.AMK_KAUF_STORE.save) window.AMK_KAUF_STORE.save(items);
+    else window.AMK_WUNSCH.save(items, true);
     zeigeHinweis(block, stand > 0 && (fussAnders || schelleAnders));
+    var kreis = block.parentElement ? block.parentElement.querySelector("[data-kreis='bauzaun']") : null;
+    if (kreis) kreis.checked = stand > 0 || felder > 0;
     kaufLeiste();
   }
 
@@ -1027,6 +1039,8 @@
       var schelleId = wahlTreffer(items, prefix, "schelle");
       var stand = standField ? parseInt(standField.value, 10) || 0 : 0;
       zeigeHinweis(block, stand > 0 && ((fussId && fussId !== prefix + "im:fuss:" + fuss.standard) || (schelleId && schelleId !== prefix + "im:schelle:" + schelle.standard)));
+      var kreis = block.parentElement ? block.parentElement.querySelector("[data-kreis='bauzaun']") : null;
+      if (kreis) kreis.checked = (parseInt(standField && standField.value, 10) || 0) > 0 || (parseInt(feldField && feldField.value, 10) || 0) > 0;
     });
     schnellStill = false;
   }
@@ -1036,6 +1050,10 @@
     items.forEach(function (item) {
       if (item.el.querySelector(".kauf-schnell")) return;
       if (item.shop === "bauzaune") {
+        if (!item.el.querySelector("[data-kreis='bauzaun']")) {
+          item.el.insertAdjacentHTML("afterbegin", '<label class="beispiel-wahl"><input type="checkbox" data-kreis="bauzaun" aria-label="' +
+            item.name.replace(/"/g, "") + ' auswählen"><span class="beispiel-kreis kachel-kreis"></span></label>');
+        }
         item.el.insertAdjacentHTML("beforeend", window.AMK_BAUSTEINE.schnell({
           slug: item.slug,
           href: "../produkt/" + item.slug + "/"
@@ -1067,6 +1085,23 @@
   });
 
   liste.addEventListener("change", function (event) {
+    var box = event.target;
+    if (box && box.matches && box.matches("[data-kreis='bauzaun']")) {
+      var tile = box.closest("article");
+      var block = tile ? tile.querySelector(".kauf-schnell") : null;
+      var standField = schnellFeld(block, "staender");
+      var feldField = schnellFeld(block, "felder");
+      var standNow = parseInt(standField && standField.value, 10) || 0;
+      var feldNow = parseInt(feldField && feldField.value, 10) || 0;
+      if (box.checked) {
+        if (standNow < 1 && feldNow < 1 && standField) standField.value = "1";
+      } else {
+        if (standField) standField.value = "0";
+        if (feldField) feldField.value = "0";
+      }
+      schreibSchnell(block);
+      return;
+    }
     var field = event.target;
     if (!field || !field.matches || !field.matches(".kauf-schnell [data-schnell]")) return;
     if (field.value === "") field.value = "0";

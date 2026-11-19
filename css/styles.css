@@ -1436,17 +1436,6 @@ a.cart-bild:focus img { outline: 2px solid var(--forest); outline-offset: 2px; }
   min-width: 0;
 }
 .pick strong { color: var(--heading); font-size: 1.05rem; }
-.pick-linked .pick label {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 44px;
-  width: 44px;
-  height: 44px;
-}
-.pick-linked .pick a { color: inherit; text-decoration: none; }
-.pick-linked .pick-media { display: block; width: 6.6rem; height: 4.6rem; }
 .more-fold { margin: 0.2rem 0 0; }
 .more-fold summary,
 .anhaenger-details summary { gap: 0.55rem; }
@@ -1499,100 +1488,6 @@ a.cart-bild:focus img { outline: 2px solid var(--forest); outline-offset: 2px; }
   font-size: 0.95rem;
   line-height: 1.35;
 }
-.kauf-board .picks:has(.pick-linked) { gap: 1rem; align-items: stretch; }
-.kauf-board .pick-block.pick-linked {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: #fff;
-  border: 2px solid var(--ink);
-  border-radius: 1rem;
-  box-shadow: 4px 4px 0 var(--ink);
-  overflow: hidden;
-  transition: transform 180ms ease, box-shadow 180ms ease;
-}
-.kauf-board .pick-block.pick-linked:hover {
-  transform: translate(3px, 3px);
-  box-shadow: 1px 1px 0 var(--ink);
-}
-.kauf-board .pick-linked .pick {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.65rem;
-  min-height: 0;
-  margin: 0;
-  padding: 0 0 0.8rem;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  cursor: default;
-}
-.kauf-board .pick-linked .pick:has(input:checked) { box-shadow: none; }
-.kauf-board .pick-block.pick-linked:has(input:checked) { box-shadow: inset 0 0 0 2px var(--ink), 4px 4px 0 var(--ink); }
-.kauf-board .pick-linked .pick-media {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.kauf-board .pick-linked .pick > a.pick-media > img,
-.kauf-board .pick-linked .pick .pick-bild {
-  display: block;
-  width: 100%;
-  max-width: none;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  border-radius: 0;
-  object-fit: contain;
-  background: var(--soft);
-  padding: 0.65rem;
-  box-sizing: border-box;
-}
-.kauf-board .pick-linked .pick .pick-bild {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.kauf-board .pick-linked .pick .pick-bild img {
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  padding: 0;
-  aspect-ratio: auto;
-  background: transparent;
-}
-.kauf-board .pick-linked .pick-text {
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr);
-  grid-template-areas: "box name" "box mass";
-  align-items: start;
-  column-gap: 0.45rem;
-  row-gap: 0.15rem;
-  padding: 0 0.8rem;
-  min-width: 0;
-}
-.kauf-board .pick-linked .pick-text label { grid-area: box; }
-.kauf-board .pick-linked .pick-text > a { grid-area: name; min-width: 0; }
-.kauf-board .pick-linked .pick strong {
-  display: block;
-  min-height: 2.4em;
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 1.15rem;
-  line-height: 1.15;
-  letter-spacing: 0;
-}
-.kauf-board .pick-linked .pick-mass {
-  grid-area: mass;
-  margin: 0;
-  color: var(--gray);
-  font-size: 0.95rem;
-  line-height: 1.35;
-}
-.kauf-board .pick-linked .pick-menge,
-.kauf-board .pick-linked .anhaenger-details { margin: 0 0.8rem 0.75rem; }
 .pick small { color: var(--gray); font-size: 0.95rem; line-height: 1.35; }
 .pick input[type="checkbox"] { align-self: center; }
 .pick:has(input:checked)::after {
@@ -2166,8 +2061,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 
 @media (min-width: 1100px) {
   .plates-grid { grid-template-columns: repeat(4, 1fr); }
-  .kauf-board .tiles,
-  .kauf-board .picks:has(.pick-linked) { grid-template-columns: repeat(3, 1fr); }
+  .kauf-board .tiles { grid-template-columns: repeat(3, 1fr); }
 }
 
 .js-kauf section.copy { display: none; }
@@ -2308,7 +2202,18 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   top: 0.45rem;
   right: 0.45rem;
 }
-.js-kauf .kauf-produkt:has(input:checked) { border-color: var(--signal); }
+.js-kauf .kauf-produkt:has(input:checked),
+.js-kauf #kauf-liste > .tile:has(input:checked) { border-color: var(--signal); }
+.js-kauf #kauf-liste > .tile { position: relative; }
+.js-kauf #kauf-liste > .tile > .beispiel-wahl {
+  position: absolute;
+  z-index: 2;
+  top: 0.45rem;
+  right: 0.45rem;
+}
+.kauf-auswahl-leer,
+.kauf-auswahl-block { margin: 0; }
+.kauf-auswahl-block { margin-top: 0.45rem; font-weight: 700; }
 .js-kauf .kauf-produkt .beispiel-wahl:focus-within .beispiel-kreis { outline: 2px solid var(--ink); outline-offset: 2px; }
 .js-kauf .kauf-produkt .pick-menge,
 .js-kauf .tiles > [data-teil-karte] > .anhaenger-details { margin: 0.35rem 0.85rem 0.75rem; }

@@ -155,20 +155,7 @@
         : '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' + karten + "</div></fieldset>";
     }
 
-    var vorgangForm = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
-    if (window.AMK_WUNSCH && window.AMK_WUNSCH.load) {
-      var saved = {};
-      window.AMK_WUNSCH.load().forEach(function (item) { saved[item.id] = item; });
-      ZEICHEN.forEach(function (entry) {
-        var item = saved[vorgangForm + ":schild:" + entry.id];
-        if (!item) return;
-        var box = form.querySelector('input[name="schild"][value="' + entry.id + '"]');
-        var qtyField = form.querySelector("#menge-schild-" + entry.id);
-        if (box) box.checked = true;
-        if (qtyField && item.qty) qtyField.value = String(item.qty);
-        if (box && window.AMK_TYPWAHL) window.AMK_TYPWAHL.reveal(box, false);
-      });
-    }
+    liesSchilder(form);
 
     function writeCart(interactive) {
       if (!window.AMK_WUNSCH || typeof window.AMK_WUNSCH.replace !== "function") return;
@@ -238,7 +225,14 @@
       }
     }
 
+    function winkel(event) {
+      if (form.getAttribute("data-vorgang") === "miete" || !window.AMK_KAUF_STORE) return;
+      var card = event.target.closest && event.target.closest(".kauf-produkt");
+      if (card) window.AMK_KAUF_STORE.winkel(card, event.target);
+    }
+
     form.addEventListener("change", function (event) {
+      winkel(event);
       var box = event.target;
       if (box && box.name === "schild" && !box.checked && window.AMK_WUNSCH && window.AMK_WUNSCH.remove) {
         var vorgang = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
@@ -249,6 +243,7 @@
 
     form.addEventListener("input", function (event) {
       if (form.getAttribute("data-vorgang") === "miete") return;
+      winkel(event);
       var target = event.target;
       if (!target || (target.type !== "number" && target.name !== "hinweis")) return;
       writeCart(false);
@@ -272,8 +267,28 @@
 
   window.AMK_SCHILDER = ZEICHEN;
   window.AMK_SCHILDER_TEILE = TEILE.map(function (teil) { return teil.id; });
+  function liesSchilder(form) {
+    if (!form || form.getAttribute("data-vorgang") === "miete") return;
+    if (!window.AMK_WUNSCH || !window.AMK_WUNSCH.load) return;
+    var saved = {};
+    window.AMK_WUNSCH.load().forEach(function (item) { saved[item.id] = item; });
+    form.querySelectorAll('input[name="schild"]').forEach(function (box) {
+      var card = box.closest(".kauf-produkt");
+      var field = card ? card.querySelector("[data-menge]") : form.querySelector("#menge-schild-" + box.value);
+      var item = saved["kauf:schild:" + box.value];
+      var qty = item && item.qty ? item.qty : 0;
+      if (qty > 9999) qty = 9999;
+      box.checked = qty > 0;
+      if (field) field.value = String(qty);
+      if (!card && box && window.AMK_TYPWAHL) window.AMK_TYPWAHL.reveal(box, false);
+    });
+  }
+
   window.AMK_SCHILDER_UI = {
     sync: apply,
+    lies: function () {
+      document.querySelectorAll("[data-schilder]").forEach(liesSchilder);
+    },
     open: function (id) {
       if (TEILE.some(function (entry) { return entry.id === id; })) localTeil = id;
       apply();

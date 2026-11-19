@@ -446,14 +446,22 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     const kreis = await pick.page.evaluate(() => {
       const card = document.querySelector("[data-teil-karte]:not([hidden]) article.kauf-produkt");
       const field = card.querySelector("[data-menge]");
+      const step = card.querySelector(".beispiel-step");
+      const sichtbar = [...document.querySelectorAll("article.kauf-produkt, #kauf-liste .kauf-schnell")].filter((el) => {
+        return !el.hidden && !el.closest("[hidden]") && el.getBoundingClientRect().height > 0;
+      });
       return {
         checked: card.querySelector('input[type="checkbox"]').checked,
-        menge: !card.querySelector(".pick-menge").hidden,
+        menge: !!(step && getComputedStyle(step).display !== "none" && field && field.value === "1"),
         max: field.getAttribute("max"),
-        kreis: getComputedStyle(card.querySelector(".beispiel-kreis")).borderRadius
+        kreis: getComputedStyle(card.querySelector(".beispiel-kreis")).borderRadius,
+        plus: sichtbar.length > 0 && sichtbar.every((el) => {
+          const steuer = el.querySelector(".beispiel-step");
+          return steuer && getComputedStyle(steuer).display !== "none";
+        })
       };
     });
-        point("Auswahlkreis", kreis.checked && kreis.menge && kreis.kreis !== "0px" && kreis.max === "9999", JSON.stringify(kreis));
+        point("Auswahlkreis", kreis.checked && kreis.menge && kreis.plus && kreis.kreis !== "0px" && kreis.max === "9999", JSON.stringify(kreis));
     const baustein = await pick.page.evaluate(() => {
       const card = document.querySelector("[data-teil-karte]:not([hidden]) article.kauf-produkt");
       const ober = document.querySelector("#kauf-gruppen .kachel--ober");
@@ -465,6 +473,48 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     });
     point("gemeinsame Kachel", baustein.produkt && baustein.ober && baustein.kreis, JSON.stringify(baustein));
     await pick.page.close();
+
+    const rundwege = [
+      ["Absperrgitter", "/kaufen/?gruppe=zaun&kat=gitter", "#kauf-teil-gitter article.kauf-produkt a"],
+      ["Schilder", "/kaufen/?gruppe=verkehr&teil=gefahr", "#kauf-teil-gefahr article.kauf-produkt a"],
+      ["Anhänger", "/kaufen/?gruppe=anhaenger&teil=hochlader", "#kauf-teil-hochlader article.kauf-produkt a"],
+      ["Bauzaun", "/kaufen/?gruppe=zaun&kat=bauzaune", "#kauf-liste article.tile a"]
+    ];
+    for (const [name, url, selector] of rundwege) {
+      const lauf = await open(1280, url);
+      await lauf.page.evaluate(() => localStorage.removeItem("amk-wunsch"));
+      await lauf.page.reload({ waitUntil: "networkidle" });
+      const ziel = lauf.page.locator(selector).first();
+      await ziel.click();
+      await lauf.page.waitForURL(/\/produkt\//);
+      const feld = lauf.page.locator("#menge-einfach, #menge-staender").first();
+      await feld.waitFor({ state: "visible" });
+      await feld.fill("2");
+      await feld.dispatchEvent("input");
+      await lauf.page.waitForTimeout(200);
+      await lauf.page.goBack({ waitUntil: "networkidle" });
+      await lauf.page.waitForTimeout(250);
+      const stand = await lauf.page.evaluate(() => {
+        const cards = [...document.querySelectorAll("article.kauf-produkt, #kauf-liste article.tile")].filter((el) => !el.hidden && !el.closest("[hidden]") && el.getBoundingClientRect().height > 0);
+        const hit = cards.find((card) => {
+          const field = card.querySelector("[data-menge], [data-schnell='staender']");
+          return field && field.value === "2";
+        });
+        const box = hit ? hit.querySelector('input[type="checkbox"]') : null;
+        const step = hit ? hit.querySelector(".beispiel-step") : null;
+        const summe = (document.getElementById("kauf-verkehr-summe") || {}).innerText || "";
+        const leer = document.querySelector(".kauf-auswahl-leer, #beispiel-liste .kauf-auswahl-leer");
+        return {
+          checked: !!(box && box.checked),
+          menge: hit ? (hit.querySelector("[data-menge], [data-schnell='staender']") || {}).value : "",
+          plus: !!(step && getComputedStyle(step).display !== "none"),
+          box: summe.replace(/\s+/g, " ").trim(),
+          platzhalter: !!document.querySelector("#kauf-verkehr-summe") && /Typ\s*[–-]/.test(summe) && !!leer
+        };
+      });
+      point("Rundlauf " + name, stand.checked && stand.menge === "2" && stand.plus && stand.box.length > 0 && !/Typ\s*[–-]/.test(stand.box), JSON.stringify(stand));
+      await lauf.page.close();
+    }
 
     const schnell = await open(1280, "/kaufen/?gruppe=zaun&kat=bauzaune");
     await schnell.page.evaluate(() => localStorage.removeItem("amk-wunsch"));

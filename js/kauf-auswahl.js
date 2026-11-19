@@ -95,7 +95,7 @@
     korb.className = "beispiel-korb kachel-box";
     korb.innerHTML =
       '<div class="beispiel-auswahl" id="beispiel-auswahl">' +
-      '<h2 id="beispiel-auswahl-titel" tabindex="-1">Deine Auswahl</h2>' +
+      '<h2 id="beispiel-auswahl-titel" tabindex="-1">Ihre Auswahl</h2>' +
       '<div id="beispiel-liste"></div></div>' +
       '<div class="beispiel-senden"><a class="btn" href="' + esc(root) + 'anfrage/">Zum Anfragekorb</a></div>';
 
@@ -267,6 +267,7 @@
           stepper(box.value, "menge-liste-" + box.value, qtyField ? qtyField.value : "1", "Menge " + item.name, 1) + "</li>";
       });
       if (extra) html += '<section class="beispiel-block" id="block-zusatz"><h3>Zusätzlich</h3><ul>' + extra + "</ul></section>";
+      if (!html) html = '<p class="kauf-auswahl-leer">' + esc(window.AMK_KAUF_STORE ? window.AMK_KAUF_STORE.leer : "Noch nichts ausgewählt.") + "</p>";
       var active = document.activeElement;
       var typing = active && active.tagName === "INPUT" && list.contains(active);
       if (typing && standOn() && standZahl() > 0 && list.querySelector("[data-live]")) {
@@ -339,7 +340,8 @@
           else delete found.note;
         } else items.push(line);
       });
-      window.AMK_WUNSCH.save(items, true);
+      if (window.AMK_KAUF_STORE && window.AMK_KAUF_STORE.save) window.AMK_KAUF_STORE.save(items);
+      else window.AMK_WUNSCH.save(items, true);
     }
 
     function restore() {
@@ -531,6 +533,12 @@
     haube.addEventListener("click", function () { setListe(false); });
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") setListe(false);
+    });
+
+    window.addEventListener("pageshow", function () {
+      if (!document.getElementById("kauf-auswahl-form")) return;
+      restore();
+      paintList();
     });
 
     var kit = new Promise(function (resolve) {

@@ -96,13 +96,21 @@
     return map;
   }
 
+  function feldVon(box) {
+    var direkt = box && box.closest ? box.closest(".kauf-produkt, .pick-block") : null;
+    var field = direkt ? direkt.querySelector("[data-menge]") : null;
+    if (field) return field;
+    var form = box && box.form;
+    return form ? form.querySelector('[data-menge-fuer="' + box.value + '"] [data-menge]') : null;
+  }
+
   function chosen(form) {
     var list = [];
     form.querySelectorAll('input[name="typ"]:checked').forEach(function (box) {
       var product = null;
       (products || []).forEach(function (entry) { if (entry.slug === box.value) product = entry; });
       if (!product) return;
-      var field = form.querySelector('[data-menge-fuer="' + box.value + '"] [data-menge]');
+      var field = feldVon(box);
       var ohne = !field;
       var qty = ohne ? 1 : parseInt(field.value, 10);
       list.push({ product: product, field: field, qty: qty, ohne: ohne });
@@ -114,29 +122,43 @@
     var block = box && box.closest ? box.closest(".pick-block, .kauf-produkt") : null;
     var title = block ? block.querySelector("strong, h3") : null;
     var field = block ? block.querySelector("[data-menge]") : null;
+    var link = block ? block.querySelector("a[href]") : null;
     var name = title ? title.textContent.trim() : "";
     var menge = "";
     if (field) {
       var qty = parseInt(field.value, 10);
       menge = qty > 0 ? String(qty) : "–";
     }
-    return { name: name, menge: menge };
+    return { name: name, menge: menge, href: link ? link.getAttribute("href") : "" };
   }
 
   function fillLeiste(aside, lines) {
     if (!aside) return;
+    var leer = window.AMK_KAUF_STORE ? window.AMK_KAUF_STORE.leer : "Noch nichts ausgewählt.";
     var short = aside.querySelector('[data-sum="short"]');
     var liste = aside.querySelector('[data-sum="liste"]');
     var rows = lines || [];
     var bits = rows.map(function (line) {
       return line.menge ? line.name + " · " + line.menge : line.name;
     });
-    if (short) short.textContent = bits.join("; ") || "–";
+    if (short) short.textContent = bits.join("; ") || leer;
     if (liste) {
-      liste.innerHTML = rows.length ? rows.map(function (line) {
-        var menge = line.menge ? "<dd>" + esc(line.menge) + "</dd>" : "";
-        return "<div><dt>" + esc(line.name) + "</dt>" + menge + "</div>";
-      }).join("") : "<div><dt>Typ</dt><dd>–</dd></div>";
+      if (!rows.length) liste.innerHTML = '<p class="kauf-auswahl-leer">' + esc(leer) + "</p>";
+      else {
+        var html = "";
+        var last = "";
+        rows.forEach(function (line) {
+          var block = line.block || "";
+          if (block && block !== last) {
+            html += '<p class="kauf-auswahl-block">' + esc(block) + "</p>";
+            last = block;
+          }
+          var name = line.href ? '<a href="' + esc(line.href) + '">' + esc(line.name) + "</a>" : esc(line.name);
+          var menge = line.menge ? "<dd>" + esc(line.menge) + "</dd>" : "";
+          html += "<div><dt>" + name + "</dt>" + menge + "</div>";
+        });
+        liste.innerHTML = html;
+      }
     }
     aside.classList.toggle("is-leer", !rows.length);
   }
@@ -193,7 +215,8 @@
     }
     if (node.dataset.key === key && node.querySelector("form")) {
       if (stapel !== "1") showTeil(node, gruppe);
-      updateSum(node);
+      if (vorgang === "kauf") liesKarten(node);
+      else updateSum(node);
       return;
     }
     node.dataset.key = key;
@@ -271,9 +294,14 @@
       status.textContent = "";
       status.classList.remove("is-error");
     }
+    if (vorgang === "kauf") {
+      form.querySelectorAll('input[name="typ"]').forEach(function (box) {
+        if (!box.checked && window.AMK_WUNSCH.remove) window.AMK_WUNSCH.remove(vorgang + ":" + box.value);
+      });
+    }
     var list = chosen(form);
     if (!list.length) {
-      if (node.hasAttribute("data-leer-ok")) return;
+      if (node.hasAttribute("data-leer-ok") || vorgang === "kauf") return;
       var first = form.querySelector('[data-teil-karte]:not([hidden]) input[name="typ"]');
       if (!first) first = form.querySelector('input[name="typ"]');
       if (first) first.focus();
@@ -332,7 +360,10 @@
     function kaufSync(event) {
       if (node.getAttribute("data-vorgang") === "miete") return;
       var target = event.target;
-      if (!target || (target.name !== "typ" && target.type !== "number")) return;
+      if (!target) return;
+      var card = target.closest && target.closest(".kauf-produkt");
+      if (card && window.AMK_KAUF_STORE) window.AMK_KAUF_STORE.winkel(card, target);
+      if (target.name !== "typ" && target.type !== "number") return;
       submit(node, event);
     }
     node.addEventListener("input", function (event) {
@@ -359,6 +390,29 @@
       parent = parent.parentElement;
     }
     return true;
+  }
+
+  function liesKarten(node) {
+    var vorgang = node.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
+    if (vorgang !== "kauf") return;
+    var saved = cartById();
+    node.querySelectorAll(".kauf-produkt").forEach(function (card) {
+      var box = card.querySelector('input[name="typ"]');
+      var field = card.querySelector("[data-menge]");
+      if (!box || !field) return;
+      var item = saved[vorgang + ":" + box.value];
+      var qty = item && item.qty ? item.qty : 0;
+      box.checked = qty > 0;
+      field.value = String(qty > 9999 ? 9999 : qty);
+    });
+    updateSum(node);
+  }
+
+  function lies() {
+    document.querySelectorAll("[data-auswahl]").forEach(function (node) {
+      if (!node.querySelector(".kauf-produkt")) return;
+      liesKarten(node);
+    });
   }
 
   function sync() {
@@ -388,7 +442,7 @@
       });
   }
 
-  var exported = { teile: {}, sync: sync, zeileVon: zeileVon, fillLeiste: fillLeiste };
+  var exported = { teile: {}, sync: sync, lies: lies, zeileVon: zeileVon, fillLeiste: fillLeiste };
   Object.keys(TEILE).forEach(function (gruppe) {
     if (gruppe === "gitter") return;
     exported.teile[gruppe] = ids(gruppe);

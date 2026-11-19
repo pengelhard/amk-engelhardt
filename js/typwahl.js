@@ -41,6 +41,18 @@
     var on = !!opts.checked;
     var mode = opts.mode === "laenge" ? "laenge" : "stueck";
     var qty = opts.qty == null || opts.qty === "" ? (mode === "stueck" ? "1" : "") : opts.qty;
+    if (opts.kachel && mode !== "laenge" && window.AMK_BAUSTEINE) {
+      var start = on ? (parseInt(qty, 10) || 1) : 0;
+      opts.fuss = '<div class="kauf-schnell kauf-schnell--menge"><div class="kauf-schnell-zeile"><span>Anzahl</span>' +
+        window.AMK_BAUSTEINE.mengeSchritt({
+          id: opts.inputId,
+          value: String(start),
+          label: "Anzahl " + (opts.title || ""),
+          min: 0,
+          alsMenge: true
+        }) + "</div></div>";
+      return window.AMK_BAUSTEINE.produkt(opts, '<input type="checkbox" name="' + esc(opts.name) + '" value="' + esc(opts.value) + '"' + (start > 0 ? " checked" : "") + ">", "");
+    }
     var withMenge = mode === "laenge" || opts.menge !== false;
     var panel = "";
     var controls = "";
@@ -52,16 +64,6 @@
     var box = '<input type="checkbox" name="' + esc(opts.name) + '" value="' + esc(opts.value) + '"' +
       (on ? " checked" : "") + controls + ">";
     if (opts.kachel) return window.AMK_BAUSTEINE.produkt(opts, box, panel);
-    if (opts.href) {
-      var href = esc(opts.href);
-      var mass = opts.note ? '<p class="pick-mass">' + esc(opts.note) + "</p>" : "";
-      return '<div class="pick-block pick-linked"' + dataAttrs(opts.data) + ">" +
-        '<div class="pick">' +
-        '<a class="pick-media" href="' + href + '">' + (opts.media || "") + "</a>" +
-        '<span class="pick-text"><label>' + box + '<span class="visually-hidden">' + esc(opts.title) + " auswählen</span></label>" +
-        '<a href="' + href + '"><strong>' + esc(opts.title) + "</strong></a>" + mass + "</span></div>" +
-        panel + (opts.extra || "") + "</div>";
-    }
     return '<div class="pick-block"' + dataAttrs(opts.data) + ">" +
       '<label class="pick">' + (opts.media || "") +
       "<span>" + box + "<strong>" + esc(opts.title) + "</strong></span></label>" +

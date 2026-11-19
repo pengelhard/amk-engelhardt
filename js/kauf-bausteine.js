@@ -31,6 +31,7 @@
     var attrs = "";
     if (opts.key != null && opts.key !== "") attrs += ' data-spiegel="' + esc(opts.key) + '"';
     if (opts.merk) attrs += ' data-schnell="' + esc(opts.merk) + '"';
+    if (opts.alsMenge) attrs += " data-menge";
     if (opts.name) attrs += ' name="' + esc(opts.name) + '"';
     return '<div class="beispiel-step kachel-menge"' + (opts.hidden ? " hidden" : "") + ">" +
       '<button type="button" data-step="-1" aria-label="Weniger">−</button>' +
@@ -43,12 +44,13 @@
     var zeile = opts.note ? esc(opts.note) : "\u00a0";
     var inner = '<span class="frame">' + (opts.media || "") + "</span><h3>" + esc(opts.title) + "</h3>";
     var link = opts.href ? '<a href="' + esc(opts.href) + '">' + inner + "</a>" : inner;
+    var unten = opts.fuss != null ? opts.fuss : ((panel || "") + schnellLeer());
     return '<article class="tile kauf-produkt kachel kachel--produkt"' + dataAttrs(opts.data) + ">" +
       link +
       "<p>" + zeile + "</p>" +
       '<label class="beispiel-wahl">' + box + kreis() +
       '<span class="visually-hidden">' + esc(opts.title) + " auswählen</span></label>" +
-      (panel || "") + schnellLeer() + "</article>";
+      unten + "</article>";
   }
 
   function zubehoerKachel(opts) {
