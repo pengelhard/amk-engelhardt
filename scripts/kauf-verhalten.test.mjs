@@ -368,16 +368,25 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     const band = await sprung.page.evaluate(() => {
       const bar = document.getElementById("kauf-schrift");
       const link = bar.querySelector("a[aria-current='true']");
+      const schrift = link ? link.querySelector("strong") : null;
+      const ober = document.querySelector("#kauf-gruppen a[data-gruppe='zaun']");
+      const kopf = ober ? ober.querySelector("strong") : null;
+      const ss = schrift ? getComputedStyle(schrift) : null;
+      const os = kopf ? getComputedStyle(kopf) : null;
+      const sl = link ? getComputedStyle(link) : null;
+      const ol = ober ? getComputedStyle(ober) : null;
+      const gleich = !!(ss && os && sl && ol && ss.fontFamily === os.fontFamily && ss.fontSize === os.fontSize && ss.fontWeight === os.fontWeight && ss.letterSpacing === os.letterSpacing && ss.color === os.color && sl.borderTopWidth === ol.borderTopWidth && sl.borderRadius === ol.borderRadius && sl.boxShadow === ol.boxShadow && Math.abs(link.getBoundingClientRect().width - ober.getBoundingClientRect().width) < 2);
       return {
         weg: bar.classList.contains("is-weg"),
         n: bar.querySelectorAll("a").length,
         bilder: bar.querySelectorAll("img").length,
-        gruen: link ? getComputedStyle(link).backgroundColor : "",
+        gruen: ss ? ss.backgroundColor : "",
         text: link ? link.textContent.replace(/\s+/g, " ").trim() : "",
-        leiste: getComputedStyle(document.getElementById("kauf-leiste")).display
+        leiste: getComputedStyle(document.getElementById("kauf-leiste")).display,
+        gleich
       };
     });
-    point("Schriftzug-Leiste", ruhe.weg && ruhe.kacheln && ruhe.bilder === 0 && !band.weg && band.n === 3 && band.bilder === 0 && band.gruen === "rgb(118, 183, 41)" && /Bauzaun/.test(band.text) && band.leiste === "none", JSON.stringify({ ruhe, band }));
+    point("Schriftzug-Leiste", ruhe.weg && ruhe.kacheln && ruhe.bilder === 0 && !band.weg && band.n === 3 && band.bilder === 0 && band.gruen === "rgb(118, 183, 41)" && band.gleich && /Bauzaun/.test(band.text) && band.leiste === "none", JSON.stringify({ ruhe, band }));
     const schriftKarte = sprung.page.locator("#kauf-schrift a[data-gruppe='verkehr']");
     const schriftBox = await schriftKarte.boundingBox();
     await sprung.page.mouse.move(schriftBox.x + schriftBox.width / 2, schriftBox.y + schriftBox.height / 2);

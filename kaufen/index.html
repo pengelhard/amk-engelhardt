@@ -8,7 +8,7 @@
   <meta name="description" content="Einzelteile, Zubehör und Anhänger zum Kauf.">
   <link rel="icon" href="../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../assets/logo.png">
-  <link rel="stylesheet" href="../css/styles.css?v=as">
+  <link rel="stylesheet" href="../css/styles.css?v=at">
   <script>document.documentElement.classList.add("js-kauf")</script>
 </head>
 <body>
@@ -74,9 +74,13 @@
         </nav>
         </div>
         <nav id="kauf-schrift" class="kauf-schrift is-weg" aria-label="Hauptgruppen" aria-hidden="true">
-          <a href="?gruppe=zaun" data-gruppe="zaun" aria-expanded="false" aria-controls="kauf-ebene" tabindex="-1">Bauzaun &amp; Absperrgitter</a>
-          <a href="?gruppe=verkehr" data-gruppe="verkehr" aria-expanded="false" aria-controls="kauf-ebene-verkehr" tabindex="-1">Verkehrsabsicherung &amp; Schilder</a>
-          <a href="?gruppe=anhaenger" data-gruppe="anhaenger" aria-expanded="false" aria-controls="kauf-ebene-anhaenger" tabindex="-1">Anhänger</a>
+          <div class="wrap">
+            <div class="kauf-einstieg">
+              <a class="kauf-karte kachel kachel--ober" href="?gruppe=zaun" data-gruppe="zaun" aria-expanded="false" aria-controls="kauf-ebene" tabindex="-1"><strong>Bauzaun &amp; Absperrgitter</strong></a>
+              <a class="kauf-karte kachel kachel--ober" href="?gruppe=verkehr" data-gruppe="verkehr" aria-expanded="false" aria-controls="kauf-ebene-verkehr" tabindex="-1"><strong>Verkehrsabsicherung &amp; Schilder</strong></a>
+              <a class="kauf-karte kachel kachel--ober" href="?gruppe=anhaenger" data-gruppe="anhaenger" aria-expanded="false" aria-controls="kauf-ebene-anhaenger" tabindex="-1"><strong>Anhänger</strong></a>
+            </div>
+          </div>
         </nav>
         <nav id="kauf-leiste" class="kauf-leiste" aria-label="Kategorien" hidden></nav>
         <p class="kauf-hinweis" id="kauf-hinweis" hidden></p>

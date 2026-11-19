@@ -2217,7 +2217,8 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .kauf-ebene { margin-top: 0.9rem; }
 .kauf-ebene .kauf-karte strong { overflow-wrap: anywhere; }
 .js-kauf .kauf-drops { position: relative; z-index: 38; overflow: visible; }
-.js-kauf #kauf-gruppen .kauf-karte:hover {
+.js-kauf #kauf-gruppen .kauf-karte:hover,
+.js-kauf #kauf-schrift .kauf-karte:hover {
   transform: none;
   box-shadow: var(--kachel-schatten);
 }
@@ -2292,7 +2293,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
     align-self: start;
     width: auto;
     margin: 0;
-    top: calc(var(--top, 6rem) + var(--kauf-schrift, 3.15rem) + 0.65rem);
+    top: calc(var(--top, 6rem) + var(--kauf-schrift, 4.6rem) + 0.65rem);
   }
 }
 .js-kauf .tiles > [data-teil-karte] {
@@ -2357,8 +2358,8 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .kauf-leiste-link[aria-current="true"] { background: var(--signal); color: var(--signal-ink); }
 .kauf-abschnitt { scroll-margin-top: calc(var(--top, 6rem) + var(--kauf-leiste, 3.4rem) + 0.6rem); }
 @media (min-width: 980px) {
-  .js-kauf { --kauf-schrift: 3.15rem; }
-  .js-kauf .kauf-abschnitt { scroll-margin-top: calc(var(--top, 6rem) + var(--kauf-schrift, 3.15rem) + 0.6rem); }
+  .js-kauf { --kauf-schrift: 4.6rem; }
+  .js-kauf .kauf-abschnitt { scroll-margin-top: calc(var(--top, 6rem) + var(--kauf-schrift, 4.6rem) + 0.6rem); }
   .js-kauf .kauf-leiste { display: none; }
 }
 .kauf-abschnitt h2 {
@@ -2482,37 +2483,14 @@ input[aria-invalid="true"] { border-color: var(--danger); }
     top: var(--top, 6rem);
     left: 0;
     right: 0;
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
+    display: block;
     margin: 0;
-    padding: 0.4rem 1.2rem;
+    padding: 0.35rem 0 0.55rem;
     background: var(--paper);
-    border-bottom: 1px solid var(--line);
   }
   .js-kauf .kauf-schrift.is-weg { visibility: hidden; pointer-events: none; }
-  .js-kauf .kauf-schrift a {
-    flex: 1 1 0;
-    max-width: 22rem;
-    min-height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.3rem 0.75rem;
-    border: 2px solid var(--ink);
-    background: var(--white);
-    color: var(--ink);
-    font-family: var(--display);
-    font-size: 1.2rem;
-    font-weight: 400;
-    letter-spacing: -0.03em;
-    line-height: 1.05;
-    text-align: center;
-    text-decoration: none;
-  }
-  .js-kauf .kauf-schrift a[aria-current="true"] { background: var(--signal); color: var(--signal-ink); }
-  .js-kauf .kauf-schrift a:hover,
-  .js-kauf .kauf-schrift a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .js-kauf .kauf-schrift .kauf-karte { text-decoration: none; }
+  .js-kauf .kauf-schrift .kauf-karte:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 }
 .kauf-layout { margin-top: 0.4rem; }
 .kauf-empty { margin: 1rem 0; }
