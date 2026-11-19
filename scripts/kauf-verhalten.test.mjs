@@ -502,17 +502,27 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
         });
         const box = hit ? hit.querySelector('input[type="checkbox"]') : null;
         const step = hit ? hit.querySelector(".beispiel-step") : null;
-        const summe = (document.getElementById("kauf-verkehr-summe") || {}).innerText || "";
-        const leer = document.querySelector(".kauf-auswahl-leer, #beispiel-liste .kauf-auswahl-leer");
+        const summe = document.getElementById("kauf-verkehr-summe");
+        const text = summe ? summe.innerText : "";
+        const karte = summe ? summe.querySelector(".beispiel-post") : null;
+        const steuer = karte ? karte.querySelector(".beispiel-step") : null;
+        const weg = karte ? karte.querySelector(".beispiel-weg") : null;
+        const titel = summe ? summe.querySelector("h2") : null;
+        const knopf = summe ? summe.querySelector(".beispiel-senden .btn") : null;
         return {
           checked: !!(box && box.checked),
           menge: hit ? (hit.querySelector("[data-menge], [data-schnell='staender']") || {}).value : "",
           plus: !!(step && getComputedStyle(step).display !== "none"),
-          box: summe.replace(/\s+/g, " ").trim(),
-          platzhalter: !!document.querySelector("#kauf-verkehr-summe") && /Typ\s*[–-]/.test(summe) && !!leer
+          box: text.replace(/\s+/g, " ").trim(),
+          platzhalter: /Typ\s*[–-]/.test(text),
+          titel: titel ? titel.textContent.trim() : "",
+          karte: !!(karte && getComputedStyle(karte).borderTopWidth !== "0px" && getComputedStyle(karte).borderRadius !== "0px"),
+          weg: !!(weg && getComputedStyle(weg).borderRadius !== "0px"),
+          schritt: !!(steuer && getComputedStyle(steuer).display !== "none"),
+          korb: knopf ? knopf.textContent.trim() : ""
         };
       });
-      point("Rundlauf " + name, stand.checked && stand.menge === "2" && stand.plus && stand.box.length > 0 && !/Typ\s*[–-]/.test(stand.box), JSON.stringify(stand));
+      point("Rundlauf " + name, stand.checked && stand.menge === "2" && stand.plus && stand.box.length > 0 && !stand.platzhalter && stand.titel === "Deine Auswahl" && stand.karte && stand.weg && stand.schritt && stand.korb === "Zum Anfragekorb", JSON.stringify(stand));
       await lauf.page.close();
     }
 
@@ -591,12 +601,15 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
         scrolls,
         liste: liste ? getComputedStyle(liste).overflowY : "",
         max: document.getElementById("menge-staender").getAttribute("max"),
-        robots: document.querySelector('meta[name="robots"]').content
+        robots: document.querySelector('meta[name="robots"]').content,
+        titel: (document.getElementById("beispiel-auswahl-titel") || {}).textContent || "",
+        standKarte: !!document.querySelector("#block-im .beispiel-post .beispiel-step"),
+        zusatzKarte: !!document.querySelector("#block-zusatz .beispiel-post .beispiel-weg")
       };
     });
     point("Komplett-Ständer und Einzelfelder", detailInfo.staender && detailInfo.felder, "");
     point("Fuß- und Schellentausch", detailInfo.fuss > 1 && detailInfo.schelle > 1, `${detailInfo.fuss}/${detailInfo.schelle}`);
-    point("Blöcke enthalten und zusätzlich", detailInfo.im && detailInfo.extra, "");
+    point("Blöcke enthalten und zusätzlich", detailInfo.im && detailInfo.extra && detailInfo.titel.trim() === "Deine Auswahl" && detailInfo.standKarte && detailInfo.zusatzKarte, detailInfo.titel.trim());
     point("Zubehör", detailInfo.zubehoer > 0, String(detailInfo.zubehoer));
     point("Galerie", detailInfo.galerie > 0, String(detailInfo.galerie));
     point("ein Scrollbalken", detailInfo.liste === "auto" && detailInfo.scrolls.length === 1, detailInfo.scrolls.join(", "));

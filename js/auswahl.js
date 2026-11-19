@@ -124,16 +124,77 @@
     var field = block ? block.querySelector("[data-menge]") : null;
     var link = block ? block.querySelector("a[href]") : null;
     var name = title ? title.textContent.trim() : "";
-    var menge = "";
+    var qty = 0;
     if (field) {
-      var qty = parseInt(field.value, 10);
-      menge = qty > 0 ? String(qty) : "–";
+      qty = parseInt(field.value, 10);
+      if (!qty || qty < 0) qty = 0;
     }
-    return { name: name, menge: menge, href: link ? link.getAttribute("href") : "" };
+    var kind = box.name === "schild" ? "schild" : "typ";
+    return {
+      name: name,
+      menge: qty > 0 ? String(qty) : "–",
+      qty: qty,
+      href: link ? link.getAttribute("href") : "",
+      ziel: kind + ":" + (box.value || "")
+    };
+  }
+
+  function kaufBox(aside, lines) {
+    var liste = aside.querySelector('[data-sum="liste"]');
+    var kurz = aside.querySelector('[data-sum="kurz"]');
+    var rows = lines || [];
+    if (kurz) kurz.textContent = (rows.length || 0) + " Posten";
+    if (!liste || !window.AMK_BAUSTEINE) return;
+    if (!rows.length) {
+      liste.innerHTML = '<p class="kauf-auswahl-leer">Noch nichts ausgewählt.</p>';
+    } else {
+      var html = "";
+      var last = "";
+      var buf = "";
+      function flush() {
+        if (!buf) return;
+        html += last
+          ? '<section class="beispiel-block"><h3>' + esc(last) + "</h3><ul>" + buf + "</ul></section>"
+          : "<ul>" + buf + "</ul>";
+        buf = "";
+      }
+      rows.forEach(function (line) {
+        var block = line.block || "";
+        if (block !== last) {
+          flush();
+          last = block;
+        }
+        var qty = line.qty;
+        var step = "";
+        if (typeof qty === "number") {
+          var feldId = "kauf-box-" + String(line.ziel || line.name).replace(/[^a-z0-9_-]+/gi, "-");
+          step = window.AMK_BAUSTEINE.mengeSchritt({
+            id: feldId,
+            value: String(qty),
+            label: "Menge " + (line.name || ""),
+            min: 0
+          });
+        }
+        buf += window.AMK_BAUSTEINE.auswahlPost({
+          name: line.name,
+          ziel: line.ziel || "",
+          weg: line.ziel || "",
+          wegLabel: (line.name || "Position") + " entfernen",
+          step: step
+        });
+      });
+      flush();
+      liste.innerHTML = html;
+    }
+    aside.classList.toggle("is-leer", !rows.length);
   }
 
   function fillLeiste(aside, lines) {
     if (!aside) return;
+    if (aside.id === "kauf-verkehr-summe") {
+      kaufBox(aside, lines);
+      return;
+    }
     var leer = window.AMK_KAUF_STORE ? window.AMK_KAUF_STORE.leer : "Noch nichts ausgewählt.";
     var short = aside.querySelector('[data-sum="short"]');
     var liste = aside.querySelector('[data-sum="liste"]');
@@ -262,7 +323,7 @@
       }
     });
     var aside = bare === "1" ? "" :
-      '<aside class="konfig-summary kachel-box is-leer" aria-live="polite"><h2>Ihre Auswahl</h2>' +
+      '<aside class="konfig-summary kachel-box is-leer" aria-live="polite"><h2>' + (vorgang === "kauf" ? "Deine Auswahl" : "Ihre Auswahl") + "</h2>" +
       '<p class="sum-short" data-sum="short"></p><dl class="sum-full">' +
       '<div class="sum-lines" data-sum="liste"></div>' +
       "</dl><p class=\"price-once\">Preis auf Anfrage</p>" +

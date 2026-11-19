@@ -89,6 +89,20 @@
     return '<div class="kauf-schnell kauf-schnell--leer" aria-hidden="true"></div>';
   }
 
+  function auswahlPost(opts) {
+    var live = opts.live ? ' data-live="' + esc(opts.live) + '"' : "";
+    var nameId = opts.nameId ? ' id="' + esc(opts.nameId) + '"' : "";
+    var weg = opts.weg
+      ? '<button type="button" class="beispiel-weg" data-weg="' + esc(opts.weg) + '" aria-label="' + esc(opts.wegLabel || ((opts.name || "") + " entfernen")) + '">×</button>'
+      : "";
+    var attrs = "";
+    if (opts.id) attrs += ' id="' + esc(opts.id) + '"';
+    if (opts.ziel) attrs += ' data-ziel="' + esc(opts.ziel) + '"';
+    return '<li class="beispiel-post"' + attrs + ">" +
+      '<p class="beispiel-post-text"><strong' + nameId + live + ">" + esc(opts.name) + "</strong></p>" +
+      weg + (opts.step || "") + (opts.extra || "") + "</li>";
+  }
+
   window.AMK_BAUSTEINE = {
     esc: esc,
     kreis: kreis,
@@ -97,6 +111,7 @@
     produkt: produkt,
     schnell: schnell,
     schnellLeer: schnellLeer,
+    auswahlPost: auswahlPost,
     zubehoerKachel: zubehoerKachel
   };
 })();

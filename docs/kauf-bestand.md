@@ -8,11 +8,11 @@ HTML: `kaufen/index.html` (Übersicht, Ober- und Unterkacheln, Bauzaun-Liste), `
 
 ## Vorher doppelt, jetzt ein Baustein
 
-Die Produktkachel stand in `js/typwahl.js`, das Zubehör noch einmal in `js/kauf-auswahl.js` und `js/beispiel.js`. Die Schrittsteuerung stand dreimal. Jetzt baut `js/kauf-bausteine.js` die Produktkachel (`kachel--produkt`), den Kreis (`kachel-kreis`) und die Menge (`kachel-menge`). Oberkacheln sind `kachel--ober`, Unterkacheln `kachel--unter`, dieselben Maße und derselbe Rahmen wie bisher. Die Mitlauf-Box auf der Liste ist `.konfig-summary.kachel-box` („Ihre Auswahl“), auf der Detailseite `.beispiel-korb.kachel-box`.
+Die Produktkachel stand in `js/typwahl.js`, das Zubehör noch einmal in `js/kauf-auswahl.js` und `js/beispiel.js`. Die Schrittsteuerung stand dreimal. Jetzt baut `js/kauf-bausteine.js` die Produktkachel (`kachel--produkt`), den Kreis (`kachel-kreis`) und die Menge (`kachel-menge`). Oberkacheln sind `kachel--ober`, Unterkacheln `kachel--unter`, dieselben Maße und derselbe Rahmen wie bisher. Die Mitlauf-Box auf der Liste und der Korb auf der Detailseite nutzen dieselbe Karte `.beispiel-post` aus `js/kauf-bausteine.js` (`auswahlPost`). Die Vorlage steht in `produkt/beispiel/index.html` mit dem Titel „Deine Auswahl“, gebaut von `js/beispiel.js`.
 
 ## Abweichende Stile, die bleiben
 
-Die Miet-Zeile `.pick` bleibt flach und zweispaltig. Sie ist kein Kauf-Kachel. „Ihre Auswahl“ auf der Liste behält den weichen Schatten der Leiste, der Korb auf der Detailseite den harten Schatten. Beides ist die Auswahl-Box, mit demselben Inhalt, nicht mit derselben Fläche. Eckdaten der Anhänger stehen weiter unter der Kachel, nicht in ihr. Piktogramme in der Verkehrs-Leiste bleiben enthalten auf weiß, Fotos füllen das Feld.
+Die Miet-Zeile `.pick` bleibt flach und zweispaltig. Sie ist kein Kauf-Kachel. „Deine Auswahl“ auf Liste und Detailseite hat denselben harten Schatten, dieselben Karten und denselben grünen Button. Die Miet-Anzeige „Ihre Auswahl“ bleibt die Leiste mit Kurztext. Eckdaten der Anhänger stehen weiter unter der Kachel, nicht in ihr. Piktogramme in der Verkehrs-Leiste bleiben enthalten auf weiß, Fotos füllen das Feld.
 
 ## Toter oder ungenutzter Code, nicht gelöscht
 
@@ -20,7 +20,14 @@ Die Miet-Zeile `.pick` bleibt flach und zweispaltig. Sie ist kein Kauf-Kachel. �
 
 ## Funktionsliste
 
-Oberkacheln, Unterkacheln, undurchsichtiges Hover-Panel über „Ihre Auswahl“ und unter dem Seitenkopf, Schließen per Klick und Escape. Ab 980 px eine feste Schriftzug-Leiste. Die drei Schriftzüge sind dieselben Oberkachel-Beschriftungen (`kauf-karte` und `strong`), ohne Bild, sichtbar sobald die Oberkacheln aus dem Bild sind; Hover und Fokus öffnen dasselbe Panel, der Klick auf den Schriftzug folgt der Oberkachel. Adresse `?gruppe`, `?kat`, `?teil`. Auf Verkehrsabsicherung, Anhängern und den Zaun-Gruppen außer dem Bauzaun-Katalog stehen die Kategorien untereinander; am Handy markiert die umbrechende Button-Leiste per IntersectionObserver die sichtbare Kategorie, ein Klick scrollt zur Überschrift. Am Computer gibt es diese Button-Leiste nicht. Der Bauzaun-Katalog bleibt die eigene Liste, mit Schnellauswahl Ständer und Einzelfelder, Link „Details anpassen“ und der rechten Box „Ihre Auswahl“. Die Mengen schreiben denselben Korb wie die Detailseite; ein geänderter Fuß oder eine geänderte Schelle wird nicht überschrieben. Runder Auswahlkreis an derselben Stelle, Plus/Minus immer sichtbar, Grenze 9999. Menge über 0 setzt den Kreis, der Kreis setzt die Menge auf 1, Menge 0 nimmt die Zeile aus dem Korb. Beim Bauzaun gilt der Kreis für Ständer und Einzelfelder gemeinsam. `js/kauf-store.js` ist der gemeinsame Stand. Liste, Detailseite und „Ihre Auswahl“ lesen ihn. Leer heißt „Noch nichts ausgewählt.“
+Oberkacheln, Unterkacheln, undurchsichtiges Hover-Panel über „Deine Auswahl“ und unter dem Seitenkopf, Schließen per Klick und Escape. Ab 980 px eine feste Schriftzug-Leiste. Die drei Schriftzüge sind dieselben Oberkachel-Beschriftungen (`kauf-karte` und `strong`), ohne Bild, sichtbar sobald die Oberkacheln aus dem Bild sind; Hover und Fokus öffnen dasselbe Panel, der Klick auf den Schriftzug folgt der Oberkachel. Adresse `?gruppe`, `?kat`, `?teil`. Auf Verkehrsabsicherung, Anhängern und den Zaun-Gruppen außer dem Bauzaun-Katalog stehen die Kategorien untereinander; am Handy markiert die umbrechende Button-Leiste per IntersectionObserver die sichtbare Kategorie, ein Klick scrollt zur Überschrift. Am Computer gibt es diese Button-Leiste nicht. Der Bauzaun-Katalog bleibt die eigene Liste, mit Schnellauswahl Ständer und Einzelfelder, Link „Details anpassen“ und der rechten Box „Deine Auswahl“. Die Mengen schreiben denselben Korb wie die Detailseite; ein geänderter Fuß oder eine geänderte Schelle wird nicht überschrieben. Runder Auswahlkreis an derselben Stelle, Plus/Minus immer sichtbar, Grenze 9999. Menge über 0 setzt den Kreis, der Kreis setzt die Menge auf 1, Menge 0 nimmt die Zeile aus dem Korb. Beim Bauzaun gilt der Kreis für Ständer und Einzelfelder gemeinsam. `js/kauf-store.js` ist der gemeinsame Stand. Liste, Detailseite und „Ihre Auswahl“ lesen ihn. Leer heißt „Noch nichts ausgewählt.“
+
+Vor dem Umbau der Kauf-Box, Aufrufer `paintList` in `js/kauf-auswahl.js` und `js/beispiel.js`:
+
+- `beispiel-block-kopf` und `beispiel-zeile` im Block „Im Komplett-Ständer enthalten“. Die Positionen nutzen jetzt dieselbe Karte `.beispiel-post` wie „Zusätzlich“.
+- In `js/kauf.js` ersetzte der Start den Button `#kauf-verkehr-korb` durch den Link „Zum Anfragekorb“. Der Link steht jetzt in `kaufen/index.html`.
+
+Die Listen-Zeile `dt`/`dd` in `fillLeiste` bleibt für die Miete. Kauf schreibt über `kaufBox` nur in `#kauf-verkehr-summe`.
 
 Vor dem Entfernen, Aufrufer keiner:
 

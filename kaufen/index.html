@@ -8,7 +8,7 @@
   <meta name="description" content="Einzelteile, Zubehör und Anhänger zum Kauf.">
   <link rel="icon" href="../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../assets/logo.png">
-  <link rel="stylesheet" href="../css/styles.css?v=au">
+  <link rel="stylesheet" href="../css/styles.css?v=av">
   <script>document.documentElement.classList.add("js-kauf")</script>
 </head>
 <body>
@@ -110,13 +110,15 @@
             </form>
             <div id="kauf-liste" class="tiles"></div>
             </div>
-            <aside class="konfig-summary is-leer" id="kauf-verkehr-summe" hidden aria-live="polite">
-              <h2>Ihre Auswahl</h2>
-              <p class="sum-short" data-sum="short">Noch nichts ausgewählt.</p>
-              <dl class="sum-full"><div class="sum-lines" data-sum="liste"></div></dl>
-              <p class="price-once">Preis auf Anfrage</p>
-              <p class="form-status" data-status role="status"></p>
-              <button class="btn" type="button" id="kauf-verkehr-korb">In den Anfragekorb</button>
+            <aside class="konfig-summary beispiel-korb is-leer" id="kauf-verkehr-summe" hidden aria-live="polite">
+              <div class="beispiel-auswahl" id="kauf-auswahl-panel">
+                <h2>Deine Auswahl</h2>
+                <div data-sum="liste"></div>
+              </div>
+              <button type="button" class="beispiel-leiste-wahl" data-sum="kurz" aria-expanded="false" aria-controls="kauf-auswahl-panel">0 Posten</button>
+              <div class="beispiel-senden">
+                <a class="btn" href="../anfrage/">Zum Anfragekorb</a>
+              </div>
             </aside>
           </div>
         </div>
@@ -1667,15 +1669,15 @@
   </div>
   <script src="../js/nav.js"></script>
   <script src="../js/merkzettel.js"></script>
-  <script src="../js/kauf-bausteine.js?v=au"></script>
-  <script src="../js/kauf-store.js?v=au"></script>
-  <script src="../js/typwahl.js?v=au"></script>
+  <script src="../js/kauf-bausteine.js?v=av"></script>
+  <script src="../js/kauf-store.js?v=av"></script>
+  <script src="../js/typwahl.js?v=av"></script>
   <script src="../js/zeitraum.js"></script>
   <script src="../js/bestellen.js"></script>
   <script src="../js/gruppen.js"></script>
-  <script src="../js/schilder.js?v=au"></script>
+  <script src="../js/schilder.js?v=av"></script>
   <script src="../data/anhaenger-eckdaten.js"></script>
-  <script src="../js/auswahl.js?v=au"></script>
-  <script src="../js/kauf.js?v=au"></script>
+  <script src="../js/auswahl.js?v=av"></script>
+  <script src="../js/kauf.js?v=av"></script>
 </body>
 </html>

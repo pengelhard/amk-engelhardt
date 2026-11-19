@@ -534,8 +534,9 @@
         var felder = schnellZahl(block, "felder");
         var details = block.querySelector(".kauf-schnell-details");
         var href = details ? details.getAttribute("href") : "";
-        if (stand > 0) lines.push({ name: name, menge: stand + " Ständer", block: "Im Komplett-Ständer enthalten", href: href });
-        if (felder > 0) lines.push({ name: name, menge: felder + " Einzelfelder", block: "Zusätzlich", href: href });
+        var slug = block.getAttribute("data-slug") || "";
+        if (stand > 0) lines.push({ name: name, menge: String(stand), qty: stand, block: "Im Komplett-Ständer enthalten", href: href, ziel: "staender:" + slug });
+        if (felder > 0) lines.push({ name: name, menge: String(felder), qty: felder, block: "Zusätzlich", href: href, ziel: "felder:" + slug });
       });
     }
     if (schilder && zeile) {
@@ -544,7 +545,7 @@
       });
       var note = schilder.elements.hinweis;
       var text = note ? String(note.value || "").trim() : "";
-      if (text) lines.push({ name: "Größe, Folie, Ständer", menge: text });
+      if (text) lines.push({ name: "Größe, Folie, Ständer: " + text, ziel: "hinweis:schilder" });
     }
     return lines;
   }
@@ -867,13 +868,82 @@
       render({ sprung: true, sanft: true });
     });
   }
-  var kaufKorb = document.getElementById("kauf-verkehr-korb");
-  if (kaufKorb) {
-    var korbLink = document.createElement("a");
-    korbLink.className = "btn";
-    korbLink.href = "../anfrage/";
-    korbLink.textContent = "Zum Anfragekorb";
-    kaufKorb.replaceWith(korbLink);
+  function zielWert(value) {
+    return window.CSS && CSS.escape ? CSS.escape(value) : String(value).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  }
+
+  function boxSetzen(ziel, qty) {
+    var cut = String(ziel || "").indexOf(":");
+    if (cut < 0) return;
+    var kind = ziel.slice(0, cut);
+    var id = ziel.slice(cut + 1);
+    var safe = zielWert(id);
+    if (kind === "typ" || kind === "schild") {
+      var root = kind === "schild" ? "#schilder-bereich" : "#kauf-stapel";
+      var box = document.querySelector(root + ' input[name="' + kind + '"][value="' + safe + '"]');
+      var card = box && box.closest(".kauf-produkt");
+      var field = card && card.querySelector("[data-menge]");
+      if (field) {
+        field.value = String(qty);
+        field.dispatchEvent(new Event("input", { bubbles: true }));
+      } else if (box) {
+        box.checked = qty > 0;
+        box.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      return;
+    }
+    if (kind === "staender" || kind === "felder") {
+      var block = document.querySelector('#kauf-liste .kauf-schnell[data-slug="' + safe + '"]');
+      var field = block && block.querySelector('[data-schnell="' + kind + '"]');
+      if (field) {
+        field.value = String(qty);
+        field.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      return;
+    }
+    if (kind === "hinweis") {
+      var note = document.getElementById("hinweis-schilder");
+      if (note) {
+        note.value = "";
+        note.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    }
+  }
+
+  if (verkehrSumme) {
+    verkehrSumme.addEventListener("click", function (event) {
+      var kurz = event.target.closest("[data-sum='kurz']");
+      if (kurz && verkehrSumme.contains(kurz)) {
+        var panel = document.getElementById("kauf-auswahl-panel");
+        if (!panel) return;
+        var open = !panel.classList.contains("is-offen");
+        panel.classList.toggle("is-offen", open);
+        kurz.setAttribute("aria-expanded", open ? "true" : "false");
+        return;
+      }
+      var weg = event.target.closest("[data-weg]");
+      if (weg && verkehrSumme.contains(weg)) {
+        boxSetzen(weg.getAttribute("data-weg"), 0);
+        return;
+      }
+      var button = event.target.closest(".beispiel-step [data-step]");
+      if (!button || !verkehrSumme.contains(button)) return;
+      var li = button.closest("[data-ziel]");
+      var field = button.parentNode.querySelector("input");
+      if (!li || !field) return;
+      var step = parseInt(button.getAttribute("data-step"), 10) || 0;
+      var next = Math.min(9999, Math.max(0, (parseInt(field.value, 10) || 0) + step));
+      boxSetzen(li.getAttribute("data-ziel"), next);
+    });
+    verkehrSumme.addEventListener("change", function (event) {
+      var field = event.target;
+      if (!field || field.type !== "number" || !verkehrSumme.contains(field)) return;
+      var li = field.closest("[data-ziel]");
+      if (!li) return;
+      var qty = parseInt(field.value, 10);
+      if (isNaN(qty)) qty = 0;
+      boxSetzen(li.getAttribute("data-ziel"), Math.min(9999, Math.max(0, qty)));
+    });
   }
 
   document.addEventListener("amk-zeichen", function (event) {

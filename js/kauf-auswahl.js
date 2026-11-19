@@ -95,7 +95,7 @@
     korb.className = "beispiel-korb kachel-box";
     korb.innerHTML =
       '<div class="beispiel-auswahl" id="beispiel-auswahl">' +
-      '<h2 id="beispiel-auswahl-titel" tabindex="-1">Ihre Auswahl</h2>' +
+      '<h2 id="beispiel-auswahl-titel" tabindex="-1">Deine Auswahl</h2>' +
       '<div id="beispiel-liste"></div></div>' +
       '<div class="beispiel-senden"><a class="btn" href="' + esc(root) + 'anfrage/">Zum Anfragekorb</a></div>';
 
@@ -236,35 +236,49 @@
       var list = document.getElementById("beispiel-liste");
       if (!list) return;
       var html = "";
+      var post = window.AMK_BAUSTEINE.auswahlPost;
       if (standOn() && standZahl() > 0) {
-        html += '<section class="beispiel-block" id="block-im"><h3>Im Komplett-Ständer enthalten</h3>' +
-          '<div class="beispiel-block-kopf"><p id="beispiel-staender-kopf">' + esc(standZahl() + " × " + (paket.label || "Komplett-Ständer")) + "</p>" +
-          stepper("staender", "menge-liste-staender", standZahl(), "Ständeranzahl", 0) +
-          "</div><ul>" +
-          '<li class="beispiel-zeile"><span data-live="zaun">' + esc(zeileText("zaun")) + "</span></li>" +
-          '<li class="beispiel-zeile"><span data-live="stand">' + esc(zeileText("stand")) + "</span></li>";
+        html += '<section class="beispiel-block" id="block-im"><h3>Im Komplett-Ständer enthalten</h3><ul>' +
+          post({
+            name: standZahl() + " × " + (paket.label || "Komplett-Ständer"),
+            nameId: "beispiel-staender-kopf",
+            weg: "staender",
+            wegLabel: "Komplett-Ständer entfernen",
+            step: stepper("staender", "menge-liste-staender", standZahl(), "Ständeranzahl", 0)
+          }) +
+          post({ name: zeileText("zaun"), live: "zaun" }) +
+          post({ name: zeileText("stand"), live: "stand" });
         (paket.wahl || []).forEach(function (entry) {
-          html += '<li class="beispiel-zeile"><span data-live="' + esc(entry.id) + '">' + esc(zeileText(entry.id)) + "</span>" + selectField(entry) + "</li>";
+          html += post({ name: zeileText(entry.id), live: entry.id, extra: selectField(entry) });
         });
         html += "</ul></section>";
       }
       var extra = "";
       var felder = standOn() ? feldZahl() : 0;
       if (felder > 0) {
-        extra += '<li class="beispiel-post" id="zeile-felder"><p class="beispiel-post-text"><strong>' + esc(product.name) + "</strong></p>" +
-          '<button type="button" class="beispiel-weg" data-weg="felder" aria-label="Einzelfelder entfernen">×</button>' +
-          stepper("felder", "menge-liste-felder", felder, "Feldanzahl", 0) + "</li>";
+        extra += post({
+          id: "zeile-felder",
+          name: product.name,
+          weg: "felder",
+          wegLabel: "Einzelfelder entfernen",
+          step: stepper("felder", "menge-liste-felder", felder, "Feldanzahl", 0)
+        });
       }
       if (!standOn() && feldZahl() > 0) {
-        extra += '<li class="beispiel-post"><p class="beispiel-post-text"><strong>' + esc(product.name) + "</strong></p>" +
-          stepper("einfach", "menge-liste-einfach", feldZahl(), "Menge", 0) + "</li>";
+        extra += post({
+          name: product.name,
+          step: stepper("einfach", "menge-liste-einfach", feldZahl(), "Menge", 0)
+        });
       }
       form.querySelectorAll('input[name="zubehoer"]:checked').forEach(function (box) {
         var item = itemOf(box.value);
         var qtyField = document.getElementById("menge-" + box.value);
-        extra += '<li class="beispiel-post"><p class="beispiel-post-text"><strong>' + esc(item.name) + "</strong></p>" +
-          '<button type="button" class="beispiel-weg" data-weg="' + esc(box.value) + '" aria-label="' + esc(item.name) + ' entfernen">×</button>' +
-          stepper(box.value, "menge-liste-" + box.value, qtyField ? qtyField.value : "1", "Menge " + item.name, 1) + "</li>";
+        extra += post({
+          name: item.name,
+          weg: box.value,
+          wegLabel: item.name + " entfernen",
+          step: stepper(box.value, "menge-liste-" + box.value, qtyField ? qtyField.value : "1", "Menge " + item.name, 1)
+        });
       });
       if (extra) html += '<section class="beispiel-block" id="block-zusatz"><h3>Zusätzlich</h3><ul>' + extra + "</ul></section>";
       if (!html) html = '<p class="kauf-auswahl-leer">' + esc(window.AMK_KAUF_STORE ? window.AMK_KAUF_STORE.leer : "Noch nichts ausgewählt.") + "</p>";
@@ -442,8 +456,8 @@
       var weg = event.target.closest("[data-weg]");
       if (weg && form.contains(weg)) {
         var key = weg.getAttribute("data-weg");
-        if (key === "felder") {
-          setMenge("felder", 0);
+        if (key === "felder" || key === "staender") {
+          setMenge(key, 0);
           paintList();
           syncCart();
           return;
@@ -544,7 +558,7 @@
     var kit = new Promise(function (resolve) {
       if (window.AMK_BAUSTEINE) { resolve(); return; }
       var script = document.createElement("script");
-      script.src = root + "js/kauf-bausteine.js";
+      script.src = root + "js/kauf-bausteine.js?v=av";
       script.onload = function () { resolve(); };
       script.onerror = function () { resolve(); };
       document.head.appendChild(script);

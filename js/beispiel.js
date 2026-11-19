@@ -168,13 +168,14 @@
 
   function postZeile(slug) {
     var item = bySlug[slug];
-    if (!item) return "";
+    if (!item || !window.AMK_BAUSTEINE) return "";
     var field = document.getElementById("menge-" + slug);
-    return '<li class="beispiel-post">' +
-      '<p class="beispiel-post-text"><strong>' + esc(item.name) + "</strong></p>" +
-      '<button type="button" class="beispiel-weg" data-weg="' + esc(slug) + '" aria-label="' + esc(item.name) + ' entfernen">×</button>' +
-      stepper(slug, "menge-liste-" + slug, field ? field.value : "1", "Menge " + item.name, 1) +
-      "</li>";
+    return window.AMK_BAUSTEINE.auswahlPost({
+      name: item.name,
+      weg: slug,
+      wegLabel: item.name + " entfernen",
+      step: stepper(slug, "menge-liste-" + slug, field ? field.value : "1", "Menge " + item.name, 1)
+    });
   }
 
   function paintList() {
@@ -191,26 +192,33 @@
       return;
     }
     var html = "";
+    var post = window.AMK_BAUSTEINE.auswahlPost;
     if (n > 0) {
       html += '<section class="beispiel-block" id="block-im">' +
-        "<h3>Im Komplett-Ständer enthalten</h3>" +
-        '<div class="beispiel-block-kopf"><p id="beispiel-staender-kopf">' + esc(n + " × " + (paket().label || "Komplett-Ständer")) + "</p>" +
-        stepper("staender", "menge-liste-staender", n, "Ständeranzahl", 0) +
-        "</div><ul>" +
-        '<li class="beispiel-zeile"><span data-live="zaun">' + esc(zeileText("zaun")) + "</span></li>" +
-        '<li class="beispiel-zeile"><span data-live="stand">' + esc(zeileText("stand")) + "</span></li>";
+        "<h3>Im Komplett-Ständer enthalten</h3><ul>" +
+        post({
+          name: n + " × " + (paket().label || "Komplett-Ständer"),
+          nameId: "beispiel-staender-kopf",
+          weg: "staender",
+          wegLabel: "Komplett-Ständer entfernen",
+          step: stepper("staender", "menge-liste-staender", n, "Ständeranzahl", 0)
+        }) +
+        post({ name: zeileText("zaun"), live: "zaun" }) +
+        post({ name: zeileText("stand"), live: "stand" });
       wahlGruppen().forEach(function (entry) {
-        html += '<li class="beispiel-zeile"><span data-live="' + esc(entry.id) + '">' + esc(zeileText(entry.id)) + "</span>" + selectField(entry) + "</li>";
+        html += post({ name: zeileText(entry.id), live: entry.id, extra: selectField(entry) });
       });
       html += "</ul></section>";
     }
     var extra = "";
     if (m > 0) {
-      extra += '<li class="beispiel-post" id="zeile-felder">' +
-        '<p class="beispiel-post-text"><strong>' + esc(product.name) + "</strong></p>" +
-        '<button type="button" class="beispiel-weg" data-weg="felder" aria-label="Einzelfelder entfernen">×</button>' +
-        stepper("felder", "menge-liste-felder", m, "Feldanzahl", 0) +
-        "</li>";
+      extra += post({
+        id: "zeile-felder",
+        name: product.name,
+        weg: "felder",
+        wegLabel: "Einzelfelder entfernen",
+        step: stepper("felder", "menge-liste-felder", m, "Feldanzahl", 0)
+      });
     }
     root.querySelectorAll('input[name="zubehoer"]:checked').forEach(function (box) {
       extra += postZeile(box.value);
@@ -451,9 +459,9 @@
     var weg = event.target.closest("[data-weg]");
     if (weg && root.contains(weg)) {
       var key = weg.getAttribute("data-weg");
-      if (key === "felder") {
-        setMenge("felder", 0);
-        var field = document.getElementById("menge-felder");
+      if (key === "felder" || key === "staender") {
+        setMenge(key, 0);
+        var field = document.getElementById("menge-" + key);
         if (field) field.dispatchEvent(new Event("input", { bubbles: true }));
         return;
       }

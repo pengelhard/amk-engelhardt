@@ -1,5 +1,5 @@
 (function () {
-  /* Ein Stand für alle Kaufseiten. Liste, Detail und „Ihre Auswahl“
+  /* Ein Stand für alle Kaufseiten. Liste, Detail und „Deine Auswahl“
      lesen und schreiben denselben Korb-Speicher. */
   var LEER = "Noch nichts ausgewählt.";
 

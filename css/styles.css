@@ -2214,6 +2214,53 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .kauf-auswahl-leer,
 .kauf-auswahl-block { margin: 0; }
 .kauf-auswahl-block { margin-top: 0.45rem; font-weight: 700; }
+.beispiel-post:not(:has(.beispiel-weg)) > .beispiel-post-text,
+.beispiel-post .beispiel-wahlfeld { grid-column: 1 / -1; }
+.js-kauf #kauf-verkehr-summe.beispiel-korb {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+@media (max-width: 979px) {
+  .js-kauf #kauf-verkehr-summe.beispiel-korb.is-leer { display: none; }
+  .js-kauf #kauf-verkehr-summe .beispiel-senden { display: contents; }
+  .js-kauf #kauf-verkehr-summe .beispiel-auswahl.is-offen h2 {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0 0 0.5rem;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+}
+@media (min-width: 980px) {
+  .js-kauf #kauf-verkehr-summe.beispiel-korb {
+    flex-direction: column;
+    align-items: stretch;
+    border: 1px solid var(--line);
+    border-radius: var(--kachel-radius);
+    box-shadow: var(--kachel-schatten);
+    padding: 1rem 1rem 0.95rem;
+    max-height: calc(100dvh - var(--top, 6rem) - var(--kauf-schrift, 4.6rem) - 1.6rem);
+    overflow: hidden;
+  }
+  .js-kauf #kauf-verkehr-summe .beispiel-leiste-wahl { display: none; }
+  .js-kauf #kauf-verkehr-summe .beispiel-auswahl {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .js-kauf #kauf-verkehr-summe [data-sum="liste"] {
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .js-kauf #kauf-verkehr-summe .price-once { display: none; }
+}
 .js-kauf .kauf-produkt .beispiel-wahl:focus-within .beispiel-kreis { outline: 2px solid var(--ink); outline-offset: 2px; }
 .js-kauf .kauf-produkt .pick-menge,
 .js-kauf .tiles > [data-teil-karte] > .anhaenger-details { margin: 0.35rem 0.85rem 0.75rem; }
