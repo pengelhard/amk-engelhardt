@@ -396,7 +396,7 @@
     var link = document.querySelector('#kauf-gruppen a[data-gruppe="' + id + '"]');
     var nav = document.querySelector('.kauf-ebene[data-fuer="' + id + '"]');
     if (!link || !nav) return;
-    nav.style.top = Math.max(0, link.offsetTop + link.offsetHeight - 1) + "px";
+    nav.style.top = (link.offsetTop + link.offsetHeight + 4) + "px";
   }
 
   function paintPanel() {
