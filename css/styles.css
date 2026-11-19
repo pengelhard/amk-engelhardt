@@ -651,6 +651,14 @@ main { position: relative; z-index: 0; padding-top: var(--top, 5.6rem); }
   padding: 0.16rem 0.45rem;
   border-radius: 999px;
 }
+.badge--mvas {
+  background: var(--green);
+  color: #fff;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+}
 .offer-empty, .offer-more { margin: 0.9rem 0 0; }
 .news-grid { display: grid; gap: 0.85rem; margin-top: 1.1rem; }
 .news-card {
@@ -3211,6 +3219,29 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 }
 .start-schritte span { display: block; margin-top: 0.3rem; }
 .start-beispiel { margin: 0; max-width: 40rem; }
+.start-block .badge { margin: 0 0 1rem; }
+.start-block .actions { margin-top: 1.1rem; }
+.leistung-karte {
+  display: block;
+  max-width: 28rem;
+  margin: 0 0 1rem;
+  padding: 0.95rem 1rem 1.05rem;
+  background: #fff;
+  border: var(--kachel-rand);
+  border-radius: var(--kachel-radius);
+  box-shadow: var(--kachel-schatten);
+}
+.leistung-karte[hidden] { display: none !important; }
+.leistung-karte strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.leistung-karte p { margin: 0.4rem 0 0.75rem; }
+.leistung-karte a { font-weight: 600; color: var(--green-text); }
 .start-neu .kauf-board { padding: 0; background: transparent; }
 .start-neu .badge { margin-right: 0.4rem; vertical-align: 0.05em; }
 .start-neu .offer-more { margin-top: 1.1rem; }
