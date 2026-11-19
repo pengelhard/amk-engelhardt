@@ -2091,6 +2091,32 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   font-family: var(--display); font-weight: 400; font-size: 1.45rem; line-height: 1.05; letter-spacing: -0.03em;
 }
 .kauf-karte[aria-current="true"] strong { background: var(--signal); color: var(--signal-ink); }
+.modus-schalter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+  max-width: 28rem;
+  margin: 0.85rem 0 0.2rem;
+}
+.modus-schalter a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.45rem 0.8rem;
+  border: var(--kachel-rand);
+  border-radius: var(--kachel-radius);
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: var(--kachel-schatten);
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.45rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+.modus-schalter a[aria-current="true"] { background: var(--signal); color: var(--signal-ink); }
 .kauf-karte:hover { transform: translate(3px, 3px); box-shadow: var(--kachel-schatten-ruhe); }
 .kauf-board:not(.is-gruppe) .kauf-layout { display: none; }
 .kauf-board.is-schilder .kauf-layout { display: block; }

@@ -32,8 +32,10 @@
     return { kat: link.getAttribute("data-kat") || "", teil: link.getAttribute("data-teil") || "" };
   }
   function ersteUnter(id) {
-    var link = document.querySelector('.kauf-ebene[data-fuer="' + id + '"] a');
-    return link ? unterVon(link) : { kat: "", teil: "" };
+    var links = document.querySelectorAll('.kauf-ebene[data-fuer="' + id + '"] a');
+    var i;
+    for (i = 0; i < links.length; i++) if (!links[i].hidden) return unterVon(links[i]);
+    return { kat: "", teil: "" };
   }
   function gemerkteUnter(id) {
     var saved = "";
@@ -42,6 +44,7 @@
       var links = document.querySelectorAll('.kauf-ebene[data-fuer="' + id + '"] a');
       var i;
       for (i = 0; i < links.length; i++) {
+        if (links[i].hidden) continue;
         if (links[i].getAttribute("data-kat") === saved || links[i].getAttribute("data-teil") === saved) return unterVon(links[i]);
       }
     }
@@ -76,7 +79,23 @@
     if (form) form.remove();
   });
 
-  var state = { gruppe: "", kat: "" };
+  var state = { gruppe: "", kat: "", modus: "kauf" };
+  var katalog = [];
+  var MODUS_MERK = "amk-modus";
+  var SHOP_KAT = { bauzaune: 1, zubehoer: 1, tore: 1, sichtschutz: 1, gitter: 1 };
+  var TEIL_ART = {
+    schwellen: "Betonschwellen",
+    schleuse: "Schleuse",
+    buehne: "Bühne",
+    schranken: "Schranken",
+    baken: "Baken",
+    hochlader: "Hochlader",
+    plane: "Planenanhänger",
+    koffer: "Kofferanhänger",
+    transporter: "Fahrzeugtransporter",
+    kuehl: "Kühlanhänger"
+  };
+  var ZEICHEN_TEIL = { gefahr: 1, vorschrift: 1, richt: 1, einrichtung: 1 };
   var schilder = document.getElementById("schilder-bereich");
   var wahl = document.getElementById("kauf-wahl");
   var spalte = document.getElementById("kauf-spalte");
@@ -111,6 +130,11 @@
     if (kat && !gruppe) gruppe = EBENE[kat] ? "zaun" : (KAT_GRUPPE[kat] || "");
     if (gruppe && kat && !EBENE[kat] && GRUPPEN[gruppe].indexOf(kat) === -1) kat = "";
     if (!gruppe) gruppe = "zaun";
+    var ausAdresse = params.get("modus");
+    var modus = ausAdresse === "miete" ? "miete" : (ausAdresse === "kauf" ? "kauf" : "");
+    if (!modus) {
+      try { modus = sessionStorage.getItem(MODUS_MERK) === "miete" ? "miete" : "kauf"; } catch (error) { modus = "kauf"; }
+    }
     var signs = window.AMK_SCHILDER_TEILE || [];
     var zeichen = "";
     if (gruppe === "verkehr" && signs.indexOf(teil) !== -1) {
@@ -122,8 +146,11 @@
       gruppe: gruppe,
       kat: kat,
       teil: teil,
-      zeichen: zeichen
+      zeichen: zeichen,
+      modus: modus
     };
+    window.AMK_MODUS = state.modus === "miete" ? "miete" : "kauf";
+    try { sessionStorage.setItem(MODUS_MERK, window.AMK_MODUS); } catch (error) { /* Speicher kann gesperrt sein */ }
     if (state.gruppe === "verkehr" && !state.zeichen && !state.teil) state.teil = "schranken";
     if (state.gruppe === "anhaenger" && !state.teil) state.teil = "hochlader";
     if (state.gruppe === "zaun" && state.kat) merkeUnter("zaun", state.kat);
@@ -144,6 +171,7 @@
     if (state.kat) params.set("kat", state.kat);
     if (state.gruppe === "verkehr" && state.zeichen) params.set("teil", state.zeichen);
     else if (state.teil && teilList().indexOf(state.teil) !== -1) params.set("teil", state.teil);
+    if (state.modus === "miete") params.set("modus", "miete");
     var qs = params.toString();
     var url = location.pathname + (qs ? "?" + qs : "");
     if (mode === "push") history.pushState({ kauf: 1 }, "", url);
@@ -159,8 +187,121 @@
     return true;
   }
 
+  function modusPasst(product) {
+    if (state.modus !== "miete") return true;
+    var modi = product && product.modi && product.modi.length ? product.modi : ["kauf"];
+    return modi.indexOf("miete") !== -1;
+  }
+
+  function linkSichtbar(link) {
+    if (state.modus !== "miete") return true;
+    var kat = link.getAttribute("data-kat") || "";
+    var teil = link.getAttribute("data-teil") || "";
+    if (ZEICHEN_TEIL[teil]) return false;
+    var art = TEIL_ART[kat || teil] || "";
+    var i;
+    for (i = 0; i < katalog.length; i++) {
+      var product = katalog[i];
+      if (!modusPasst(product)) continue;
+      if (kat && SHOP_KAT[kat] && product.shop === kat) return true;
+      if (art && ((product.attr || {}).art || "") === art) return true;
+    }
+    return false;
+  }
+
+  function maleNav() {
+    document.querySelectorAll(".kauf-ebene a").forEach(function (link) {
+      link.hidden = !linkSichtbar(link);
+    });
+    document.querySelectorAll("#kauf-gruppen a[data-gruppe], #kauf-schrift a[data-gruppe]").forEach(function (link) {
+      var id = link.getAttribute("data-gruppe") || "";
+      var nav = document.querySelector('.kauf-ebene[data-fuer="' + id + '"]');
+      var any = false;
+      if (nav) nav.querySelectorAll("a").forEach(function (sub) { if (!sub.hidden) any = true; });
+      link.hidden = state.modus === "miete" && !any;
+    });
+    ["gitter", "schwellen", "schleuse", "buehne"].forEach(function (id) {
+      var section = document.getElementById("kauf-teil-" + id);
+      var link = document.querySelector('#kauf-ebene a[data-kat="' + id + '"]');
+      if (section) section.hidden = !!(link && link.hidden);
+    });
+  }
+
+  function ersteSichtbare(nav) {
+    if (!nav) return null;
+    var links = nav.querySelectorAll("a");
+    var i;
+    for (i = 0; i < links.length; i++) if (!links[i].hidden) return links[i];
+    return null;
+  }
+
+  function aktuelleLink() {
+    var nav = document.querySelector('.kauf-ebene[data-fuer="' + state.gruppe + '"]');
+    if (!nav) return null;
+    var key = state.gruppe === "zaun" ? state.kat : (state.zeichen || state.teil);
+    var attr = state.gruppe === "zaun" ? "data-kat" : "data-teil";
+    if (!/^[a-z0-9-]+$/.test(key || "")) return null;
+    return nav.querySelector("a[" + attr + '="' + key + '"]');
+  }
+
+  function sichereStelle() {
+    var link = aktuelleLink();
+    if (link && !link.hidden) return false;
+    var nav = document.querySelector('.kauf-ebene[data-fuer="' + state.gruppe + '"]');
+    var next = null;
+    if (link && nav) {
+      var all = nav.querySelectorAll("a");
+      var seen = false;
+      var i;
+      for (i = 0; i < all.length; i++) {
+        if (all[i] === link) { seen = true; continue; }
+        if (seen && !all[i].hidden) { next = all[i]; break; }
+      }
+    }
+    if (!next) next = ersteSichtbare(nav);
+    if (!next) {
+      var groups = document.querySelectorAll("#kauf-gruppen a[data-gruppe]");
+      var g;
+      for (g = 0; g < groups.length; g++) {
+        if (groups[g].hidden) continue;
+        var id = groups[g].getAttribute("data-gruppe") || "";
+        var alt = ersteSichtbare(document.querySelector('.kauf-ebene[data-fuer="' + id + '"]'));
+        if (!alt) continue;
+        setzeUnter(id, unterVon(alt));
+        return true;
+      }
+      return false;
+    }
+    setzeUnter(state.gruppe, unterVon(next));
+    return true;
+  }
+
+  function renderSchalter() {
+    var modus = state.modus === "miete" ? "miete" : "kauf";
+    document.querySelectorAll(".modus-schalter [data-modus]").forEach(function (link) {
+      if (link.getAttribute("data-modus") === modus) link.setAttribute("aria-current", "true");
+      else link.removeAttribute("aria-current");
+    });
+    var name = modus === "miete" ? "Mieten" : "Kaufen";
+    var titel = document.querySelector("main h1");
+    if (titel) titel.textContent = name;
+    var crumb = document.getElementById("crumb-kauf");
+    if (crumb && !crumb.querySelector("a")) crumb.textContent = name;
+    if (modus === "miete") document.title = "Mieten – AMK Engelhardt";
+    else document.title = "Kaufen – AMK Engelhardt";
+  }
+
+  function modusLinks() {
+    var suffix = state.modus === "miete" ? "?modus=miete" : "";
+    document.querySelectorAll("#kauf-liste a[href*='/produkt/']").forEach(function (link) {
+      var href = link.getAttribute("href") || "";
+      link.setAttribute("href", href.split("?")[0] + suffix);
+    });
+  }
+
   function matches(item) {
     if (!inGruppe(item)) return false;
+    if (!modusPasst(item)) return false;
     if (state.kat && item.shop !== state.kat) return false;
     return true;
   }
@@ -306,11 +447,13 @@
     bar.hidden = false;
     var nav = document.querySelector('.kauf-ebene[data-fuer="' + state.gruppe + '"]');
     if (!nav) return;
-    if (bar.getAttribute("data-fuer") !== state.gruppe || !bar.querySelector(".kauf-leiste-wahl")) {
+    var stempel = state.gruppe + ":" + (state.modus === "miete" ? "miete" : "kauf");
+    if (bar.getAttribute("data-fuer") !== stempel || !bar.querySelector(".kauf-leiste-wahl")) {
       bar.textContent = "";
       var haupt = document.createElement("div");
       haupt.className = "kauf-leiste-haupt";
       document.querySelectorAll("#kauf-gruppen a[data-gruppe]").forEach(function (src) {
+        if (src.hidden) return;
         var a = document.createElement("a");
         a.className = "kauf-leiste-gruppe";
         a.href = src.getAttribute("href") || "#";
@@ -336,6 +479,7 @@
       menu.className = "kauf-leiste-menu";
       menu.hidden = true;
       nav.querySelectorAll("a").forEach(function (link) {
+        if (link.hidden) return;
         var a = document.createElement("a");
         var kat = link.getAttribute("data-kat") || "";
         var teil = link.getAttribute("data-teil") || "";
@@ -348,7 +492,7 @@
       bar.appendChild(haupt);
       bar.appendChild(knopf);
       bar.appendChild(menu);
-      bar.setAttribute("data-fuer", state.gruppe);
+      bar.setAttribute("data-fuer", stempel);
     }
     bar.querySelectorAll(".kauf-leiste-gruppe").forEach(function (link) {
       if (link.getAttribute("data-gruppe") === state.gruppe) link.setAttribute("aria-current", "true");
@@ -501,6 +645,10 @@
   }
 
   function render(opts) {
+    maleNav();
+    var bewegt = sichereStelle();
+    if (bewegt) maleNav();
+    renderSchalter();
     var overview = !state.gruppe;
     var verkehr = state.gruppe === "verkehr";
     var signs = verkehr;
@@ -540,9 +688,11 @@
       liste.appendChild(item.el);
       if (on) shown += 1;
     });
-    if (schilder) schilder.hidden = !verkehr;
+    if (schilder) schilder.hidden = !verkehr || state.modus === "miete";
     empty.hidden = overview || stapel || shown !== 0;
+    modusLinks();
     if (window.AMK_AUSWAHL) window.AMK_AUSWAHL.sync();
+    if (bewegt) writeUrl("replace");
     document.querySelectorAll("main section.copy").forEach(function (section) {
       section.hidden = true;
     });
@@ -611,6 +761,27 @@
       state.teil = teil;
     }
     merkeUnter(state.gruppe, kat || state.zeichen || state.teil);
+  }
+
+  var schalter = document.querySelector(".modus-schalter");
+  if (schalter) {
+    schalter.addEventListener("click", function (event) {
+      var link = event.target.closest("a[data-modus]");
+      if (!link || !schalter.contains(link)) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+      event.preventDefault();
+      var next = link.getAttribute("data-modus") === "miete" ? "miete" : "kauf";
+      if (state.modus === next) return;
+      state.modus = next;
+      window.AMK_MODUS = next;
+      try { sessionStorage.setItem(MODUS_MERK, next); } catch (error) { /* Speicher kann gesperrt sein */ }
+      var bar = document.getElementById("kauf-leiste");
+      if (bar) bar.removeAttribute("data-fuer");
+      closePanel();
+      menuSchalter(false);
+      writeUrl("push");
+      render({ sprung: true, sanft: true });
+    });
   }
 
   document.querySelectorAll(".kauf-ebene").forEach(function (nav) {
@@ -744,7 +915,7 @@
         if (event.key !== "Enter" && event.key !== " ") return;
         event.preventDefault();
         openPanel(id);
-        var first = document.querySelector('.kauf-ebene[data-fuer="' + id + '"] a');
+        var first = ersteSichtbare(document.querySelector('.kauf-ebene[data-fuer="' + id + '"]'));
         if (first) first.focus();
       });
     });
@@ -877,7 +1048,7 @@
         if (event.key !== "Enter" && event.key !== " ") return;
         event.preventDefault();
         openPanel(id, "schrift");
-        var first = document.querySelector('.kauf-ebene[data-fuer="' + id + '"] a');
+        var first = ersteSichtbare(document.querySelector('.kauf-ebene[data-fuer="' + id + '"]'));
         if (first) first.focus();
       });
     });
@@ -1265,6 +1436,7 @@
     var data = result[0];
     var config = result[1];
     if (config && config.staender && config.staender.paket) staenderPaket = config.staender.paket;
+    katalog = data;
     data.forEach(function (product) {
       var item = bySlug[product.slug];
       if (!item) return;
@@ -1273,6 +1445,7 @@
       item.attr = product.attr || {};
       item.bild = product.bild || "";
       item.kat = product.kat || "";
+      item.modi = product.modi && product.modi.length ? product.modi : ["kauf"];
       if (product.name) item.name = product.name;
     });
     schmuecke();

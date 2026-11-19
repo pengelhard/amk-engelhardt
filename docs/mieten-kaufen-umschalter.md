@@ -4,7 +4,7 @@ Stand: Auftrag AU, 19.11.2026. Dieses Dokument ist das Konzept und die Funktions
 
 ## Konzept
 
-Ein Katalog unter `kaufen/`. Oben ein Umschalter **Mieten | Kaufen**, dieselbe Optik wie die übrige Fläche (Rahmen, Schrift der Kachelbeschriftung, aktiv grün). Der Modus steht in der Adresse als `?modus=miete` und wird gemerkt. Ohne Angabe gilt Kaufen, damit die bisherigen Kauf-Adressen bleiben.
+Ein Katalog unter `kaufen/`. Unter der Überschrift steht der Umschalter **Mieten | Kaufen**, dieselbe Optik wie die Kachelbeschriftung (Rahmen, Schrift, aktiv grün). Der Modus steht in der Adresse als `?modus=miete` und wird gemerkt. Ohne Angabe gilt Kaufen, damit die bisherigen Kauf-Adressen bleiben. Leere Unterkategorien verschwinden aus Oberkacheln, Hover-Panel, Schriftzug-Leiste und Handy-Leiste.
 
 Bilder, Texte, Maße und Kategorien sind gemeinsam. `data/katalog.json` trägt je Produkt `modi`. Jedes Produkt enthält `"kauf"`. `"miete"` steht nur bei der Testauswahl unten. Preise, Texte und die Kauf-Zubehörzuordnung bleiben unverändert.
 

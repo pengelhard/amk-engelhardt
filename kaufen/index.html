@@ -8,8 +8,8 @@
   <meta name="description" content="Einzelteile, Zubehör und Anhänger zum Kauf.">
   <link rel="icon" href="../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../assets/logo.png">
-  <link rel="stylesheet" href="../css/styles.css?v=ax">
-  <script>document.documentElement.classList.add("js-kauf")</script>
+  <link rel="stylesheet" href="../css/styles.css?v=ay">
+  <script>document.documentElement.classList.add("js-kauf");(function(){var params=new URLSearchParams(location.search);var modus=params.get("modus");if(modus!=="miete"&&modus!=="kauf"){try{modus=sessionStorage.getItem("amk-modus")==="miete"?"miete":"kauf";}catch(e){modus="kauf";}}window.AMK_MODUS=modus==="miete"?"miete":"kauf";})();</script>
 </head>
 <body>
   <a class="skip" href="#inhalt">Zum Inhalt</a>
@@ -37,6 +37,10 @@
       <div class="wrap hero-copy">
         <nav class="crumbs" aria-label="Brotkrumen"><a href="../">Start</a> <span aria-hidden="true">›</span> <span id="crumb-kauf" aria-current="page">Kaufen</span><span id="crumb-wahl"></span></nav>
         <h1>Kaufen</h1>
+        <div class="modus-schalter" role="group" aria-label="Mieten oder Kaufen">
+          <a href="?modus=miete" data-modus="miete">Mieten</a>
+          <a href="?gruppe=zaun&amp;kat=bauzaune" data-modus="kauf" aria-current="true">Kaufen</a>
+        </div>
       </div>
     </section>
     <section class="kauf-board">
@@ -1677,7 +1681,7 @@
   <script src="../js/gruppen.js"></script>
   <script src="../js/schilder.js?v=av"></script>
   <script src="../data/anhaenger-eckdaten.js"></script>
-  <script src="../js/auswahl.js?v=av"></script>
-  <script src="../js/kauf.js?v=ax"></script>
+  <script src="../js/auswahl.js?v=aw"></script>
+  <script src="../js/kauf.js?v=ay"></script>
 </body>
 </html>

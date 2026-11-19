@@ -50,8 +50,15 @@
     return (TEILE[gruppe] || []).map(function (teil) { return teil.id; });
   }
 
+  function modusPasst(product) {
+    var modus = window.AMK_MODUS === "miete" ? "miete" : "kauf";
+    var modi = product.modi && product.modi.length ? product.modi : ["kauf"];
+    return modi.indexOf(modus) !== -1;
+  }
+
   function matches(product, teil) {
     if (!product || product.shop !== teil.shop) return false;
+    if (!modusPasst(product)) return false;
     if (teil.art && ((product.attr || {}).art || "") !== teil.art) return false;
     return true;
   }
@@ -268,7 +275,8 @@
     var bare = node.hasAttribute("data-ohne-leiste") ? "1" : "0";
     var pillsOff = node.hasAttribute("data-ohne-pills") ? "1" : "0";
     var stapel = node.hasAttribute("data-stapel") ? "1" : "0";
-    var key = gruppe + ":" + vorgang + ":" + bare + ":" + pillsOff + ":" + stapel;
+    var modus = window.AMK_MODUS === "miete" ? "miete" : "kauf";
+    var key = gruppe + ":" + vorgang + ":" + modus + ":" + bare + ":" + pillsOff + ":" + stapel;
     if (!teile.length) {
       node.innerHTML = "";
       delete node.dataset.key;
@@ -314,7 +322,7 @@
           inputId: "menge-" + gruppe + "-" + product.slug,
           extra: kachel ? "" : daten,
           kachel: kachel,
-          href: vorgang === "kauf" ? root + "produkt/" + product.slug + "/" : ""
+          href: vorgang === "kauf" ? root + "produkt/" + product.slug + "/" + (modus === "miete" ? "?modus=miete" : "") : ""
         }) + (kachel ? daten : "") + "</div>";
       });
       cards += teilKarten;

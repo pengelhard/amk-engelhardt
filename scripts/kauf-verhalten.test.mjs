@@ -43,7 +43,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
       ask();
     });
 
-    async function open(width, url) {
+    async function open(width, url, opts) {
       const height = width >= 980 ? 1100 : (width <= 360 ? 740 : 844);
       const page = await browser.newPage({ viewport: { width, height } });
       const errors = [];
@@ -55,6 +55,8 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
         await client.send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 5 });
         await client.send("Emulation.setEmulatedMedia", { media: "", features: [{ name: "hover", value: "none" }, { name: "pointer", value: "coarse" }] });
       }
+      if (opts && opts.modus) await page.addInitScript((value) => sessionStorage.setItem("amk-modus", value), opts.modus);
+      else await page.addInitScript(() => sessionStorage.removeItem("amk-modus"));
       await page.goto(base + url, { waitUntil: "networkidle" });
       return { page, errors };
     }
@@ -844,6 +846,87 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     point("Mieten unverändert", mieteInfo.kachel === 0 && mieteInfo.zeile > 0 && /320px/.test(mieteInfo.spalten), JSON.stringify(mieteInfo));
     point("Konsole Mieten", miete.errors.length === 0, miete.errors.join(" | "));
     await miete.page.close();
+
+    async function modusBild(page) {
+      return page.evaluate(() => {
+        function sichtbar(el) {
+          return !!el && !el.hidden && !el.closest("[hidden]") && el.getBoundingClientRect().height > 0;
+        }
+        const schalter = [...document.querySelectorAll(".modus-schalter a")];
+        const aktiv = schalter.find((el) => el.getAttribute("aria-current") === "true");
+        const stil = aktiv ? getComputedStyle(aktiv) : null;
+        const kacheln = [...document.querySelectorAll("#kauf-liste article.tile")].filter(sichtbar).map((el) => el.querySelector("h3").textContent.replace(/\s+/g, " ").trim());
+        const produkte = [...document.querySelectorAll("#kauf-stapel article.kauf-produkt")].filter(sichtbar).map((el) => el.querySelector("h3").textContent.replace(/\s+/g, " ").trim());
+        const versteckt = [...document.querySelectorAll(".kauf-ebene a")].filter((el) => el.hidden).map((el) => el.getAttribute("data-kat") || el.getAttribute("data-teil"));
+        const sichtbarNav = [...document.querySelectorAll(".kauf-ebene a")].filter((el) => !el.hidden).map((el) => el.getAttribute("data-kat") || el.getAttribute("data-teil"));
+        const adresse = new URL(location.href);
+        return {
+          n: schalter.length,
+          texte: schalter.map((el) => el.textContent.trim()),
+          hoehe: schalter.length ? Math.round(Math.min(...schalter.map((el) => el.getBoundingClientRect().height))) : 0,
+          gruen: stil ? stil.backgroundColor : "",
+          aktiv: aktiv ? aktiv.getAttribute("data-modus") : "",
+          h1: document.querySelector("main h1").textContent.trim(),
+          modus: adresse.searchParams.get("modus") || "",
+          gruppe: adresse.searchParams.get("gruppe") || "",
+          kat: adresse.searchParams.get("kat") || "",
+          teil: adresse.searchParams.get("teil") || "",
+          kacheln,
+          produkte,
+          versteckt,
+          sichtbarNav,
+          schilder: !!(document.getElementById("schilder-bereich") && !document.getElementById("schilder-bereich").hidden),
+          quer: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+          scrolls: [...document.querySelectorAll("body *")].filter((el) => {
+            const value = getComputedStyle(el).overflowY;
+            return (value === "auto" || value === "scroll") && el.scrollHeight > el.clientHeight + 2;
+          }).map((el) => el.id || String(el.className).slice(0, 40))
+        };
+      });
+    }
+    for (const width of [1280, 1920, 390]) {
+      const view = await open(width, "/kaufen/?gruppe=zaun&kat=bauzaune");
+      const kauf = await modusBild(view.page);
+      await view.page.locator(".modus-schalter a[data-modus='miete']").click();
+      await view.page.waitForFunction(() => new URL(location.href).searchParams.get("modus") === "miete");
+      const miet = await modusBild(view.page);
+      await view.page.locator(".modus-schalter a[data-modus='kauf']").click();
+      await view.page.waitForFunction(() => !new URL(location.href).searchParams.get("modus"));
+      const zurueck = await modusBild(view.page);
+      const ok = kauf.n === 2 && kauf.texte.join("|") === "Mieten|Kaufen" && kauf.hoehe >= 44 && kauf.aktiv === "kauf" && kauf.gruen === "rgb(118, 183, 41)" && kauf.h1 === "Kaufen" && kauf.modus === "" && kauf.kacheln.length === 22 && kauf.quer <= 1 && kauf.scrolls.length === 0
+        && miet.aktiv === "miete" && miet.h1 === "Mieten" && miet.modus === "miete" && miet.gruppe === "zaun" && miet.kat === "bauzaune" && miet.kacheln.length === 1 && /3,5 × 2,0 m/.test(miet.kacheln[0]) && miet.versteckt.indexOf("schwellen") !== -1 && miet.versteckt.indexOf("schleuse") !== -1 && miet.versteckt.indexOf("buehne") !== -1 && miet.versteckt.indexOf("tore") !== -1 && miet.sichtbarNav.indexOf("bauzaune") !== -1 && miet.sichtbarNav.indexOf("gitter") !== -1 && miet.sichtbarNav.indexOf("zubehoer") !== -1 && miet.sichtbarNav.indexOf("sichtschutz") !== -1 && miet.quer <= 1 && miet.scrolls.length === 0
+        && zurueck.modus === "" && zurueck.kacheln.length === 22 && zurueck.aktiv === "kauf";
+      point(`Umschalter ${width}`, ok, JSON.stringify({ kauf: { n: kauf.n, hoehe: kauf.hoehe, aktiv: kauf.aktiv, gruen: kauf.gruen, kacheln: kauf.kacheln.length, quer: kauf.quer, scrolls: kauf.scrolls }, miet: { modus: miet.modus, kat: miet.kat, kacheln: miet.kacheln, versteckt: miet.versteckt, sichtbarNav: miet.sichtbarNav, quer: miet.quer, scrolls: miet.scrolls }, zurueck: zurueck.kacheln.length, fehler: view.errors }));
+      point(`Konsole Umschalter ${width}`, view.errors.length === 0, view.errors.join(" | "));
+      await view.page.close();
+    }
+    const schwelle = await open(1280, "/kaufen/?gruppe=zaun&kat=schwellen");
+    await schwelle.page.locator(".modus-schalter a[data-modus='miete']").click();
+    await schwelle.page.waitForFunction(() => new URL(location.href).searchParams.get("modus") === "miete");
+    const nachSchwelle = await modusBild(schwelle.page);
+    point("Wechsel von leerer Kategorie", nachSchwelle.kat !== "schwellen" && nachSchwelle.gruppe === "zaun" && (nachSchwelle.kacheln.length > 0 || nachSchwelle.produkte.length > 0), JSON.stringify({ kat: nachSchwelle.kat, kacheln: nachSchwelle.kacheln, produkte: nachSchwelle.produkte }));
+    await schwelle.page.close();
+    const verkehr = await open(1280, "/kaufen/?modus=miete&gruppe=verkehr&teil=baken");
+    await verkehr.page.waitForFunction(() => new URL(location.href).searchParams.get("teil") === "schranken");
+    const verkehrBild = await modusBild(verkehr.page);
+    point("Miete Verkehr", verkehrBild.teil === "schranken" && verkehrBild.produkte.length === 2 && verkehrBild.produkte.every((name) => /Folie/.test(name)) && verkehrBild.versteckt.indexOf("baken") !== -1 && verkehrBild.versteckt.indexOf("gefahr") !== -1 && !verkehrBild.schilder, JSON.stringify({ teil: verkehrBild.teil, produkte: verkehrBild.produkte, versteckt: verkehrBild.versteckt, schilder: verkehrBild.schilder }));
+    await verkehr.page.close();
+    const anhaenger = await open(1280, "/kaufen/?modus=miete&gruppe=anhaenger");
+    const anhaengerBild = await modusBild(anhaenger.page);
+    const kuehl = await anhaenger.page.locator("#kauf-teil-kuehl article.kauf-produkt").count();
+    point("Miete Anhänger", anhaengerBild.sichtbarNav.filter((id) => ["hochlader", "plane", "koffer", "transporter", "kuehl"].indexOf(id) !== -1).length === 5 && kuehl === 2, JSON.stringify({ nav: anhaengerBild.sichtbarNav, kuehl }));
+    await anhaenger.page.close();
+    const gitter = await open(390, "/kaufen/?modus=miete&gruppe=zaun&kat=gitter");
+    const gitterBild = await modusBild(gitter.page);
+    await gitter.page.locator(".kauf-leiste-wahl").click();
+    const menu = await gitter.page.evaluate(() => [...document.querySelectorAll("#kauf-leiste-menu a")].map((el) => el.textContent.replace(/\s+/g, " ").trim()));
+    point("Miete Handy filtert", gitterBild.produkte.length === 1 && /leicht/.test(gitterBild.produkte[0]) && menu.indexOf("Bodenleitschwellen") === -1 && menu.some((name) => /Absperrgitter/.test(name)) && gitterBild.quer <= 1, JSON.stringify({ produkte: gitterBild.produkte, menu, quer: gitterBild.quer }));
+    await gitter.page.close();
+    const gemerkt = await open(1280, "/kaufen/?gruppe=zaun&kat=bauzaune", { modus: "miete" });
+    await gemerkt.page.waitForFunction(() => new URL(location.href).searchParams.get("modus") === "miete");
+    const gemerktBild = await modusBild(gemerkt.page);
+    point("Modus gemerkt", gemerktBild.modus === "miete" && gemerktBild.kacheln.length === 1 && gemerktBild.aktiv === "miete", JSON.stringify({ modus: gemerktBild.modus, n: gemerktBild.kacheln.length }));
+    await gemerkt.page.close();
 
     const bad = points.filter((entry) => !entry.ok);
     console.log(points.map((entry) => `${entry.ok ? "ok" : "FEHLER"}  ${entry.name}${entry.detail ? " — " + entry.detail : ""}`).join("\n"));
