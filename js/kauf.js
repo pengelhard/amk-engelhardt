@@ -356,9 +356,11 @@
         state.zeichen = "";
         state.teil = teil;
       }
+      auswahlHalt = true;
+      closePanel();
       writeUrl("push");
       render();
-      if (!hoverFein()) closePanel();
+      zeigeAnsicht();
     });
   });
 
@@ -383,6 +385,7 @@
   var closeTimer = 0;
   var focusQuiet = false;
   var fromPointer = false;
+  var auswahlHalt = false;
 
   function hoverFein() {
     return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -428,6 +431,20 @@
     paintPanel();
   }
 
+  function zeigeAnsicht() {
+    var schmal = window.matchMedia("(max-width: 859px)").matches;
+    var ziel = schmal ? document.getElementById("kauf-hinweis") : document.querySelector(".kauf-board");
+    if (!ziel || ziel.hidden) ziel = document.getElementById("kauf-wahl");
+    if (!ziel) return;
+    var kopf = document.querySelector(".top");
+    var abstand = kopf ? kopf.offsetHeight + 8 : 0;
+    var root = document.documentElement;
+    var previous = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    window.scrollTo(0, Math.max(0, ziel.getBoundingClientRect().top + window.scrollY - abstand));
+    root.style.scrollBehavior = previous;
+  }
+
   if (gruppen) {
     gruppen.addEventListener("click", function (event) {
       var link = event.target.closest("a[data-gruppe]");
@@ -448,7 +465,8 @@
       link.addEventListener("pointerup", function () { fromPointer = false; });
       link.addEventListener("pointercancel", function () { fromPointer = false; });
       link.addEventListener("mouseenter", function () {
-        if (hoverFein()) openPanel(id);
+        if (auswahlHalt || !hoverFein()) return;
+        openPanel(id);
       });
       link.addEventListener("mouseleave", function () {
         if (hoverFein()) scheduleClose();
@@ -470,7 +488,8 @@
   document.querySelectorAll(".kauf-ebene").forEach(function (nav) {
     var id = nav.getAttribute("data-fuer") || "";
     nav.addEventListener("mouseenter", function () {
-      if (hoverFein()) openPanel(id);
+      if (auswahlHalt || !hoverFein()) return;
+      openPanel(id);
     });
     nav.addEventListener("mouseleave", function () {
       if (hoverFein()) scheduleClose();
@@ -499,6 +518,13 @@
   document.addEventListener("pointerdown", function (event) {
     if (!offen || !drops || drops.contains(event.target)) return;
     closePanel();
+  });
+
+  document.addEventListener("mousemove", function (event) {
+    if (!auswahlHalt || !drops) return;
+    var ziel = event.target;
+    if (ziel && ziel.closest && ziel.closest("#kauf-drops")) return;
+    auswahlHalt = false;
   });
 
   window.addEventListener("resize", function () {
