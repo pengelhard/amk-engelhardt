@@ -1,13 +1,12 @@
 (function () {
   var board = document.querySelector(".kauf-board");
   var liste = document.getElementById("kauf-liste");
-  var cats = document.getElementById("kauf-cats");
   var empty = document.getElementById("kauf-empty");
   var countEl = document.getElementById("kauf-count");
   var qInput = document.getElementById("kauf-q");
   var sortInput = document.getElementById("kauf-sort");
   var resetBtn = document.getElementById("kauf-reset");
-  if (!board || !liste || !cats) return;
+  if (!board || !liste) return;
 
   var GRUPPEN = {};
   (window.AMK_GRUPPEN ? window.AMK_GRUPPEN.list : [
@@ -15,15 +14,6 @@
     { id: "verkehr", shops: ["schilder", "verkehr"] },
     { id: "anhaenger", shops: ["anhaenger"] }
   ]).forEach(function (gruppe) { GRUPPEN[gruppe.id] = gruppe.shops.slice(); });
-  var UNTER = {
-    zaun: [
-      { id: "", label: "Alle" },
-      { id: "bauzaune", label: "Bauzäune" },
-      { id: "zubehoer", label: "Zaunzubehör" },
-      { id: "tore", label: "Türen & Tore" },
-      { id: "sichtschutz", label: "Sichtschutz & Planen" }
-    ]
-  };
   var KAT_GRUPPE = {};
   Object.keys(GRUPPEN).forEach(function (gruppe) {
     GRUPPEN[gruppe].forEach(function (kat) { KAT_GRUPPE[kat] = gruppe; });
@@ -156,23 +146,21 @@
   }
 
   function renderEbene() {
-    var nav = document.getElementById("kauf-ebene");
-    if (!nav) return;
-    nav.hidden = state.gruppe !== "zaun";
-    nav.querySelectorAll("a[data-kat]").forEach(function (link) {
-      var on = state.gruppe === "zaun" && link.getAttribute("data-kat") === state.kat;
-      if (on) link.setAttribute("aria-current", "true");
-      else link.removeAttribute("aria-current");
+    var signs = window.AMK_SCHILDER_TEILE || [];
+    document.querySelectorAll(".kauf-ebene").forEach(function (nav) {
+      var fuer = nav.getAttribute("data-fuer") || "";
+      nav.hidden = fuer !== state.gruppe;
+      nav.querySelectorAll("a").forEach(function (link) {
+        var kat = link.getAttribute("data-kat") || "";
+        var teil = link.getAttribute("data-teil") || "";
+        var on = false;
+        if (fuer === "zaun") on = !!state.kat && kat === state.kat;
+        else if (signs.indexOf(teil) !== -1) on = state.zeichen === teil || (!state.zeichen && !state.teil && teil === signs[0]);
+        else if (teil) on = state.teil === teil || (!state.teil && !state.zeichen && teil === (teilList()[0] || ""));
+        if (on) link.setAttribute("aria-current", "true");
+        else link.removeAttribute("aria-current");
+      });
     });
-  }
-
-  function renderChips() {
-    var list = UNTER[state.gruppe] || [];
-    cats.hidden = !list.length;
-    cats.innerHTML = list.map(function (kat) {
-      var on = state.kat === kat.id;
-      return '<button type="button" class="chip" data-kat="' + kat.id + '" aria-pressed="' + (on ? "true" : "false") + '">' + kat.label + "</button>";
-    }).join("");
   }
 
   function renderGruppen() {
@@ -222,7 +210,6 @@
     if (verkehrSumme) verkehrSumme.hidden = !verkehr;
     renderGruppen();
     renderEbene();
-    renderChips();
     if (auswahl) {
       if (verkehr) {
         auswahl.setAttribute("data-ohne-leiste", "");
@@ -292,27 +279,32 @@
     window.AMK_AUSWAHL.fillLeiste(verkehrSumme, kaufZeilen());
   }
 
-  var ebene = document.getElementById("kauf-ebene");
-  if (ebene) {
-    ebene.addEventListener("click", function (event) {
-      var link = event.target.closest("a[data-kat]");
-      if (!link) return;
+  document.querySelectorAll(".kauf-ebene").forEach(function (nav) {
+    nav.addEventListener("click", function (event) {
+      var link = event.target.closest("a");
+      if (!link || !nav.contains(link)) return;
       event.preventDefault();
-      state.gruppe = "zaun";
-      state.kat = link.getAttribute("data-kat") || "";
-      state.teil = "";
-      state.zeichen = "";
-      render();
+      var fuer = nav.getAttribute("data-fuer") || "";
+      var signs = window.AMK_SCHILDER_TEILE || [];
+      var teil = link.getAttribute("data-teil") || "";
+      state.gruppe = fuer || state.gruppe;
+      if (link.hasAttribute("data-kat")) {
+        state.kat = link.getAttribute("data-kat") || "";
+        state.teil = "";
+        state.zeichen = "";
+      } else if (signs.indexOf(teil) !== -1) {
+        state.kat = "";
+        state.teil = "";
+        state.zeichen = teil;
+        if (window.AMK_SCHILDER_UI && window.AMK_SCHILDER_UI.open) window.AMK_SCHILDER_UI.open(teil);
+      } else {
+        state.kat = "";
+        state.zeichen = "";
+        state.teil = teil;
+      }
       writeUrl("push");
+      render();
     });
-  }
-
-  cats.addEventListener("click", function (event) {
-    var button = event.target.closest("button[data-kat]");
-    if (!button) return;
-    state.kat = button.getAttribute("data-kat") || "";
-    render();
-    writeUrl("push");
   });
 
   sortInput.addEventListener("change", function () {
@@ -425,8 +417,8 @@
       readUrl();
       render();
       writeUrl("replace");
-      if (state.gruppe === "verkehr" && state.zeichen) jumpTo("#schilder-bereich .kauf-cats");
-      else if (state.gruppe === "verkehr" && state.teil) jumpTo("#kauf-auswahl .kauf-cats");
+      if (state.gruppe === "verkehr" && (state.zeichen || state.teil)) jumpTo("#kauf-ebene-verkehr");
+      else if (state.gruppe === "anhaenger" && state.teil) jumpTo("#kauf-ebene-anhaenger");
     })
     .catch(function () {
       board.hidden = true;

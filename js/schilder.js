@@ -90,22 +90,24 @@
   document.querySelectorAll("[data-schilder]").forEach(function (form) {
     var list = form.querySelector("[data-schild-liste]");
     if (!list || !window.AMK_TYPWAHL) return;
-    var nav = document.createElement("div");
-    nav.className = "kauf-cats";
-    nav.setAttribute("role", "navigation");
-    nav.setAttribute("aria-label", "Unterkategorien");
-    nav.innerHTML = TEILE.map(function (teil) {
-      return '<button type="button" class="chip" data-teil="' + teil.id + '" aria-pressed="false">' + esc(teil.label) + "</button>";
-    }).join("");
-    form.insertBefore(nav, list);
-    nav.addEventListener("click", function (event) {
-      var button = event.target.closest("[data-teil]");
-      if (!button) return;
-      var id = button.getAttribute("data-teil") || "";
-      localTeil = id;
-      apply();
-      document.dispatchEvent(new CustomEvent("amk-zeichen", { detail: id }));
-    });
+    if (!form.hasAttribute("data-ohne-pills")) {
+      var nav = document.createElement("div");
+      nav.className = "kauf-cats";
+      nav.setAttribute("role", "navigation");
+      nav.setAttribute("aria-label", "Unterkategorien");
+      nav.innerHTML = TEILE.map(function (teil) {
+        return '<button type="button" class="chip" data-teil="' + teil.id + '" aria-pressed="false">' + esc(teil.label) + "</button>";
+      }).join("");
+      form.insertBefore(nav, list);
+      nav.addEventListener("click", function (event) {
+        var button = event.target.closest("[data-teil]");
+        if (!button) return;
+        var id = button.getAttribute("data-teil") || "";
+        localTeil = id;
+        apply();
+        document.dispatchEvent(new CustomEvent("amk-zeichen", { detail: id }));
+      });
+    }
     list.innerHTML = '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' +
       ZEICHEN.map(function (entry) {
         return window.AMK_TYPWAHL.card({

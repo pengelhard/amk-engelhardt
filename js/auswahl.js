@@ -183,7 +183,8 @@
     if (!products || !TEILE[gruppe] || !window.AMK_TYPWAHL) return;
     var teile = liveTeile(gruppe);
     var bare = node.hasAttribute("data-ohne-leiste") ? "1" : "0";
-    var key = gruppe + ":" + vorgang + ":" + bare;
+    var pillsOff = node.hasAttribute("data-ohne-pills") ? "1" : "0";
+    var key = gruppe + ":" + vorgang + ":" + bare + ":" + pillsOff;
     if (!teile.length) {
       node.innerHTML = "";
       delete node.dataset.key;
@@ -197,7 +198,7 @@
     node.dataset.key = key;
     var teilId = selectedTeil(gruppe);
     var saved = cartById();
-    var pills = teile.length > 1
+    var pills = teile.length > 1 && !node.hasAttribute("data-ohne-pills")
       ? '<div class="kauf-cats" role="navigation" aria-label="Unterkategorien">' + teile.map(function (entry) {
         var on = entry.id === teilId;
         return '<button type="button" class="chip" data-teil="' + entry.id + '" aria-pressed="' + (on ? "true" : "false") + '">' + esc(entry.label) + "</button>";
