@@ -33,15 +33,15 @@
   </div>
   <main id="inhalt">
     <form class="beispiel-form" id="beispiel-form">
-      <section class="beispiel">
-        <div class="wrap beispiel-layout">
-          <div class="beispiel-galerie">
-            <div class="beispiel-buehne">
-              <img id="beispiel-bild" src="../../images/kk/bauzaun-10075.webp" width="1200" height="675" alt="">
-            </div>
-            <div class="beispiel-thumbs" id="beispiel-thumbs" aria-label="Bilder"></div>
+      <div class="wrap beispiel-seite">
+        <div class="beispiel-galerie">
+          <div class="beispiel-buehne">
+            <img id="beispiel-bild" src="../../images/kk/bauzaun-10075.webp" width="1200" height="675" alt="">
           </div>
-          <div class="beispiel-kauf">
+          <div class="beispiel-thumbs" id="beispiel-thumbs" aria-label="Bilder"></div>
+        </div>
+        <div class="beispiel-kauf">
+          <div class="beispiel-kauf-body">
             <nav class="crumbs" aria-label="Brotkrumen"><a href="../../">Start</a> <span aria-hidden="true">›</span> <a href="../../kaufen/">Kaufen</a> <span aria-hidden="true">›</span> <span id="beispiel-krume" aria-current="page">Bauzaun</span></nav>
             <h1 id="beispiel-titel">Bauzaun</h1>
             <p id="beispiel-kicker"></p>
@@ -59,21 +59,28 @@
             </div>
             <ul class="beispiel-inhalt" id="beispiel-inhalt" hidden></ul>
           </div>
+          <div class="beispiel-auswahl" id="beispiel-auswahl">
+            <h2 id="beispiel-auswahl-titel" tabindex="-1">Deine Auswahl</h2>
+            <ul id="beispiel-liste"></ul>
+          </div>
+          <div class="beispiel-senden">
+            <button class="btn" type="submit">In den Anfragekorb</button>
+          </div>
         </div>
-        <div class="wrap beispiel-daten">
+        <div class="beispiel-daten">
           <div id="beispiel-text"></div>
           <table class="spec-table" id="beispiel-specs" hidden></table>
         </div>
-      </section>
-      <section class="kauf-board beispiel-zubehoer" aria-labelledby="zubehoer-titel">
-        <div class="wrap">
+        <section class="kauf-board beispiel-zubehoer" aria-labelledby="zubehoer-titel">
           <h2 id="zubehoer-titel">Passendes Zubehör</h2>
           <div class="tiles" id="beispiel-zubehoer"></div>
-        </div>
-      </section>
-      <div class="wrap beispiel-senden">
+        </section>
+      </div>
+      <div class="beispiel-leiste">
+        <button type="button" class="beispiel-leiste-wahl" aria-expanded="false" aria-controls="beispiel-auswahl"><span id="beispiel-posten">1 Posten</span></button>
         <button class="btn" type="submit">In den Anfragekorb</button>
       </div>
+      <button type="button" class="beispiel-haube" hidden aria-label="Auswahl schließen"></button>
     </form>
   </main>
   <footer class="site-footer">
