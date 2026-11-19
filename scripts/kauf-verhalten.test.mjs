@@ -64,53 +64,103 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
           const r = el.getBoundingClientRect();
           return { w: Math.round(r.width), h: Math.round(r.height) };
         }
+        function spanne(values) {
+          return { min: Math.min(...values), max: Math.max(...values) };
+        }
         const root = kind === "zaun" ? document.getElementById("kauf-liste") : (kind === "schild" ? document.getElementById("schilder-bereich") : document.getElementById("kauf-auswahl"));
         const sel = kind === "zaun" ? "article.tile:not(.kauf-produkt)" : "article.kauf-produkt";
         const cards = [...root.querySelectorAll(sel)].filter((el) => !el.hidden && !el.closest("[hidden]") && el.getBoundingClientRect().height);
         const grid = kind === "zaun" ? root : root.querySelector(".tiles");
-        const img = cards[0].querySelector("img");
+        const kacheln = cards.map(size);
+        const bilder = cards.map((card) => size(card.querySelector("img")));
+        const kw = spanne(kacheln.map((item) => item.w));
+        const kh = spanne(kacheln.map((item) => item.h));
+        const bw = spanne(bilder.map((item) => item.w));
+        const bh = spanne(bilder.map((item) => item.h));
+        const scrolls = [...document.querySelectorAll("body *")].filter((el) => {
+          const value = getComputedStyle(el).overflowY;
+          return (value === "auto" || value === "scroll") && el.scrollHeight > el.clientHeight + 2;
+        }).map((el) => el.id || String(el.className).slice(0, 40));
         return {
           n: cards.length,
           spalten: getComputedStyle(grid).gridTemplateColumns.split(" ").length,
-          kachel: size(cards[0]),
-          bild: size(img),
-          fit: getComputedStyle(img).objectFit,
+          kachel: kacheln[0],
+          bild: bilder[0],
+          gleich: kw.min === kw.max && kh.min === kh.max && bw.min === bw.max && bh.min === bh.max,
+          fit: getComputedStyle(cards[0].querySelector("img")).objectFit,
+          overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+          scrolls,
           name: cards[0].querySelector("h3").textContent
         };
       }, kind);
     }
 
+    const gruppen = [
+      ["Bauzaun", "/kaufen/?gruppe=zaun&kat=bauzaune", "zaun"],
+      ["Absperrgitter", "/kaufen/?gruppe=zaun&kat=gitter", "auswahl"],
+      ["Schwellen", "/kaufen/?gruppe=zaun&kat=schwellen", "auswahl"],
+      ["Schleusen", "/kaufen/?gruppe=zaun&kat=schleuse", "auswahl"],
+      ["Bühnen", "/kaufen/?gruppe=zaun&kat=buehne", "auswahl"],
+      ["Schilder", "/kaufen/?gruppe=verkehr&teil=vorschrift", "schild"],
+      ["Absperrschranken", "/kaufen/?gruppe=verkehr&teil=schranken", "auswahl"],
+      ["Anhänger", "/kaufen/?gruppe=anhaenger&teil=hochlader", "anh"]
+    ];
+    const masse = {};
+
     for (const width of [1280, 1920, 390]) {
-      const { page, errors } = await open(width, "/kaufen/?gruppe=zaun&kat=bauzaune");
-      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      const { page, errors } = await open(width, gruppen[0][1]);
       const robots = await page.locator('meta[name="robots"]').getAttribute("content");
       const tops = await page.locator("#kauf-gruppen .kauf-karte").count();
       point(`Oberkacheln ${width}`, tops === 3, String(tops));
       point(`noindex ${width}`, /noindex/i.test(robots || ""), robots || "");
-      point(`kein Quer-Scroll ${width}`, overflow <= 1, String(overflow));
-      point(`Konsole ${width} Übersicht`, errors.length === 0, errors.join(" | "));
-
-      const zaun = await measureCards(page, "zaun");
-      await page.goto(base + "/kaufen/?gruppe=anhaenger&teil=hochlader", { waitUntil: "networkidle" });
-      const anh = await measureCards(page, "anh");
-      await page.goto(base + "/kaufen/?gruppe=verkehr&teil=vorschrift", { waitUntil: "networkidle" });
-      const schild = await measureCards(page, "schild");
-      const nah = (a, b) => Math.abs(a - b) <= 2;
-      const paar = nah(anh.kachel.w, schild.kachel.w) && nah(anh.kachel.h, schild.kachel.h) && nah(anh.bild.w, schild.bild.w) && nah(anh.bild.h, schild.bild.h) && anh.spalten === schild.spalten && zaun.spalten === anh.spalten;
-      const breite = width < 900 ? nah(zaun.kachel.w, anh.kachel.w) : zaun.kachel.w > anh.kachel.w + 20;
-      point(`Produktkacheln gleich ${width}`, paar && breite && zaun.n > 3 && schild.n > 3 && zaun.fit === "contain" && anh.fit === "contain", JSON.stringify({ zaun, anh, schild }));
+      const gemessen = {};
+      for (const [name, url, kind] of gruppen) {
+        if (url !== gruppen[0][1] || name !== "Bauzaun") await page.goto(base + url, { waitUntil: "networkidle" });
+        gemessen[name] = await measureCards(page, kind);
+      }
+      masse[width] = gemessen;
+      const basis = gemessen.Bauzaun;
+      const gleich = gruppen.every(([name]) => {
+        const probe = gemessen[name];
+        return probe.gleich && probe.n > 0 && probe.fit === "contain" && probe.overflow <= 1 && probe.scrolls.length === 0
+          && probe.kachel.w === basis.kachel.w && probe.kachel.h === basis.kachel.h
+          && probe.bild.w === basis.bild.w && probe.bild.h === basis.bild.h && probe.spalten === basis.spalten;
+      });
+      const spaltenOk = width < 900 ? basis.spalten === 1 && basis.kachel.w > 300 : basis.spalten === 3 && basis.kachel.w > 200 && basis.kachel.w < 360;
+      const text = gruppen.map(([name]) => {
+        const probe = gemessen[name];
+        return `${name} ${probe.kachel.w}×${probe.kachel.h} Bild ${probe.bild.w}×${probe.bild.h} ${probe.spalten} Spalten n=${probe.n}`;
+      }).join("; ");
+      point(`Produktkacheln gleich ${width}`, gleich && spaltenOk && basis.n > 3 && gemessen.Schilder.n > 3, text);
+      point(`kein Quer-Scroll ${width}`, gruppen.every(([name]) => gemessen[name].overflow <= 1), gruppen.map(([name]) => `${name} ${gemessen[name].overflow}`).join(", "));
+      point(`ein Scrollbalken ${width}`, gruppen.every(([name]) => gemessen[name].scrolls.length === 0), gruppen.map(([name]) => `${name}: ${gemessen[name].scrolls.join("|") || "—"}`).join("; "));
+      point(`Konsole ${width}`, errors.length === 0, errors.join(" | "));
       if (width >= 980) {
+        await page.goto(base + "/kaufen/?gruppe=zaun&kat=bauzaune", { waitUntil: "networkidle" });
+        const ohneBox = await page.evaluate(() => [...document.querySelectorAll(".konfig-summary")].filter((el) => getComputedStyle(el).display !== "none" && el.getBoundingClientRect().height > 0).length);
+        await page.goto(base + "/kaufen/?gruppe=verkehr&teil=vorschrift", { waitUntil: "networkidle" });
         const verkehrBox = await page.evaluate(() => {
           const summary = document.getElementById("kauf-verkehr-summe");
-          const list = document.getElementById("kauf-spalte");
+          const list = document.querySelector("#schilder-bereich .tiles");
+          const anker = document.getElementById("kauf-verkehr-hinweis");
           const sr = summary.getBoundingClientRect();
           const lr = list.getBoundingClientRect();
+          const ar = anker.getBoundingClientRect();
+          const hit = document.elementFromPoint(sr.left + sr.width / 2, sr.top + 40);
           return {
             sticky: getComputedStyle(summary).position,
             neben: sr.left >= lr.right - 8 && sr.top < lr.bottom,
-            oben: Math.abs(sr.top - lr.top) < 80,
-            hoehe: Math.round(sr.height)
+            oben: Math.abs(sr.top - ar.top) < 80 && sr.top <= lr.top + 8,
+            hoehe: Math.round(sr.height),
+            treffer: !!(hit && hit.closest("#kauf-verkehr-summe"))
           };
+        });
+        await page.evaluate(() => window.scrollTo(0, 900));
+        const haengt = await page.evaluate(() => {
+          const summary = document.getElementById("kauf-verkehr-summe");
+          const top = summary.getBoundingClientRect().top;
+          const header = document.querySelector(".top").getBoundingClientRect().bottom;
+          return { top: Math.round(top), header: Math.round(header) };
         });
         await page.goto(base + "/kaufen/?gruppe=anhaenger&teil=hochlader", { waitUntil: "networkidle" });
         const anhBox = await page.evaluate(() => {
@@ -118,17 +168,21 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
           const list = document.querySelector("#kauf-auswahl .tiles");
           const sr = summary.getBoundingClientRect();
           const lr = list.getBoundingClientRect();
+          const hit = document.elementFromPoint(sr.left + sr.width / 2, sr.top + 40);
           return {
             sticky: getComputedStyle(summary).position,
             neben: sr.left >= lr.right - 8 && sr.top < lr.bottom,
             oben: Math.abs(sr.top - lr.top) < 80,
-            hoehe: Math.round(sr.height)
+            hoehe: Math.round(sr.height),
+            treffer: !!(hit && hit.closest("#kauf-auswahl .konfig-summary"))
           };
         });
-        point(`Auswahl rechts ${width}`, verkehrBox.sticky === "sticky" && verkehrBox.neben && verkehrBox.oben && verkehrBox.hoehe > 40 && anhBox.sticky === "sticky" && anhBox.neben && anhBox.oben && anhBox.hoehe > 40, JSON.stringify({ verkehrBox, anhBox }));
+        point(`Auswahl rechts ${width}`, ohneBox === 0 && verkehrBox.sticky === "sticky" && verkehrBox.neben && verkehrBox.oben && verkehrBox.hoehe > 40 && verkehrBox.treffer && haengt.top > 40 && haengt.top < haengt.header + 40 && anhBox.sticky === "sticky" && anhBox.neben && anhBox.oben && anhBox.hoehe > 40 && anhBox.treffer, JSON.stringify({ ohneBox, verkehrBox, haengt, anhBox }));
       }
       await page.close();
     }
+    const desktopGleich = ["kachel", "bild"].every((teil) => masse[1280].Bauzaun[teil].w === masse[1920].Bauzaun[teil].w && masse[1280].Bauzaun[teil].h === masse[1920].Bauzaun[teil].h) && masse[1280].Bauzaun.spalten === masse[1920].Bauzaun.spalten;
+    point("gleiche Maße 1280 und 1920", desktopGleich, `${masse[1280].Bauzaun.kachel.w}×${masse[1280].Bauzaun.kachel.h} / ${masse[1920].Bauzaun.kachel.w}×${masse[1920].Bauzaun.kachel.h}`);
 
     const desktop = await open(1280, "/kaufen/?gruppe=zaun&kat=bauzaune");
     const html = await desktop.page.content();

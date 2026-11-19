@@ -103,6 +103,8 @@
   --bild-produkt: 4 / 3;
   --kreis-groesse: 1.375rem;
   --kachel-grund: var(--soft);
+  --korb-breite: 20rem;
+  --korb-luecke: 1.75rem;
 }
 
 *,
@@ -1855,8 +1857,8 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 @media (min-width: 980px) {
   .konfig-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 20rem;
-    gap: 1.75rem;
+    grid-template-columns: minmax(0, 1fr) var(--korb-breite);
+    gap: var(--korb-luecke);
     align-items: start;
   }
   .konfig-summary {
@@ -2254,11 +2256,44 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .js-kauf .kauf-cats { display: none !important; }
 .js-kauf .konfig-layout { display: block; }
 @media (min-width: 980px) {
-  .js-kauf .konfig-layout {
+  .js-kauf #kauf-wahl {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 20rem;
-    gap: 1.75rem;
+    grid-template-columns: minmax(0, 1fr) var(--korb-breite);
+    column-gap: var(--korb-luecke);
     align-items: start;
+  }
+  .js-kauf #kauf-spalte {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--korb-breite);
+    column-gap: var(--korb-luecke);
+    grid-column: 1 / -1;
+    grid-row: 1;
+    align-items: start;
+    min-width: 0;
+  }
+  .js-kauf #kauf-auswahl,
+  .js-kauf #kauf-auswahl > form.konfig-layout { display: contents; }
+  .js-kauf #kauf-spalte > *,
+  .js-kauf #kauf-auswahl > form,
+  .js-kauf #kauf-auswahl .konfig-main {
+    grid-column: 1;
+    min-width: 0;
+  }
+  .js-kauf #kauf-auswahl .konfig-main,
+  .js-kauf #kauf-auswahl > form:not(.konfig-layout) { margin-top: 0.9rem; }
+  .js-kauf #kauf-auswahl .konfig-summary {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    width: auto;
+    margin: 0;
+  }
+  .js-kauf #kauf-verkehr-summe {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    width: auto;
+    margin: 0;
   }
 }
 .js-kauf .tiles > [data-teil-karte] {
