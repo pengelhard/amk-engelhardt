@@ -972,6 +972,16 @@ select, input, textarea {
 }
 textarea { min-height: 7rem; width: 100%; resize: vertical; }
 .choices { border: 0; border-top: 1px solid var(--line); margin: 0 0 0.6rem; padding: 0.8rem 0 0.2rem; }
+.leistung-kreise { border-top: 0; margin-top: 0; padding-top: 0; }
+.leistung-kreise .choice { min-height: 2.75rem; }
+.leistung-kreise input[type="radio"] {
+  width: 1.35rem;
+  height: 1.35rem;
+  min-width: 1.35rem;
+  min-height: 1.35rem;
+  accent-color: var(--green);
+  border-radius: 50%;
+}
 .group-label { margin: 0.7rem 0 0.1rem; color: var(--heading); font-weight: 600; font-size: 0.92rem; }
 .form-status { min-height: 1.2em; font-weight: 600; color: var(--heading); }
 .form-status.is-error { color: var(--danger); }

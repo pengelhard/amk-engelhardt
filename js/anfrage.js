@@ -401,14 +401,16 @@
     var rent = document.getElementById("anfrage-miete");
     var fence = document.getElementById("anfrage-zaun");
     var period = document.getElementById("anfrage-zeit");
-    var periodTitle = document.getElementById("anfrage-miete-titel");
+    var periodTitle = document.getElementById("anfrage-zeit-titel");
+    var fahrtTitle = document.getElementById("anfrage-fahrt-titel");
     var askPeriod = needsPeriod(data);
     var verkehrOn = data.some(isVerkehr);
     var verkehr = document.getElementById("anfrage-verkehr");
     var einsatz = document.getElementById("anfrage-einsatz");
     if (rent) rent.hidden = !renting(data);
     if (period) period.hidden = !askPeriod;
-    if (periodTitle) periodTitle.textContent = askPeriod ? "Zeitraum und Anfahrt" : "Anfahrt";
+    if (periodTitle) periodTitle.textContent = "Zeitraum (Miete)";
+    if (fahrtTitle) fahrtTitle.textContent = "Anfahrt & Leistungen (Miete)";
     if (verkehr) verkehr.hidden = true;
     if (einsatz) einsatz.hidden = true;
     if (fence) fence.hidden = !fencing(data);
@@ -759,7 +761,9 @@
     if (fencing(items) && val("hoehe")) lines.push("Höhe: " + val("hoehe") + " m");
     if (renting(items)) {
       if (askPeriod) lines.push("Zeitraum: " + (deDate(val("von")) || val("von")) + " bis " + (deDate(val("bis")) || val("bis")));
-      lines.push("Leistung: " + (val("leistung") === "abholung" ? "Selbstabholung" : "Lieferung, Aufbau und Abbau"));
+      var leistung = val("leistung");
+      var leistungText = leistung === "abholung" ? "Selbstabholung" : (leistung === "nur" ? "Nur Lieferung" : "Lieferung, Aufbau und Abbau");
+      lines.push("Leistung: " + leistungText);
       lines.push("Einsatzort: " + val("ort"));
       lines.push("PLZ: " + val("plz"));
     } else if (items.some(isVerkehr) && val("einsatzort")) {
