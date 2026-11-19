@@ -8,10 +8,10 @@
   <meta name="description" content="Bauzäune, Absperrungen und Anhänger. Zur Miete und zum Kauf. AMK Engelhardt, Oberer Kesselweg 2, 86744 Hainsfarth.">
   <link rel="preload" href="assets/fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" as="image" type="image/avif" href="images/hero/leuchten-1920.avif" imagesrcset="images/hero/leuchten-768.avif 768w, images/hero/leuchten-1280.avif 1280w, images/hero/leuchten-1920.avif 1920w, images/hero/leuchten-2560.avif 2560w" imagesizes="100vw" fetchpriority="high">
+  <link rel="preload" as="image" type="image/webp" href="images/start/hero-nebel.webp" imagesrcset="images/start/hero-nebel-768.webp 768w, images/start/hero-nebel.webp 1280w" imagesizes="100vw" fetchpriority="high">
   <link rel="icon" href="assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/logo.png">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=az">
 </head>
 <body>
   <a class="skip" href="#inhalt">Zum Inhalt</a>
@@ -35,32 +35,12 @@
     </header>
   </div>
   <main id="inhalt">
-    <section class="hero hero--foto">
+    <section class="hero hero--start">
       <div class="hero-media">
-        <picture id="hero-bild">
-          <source type="image/avif" srcset="images/hero/leuchten-768.avif 768w, images/hero/leuchten-1280.avif 1280w, images/hero/leuchten-1920.avif 1920w, images/hero/leuchten-2560.avif 2560w" sizes="100vw">
-          <source type="image/webp" srcset="images/hero/leuchten-768.webp 768w, images/hero/leuchten-1280.webp 1280w, images/hero/leuchten-1920.webp 1920w, images/hero/leuchten-2560.webp 2560w" sizes="100vw">
-          <img src="images/hero/leuchten-1920.webp" width="2560" height="1440" alt="Rot-weiße Schranken mit Warnleuchten an einer Straßensperre" fetchpriority="high" decoding="async">
+        <picture>
+          <source type="image/webp" srcset="images/start/hero-nebel-768.webp 768w, images/start/hero-nebel.webp 1280w" sizes="100vw">
+          <img src="images/start/hero-nebel.webp" width="1280" height="720" alt="Bauzaun, Schilder und Anhänger im Morgennebel" fetchpriority="high" decoding="async">
         </picture>
-        <script>
-          (function () {
-            if (!/(?:^|[?&])hero=2(?:&|$)/.test(location.search)) return;
-            var pic = document.getElementById("hero-bild");
-            if (!pic) return;
-            var widths = [768, 1280, 1920, 2560];
-            function srcset(ext) {
-              return widths.map(function (n) {
-                return "images/hero/schranke2-" + n + "." + ext + " " + n + "w";
-              }).join(", ");
-            }
-            var sources = pic.querySelectorAll("source");
-            sources[0].srcset = srcset("avif");
-            sources[1].srcset = srcset("webp");
-            var img = pic.querySelector("img");
-            img.src = "images/hero/schranke2-1920.webp";
-            img.alt = "Rot-weiße Schranken an einer Baustelle";
-          })();
-        </script>
       </div>
       <div class="wrap hero-copy">
         <h1>Bauzäune, Absperrungen und Anhänger.</h1>
@@ -68,65 +48,30 @@
         <div class="actions">
           <a class="btn" href="mieten/">Mieten</a>
           <a class="btn btn-ghost" href="kaufen/">Kaufen</a>
-          <a class="hero-phone" href="tel:+499082921777">09082 921777</a>
         </div>
       </div>
     </section>
-    <section class="shots" aria-labelledby="leistungen-titel">
-      <h2 id="leistungen-titel" class="wrap">Leistungen</h2>
-      <div class="shots-grid">
-        <article class="shot">
-          <img src="images/kk/zaun-einsatz.webp" width="790" height="527" alt="Sauber aufgestellte Zaunfelder mit Füßen und Streben" loading="lazy" decoding="async">
-          <div class="shot-body">
-            <h3>Bauzaun &amp; Absperrgitter</h3>
-            <div class="plate-ways">
-              <a class="btn" href="mieten/?gruppe=zaun" aria-label="Bauzaun und Absperrgitter mieten">Mieten</a>
-              <a class="btn btn-ghost" href="kaufen/?gruppe=zaun" aria-label="Bauzaun und Absperrgitter kaufen">Kaufen</a>
-            </div>
-          </div>
-        </article>
-        <article class="shot">
-          <img class="shot-fit" src="images/verkehrsschilder.webp" width="600" height="697" alt="Gruppe von Verkehrsschildern" loading="lazy" decoding="async">
-          <div class="shot-body">
-            <h3>Verkehrsschilder</h3>
-            <div class="plate-ways">
-              <a class="btn" href="mieten/?gruppe=schilder&amp;teil=gefahr" aria-label="Verkehrsschilder mieten">Mieten</a>
-              <a class="btn btn-ghost" href="kaufen/?gruppe=schilder&amp;teil=gefahr" aria-label="Verkehrsschilder kaufen">Kaufen</a>
-            </div>
-          </div>
-        </article>
-        <article class="shot">
-          <img src="images/hero/schranke2-kachel.webp" width="800" height="450" alt="Rot-weiße Schranken mit Warnleuchten an einer Baustelle" loading="lazy" decoding="async">
-          <div class="shot-body">
-            <h3>Verkehrs&shy;absperr&shy;einrichtungen</h3>
-            <p>Das Behördliche klären wir.</p>
-            <div class="plate-ways">
-              <a class="btn" href="mieten/?gruppe=absperrung&amp;teil=schranken" aria-label="Verkehrsabsperreinrichtungen mieten">Mieten</a>
-              <a class="btn btn-ghost" href="kaufen/?gruppe=absperrung&amp;teil=schranken" aria-label="Verkehrsabsperreinrichtungen kaufen">Kaufen</a>
-            </div>
-          </div>
-        </article>
-        <article class="shot">
-          <img src="images/fahrzeugtransporter.webp" width="800" height="534" alt="Fahrzeugtransporter mit einem Pkw auf der Ladefläche" loading="lazy" decoding="async">
-          <div class="shot-body">
-            <h3>Anhänger</h3>
-            <div class="plate-ways">
-              <a class="btn" href="mieten/?gruppe=anhaenger" aria-label="Anhänger mieten">Mieten</a>
-              <a class="btn btn-ghost" href="kaufen/?gruppe=anhaenger" aria-label="Anhänger kaufen">Kaufen</a>
-            </div>
-          </div>
-        </article>
+    <section class="start-block" aria-label="Kategorien">
+      <div class="wrap">
+        <div class="kauf-einstieg start-kat-grid">
+          <a class="kauf-karte" href="kaufen/?gruppe=zaun">
+            <img src="images/start/kat-bauzaun.webp" srcset="images/start/kat-bauzaun-768.webp 768w, images/start/kat-bauzaun.webp 1280w" sizes="(min-width: 800px) 33vw, 100vw" width="1280" height="720" alt="" loading="lazy" decoding="async">
+            <strong>Bauzaun &amp; Absperrgitter</strong>
+          </a>
+          <a class="kauf-karte" href="kaufen/?gruppe=verkehr">
+            <img src="images/hero/schranke2-kachel.webp" width="800" height="450" alt="" loading="lazy" decoding="async">
+            <strong>Verkehrsabsicherung &amp; Schilder</strong>
+          </a>
+          <a class="kauf-karte" href="kaufen/?gruppe=anhaenger">
+            <img src="images/start/kat-anhaenger.webp" srcset="images/start/kat-anhaenger-768.webp 768w, images/start/kat-anhaenger.webp 1280w" sizes="(min-width: 800px) 33vw, 100vw" width="1280" height="720" alt="" loading="lazy" decoding="async">
+            <strong>Anhänger</strong>
+          </a>
+        </div>
       </div>
     </section>
-    <section class="offers" id="aktuelles" aria-labelledby="aktuelles-titel" hidden>
+    <section class="trust" aria-labelledby="warum-titel">
       <div class="wrap">
-        <h2 id="aktuelles-titel">Neuheiten &amp; Angebote</h2>
-        <div data-aktuelles data-home="ja" data-limit="3" data-root=""></div>
-        <p class="offer-more"><a href="aktuelles/">Alle ansehen</a></p>
-      </div>
-    </section>
-    <section class="trust" aria-label="Vertrauen">
-      <div class="wrap">
+        <h2 id="warum-titel">Warum AMK</h2>
         <ul class="trust-points">
           <li><strong>Deutschlandweit</strong><span>im Einsatz</span></li>
           <li><strong>Rundum-Service</strong><span>Beratung, Transport, Auf- und Abbau mit eigenem Personal, Abholung</span></li>
@@ -137,19 +82,55 @@
             <span>Sterne</span>
           </li>
         </ul>
-        <div class="trust-quotes">
-          <blockquote><p>Einfach, schnell, unkompliziert. Absolut zu empfehlen!</p></blockquote>
-          <blockquote><p>Immer erreichbar und der Preis passt!</p></blockquote>
-        </div>
       </div>
     </section>
-    <section class="close-band">
-      <div class="wrap close-row">
-        <div>
-          <p class="eyebrow">Telefon</p>
-          <a class="close-phone" href="tel:+499082921777">09082 921777</a>
+    <section class="start-block" aria-labelledby="ablauf-titel">
+      <div class="wrap">
+        <h2 id="ablauf-titel">Ablauf</h2>
+        <ol class="start-schritte">
+          <li><a href="anfrage/"><strong>Anfragen</strong><span>Anfrage starten.</span></a></li>
+          <li><strong>Angebot</strong><span>Preis auf Anfrage.</span></li>
+          <li><strong>Lieferung oder Abholung</strong><span>Lieferung und Aufbau. Abbau und Abholung.</span></li>
+        </ol>
+      </div>
+    </section>
+    <section class="start-block start-neu" aria-labelledby="neuheiten-titel">
+      <div class="wrap">
+        <h2 id="neuheiten-titel">Neuheiten &amp; Angebote</h2>
+        <p class="start-beispiel">Beispiel aus dem Katalog. Keine Preise.</p>
+        <div class="kauf-board">
+          <div class="tiles">
+            <article class="tile">
+              <a href="produkt/bauzaun-10075/">
+                <span class="frame"><img loading="lazy" src="images/kk/bauzaun-10075.webp" srcset="images/kk/bauzaun-10075-640.webp 640w, images/kk/bauzaun-10075.webp 1200w" sizes="(min-width: 1100px) 22vw, (min-width: 720px) 45vw, 100vw" width="1200" height="675" alt="Bauzaun Profi 3,5 × 2,0 m" decoding="async"></span>
+                <h3>Bauzaun Profi 3,5 × 2,0 m</h3>
+              </a>
+              <p><span class="badge">Neu</span> 3,5 × 2,0 m · 14 kg</p>
+            </article>
+            <article class="tile">
+              <a href="produkt/plane-10012/">
+                <span class="frame"><img loading="lazy" src="images/kk/plane-10012.webp" srcset="images/kk/plane-10012-640.webp 640w, images/kk/plane-10012.webp 1024w" sizes="(min-width: 1100px) 22vw, (min-width: 720px) 45vw, 100vw" width="1024" height="576" alt="Sichtschutzplane" decoding="async"></span>
+                <h3>Sichtschutzplane</h3>
+              </a>
+              <p><span class="badge">Neu</span> Plane vor dem Gitterfeld.</p>
+            </article>
+            <article class="tile">
+              <a href="produkt/schranke-10024-1/">
+                <span class="frame"><img loading="lazy" src="images/schranke-folie-ra1.webp" srcset="images/schranke-folie-ra1-640.webp 640w, images/schranke-folie-ra1.webp 610w" sizes="(min-width: 1100px) 22vw, (min-width: 720px) 45vw, 100vw" width="610" height="420" alt="Kunststoff Schrankenzaun mit Folie RA1" decoding="async"></span>
+                <h3>Kunststoff Schrankenzaun mit Folie RA1</h3>
+              </a>
+              <p><span class="badge">Angebot</span> 12 kg</p>
+            </article>
+            <article class="tile">
+              <a href="produkt/fahrzeugtransporter/">
+                <span class="frame"><img loading="lazy" src="images/fahrzeugtransporter.webp" width="800" height="534" alt="Kippbarer Autotransporter mit einem Pkw auf der Ladefläche" decoding="async"></span>
+                <h3>Fahrzeugtransporter</h3>
+              </a>
+              <p><span class="badge">Angebot</span> Transporter, wenn ein Fahrzeug auf der Ladefläche steht.</p>
+            </article>
+          </div>
         </div>
-        <a class="btn btn-ink" href="anfrage/">Anfrage</a>
+        <p class="offer-more"><a href="aktuelles/">Alle ansehen</a></p>
       </div>
     </section>
   </main>
@@ -200,7 +181,6 @@
       </div>
     </div>
 <script src="js/nav.js"></script>
-<script src="js/aktuelles.js"></script>
 <script src="js/merkzettel.js"></script>
 </body>
 </html>
