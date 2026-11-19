@@ -2025,17 +2025,25 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 
 .js-kauf section.copy { display: none; }
 .kauf-board { padding: 1.3rem 0 0.4rem; background: var(--paper); }
-.kauf-einstieg { display: grid; gap: 0.75rem; }
+.kauf-einstieg { display: grid; gap: 0.9rem; }
 .kauf-karte {
-  display: flex; align-items: center; justify-content: center; text-align: center;
-  min-height: 3.2rem; padding: 0.55rem 1.1rem; background: var(--white); color: var(--ink);
-  border: 2px solid var(--ink); border-radius: 999px;
+  display: flex; flex-direction: column; align-items: stretch; text-align: left;
+  min-height: 0; padding: 0; overflow: hidden;
+  background: var(--white); color: var(--ink);
+  border: 2px solid var(--ink); border-radius: 1rem;
   box-shadow: 4px 4px 0 var(--ink);
   text-decoration: none;
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
-.kauf-karte strong { font-family: var(--display); font-weight: 400; font-size: 1.15rem; line-height: 1.05; letter-spacing: -0.03em; }
-.kauf-karte[aria-current="true"] { background: var(--signal); color: var(--signal-ink); }
+.kauf-karte img {
+  width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: var(--soft);
+}
+.kauf-karte strong {
+  display: flex; align-items: center; min-height: 3.25rem;
+  padding: 0.7rem 0.9rem 0.8rem;
+  font-family: var(--display); font-weight: 400; font-size: 1.45rem; line-height: 1.05; letter-spacing: -0.03em;
+}
+.kauf-karte[aria-current="true"] strong { background: var(--signal); color: var(--signal-ink); }
 .kauf-karte:hover { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
 .kauf-board:not(.is-gruppe) .kauf-sort,
 .kauf-board:not(.is-gruppe) .kauf-more,
@@ -2068,14 +2076,10 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 #miete-anhaenger,
 #kauf-auswahl { margin-top: 0.9rem; }
 .schilder .field { margin-top: 0.9rem; }
-@media (min-width: 700px) {
-  .kauf-einstieg { grid-template-columns: 1fr 1fr; }
-}
-@media (min-width: 1100px) {
+@media (min-width: 860px) {
   .kauf-einstieg { grid-template-columns: repeat(3, 1fr); }
-  .kauf-board.is-gruppe .kauf-einstieg { grid-template-columns: repeat(3, 1fr); }
 }
-.kauf-cats { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.kauf-cats { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
 #miete-schilder .kauf-cats,
 #miete-absperrung .kauf-cats,
 #schilder-bereich .kauf-cats,
@@ -2085,7 +2089,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   min-height: 44px;
   padding: 0.35rem 0.85rem;
   border: 2px solid var(--ink);
-  border-radius: 999px;
+  border-radius: 1rem;
   background: var(--white);
   box-shadow: 4px 4px 0 var(--ink);
   color: var(--ink);

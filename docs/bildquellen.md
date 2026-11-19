@@ -98,7 +98,7 @@ Das Logo bleibt das der bestehenden Website.
 
 ## Hero und Startkacheln
 
-Die Startseite nutzt ein Foto. Es liegt lokal als WebP und AVIF in 768, 1280, 1920 und 2560 px Breite, 16:9. Nichts wird von Pexels eingebunden. `?hero=2` zeigt das zweite Schranken-Foto. Die älteren Dateien `schranke`, `zeichen`, `zaun`, `baustelle` und `anhaenger` bleiben im Ordner und stehen nicht mehr auf der Startseite.
+Mieten und Kaufen nutzen dieselben drei Motive als Oberkategorie: `images/kk/zaun-einsatz.webp` (Rechte in Klärung), `images/hero/schranke2-kachel.webp` (Pexels) und `images/fahrzeugtransporter.webp` (CC BY-SA 4.0). Die Startseite nutzt ein Foto. Es liegt lokal als WebP und AVIF in 768, 1280, 1920 und 2560 px Breite, 16:9. Nichts wird von Pexels eingebunden. `?hero=2` zeigt das zweite Schranken-Foto. Die älteren Dateien `schranke`, `zeichen`, `zaun`, `baustelle` und `anhaenger` bleiben im Ordner und stehen nicht mehr auf der Startseite.
 
 | Datei | Motiv | Fotograf | Seite | Lizenz |
 | --- | --- | --- | --- | --- |
