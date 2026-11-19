@@ -2408,11 +2408,11 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   #aktuelles .news-grid { grid-template-columns: 1fr 1fr; }
 }
 
-.beispiel-layout { display: grid; gap: 1.25rem; padding-bottom: 2.2rem; }
+.beispiel-layout { display: grid; gap: 1.5rem; }
 .beispiel-buehne {
   overflow: hidden;
-  background: #e4e1d8;
-  border: 2px solid var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
   border-radius: 1rem;
   box-shadow: 4px 4px 0 var(--ink);
 }
@@ -2421,13 +2421,14 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: contain;
-  background: #e4e1d8;
+  background: var(--soft);
+  padding: 0.65rem;
 }
 .beispiel-thumbs {
   display: flex;
   flex-wrap: wrap;
   gap: 0.55rem;
-  margin-top: 0.75rem;
+  margin-top: 0.8rem;
   overflow-x: auto;
 }
 .beispiel-thumbs button {
@@ -2435,36 +2436,67 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   width: 4.6rem;
   min-height: 44px;
   margin: 0;
-  padding: 0.2rem;
-  border: 2px solid var(--ink);
+  padding: 0.15rem;
+  border: 1px solid var(--line);
   border-radius: 1rem;
   background: #fff;
-  box-shadow: 4px 4px 0 var(--ink);
   cursor: pointer;
 }
-.beispiel-thumbs button[aria-current="true"] { background: var(--signal); }
+.beispiel-thumbs button[aria-current="true"] {
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
 .beispiel-thumbs img {
   display: block;
   width: 100%;
   height: 3.2rem;
   object-fit: contain;
-  background: #e4e1d8;
-  border-radius: 0.7rem;
+  background: var(--soft);
+  border-radius: 0.75rem;
 }
 .beispiel-kauf {
   background: #fff;
-  border: 2px solid var(--ink);
+  border: 1px solid var(--line);
   border-radius: 1rem;
   box-shadow: 4px 4px 0 var(--ink);
-  padding: 0.9rem 1rem 1.15rem;
+  padding: 1.15rem 1.2rem 1.3rem;
 }
-.beispiel-kauf h1 { margin: 0; font-size: clamp(2rem, 4vw, 2.8rem); }
-.beispiel-kauf > p { margin: 0.55rem 0 0; }
+.beispiel-kauf h1 { margin: 0; font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.05; }
+.beispiel-kauf > p { margin: 0.4rem 0 0; color: var(--gray); }
+.beispiel-kauf .specs { margin-top: 0.9rem; }
+.beispiel-arten { display: grid; gap: 0.65rem; margin-top: 1rem; }
+.beispiel-art {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 4.6rem;
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border: 2px solid var(--line);
+  border-radius: 1rem;
+  background: #fff;
+  cursor: pointer;
+}
+.beispiel-art input { width: 1.25rem; height: 1.25rem; margin: 0; }
+.beispiel-art strong { font-size: 1.05rem; }
+.beispiel-art:has(input:checked) {
+  border-color: var(--ink);
+  background: var(--signal);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.beispiel-menge { margin-top: 0.9rem; }
+.beispiel-menge p { margin: 0 0 0.4rem; font-weight: 600; }
+.beispiel-inhalt { margin: 0.75rem 0 0; padding-left: 1.15rem; }
+.beispiel-inhalt[hidden] { display: none; }
+.beispiel-inhalt li { margin: 0.25rem 0; }
+.beispiel-daten { padding: 1.4rem 0 0.4rem; }
+.beispiel-daten p { max-width: 42rem; }
 .beispiel-step {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr) 44px;
   gap: 0.45rem;
 }
+.beispiel-step[hidden] { display: none; }
 .beispiel-step button,
 .beispiel-step input {
   min-height: 44px;
@@ -2480,24 +2512,32 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .beispiel-step input { width: 100%; max-width: none; -moz-appearance: textfield; appearance: textfield; }
 .beispiel-step input::-webkit-outer-spin-button,
 .beispiel-step input::-webkit-inner-spin-button { appearance: none; margin: 0; }
-.beispiel .btn { width: 100%; min-height: 3.25rem; }
-.beispiel-tabs { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 1rem; }
-.beispiel-tabs button {
-  min-height: 44px;
-  padding: 0.35rem 0.85rem;
-  border: 2px solid var(--ink);
-  border-radius: 1rem;
-  background: #fff;
-  box-shadow: 4px 4px 0 var(--ink);
-  color: var(--ink);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-}
-.beispiel-tabs button[aria-selected="true"] { background: var(--signal); }
-.beispiel-panel { margin: 0.85rem 0 0; }
-.beispiel-panel[hidden] { display: none; }
 .beispiel-zubehoer h2 { margin: 0.2rem 0 0; }
+.beispiel-hit { display: block; color: inherit; cursor: pointer; }
+.beispiel-zeile {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem 0;
+}
+.beispiel-zeile input { flex: 0 0 44px; width: 44px; height: 44px; margin: 0; }
+.kauf-board .beispiel-zeile h3 { margin: 0; min-height: 0; }
+.beispiel-pick:has(input:checked) { box-shadow: inset 0 0 0 2px var(--ink), 4px 4px 0 var(--ink); }
+.beispiel-pick .beispiel-step { margin: 0.35rem 0.8rem 0.8rem; }
+.beispiel-details {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0 0.85rem 0.65rem;
+  color: var(--green-text);
+  font-weight: 600;
+}
+.beispiel-senden { padding: 0.3rem 0 2.6rem; }
+.beispiel-senden .btn { width: 100%; max-width: 28rem; min-height: 3.25rem; }
+@media (min-width: 700px) {
+  .beispiel-arten { grid-template-columns: 1fr 1fr; }
+}
 @media (min-width: 900px) {
-  .beispiel-layout { grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.8fr); gap: 1.5rem; align-items: start; }
+  .beispiel-layout { grid-template-columns: minmax(0, 1.25fr) minmax(20rem, 0.75fr); gap: 1.75rem; align-items: start; }
+  .beispiel-kauf { position: sticky; top: calc(var(--top, 5.6rem) + 0.8rem); }
 }

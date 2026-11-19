@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
-  <title>Produktname (Platzhalter) – AMK Engelhardt</title>
-  <meta name="description" content="Platzhalter für eine Beispiel-Produktseite.">
+  <title>Bauzaun – AMK Engelhardt</title>
+  <meta name="description" content="Bauzaun Profi 3,5 × 2,0 m">
   <link rel="icon" href="../../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../../assets/logo.png">
   <link rel="stylesheet" href="../../css/styles.css">
@@ -32,100 +32,49 @@
     </header>
   </div>
   <main id="inhalt">
-    <section class="beispiel">
-      <div class="wrap beispiel-layout">
-        <div class="beispiel-galerie">
-          <div class="beispiel-buehne">
-            <img id="beispiel-bild" src="../../images/beispiel/bild-1.svg" width="800" height="600" alt="Bild 1">
-          </div>
-          <div class="beispiel-thumbs" aria-label="Vorschaubilder">
-            <button type="button" aria-current="true" aria-label="Bild 1"><img src="../../images/beispiel/bild-1.svg" width="800" height="600" alt=""></button>
-            <button type="button" aria-label="Bild 2"><img src="../../images/beispiel/bild-2.svg" width="800" height="600" alt=""></button>
-            <button type="button" aria-label="Bild 3"><img src="../../images/beispiel/bild-3.svg" width="800" height="600" alt=""></button>
-            <button type="button" aria-label="Bild 4"><img src="../../images/beispiel/bild-4.svg" width="800" height="600" alt=""></button>
-            <button type="button" aria-label="Bild 5"><img src="../../images/beispiel/bild-5.svg" width="800" height="600" alt=""></button>
-          </div>
-        </div>
-        <div class="beispiel-kauf">
-          <nav class="crumbs" aria-label="Brotkrumen"><a href="../../">Start</a> <span aria-hidden="true">›</span> <a href="../../kaufen/">Kaufen</a> <span aria-hidden="true">›</span> <span aria-current="page">Produktname (Platzhalter)</span></nav>
-          <h1>Produktname (Platzhalter)</h1>
-          <p>Kurztext (Platzhalter)</p>
-          <ul class="specs">
-            <li><span>Angabe (Platzhalter)</span><strong>Wert (Platzhalter)</strong></li>
-            <li><span>Preis</span><strong>Preis auf Anfrage</strong></li>
-          </ul>
-          <form class="order" data-order data-slug="beispiel" data-name="Produktname (Platzhalter)">
-            <div class="beispiel-step">
-              <button type="button" data-step="-1" aria-label="Weniger">−</button>
-              <label class="visually-hidden" for="menge-beispiel">Menge</label>
-              <input id="menge-beispiel" name="menge" type="number" min="1" max="99" value="1" inputmode="numeric" required>
-              <button type="button" data-step="1" aria-label="Mehr">+</button>
+    <form class="beispiel-form" id="beispiel-form">
+      <section class="beispiel">
+        <div class="wrap beispiel-layout">
+          <div class="beispiel-galerie">
+            <div class="beispiel-buehne">
+              <img id="beispiel-bild" src="../../images/kk/bauzaun-10075.webp" width="1200" height="675" alt="">
             </div>
-            <button class="btn" type="submit">In den Anfragekorb</button>
-          </form>
-          <div class="beispiel-tabs" role="tablist" aria-label="Platzhalter">
-            <button type="button" role="tab" id="tab-beschreibung" aria-selected="true" aria-controls="beispiel-beschreibung">Beschreibung</button>
-            <button type="button" role="tab" id="tab-daten" aria-selected="false" aria-controls="beispiel-daten">Technische Daten</button>
+            <div class="beispiel-thumbs" id="beispiel-thumbs" aria-label="Bilder"></div>
           </div>
-          <div class="beispiel-panel" id="beispiel-beschreibung" role="tabpanel" aria-labelledby="tab-beschreibung">
-            <p>Beschreibung (Platzhalter)</p>
-          </div>
-          <div class="beispiel-panel" id="beispiel-daten" role="tabpanel" aria-labelledby="tab-daten" hidden>
-            <table class="spec-table">
-              <tbody>
-                <tr><th scope="row">Angabe (Platzhalter)</th><td>Wert (Platzhalter)</td></tr>
-              </tbody>
-            </table>
+          <div class="beispiel-kauf">
+            <nav class="crumbs" aria-label="Brotkrumen"><a href="../../">Start</a> <span aria-hidden="true">›</span> <a href="../../kaufen/">Kaufen</a> <span aria-hidden="true">›</span> <span id="beispiel-krume" aria-current="page">Bauzaun</span></nav>
+            <h1 id="beispiel-titel">Bauzaun</h1>
+            <p id="beispiel-kicker"></p>
+            <p id="beispiel-lead"></p>
+            <ul class="specs"><li><span>Preis</span><strong>Preis auf Anfrage</strong></li></ul>
+            <div class="beispiel-arten" id="beispiel-arten" role="radiogroup" aria-label="Bestellart"></div>
+            <div class="beispiel-menge">
+              <p id="beispiel-einheit"></p>
+              <div class="beispiel-step">
+                <button type="button" data-step="-1" aria-label="Weniger">−</button>
+                <label class="visually-hidden" for="menge-beispiel">Menge</label>
+                <input id="menge-beispiel" name="menge" type="number" min="1" max="99" value="1" inputmode="numeric" required>
+                <button type="button" data-step="1" aria-label="Mehr">+</button>
+              </div>
+            </div>
+            <ul class="beispiel-inhalt" id="beispiel-inhalt" hidden></ul>
           </div>
         </div>
-      </div>
-    </section>
-    <section class="kauf-board beispiel-zubehoer" aria-labelledby="zubehoer-titel">
-      <div class="wrap">
-        <h2 id="zubehoer-titel">Passendes Zubehör</h2>
-        <div class="tiles">
-          <article class="tile">
-            <a href="../fuss-10005/">
-              <span class="frame"><img loading="lazy" src="../../images/kk/fuss-10005.webp" width="1200" height="675" alt="Betonfuß 31 kg" decoding="async"></span>
-              <h3>Betonfuß 31 kg</h3>
-            </a>
-            <p>31 kg</p>
-          </article>
-          <article class="tile">
-            <a href="../fuss-10004/">
-              <span class="frame"><img loading="lazy" src="../../images/kk/fuss-10004.webp" width="1200" height="675" alt="Kunststofffuß leicht" decoding="async"></span>
-              <h3>Kunststofffuß leicht</h3>
-            </a>
-            <p>17 kg</p>
-          </article>
-          <article class="tile">
-            <a href="../fuss-10006/">
-              <span class="frame"><img loading="lazy" src="../../images/kk/fuss-10006.webp" width="1200" height="675" alt="Kunststofffuß schwer 23 kg" decoding="async"></span>
-              <h3>Kunststofffuß schwer 23 kg</h3>
-            </a>
-            <p>23 kg</p>
-          </article>
-          <article class="tile">
-            <a href="../zubehoer-10002/">
-              <span class="frame"><img loading="lazy" src="../../images/kk/zubehoer-10002.webp" width="1024" height="576" alt="Verbindungsschelle 3 mm" decoding="async"></span>
-              <h3>Verbindungsschelle 3 mm</h3>
-            </a>
-          </article>
-          <article class="tile">
-            <a href="../zubehoer-10003/">
-              <span class="frame"><img loading="lazy" src="../../images/kk/zubehoer-10003.webp" width="1024" height="576" alt="Sicherheitsschelle" decoding="async"></span>
-              <h3>Sicherheitsschelle</h3>
-            </a>
-          </article>
-          <article class="tile">
-            <a href="../zubehoer-10008/">
-              <span class="frame"><img loading="lazy" src="../../images/kk/zubehoer-10008.webp" width="1024" height="576" alt="Stützstrebe" decoding="async"></span>
-              <h3>Stützstrebe</h3>
-            </a>
-          </article>
+        <div class="wrap beispiel-daten">
+          <div id="beispiel-text"></div>
+          <table class="spec-table" id="beispiel-specs" hidden></table>
         </div>
+      </section>
+      <section class="kauf-board beispiel-zubehoer" aria-labelledby="zubehoer-titel">
+        <div class="wrap">
+          <h2 id="zubehoer-titel">Passendes Zubehör</h2>
+          <div class="tiles" id="beispiel-zubehoer"></div>
+        </div>
+      </section>
+      <div class="wrap beispiel-senden">
+        <button class="btn" type="submit">In den Anfragekorb</button>
       </div>
-    </section>
+    </form>
   </main>
   <footer class="site-footer">
     <div class="wrap">

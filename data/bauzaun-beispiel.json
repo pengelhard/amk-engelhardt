@@ -1,0 +1,36 @@
+{
+  "slug": "bauzaun-10075",
+  "zubehoer": [
+    "fuss-10005",
+    "fuss-10004",
+    "fuss-10006",
+    "zubehoer-10002",
+    "zubehoer-10003",
+    "zubehoer-10008",
+    "schwelle-10005-2"
+  ],
+  "platzhalter": [
+    "images/beispiel/bild-2.svg",
+    "images/beispiel/bild-3.svg",
+    "images/beispiel/bild-4.svg"
+  ],
+  "arten": [
+    {
+      "id": "felder",
+      "label": "Einzelne Felder",
+      "einheit": "Felder",
+      "hinweis": "Einzelne Felder"
+    },
+    {
+      "id": "staender",
+      "label": "Ständer",
+      "einheit": "Ständer",
+      "vorsatz": "Ständer à 30 Felder",
+      "inhalt": [
+        "30 Felder",
+        "31 Bauzaunfüße",
+        "Verbindungsschellen, Anzahl auf Anfrage"
+      ]
+    }
+  ]
+}
