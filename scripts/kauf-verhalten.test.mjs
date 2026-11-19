@@ -498,10 +498,14 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
         const cards = [...document.querySelectorAll("article.kauf-produkt, #kauf-liste article.tile")].filter((el) => !el.hidden && !el.closest("[hidden]") && el.getBoundingClientRect().height > 0);
         const hit = cards.find((card) => {
           const field = card.querySelector("[data-menge], [data-schnell='staender']");
-          return field && field.value === "2";
+          if (field && field.value === "2") return true;
+          const kreis = card.querySelector("[data-kreis='bauzaun']");
+          const ausBox = [...document.querySelectorAll("#kauf-verkehr-summe .beispiel-step input")].some((input) => input.value === "2");
+          return !!(kreis && kreis.checked && ausBox && !card.querySelector("[data-schnell='staender']"));
         });
         const box = hit ? hit.querySelector('input[type="checkbox"]') : null;
         const step = hit ? hit.querySelector(".beispiel-step") : null;
+        const direkt = hit ? hit.querySelector("[data-menge], [data-schnell='staender']") : null;
         const summe = document.getElementById("kauf-verkehr-summe");
         const text = summe ? summe.innerText : "";
         const karte = summe ? summe.querySelector(".beispiel-post") : null;
@@ -511,7 +515,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
         const knopf = summe ? summe.querySelector(".beispiel-senden .btn") : null;
         return {
           checked: !!(box && box.checked),
-          menge: hit ? (hit.querySelector("[data-menge], [data-schnell='staender']") || {}).value : "",
+          menge: direkt && direkt.value === "2" ? "2" : ([...document.querySelectorAll("#kauf-verkehr-summe .beispiel-step input")].some((input) => input.value === "2") ? "2" : (direkt ? direkt.value : "")),
           plus: !!(step && getComputedStyle(step).display !== "none"),
           box: text.replace(/\s+/g, " ").trim(),
           platzhalter: /Typ\s*[–-]/.test(text),
@@ -535,22 +539,26 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
       const stand = block.querySelector("[data-schnell='staender']");
       const feld = block.querySelector("[data-schnell='felder']");
       const link = block.querySelector(".kauf-schnell-details");
+      const zeilen = block.querySelectorAll(".kauf-schnell-zeile").length;
       return {
         slug: block.getAttribute("data-slug"),
-        max: stand.getAttribute("max"),
-        min: stand.getAttribute("min"),
+        stand: !!stand,
+        zeilen,
+        max: feld.getAttribute("max"),
+        min: feld.getAttribute("min"),
         link: link.getAttribute("href"),
         text: link.textContent.trim(),
-        felder: feld.getAttribute("max")
+        label: block.querySelector(".kauf-schnell-zeile span").textContent.trim()
       };
     });
-    point("Schnellauswahl", schnellInfo.slug === "bauzaun-10075" && schnellInfo.max === "9999" && schnellInfo.min === "0" && schnellInfo.felder === "9999" && /bauzaun-10075\/$/.test(schnellInfo.link) && schnellInfo.text === "Details anpassen", JSON.stringify(schnellInfo));
-    await schnellKarte.locator("[data-schnell='staender']").fill("2");
+    point("Schnellauswahl", schnellInfo.slug === "bauzaun-10075" && !schnellInfo.stand && schnellInfo.zeilen === 1 && schnellInfo.label === "Einzelfelder" && schnellInfo.max === "9999" && schnellInfo.min === "0" && /bauzaun-10075\/$/.test(schnellInfo.link) && schnellInfo.text === "Details anpassen", JSON.stringify(schnellInfo));
     await schnellKarte.locator("[data-schnell='felder']").fill("3");
     await schnell.page.waitForTimeout(100);
     const korb = await schnell.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty + ":" + (item.note || "")));
-    point("Korb aus der Liste", korb.indexOf("kauf:bauzaun-10075:im:staender:2:im Komplett-Ständer") !== -1 && korb.indexOf("kauf:bauzaun-10075:im:zaun:60:im Komplett-Ständer") !== -1 && korb.indexOf("kauf:bauzaun-10075:im:fuss:fuss-10006:62:im Komplett-Ständer") !== -1 && korb.indexOf("kauf:bauzaun-10075:im:schelle:zubehoer-10002-1:60:im Komplett-Ständer") !== -1 && korb.indexOf("kauf:bauzaun-10075:zusatz:felder:3:zusätzlich") !== -1, korb.join(" | "));
+    point("Korb aus der Liste", korb.indexOf("kauf:bauzaun-10075:zusatz:felder:3:zusätzlich") !== -1 && !korb.some((line) => line.indexOf(":im:") !== -1), korb.join(" | "));
     await schnell.page.goto(base + "/produkt/bauzaun-10075/", { waitUntil: "networkidle" });
+    await schnell.page.locator("#menge-staender").fill("2");
+    await schnell.page.locator("#menge-staender").dispatchEvent("input");
     await schnell.page.waitForFunction(() => document.getElementById("menge-staender") && document.getElementById("menge-staender").value === "2" && document.getElementById("menge-felder") && document.getElementById("menge-felder").value === "3");
     await schnell.page.selectOption("#wahl-fuss", "fuss-10004");
     await schnell.page.waitForTimeout(150);
@@ -558,19 +566,23 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     const angepasst = await schnell.page.evaluate(() => {
       const block = document.querySelector(".kauf-schnell[data-slug='bauzaun-10075']");
       const hint = block.querySelector(".kauf-schnell-hinweis");
+      const kreis = block.parentElement.querySelector("[data-kreis='bauzaun']");
+      const box = document.getElementById("kauf-verkehr-summe").innerText;
       return {
-        stand: block.querySelector("[data-schnell='staender']").value,
+        standFeld: !!block.querySelector("[data-schnell='staender']"),
         feld: block.querySelector("[data-schnell='felder']").value,
-        hinweis: hint && !hint.hidden && hint.textContent.trim()
+        kreis: !!(kreis && kreis.checked),
+        hinweis: hint && !hint.hidden && hint.textContent.trim(),
+        box: /Im Komplett-Ständer enthalten/.test(box) && /2/.test(box)
       };
     });
-    point("Angepasst bleibt", angepasst.stand === "2" && angepasst.feld === "3" && angepasst.hinweis === "angepasst", JSON.stringify(angepasst));
-    await schnell.page.locator(".kauf-schnell[data-slug='bauzaun-10075'] [data-schnell='staender']").fill("3");
+    point("Angepasst bleibt", !angepasst.standFeld && angepasst.feld === "3" && angepasst.kreis && angepasst.hinweis === "angepasst" && angepasst.box, JSON.stringify(angepasst));
+    await schnell.page.locator(".kauf-schnell[data-slug='bauzaun-10075'] [data-schnell='felder']").fill("4");
     await schnell.page.waitForTimeout(100);
     const bewahrt = await schnell.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").filter((item) => String(item.id).indexOf("kauf:bauzaun-10075:im:fuss:") === 0).map((item) => item.id + ":" + item.qty));
-    point("Liste überschreibt den Fuß nicht", bewahrt.length === 1 && bewahrt[0] === "kauf:bauzaun-10075:im:fuss:fuss-10004:93", bewahrt.join(", "));
-    await schnell.page.locator(".kauf-schnell[data-slug='bauzaun-10075'] [data-schnell='staender']").fill("10000");
-    const begrenzt = await schnell.page.locator(".kauf-schnell[data-slug='bauzaun-10075'] [data-schnell='staender']").inputValue();
+    point("Liste überschreibt den Fuß nicht", bewahrt.length === 1 && bewahrt[0] === "kauf:bauzaun-10075:im:fuss:fuss-10004:62", bewahrt.join(", "));
+    await schnell.page.locator(".kauf-schnell[data-slug='bauzaun-10075'] [data-schnell='felder']").fill("10000");
+    const begrenzt = await schnell.page.locator(".kauf-schnell[data-slug='bauzaun-10075'] [data-schnell='felder']").inputValue();
     point("Schnellauswahl Grenze 9999", begrenzt === "9999", begrenzt);
     await schnell.page.evaluate(() => localStorage.removeItem("amk-wunsch"));
     await schnell.page.close();

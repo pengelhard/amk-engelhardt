@@ -530,11 +530,11 @@
         if (block.hidden || elternVersteckt(block)) return;
         var titel = block.parentElement ? block.parentElement.querySelector("h3") : null;
         var name = titel ? titel.textContent.replace(/\s+/g, " ").trim() : "";
-        var stand = schnellZahl(block, "staender");
         var felder = schnellZahl(block, "felder");
         var details = block.querySelector(".kauf-schnell-details");
         var href = details ? details.getAttribute("href") : "";
         var slug = block.getAttribute("data-slug") || "";
+        var stand = window.AMK_WUNSCH && window.AMK_WUNSCH.load ? zeileMenge(window.AMK_WUNSCH.load(), "kauf:" + slug + ":im:staender") : 0;
         if (stand > 0) lines.push({ name: name, menge: String(stand), qty: stand, block: "Im Komplett-Ständer enthalten", href: href, ziel: "staender:" + slug });
         if (felder > 0) lines.push({ name: name, menge: String(felder), qty: felder, block: "Zusätzlich", href: href, ziel: "felder:" + slug });
       });
@@ -898,7 +898,9 @@
       if (field) {
         field.value = String(qty);
         field.dispatchEvent(new Event("input", { bubbles: true }));
+        return;
       }
+      if (kind === "staender") setzeStandAusBox(id, qty);
       return;
     }
     if (kind === "hinweis") {
@@ -1047,33 +1049,24 @@
     return bySlug[slug] || fallback || { name: slug, bild: "", kat: "bauzaun" };
   }
 
-  function schreibSchnell(block) {
-    if (schnellStill || !block || !window.AMK_WUNSCH || !window.AMK_WUNSCH.load) return;
-    var slug = block.getAttribute("data-slug") || "";
-    var item = bySlug[slug];
-    if (!item) return;
-    var stand = mengeAus(schnellFeld(block, "staender"));
-    var felder = mengeAus(schnellFeld(block, "felder"));
-    if (stand == null || felder == null) return;
+  function schreibStand(items, item, stand) {
+    var slug = item.slug;
     var prefix = "kauf:" + slug + ":";
-    var items = window.AMK_WUNSCH.load();
     var fuss = wahlEintrag("fuss");
     var schelle = wahlEintrag("schelle");
     var fussId = wahlTreffer(items, prefix, "fuss");
     var schelleId = wahlTreffer(items, prefix, "schelle");
-    var fussAnders = !!(fussId && fussId !== prefix + "im:fuss:" + fuss.standard);
-    var schelleAnders = !!(schelleId && schelleId !== prefix + "im:schelle:" + schelle.standard);
     if (stand > 0) {
       items = setzeZeile(items, prefix + "im:zaun", item.name, mal(staenderPaket.felderJe || 30, stand), item.bild, item.kat);
       var standItem = produktVon(staenderPaket.stand.slug, staenderPaket.stand);
       items = setzeZeile(items, prefix + "im:staender", standItem.name || staenderPaket.stand.name, stand, standItem.bild, standItem.kat || item.kat);
-      if (fussAnders) items = skaliere(items, fussId, mal(fuss.je, stand));
+      if (fussId && fussId !== prefix + "im:fuss:" + fuss.standard) items = skaliere(items, fussId, mal(fuss.je, stand));
       else {
         items = items.filter(function (line) { return String(line.id).indexOf(prefix + "im:fuss:") !== 0; });
         var fussItem = produktVon(fuss.standard, { name: fuss.standard });
         items = setzeZeile(items, prefix + "im:fuss:" + fuss.standard, fussItem.name, mal(fuss.je, stand), fussItem.bild, fussItem.kat || item.kat);
       }
-      if (schelleAnders) items = skaliere(items, schelleId, mal(schelle.je, stand));
+      if (schelleId && schelleId !== prefix + "im:schelle:" + schelle.standard) items = skaliere(items, schelleId, mal(schelle.je, stand));
       else {
         items = items.filter(function (line) { return String(line.id).indexOf(prefix + "im:schelle:") !== 0; });
         var schelleItem = produktVon(schelle.standard, { name: schelle.standard });
@@ -1082,11 +1075,44 @@
     } else {
       items = items.filter(function (line) { return String(line.id).indexOf(prefix + "im:") !== 0; });
     }
-    items = setzeZeile(items, prefix + "zusatz:felder", item.name, felder, item.bild, item.kat);
-    items = items.filter(function (line) { return line.id !== "kauf:" + slug; });
+    return items;
+  }
+
+  function speichere(items) {
     if (window.AMK_KAUF_STORE && window.AMK_KAUF_STORE.save) window.AMK_KAUF_STORE.save(items);
     else window.AMK_WUNSCH.save(items, true);
-    zeigeHinweis(block, stand > 0 && (fussAnders || schelleAnders));
+  }
+
+  function setzeStandAusBox(slug, stand) {
+    if (schnellStill || !window.AMK_WUNSCH || !window.AMK_WUNSCH.load) return;
+    var item = bySlug[slug];
+    if (!item) return;
+    var items = schreibStand(window.AMK_WUNSCH.load(), item, stand);
+    speichere(items);
+    liesSchnell();
+    kaufLeiste();
+  }
+
+  function schreibSchnell(block) {
+    if (schnellStill || !block || !window.AMK_WUNSCH || !window.AMK_WUNSCH.load) return;
+    var slug = block.getAttribute("data-slug") || "";
+    var item = bySlug[slug];
+    if (!item) return;
+    var felder = mengeAus(schnellFeld(block, "felder"));
+    if (felder == null) return;
+    var prefix = "kauf:" + slug + ":";
+    var items = window.AMK_WUNSCH.load();
+    var standField = schnellFeld(block, "staender");
+    var stand = standField ? mengeAus(standField) : zeileMenge(items, prefix + "im:staender");
+    if (standField) items = schreibStand(items, item, stand || 0);
+    items = setzeZeile(items, prefix + "zusatz:felder", item.name, felder, item.bild, item.kat);
+    items = items.filter(function (line) { return line.id !== "kauf:" + slug; });
+    speichere(items);
+    var fuss = wahlEintrag("fuss");
+    var schelle = wahlEintrag("schelle");
+    var fussId = wahlTreffer(items, prefix, "fuss");
+    var schelleId = wahlTreffer(items, prefix, "schelle");
+    zeigeHinweis(block, stand > 0 && ((fussId && fussId !== prefix + "im:fuss:" + fuss.standard) || (schelleId && schelleId !== prefix + "im:schelle:" + schelle.standard)));
     var kreis = block.parentElement ? block.parentElement.querySelector("[data-kreis='bauzaun']") : null;
     if (kreis) kreis.checked = stand > 0 || felder > 0;
     kaufLeiste();
@@ -1101,16 +1127,16 @@
       var prefix = "kauf:" + slug + ":";
       var standField = schnellFeld(block, "staender");
       var feldField = schnellFeld(block, "felder");
-      if (standField) standField.value = String(zeileMenge(items, prefix + "im:staender"));
+      var stand = zeileMenge(items, prefix + "im:staender");
+      if (standField) standField.value = String(stand);
       if (feldField) feldField.value = String(zeileMenge(items, prefix + "zusatz:felder"));
       var fuss = wahlEintrag("fuss");
       var schelle = wahlEintrag("schelle");
       var fussId = wahlTreffer(items, prefix, "fuss");
       var schelleId = wahlTreffer(items, prefix, "schelle");
-      var stand = standField ? parseInt(standField.value, 10) || 0 : 0;
       zeigeHinweis(block, stand > 0 && ((fussId && fussId !== prefix + "im:fuss:" + fuss.standard) || (schelleId && schelleId !== prefix + "im:schelle:" + schelle.standard)));
       var kreis = block.parentElement ? block.parentElement.querySelector("[data-kreis='bauzaun']") : null;
-      if (kreis) kreis.checked = (parseInt(standField && standField.value, 10) || 0) > 0 || (parseInt(feldField && feldField.value, 10) || 0) > 0;
+      if (kreis) kreis.checked = stand > 0 || (parseInt(feldField && feldField.value, 10) || 0) > 0;
     });
     schnellStill = false;
   }
@@ -1159,15 +1185,14 @@
     if (box && box.matches && box.matches("[data-kreis='bauzaun']")) {
       var tile = box.closest("article");
       var block = tile ? tile.querySelector(".kauf-schnell") : null;
-      var standField = schnellFeld(block, "staender");
       var feldField = schnellFeld(block, "felder");
-      var standNow = parseInt(standField && standField.value, 10) || 0;
+      var slug = block ? block.getAttribute("data-slug") || "" : "";
+      var standNow = window.AMK_WUNSCH && window.AMK_WUNSCH.load ? zeileMenge(window.AMK_WUNSCH.load(), "kauf:" + slug + ":im:staender") : 0;
       var feldNow = parseInt(feldField && feldField.value, 10) || 0;
       if (box.checked) {
-        if (standNow < 1 && feldNow < 1 && standField) standField.value = "1";
-      } else {
-        if (standField) standField.value = "0";
-        if (feldField) feldField.value = "0";
+        if (standNow < 1 && feldNow < 1 && feldField) feldField.value = "1";
+      } else if (feldField) {
+        feldField.value = "0";
       }
       schreibSchnell(block);
       return;

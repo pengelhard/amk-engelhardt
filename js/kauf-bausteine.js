@@ -79,7 +79,6 @@
   function schnell(opts) {
     var slug = opts.slug || "";
     return '<div class="kauf-schnell" data-slug="' + esc(slug) + '">' +
-      schnellZeile("Ständer", "schnell-staender-" + slug, "staender") +
       schnellZeile("Einzelfelder", "schnell-felder-" + slug, "felder") +
       '<p class="kauf-schnell-fuss"><a class="kauf-schnell-details" href="' + esc(opts.href || "") + '">Details anpassen</a>' +
       '<span class="kauf-schnell-hinweis" hidden>angepasst</span></p></div>';
