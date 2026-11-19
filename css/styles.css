@@ -1423,31 +1423,25 @@ a.contact-card:hover .contact-main { color: var(--green); }
 }
 .pick-linked .pick a { color: inherit; text-decoration: none; }
 .pick-linked .pick-media { display: block; width: 6.6rem; height: 4.6rem; }
-#bauzaun-konfig .pick {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.65rem;
-  min-height: 0;
-  padding: 0 0 0.15rem;
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-}
-#bauzaun-konfig .pick img {
-  width: 100%;
-  max-width: none;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: contain;
-  padding: 0.65rem;
-  border-radius: 0;
-  background: var(--soft);
-}
-#bauzaun-konfig .pick > span:not(.pick-bild) { padding: 0 0.1rem; }
-#bauzaun-konfig .pick strong { font-size: 1.15rem; }
 .more-fold { margin: 0.2rem 0 0; }
-.more-fold summary { font-weight: 600; }
+.more-fold summary,
+.anhaenger-details summary { gap: 0.55rem; }
+.more-fold summary::-webkit-details-marker,
+.anhaenger-details summary::-webkit-details-marker { display: none; }
+.more-fold summary::marker,
+.anhaenger-details summary::marker { content: ""; }
+.more-fold summary::before,
+.anhaenger-details summary::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-0.12rem) rotate(-45deg);
+}
+.more-fold[open] > summary::before,
+.anhaenger-details[open] > summary::before { transform: translateY(0.12rem) rotate(45deg); }
 .kauf-board .tile .sheet { display: none; }
 .pick small { color: var(--gray); font-size: 0.95rem; line-height: 1.35; }
 .pick input[type="checkbox"] { align-self: center; }
