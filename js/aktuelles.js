@@ -2,7 +2,8 @@
   var nodes = document.querySelectorAll("[data-aktuelles]");
   if (!nodes.length) return;
 
-  var TYPES = { "Angebot": true, "Neuheit": true, "Besonderes Produkt": true };
+  var TYPES = { "Angebot": true, "Neu": true, "Neuheit": true, "Besonderes Produkt": true };
+  var LABELS = { "Neuheit": "Neu", "Neu": "Neu", "Angebot": "Angebot", "Besonderes Produkt": "Besonderes Produkt" };
   var GRUPPEN = {
     "zaun": "zaun",
     "schilder": "schilder",
@@ -45,13 +46,6 @@
     return isNaN(time) ? 0 : time;
   }
 
-  function slug(value) {
-    var text = String(value || "").toLowerCase();
-    text = text.replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss");
-    text = text.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-    return text || "eintrag";
-  }
-
   function liveEntries(entries) {
     return entries.filter(function (entry) {
       return entry && entry.titel && visible(entry) && stillValid(entry.bis);
@@ -68,42 +62,43 @@
 
   function gruppeOf(entry) {
     var raw = String(entry.gruppe || "").trim();
-    return GRUPPEN[raw] || GRUPPEN[raw.toLowerCase()] || "";
+    var id = GRUPPEN[raw] || GRUPPEN[raw.toLowerCase()] || "";
+    if (id === "schilder" || id === "absperrung") return "verkehr";
+    return id;
   }
 
-  function ways(entry, root) {
-    var weg = wegOf(entry);
+  function ziel(entry, root) {
+    var product = String(entry.slug || "").trim();
+    if (/^[a-z0-9-]+$/.test(product)) {
+      return root + "produkt/" + product + "/" + (wegOf(entry) === "miete" ? "?modus=miete" : "");
+    }
     var gruppe = gruppeOf(entry);
     var query = gruppe ? "?gruppe=" + encodeURIComponent(gruppe) : "";
-    var links = "";
-    if (weg !== "kauf") {
-      links += '<a class="btn" href="' + esc(root + "mieten/" + query) + '" aria-label="' + esc(entry.titel + " mieten") + '">Mieten</a>';
-    }
-    if (weg !== "miete") {
-      links += '<a class="btn btn-ghost" href="' + esc(root + "kaufen/" + query) + '" aria-label="' + esc(entry.titel + " kaufen") + '">Kaufen</a>';
-    }
-    return '<div class="news-ways">' + links + "</div>";
+    if (wegOf(entry) === "miete") query += (query ? "&" : "?") + "modus=miete";
+    return root + "kaufen/" + query;
+  }
+
+  function etikett(entry) {
+    if (!TYPES[entry.typ]) return "";
+    return LABELS[entry.typ] || "";
   }
 
   function card(entry, root) {
     var img = localPath(entry.bild);
+    var small = localPath(entry.bildKlein);
     var title = String(entry.titel);
-    var price = String(entry.preis || "").trim();
-    var picture = img
-      ? '<img src="' + esc(root + img) + '" alt="' + esc(entry.alt || "") + '" width="1200" height="675" loading="lazy" decoding="async">'
+    var width = parseInt(entry.breite, 10) || 1200;
+    var height = parseInt(entry.hoehe, 10) || 675;
+    var srcset = img
+      ? (small ? esc(root + small) + " 640w, " + esc(root + img) + " " + width + "w" : esc(root + img) + " " + width + "w")
       : "";
-    var badge = TYPES[entry.typ] ? '<span class="badge">' + esc(entry.typ) + "</span>" : "";
-    var note = price ? ' data-note="' + esc(price) + '"' : "";
-    var bild = img ? ' data-bild="' + esc(img) + '"' : "";
+    var picture = img
+      ? '<span class="frame"><img loading="lazy" src="' + esc(root + img) + '" srcset="' + srcset + '" sizes="(min-width: 1100px) 22vw, (min-width: 720px) 45vw, 100vw" width="' + width + '" height="' + height + '" alt="' + esc(entry.alt || title) + '" decoding="async"></span>'
+      : "";
+    var badge = etikett(entry) ? '<span class="badge">' + esc(etikett(entry)) + "</span> " : "";
     return (
-      '<article class="news-card">' + picture +
-      '<div class="news-body">' + badge +
-      "<strong>" + esc(title) + "</strong>" +
-      "<p>" + esc(entry.text || "") + "</p>" +
-      (price ? '<p class="news-price">' + esc(price) + "</p>" : "") +
-      ways(entry, root) +
-      '<button type="button" class="btn" data-add="aktuell:' + esc(slug(title)) + '" data-name="' + esc(title) + '"' + bild + note + ">Anfragen</button>" +
-      "</div></article>"
+      '<article class="tile"><a href="' + esc(ziel(entry, root)) + '">' + picture +
+      "<h3>" + esc(title) + "</h3></a><p>" + badge + esc(entry.text || "") + "</p></article>"
     );
   }
 
@@ -111,7 +106,7 @@
     var root = node.getAttribute("data-root") || "";
     var limit = parseInt(node.getAttribute("data-limit") || "", 10);
     var home = node.getAttribute("data-home") === "ja";
-    var block = home ? document.getElementById("aktuelles") : null;
+    var block = home ? document.getElementById("neuheiten") : null;
     var live = liveEntries(entries);
     var shown = limit > 0 ? live.slice(0, limit) : live;
     if (!shown.length) {
@@ -120,10 +115,9 @@
       return;
     }
     if (block) block.hidden = false;
-    var layout = shown.length === 1 ? "news-banner" : "news-grid";
-    node.innerHTML = '<div class="' + layout + '">' + shown.map(function (entry) {
+    node.innerHTML = shown.map(function (entry) {
       return card(entry, root);
-    }).join("") + "</div>";
+    }).join("");
   }
 
   var root = nodes[0].getAttribute("data-root") || "";
@@ -139,7 +133,7 @@
     .catch(function () {
       nodes.forEach(function (node) {
         if (node.getAttribute("data-home") === "ja") {
-          var block = document.getElementById("aktuelles");
+          var block = document.getElementById("neuheiten");
           if (block) block.hidden = true;
           return;
         }

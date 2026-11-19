@@ -20,6 +20,11 @@ content:
       sort: datum
       order: desc
     fields:
+      - name: slug
+        label: Produkt
+        type: string
+        required: false
+        description: Katalog-Slug, zum Beispiel bauzaun-10075. Die Kachel öffnet diese Produktseite.
       - name: titel
         label: Titel
         type: string
@@ -49,6 +54,7 @@ content:
         options:
           values:
             - Angebot
+            - Neu
             - Neuheit
             - Besonderes Produkt
       - name: weg
@@ -79,7 +85,7 @@ content:
         label: Datum
         type: date
         default: ""
-        description: Für die Reihenfolge. Auf der Startseite stehen höchstens die drei neuesten.
+        description: Für die Reihenfolge. Startseite und Aktuelles zeigen dieselben sichtbaren Einträge.
         options:
           format: yyyy-MM-dd
       - name: bis
