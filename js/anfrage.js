@@ -162,7 +162,27 @@
 
   function isIm(item) {
     var id = String(item && item.id || "");
-    return id.indexOf("kauf:beispiel:im:") === 0 || !!(item && item.note === "im Komplett-Ständer");
+    return id.indexOf(":im:") !== -1 && id.indexOf("kauf:") === 0 || !!(item && item.note === "im Komplett-Ständer");
+  }
+
+  function standKey(item) {
+    var id = String(item && item.id || "");
+    var at = id.indexOf(":im:");
+    if (id.indexOf("kauf:") === 0 && at > 0) return id.slice(0, at);
+    if (item && item.note === "im Komplett-Ständer") return "kauf:beispiel";
+    return "";
+  }
+
+  function standFieldId(key) {
+    var slug = String(key).replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
+    return "menge-staender-" + (slug || "korb");
+  }
+
+  function standHref(key) {
+    if (key === "kauf:beispiel") return "../produkt/beispiel/";
+    var slug = String(key).indexOf("kauf:") === 0 ? String(key).slice(5) : "";
+    if (!slug || slug.indexOf(":") !== -1) return "../kaufen/";
+    return "../produkt/" + slug + "/";
   }
 
   function partOrder(id) {
@@ -176,6 +196,20 @@
 
   function standMembers(items) {
     return items.filter(isIm).sort(function (a, b) { return partOrder(a.id) - partOrder(b.id); });
+  }
+
+  function standGroups(items) {
+    var map = {};
+    var order = [];
+    standMembers(items).forEach(function (item) {
+      var key = standKey(item) || "kauf:beispiel";
+      if (!map[key]) {
+        map[key] = [];
+        order.push(key);
+      }
+      map[key].push(item);
+    });
+    return order.map(function (key) { return { key: key, members: map[key] }; });
   }
 
   function standCount(members) {
@@ -201,23 +235,28 @@
     return qty;
   }
 
-  function writeStand(n) {
+  function writeStand(key, n) {
     n = clampStand(n);
     var items = window.AMK_WUNSCH.load();
-    var members = standMembers(items);
+    var members = standMembers(items).filter(function (item) { return standKey(item) === key; });
     var old = standCount(members) || 1;
     items.forEach(function (item) {
-      if (!isIm(item)) return;
+      if (standKey(item) !== key) return;
       var je = Math.max(1, Math.round(item.qty / old));
       var qty = je * n;
       if (qty > 9999) qty = 9999;
       item.qty = qty;
     });
     window.AMK_WUNSCH.save(items, true);
-    var title = list.querySelector("[data-stand-title]");
+    var row = null;
+    list.querySelectorAll("[data-stand-key]").forEach(function (node) {
+      if (!row && node.getAttribute("data-stand-key") === key) row = node;
+    });
+    if (!row) return;
+    var title = row.querySelector("[data-stand-title]");
     var name = title ? title.getAttribute("data-stand-name") || "" : "";
     if (title) title.textContent = n + " × Komplett-Ständer – " + name;
-    list.querySelectorAll("[data-je]").forEach(function (node) {
+    row.querySelectorAll("[data-je]").forEach(function (node) {
       var je = parseInt(node.getAttribute("data-je"), 10) || 1;
       var teil = node.getAttribute("data-teil") || "";
       var qty = je * n;
@@ -226,8 +265,7 @@
     });
   }
 
-  function standMail(items) {
-    var members = standMembers(items);
+  function standMail(members) {
     if (!members.length) return "";
     var n = standCount(members);
     var product = standProduct(members);
@@ -236,26 +274,29 @@
     return lines.join("\n");
   }
 
-  function standRow(members) {
+  function standRow(group) {
+    var members = group.members;
+    var key = group.key;
     var n = standCount(members);
     var product = standProduct(members);
     var info = CATALOG[product.id] || {};
     var bild = info.bild || product.bild;
     var image = bild ? '<img src="../' + esc(bild) + '" alt="" width="320" height="220">' : "";
+    var fieldId = standFieldId(key);
     var parts = members.map(function (item) {
       var je = Math.max(1, Math.round(item.qty / n));
       return '<li data-je="' + je + '" data-teil="' + esc(item.name) + '">' + (je * n) + "× " + esc(item.name) + "</li>";
     }).join("");
-    return '<li class="cart-row cart-stand">' + image +
+    return '<li class="cart-row cart-stand" data-stand-key="' + esc(key) + '">' + image +
       '<div class="cart-main"><strong data-stand-title data-stand-name="' + esc(product.name) + '">' +
       esc(n + " × Komplett-Ständer – " + product.name) + "</strong>" +
       '<ul class="cart-stand-teile">' + parts + "</ul></div>" +
       '<div class="beispiel-step"><button type="button" data-stand-step="-1" aria-label="Weniger Ständer">−</button>' +
-      '<label class="visually-hidden" for="menge-staender-korb">Ständeranzahl</label>' +
-      '<input id="menge-staender-korb" data-stand="1" type="number" size="4" min="1" max="9999" value="' + n + '" inputmode="numeric">' +
+      '<label class="visually-hidden" for="' + fieldId + '">Ständeranzahl</label>' +
+      '<input id="' + fieldId + '" data-stand-key="' + esc(key) + '" type="number" size="4" min="1" max="9999" value="' + n + '" inputmode="numeric">' +
       '<button type="button" data-stand-step="1" aria-label="Mehr Ständer">+</button></div>' +
-      '<div class="cart-actions"><a class="text-btn" href="../produkt/beispiel/">Ändern<span class="visually-hidden">: Komplett-Ständer</span></a>' +
-      '<button type="button" class="beispiel-weg" data-stand-weg="1" aria-label="Komplett-Ständer entfernen">×</button></div></li>';
+      '<div class="cart-actions"><a class="text-btn" href="' + esc(standHref(key)) + '">Ändern<span class="visually-hidden">: Komplett-Ständer</span></a>' +
+      '<button type="button" class="beispiel-weg" data-stand-weg="' + esc(key) + '" aria-label="Komplett-Ständer entfernen">×</button></div></li>';
   }
 
   function render(items) {
@@ -319,9 +360,8 @@
     list.innerHTML = groups.filter(function (group) { return group[1].length; }).map(function (group) {
       var body = group[1].map(function (entry) { return row(entry.item, entry.index); }).join("");
       if (group[0] === "Kauf") {
-        var im = group[1].filter(function (entry) { return isIm(entry.item); });
         var rest = group[1].filter(function (entry) { return !isIm(entry.item); });
-        body = (im.length ? standRow(im.map(function (entry) { return entry.item; })) : "") +
+        body = standGroups(group[1].map(function (entry) { return entry.item; })).map(standRow).join("") +
           rest.map(function (entry) { return row(entry.item, entry.index); }).join("");
       }
       return '<li class="cart-group"><h3>' + group[0] + "</h3></li>" + body;
@@ -373,19 +413,19 @@
   }
 
   list.addEventListener("input", function (event) {
-    var input = event.target.closest("[data-stand]");
+    var input = event.target.closest("[data-stand-key]");
     if (!input || input.value === "") return;
     var parsed = parseInt(input.value, 10);
     if (!parsed || parsed < 1) return;
-    writeStand(parsed);
+    writeStand(input.getAttribute("data-stand-key"), parsed);
   });
 
   list.addEventListener("change", function (event) {
-    var stand = event.target.closest("[data-stand]");
+    var stand = event.target.closest("[data-stand-key]");
     if (stand) {
       var n = clampStand(stand.value);
       stand.value = String(n);
-      writeStand(n);
+      writeStand(stand.getAttribute("data-stand-key"), n);
       return;
     }
     var input = event.target.closest("[data-index]");
@@ -403,16 +443,18 @@
   list.addEventListener("click", function (event) {
     var step = event.target.closest("[data-stand-step]");
     if (step && list.contains(step)) {
-      var field = document.getElementById("menge-staender-korb");
+      var row = step.closest("[data-stand-key]");
+      var field = row ? row.querySelector("input[data-stand-key]") : null;
       if (!field) return;
       var n = clampStand((parseInt(field.value, 10) || 1) + (parseInt(step.getAttribute("data-stand-step"), 10) || 0));
       field.value = String(n);
-      writeStand(n);
+      writeStand(field.getAttribute("data-stand-key"), n);
       return;
     }
     var weg = event.target.closest("[data-stand-weg]");
     if (weg && list.contains(weg)) {
-      window.AMK_WUNSCH.save(window.AMK_WUNSCH.load().filter(function (item) { return !isIm(item); }));
+      var key = weg.getAttribute("data-stand-weg");
+      window.AMK_WUNSCH.save(window.AMK_WUNSCH.load().filter(function (item) { return standKey(item) !== key; }));
       return;
     }
     var button = event.target.closest("button[data-index]");
@@ -554,7 +596,7 @@
     }
     var lines = ["Anfrage an AMK Engelhardt", ""];
     ["miete:", "kauf:", ""].forEach(function (prefix) {
-      if (prefix === "kauf:" && items.some(isIm)) lines.push(standMail(items));
+      if (prefix === "kauf:") standGroups(items).forEach(function (group) { lines.push(standMail(group.members)); });
       items.forEach(function (item) {
         if (isIm(item)) return;
         var id = String(item.id);

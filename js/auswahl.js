@@ -222,7 +222,10 @@
       '<div class="sum-lines" data-sum="liste"></div>' +
       "</dl><p class=\"price-once\">Preis auf Anfrage</p>" +
       '<p class="form-status" data-status role="status"></p>' +
-      '<button class="btn" type="submit">In den Anfragekorb</button></aside>';
+      (vorgang === "kauf"
+        ? '<a class="btn" href="' + esc(root) + 'anfrage/">Zum Anfragekorb</a>'
+        : '<button class="btn" type="submit">In den Anfragekorb</button>') +
+      "</aside>";
     var formClass = bare === "1" ? "" : ' class="konfig-layout"';
     var mainClass = bare === "1" ? "" : ' class="konfig-main"';
     node.innerHTML = pills +
@@ -284,7 +287,14 @@
     form.querySelectorAll('input[name="typ"]').forEach(function (box) {
       if (!box.checked && window.AMK_WUNSCH.remove) window.AMK_WUNSCH.remove(vorgang + ":" + box.value);
     });
-    window.AMK_WUNSCH.replace(lines);
+    if (!event || event.type === "submit") window.AMK_WUNSCH.replace(lines);
+    else {
+      var kept = window.AMK_WUNSCH.load().filter(function (item) {
+        return !lines.some(function (line) { return line.id === item.id; });
+      });
+      lines.forEach(function (line) { kept.push(line); });
+      window.AMK_WUNSCH.save(kept, true);
+    }
   }
 
   function bind(node) {
@@ -295,7 +305,16 @@
       if (!button || !node.contains(button)) return;
       document.dispatchEvent(new CustomEvent("amk-teil", { detail: button.getAttribute("data-teil") || "" }));
     });
-    node.addEventListener("input", function () { updateSum(node); });
+    function kaufSync(event) {
+      if (node.getAttribute("data-vorgang") === "miete") return;
+      var target = event.target;
+      if (!target || (target.name !== "typ" && target.type !== "number")) return;
+      submit(node, event);
+    }
+    node.addEventListener("input", function (event) {
+      updateSum(node);
+      kaufSync(event);
+    });
     node.addEventListener("change", function (event) {
       var box = event.target;
       if (box && box.name === "typ" && !box.checked && window.AMK_WUNSCH.remove) {
@@ -303,6 +322,7 @@
         window.AMK_WUNSCH.remove(vorgang + ":" + box.value);
       }
       updateSum(node);
+      kaufSync(event);
     });
     node.addEventListener("submit", function (event) { submit(node, event); });
   }

@@ -80,7 +80,7 @@
   }
 
   function chevron(dir) {
-    var points = dir < 0 ? "14 5 8 12 14 19" : "10 5 16 12 10 19";
+    var points = dir < 0 ? "M14 5 L8 12 L14 19" : "M10 5 L16 12 L10 19";
     return '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="' + points + '"/></svg>';
   }
 

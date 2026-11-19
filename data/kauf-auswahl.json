@@ -1,0 +1,53 @@
+{
+  "hinweis": "Zubehör und Ständer. Leere Zuordnung heißt: nichts anzeigen. AMK trägt Katalog-Slugs ein. zubehoerNachProdukt überschreibt zubehoerNachShop für einen Artikel.",
+  "zubehoerNachShop": {
+    "bauzaune": [
+      "transportstaender-10059",
+      "fuss-10005",
+      "fuss-10004",
+      "fuss-10006",
+      "zubehoer-10002-1",
+      "zubehoer-10002",
+      "zubehoer-10003",
+      "zubehoer-10008",
+      "schwelle-10005-2"
+    ]
+  },
+  "zubehoerNachProdukt": {},
+  "staender": {
+    "platzhalter": true,
+    "hinweis": "Platzhalter aus der Beispielseite. AMK muss die Stückzahlen bestätigen.",
+    "shops": ["bauzaune"],
+    "paket": {
+      "label": "Komplett-Ständer",
+      "felderLabel": "Einzelne Felder",
+      "felderJe": 30,
+      "inhalt": [
+        "30 Felder je Ständer",
+        "Transportständer inklusive",
+        "31 Bauzaunfüße je Ständer",
+        "30 Verbindungsschellen je Ständer"
+      ],
+      "stand": {
+        "slug": "transportstaender-10059",
+        "name": "Transportständer"
+      },
+      "wahl": [
+        {
+          "id": "fuss",
+          "label": "Füße",
+          "je": 31,
+          "standard": "fuss-10006",
+          "optionen": ["fuss-10006", "fuss-10004", "fuss-10005"]
+        },
+        {
+          "id": "schelle",
+          "label": "Schellen",
+          "je": 30,
+          "standard": "zubehoer-10002-1",
+          "optionen": ["zubehoer-10002-1", "zubehoer-10002", "zubehoer-10003"]
+        }
+      ]
+    }
+  }
+}

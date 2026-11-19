@@ -135,17 +135,7 @@
       });
     }
 
-    form.addEventListener("change", function (event) {
-      var box = event.target;
-      if (!box || box.name !== "schild" || box.checked) return;
-      if (window.AMK_WUNSCH && window.AMK_WUNSCH.remove) {
-        var vorgang = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
-        window.AMK_WUNSCH.remove(vorgang + ":schild:" + box.value);
-      }
-    });
-
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
+    function writeCart(interactive) {
       if (!window.AMK_WUNSCH || typeof window.AMK_WUNSCH.replace !== "function") return;
       var lines = [];
       var invalid = null;
@@ -169,6 +159,7 @@
       });
       if (invalid) {
         invalid.setAttribute("aria-invalid", "true");
+        if (!interactive) return;
         var row = invalid.closest("[data-schild]");
         if (row && row.hidden && window.AMK_SCHILDER_UI && window.AMK_SCHILDER_UI.open) {
           window.AMK_SCHILDER_UI.open(row.getAttribute("data-teil") || "");
@@ -179,8 +170,7 @@
       var vorgang = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
       var noteField = form.elements.hinweis;
       var note = noteField ? String(noteField.value || "").trim() : "";
-      if (!lines.length && !note) {
-        if (form.hasAttribute("data-leer-ok")) return;
+      if (!lines.length && !note && interactive && !form.hasAttribute("data-leer-ok")) {
         var first = form.querySelector('[data-schild]:not([hidden]) input[name="schild"]');
         if (first) first.focus();
         return;
@@ -202,8 +192,47 @@
         if (window.AMK_WUNSCH.remove) window.AMK_WUNSCH.remove(vorgangNow + ":schild:" + entry.id);
       });
       if (!note && window.AMK_WUNSCH.remove) window.AMK_WUNSCH.remove(vorgangNow + ":schild:hinweis");
-      if (lines.length) window.AMK_WUNSCH.replace(lines);
+      if (!lines.length) return;
+      if (interactive) window.AMK_WUNSCH.replace(lines);
+      else {
+        var kept = window.AMK_WUNSCH.load().filter(function (item) {
+          return !lines.some(function (line) { return line.id === item.id; });
+        });
+        lines.forEach(function (line) { kept.push(line); });
+        window.AMK_WUNSCH.save(kept, true);
+      }
+    }
+
+    form.addEventListener("change", function (event) {
+      var box = event.target;
+      if (box && box.name === "schild" && !box.checked && window.AMK_WUNSCH && window.AMK_WUNSCH.remove) {
+        var vorgang = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
+        window.AMK_WUNSCH.remove(vorgang + ":schild:" + box.value);
+      }
+      if (form.getAttribute("data-vorgang") !== "miete") writeCart(false);
     });
+
+    form.addEventListener("input", function (event) {
+      if (form.getAttribute("data-vorgang") === "miete") return;
+      var target = event.target;
+      if (!target || (target.type !== "number" && target.name !== "hinweis")) return;
+      writeCart(false);
+    });
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      writeCart(true);
+    });
+
+    if (form.getAttribute("data-vorgang") !== "miete") {
+      form.querySelectorAll('button[type="submit"]').forEach(function (button) {
+        var link = document.createElement("a");
+        link.className = "btn";
+        link.href = assetRoot() + "anfrage/";
+        link.textContent = "Zum Anfragekorb";
+        button.replaceWith(link);
+      });
+    }
   });
 
   window.AMK_SCHILDER = ZEICHEN;

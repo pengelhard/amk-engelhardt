@@ -71,6 +71,10 @@
   });
   var bySlug = {};
   items.forEach(function (item) { if (item.slug) bySlug[item.slug] = item; });
+  nodes.forEach(function (el) {
+    var form = el.querySelector("form.order");
+    if (form) form.remove();
+  });
 
   var state = { gruppe: "", kat: "", q: "", sort: "", facets: {} };
   var schilder = document.getElementById("schilder-bereich");
@@ -366,18 +370,6 @@
     window.AMK_AUSWAHL.fillLeiste(verkehrSumme, kaufZeilen());
   }
 
-  function ersteWahl(root) {
-    if (!root) return null;
-    var boxes = root.querySelectorAll('input[name="typ"], input[name="schild"]');
-    var i;
-    for (i = 0; i < boxes.length; i++) {
-      var card = boxes[i].closest("[data-teil-karte], [data-schild]");
-      if (card && card.hidden) continue;
-      return boxes[i];
-    }
-    return null;
-  }
-
   function readFacets() {
     var facets = {};
     form.querySelectorAll("input:checked").forEach(function (input) {
@@ -474,16 +466,11 @@
   document.addEventListener("amk-auswahl", kaufLeiste);
   var kaufKorb = document.getElementById("kauf-verkehr-korb");
   if (kaufKorb) {
-    kaufKorb.addEventListener("click", function () {
-      if (!kaufZeilen().length) {
-        var first = ersteWahl(wahl);
-        if (first) first.focus();
-        return;
-      }
-      var device = document.querySelector("#kauf-auswahl form");
-      if (device) device.requestSubmit();
-      if (schilder) schilder.requestSubmit();
-    });
+    var korbLink = document.createElement("a");
+    korbLink.className = "btn";
+    korbLink.href = "../anfrage/";
+    korbLink.textContent = "Zum Anfragekorb";
+    kaufKorb.replaceWith(korbLink);
   }
 
   document.addEventListener("amk-zeichen", function (event) {

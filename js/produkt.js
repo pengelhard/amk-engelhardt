@@ -91,6 +91,11 @@
   }
 
   function insertBeforeForm(node) {
+    var daten = document.getElementById("kauf-daten");
+    if (daten) {
+      daten.appendChild(node);
+      return;
+    }
     var form = document.querySelector("main form.order, main form.schilder");
     if (form && form.parentNode) form.parentNode.insertBefore(node, form);
     else {
@@ -192,8 +197,14 @@
     var root = scriptRoot();
     var form = document.querySelector("form[data-order]");
     var slug = slugFromPath();
+    function handoff(product, all) {
+      if (window.AMK_KAUF_AUSWAHL && typeof window.AMK_KAUF_AUSWAHL.mount === "function") {
+        window.AMK_KAUF_AUSWAHL.mount(product, all, root, host);
+      }
+    }
     if (form && form.getAttribute("data-slug") && form.getAttribute("data-slug").indexOf("schild:") === 0) {
       addCrumb(root, SHOP.schilder);
+      handoff(null, []);
       return;
     }
     if (form && form.getAttribute("data-slug")) slug = form.getAttribute("data-slug");
@@ -204,8 +215,9 @@
         var product = null;
         all.forEach(function (item) { if (item && item.slug === slug) product = item; });
         applyExtras(product, all, root, host);
+        handoff(product, all);
       })
-      .catch(function () {});
+      .catch(function () { handoff(null, []); });
   }
 
   window.AMK_PRODUKT = { crumbFor: crumbFor, openSheets: openSheets };
