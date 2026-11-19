@@ -2201,6 +2201,27 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .schilder .field { margin-top: 0.9rem; }
 .kauf-ebene { margin-top: 0.9rem; }
 .kauf-ebene .kauf-karte strong { overflow-wrap: anywhere; }
+.js-kauf .kauf-drops { position: relative; z-index: 3; }
+.js-kauf .kauf-ebene {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  margin: 0;
+  padding: 0.7rem 0 0.15rem;
+  background: var(--paper);
+  box-shadow: 0 3px 0 var(--ink);
+}
+.kauf-hinweis {
+  margin: 0.85rem 0 0;
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+.kauf-hinweis strong { font-weight: 400; background: var(--signal); color: var(--signal-ink); padding: 0.05rem 0.35rem; }
 .js-kauf .kauf-cats { display: none !important; }
 .js-kauf .kauf-ebene .kauf-karte { height: 100%; }
 .js-kauf .kauf-ebene .kauf-karte strong {

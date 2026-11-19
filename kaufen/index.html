@@ -8,7 +8,7 @@
   <meta name="description" content="Einzelteile, Zubehör und Anhänger zum Kauf.">
   <link rel="icon" href="../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../assets/logo.png">
-  <link rel="stylesheet" href="../css/styles.css?v=ai">
+  <link rel="stylesheet" href="../css/styles.css?v=aj">
   <script>document.documentElement.classList.add("js-kauf")</script>
 </head>
 <body>
@@ -35,16 +35,17 @@
   <main id="inhalt">
     <section class="hero hero--band">
       <div class="wrap hero-copy">
-        <nav class="crumbs" aria-label="Brotkrumen"><a href="../">Start</a> <span aria-hidden="true">›</span> <span aria-current="page">Kaufen</span></nav>
+        <nav class="crumbs" aria-label="Brotkrumen"><a href="../">Start</a> <span aria-hidden="true">›</span> <span id="crumb-kauf" aria-current="page">Kaufen</span><span id="crumb-wahl"></span></nav>
         <h1>Kaufen</h1>
       </div>
     </section>
     <section class="kauf-board">
       <div class="wrap">
+        <div class="kauf-drops" id="kauf-drops">
         <nav class="kauf-einstieg" id="kauf-gruppen" aria-label="Hauptgruppen">
-          <a class="kauf-karte" href="?gruppe=zaun" data-gruppe="zaun"><img src="../images/kk/zaun-einsatz.webp" width="790" height="527" alt="" decoding="async"><strong>Bauzaun &amp; Absperrgitter</strong></a>
-          <a class="kauf-karte" href="?gruppe=verkehr" data-gruppe="verkehr"><img src="../images/hero/schranke2-kachel.webp" width="800" height="450" alt="" decoding="async"><strong>Verkehrsabsicherung &amp; Schilder</strong></a>
-          <a class="kauf-karte" href="?gruppe=anhaenger" data-gruppe="anhaenger"><img src="../images/fahrzeugtransporter.webp" width="800" height="534" alt="" decoding="async"><strong>Anhänger</strong></a>
+          <a class="kauf-karte" href="?gruppe=zaun" data-gruppe="zaun" aria-expanded="false" aria-controls="kauf-ebene"><img src="../images/kk/zaun-einsatz.webp" width="790" height="527" alt="" decoding="async"><strong>Bauzaun &amp; Absperrgitter</strong></a>
+          <a class="kauf-karte" href="?gruppe=verkehr" data-gruppe="verkehr" aria-expanded="false" aria-controls="kauf-ebene-verkehr"><img src="../images/hero/schranke2-kachel.webp" width="800" height="450" alt="" decoding="async"><strong>Verkehrsabsicherung &amp; Schilder</strong></a>
+          <a class="kauf-karte" href="?gruppe=anhaenger" data-gruppe="anhaenger" aria-expanded="false" aria-controls="kauf-ebene-anhaenger"><img src="../images/fahrzeugtransporter.webp" width="800" height="534" alt="" decoding="async"><strong>Anhänger</strong></a>
         </nav>
         <nav class="kauf-einstieg kauf-ebene" id="kauf-ebene" data-fuer="zaun" aria-label="Kategorien" hidden>
           <a class="kauf-karte" href="?gruppe=zaun&amp;kat=bauzaune" data-kat="bauzaune"><img src="../images/kk/bauzaun-10075.webp" width="1200" height="675" alt="" decoding="async"><strong>Bauzaun</strong></a>
@@ -71,6 +72,8 @@
           <a class="kauf-karte" href="?gruppe=anhaenger&amp;teil=transporter" data-teil="transporter"><img src="../images/fahrzeugtransporter.webp" width="800" height="534" alt="" decoding="async"><strong>Fahrzeug&shy;transporter</strong></a>
           <a class="kauf-karte" href="?gruppe=anhaenger&amp;teil=kuehl" data-teil="kuehl"><img src="../images/kuehlanhaenger-13.webp" width="540" height="405" alt="" decoding="async"><strong>Kühl&shy;anhänger</strong></a>
         </nav>
+        </div>
+        <p class="kauf-hinweis" id="kauf-hinweis" hidden></p>
         <div class="kauf-tools">
           <label class="kauf-search">Suche
             <input id="kauf-q" type="search" placeholder="Name oder Artikelnummer" autocomplete="off">
@@ -1661,6 +1664,6 @@
   <script src="../js/schilder.js?v=ai"></script>
   <script src="../data/anhaenger-eckdaten.js"></script>
   <script src="../js/auswahl.js?v=ai"></script>
-  <script src="../js/kauf.js?v=ai"></script>
+  <script src="../js/kauf.js?v=aj"></script>
 </body>
 </html>

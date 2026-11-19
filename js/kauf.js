@@ -149,7 +149,6 @@
     var signs = window.AMK_SCHILDER_TEILE || [];
     document.querySelectorAll(".kauf-ebene").forEach(function (nav) {
       var fuer = nav.getAttribute("data-fuer") || "";
-      nav.hidden = fuer !== state.gruppe;
       nav.querySelectorAll("a").forEach(function (link) {
         var kat = link.getAttribute("data-kat") || "";
         var teil = link.getAttribute("data-teil") || "";
@@ -161,6 +160,60 @@
         else link.removeAttribute("aria-current");
       });
     });
+  }
+
+  function textOf(el) {
+    var strong = el && el.querySelector("strong");
+    return strong ? strong.textContent.replace(/\u00ad/g, "").replace(/\s+/g, " ").trim() : "";
+  }
+
+  function renderHinweis() {
+    var hinweis = document.getElementById("kauf-hinweis");
+    var crumbKauf = document.getElementById("crumb-kauf");
+    var crumbWahl = document.getElementById("crumb-wahl");
+    var gLink = document.querySelector('#kauf-gruppen a[data-gruppe="' + state.gruppe + '"]');
+    var gName = textOf(gLink);
+    var uName = "";
+    var nav = document.querySelector('.kauf-ebene[data-fuer="' + state.gruppe + '"]');
+    if (nav) {
+      var sub = null;
+      var key = state.gruppe === "zaun" ? state.kat : (state.zeichen || state.teil);
+      var attr = state.gruppe === "zaun" ? "data-kat" : "data-teil";
+      if (/^[a-z0-9-]+$/.test(key || "")) sub = nav.querySelector('a[' + attr + '="' + key + '"]');
+      uName = textOf(sub);
+    }
+    if (hinweis) {
+      hinweis.textContent = "";
+      if (gName && uName) {
+        hinweis.hidden = false;
+        hinweis.appendChild(document.createTextNode(gName + " · "));
+        var mark = document.createElement("strong");
+        mark.textContent = uName;
+        hinweis.appendChild(mark);
+      } else hinweis.hidden = true;
+    }
+    if (crumbKauf) {
+      if (gName) crumbKauf.removeAttribute("aria-current");
+      else crumbKauf.setAttribute("aria-current", "page");
+    }
+    if (crumbWahl) {
+      crumbWahl.textContent = "";
+      if (gName) crumbWahl.appendChild(crumbSep(uName ? "" : "page", gName));
+      if (uName) crumbWahl.appendChild(crumbSep("page", uName));
+    }
+  }
+
+  function crumbSep(current, name) {
+    var wrap = document.createDocumentFragment();
+    var sep = document.createElement("span");
+    sep.setAttribute("aria-hidden", "true");
+    sep.textContent = " › ";
+    var label = document.createElement("span");
+    if (current) label.setAttribute("aria-current", current);
+    label.textContent = name;
+    wrap.appendChild(sep);
+    wrap.appendChild(label);
+    return wrap;
   }
 
   function renderGruppen() {
@@ -210,6 +263,7 @@
     if (verkehrSumme) verkehrSumme.hidden = !verkehr;
     renderGruppen();
     renderEbene();
+    renderHinweis();
     if (auswahl) {
       if (verkehr) {
         auswahl.setAttribute("data-ohne-leiste", "");
@@ -304,6 +358,7 @@
       }
       writeUrl("push");
       render();
+      if (!hoverFein()) closePanel();
     });
   });
 
@@ -322,22 +377,133 @@
     }, 200);
   });
 
+  var drops = document.getElementById("kauf-drops");
   var gruppen = document.getElementById("kauf-gruppen");
+  var offen = "";
+  var closeTimer = 0;
+  var focusQuiet = false;
+  var fromPointer = false;
+
+  function hoverFein() {
+    return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  }
+
+  function placePanel(id) {
+    if (!drops) return;
+    var link = document.querySelector('#kauf-gruppen a[data-gruppe="' + id + '"]');
+    var nav = document.querySelector('.kauf-ebene[data-fuer="' + id + '"]');
+    if (!link || !nav) return;
+    nav.style.top = Math.max(0, link.offsetTop + link.offsetHeight - 1) + "px";
+  }
+
+  function paintPanel() {
+    document.querySelectorAll(".kauf-ebene").forEach(function (nav) {
+      var on = nav.getAttribute("data-fuer") === offen;
+      nav.hidden = !on;
+      if (on) placePanel(offen);
+    });
+    document.querySelectorAll("#kauf-gruppen a[data-gruppe]").forEach(function (link) {
+      link.setAttribute("aria-expanded", link.getAttribute("data-gruppe") === offen ? "true" : "false");
+    });
+  }
+
+  function openPanel(id) {
+    window.clearTimeout(closeTimer);
+    offen = id;
+    paintPanel();
+  }
+
+  function scheduleClose() {
+    window.clearTimeout(closeTimer);
+    closeTimer = window.setTimeout(function () {
+      offen = "";
+      paintPanel();
+    }, 250);
+  }
+
+  function closePanel() {
+    window.clearTimeout(closeTimer);
+    if (!offen) return;
+    offen = "";
+    paintPanel();
+  }
+
   if (gruppen) {
     gruppen.addEventListener("click", function (event) {
       var link = event.target.closest("a[data-gruppe]");
       if (!link) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
       event.preventDefault();
-      state.gruppe = canonGruppe(link.getAttribute("data-gruppe") || "");
-      state.kat = "";
-      state.teil = "";
-      state.zeichen = "";
-      state.q = "";
-      state.sort = "";
-      render();
-      writeUrl("push");
+      var id = canonGruppe(link.getAttribute("data-gruppe") || "");
+      if (!hoverFein()) {
+        if (offen === id) closePanel();
+        else openPanel(id);
+        return;
+      }
+      openPanel(id);
+    });
+    gruppen.querySelectorAll("a[data-gruppe]").forEach(function (link) {
+      var id = link.getAttribute("data-gruppe") || "";
+      link.addEventListener("pointerdown", function () { fromPointer = true; });
+      link.addEventListener("pointerup", function () { fromPointer = false; });
+      link.addEventListener("pointercancel", function () { fromPointer = false; });
+      link.addEventListener("mouseenter", function () {
+        if (hoverFein()) openPanel(id);
+      });
+      link.addEventListener("mouseleave", function () {
+        if (hoverFein()) scheduleClose();
+      });
+      link.addEventListener("focus", function () {
+        if (focusQuiet || fromPointer) return;
+        openPanel(id);
+      });
+      link.addEventListener("keydown", function (event) {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        openPanel(id);
+        var first = document.querySelector('.kauf-ebene[data-fuer="' + id + '"] a');
+        if (first) first.focus();
+      });
     });
   }
+
+  document.querySelectorAll(".kauf-ebene").forEach(function (nav) {
+    var id = nav.getAttribute("data-fuer") || "";
+    nav.addEventListener("mouseenter", function () {
+      if (hoverFein()) openPanel(id);
+    });
+    nav.addEventListener("mouseleave", function () {
+      if (hoverFein()) scheduleClose();
+    });
+  });
+
+  if (drops) {
+    drops.addEventListener("focusout", function (event) {
+      var next = event.relatedTarget;
+      if (next && drops.contains(next)) return;
+      closePanel();
+    });
+  }
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key !== "Escape" || !offen) return;
+    event.preventDefault();
+    var id = offen;
+    var trigger = document.querySelector('#kauf-gruppen a[data-gruppe="' + id + '"]');
+    focusQuiet = true;
+    closePanel();
+    if (trigger) trigger.focus();
+    focusQuiet = false;
+  });
+
+  document.addEventListener("pointerdown", function (event) {
+    if (!offen || !drops || drops.contains(event.target)) return;
+    closePanel();
+  });
+
+  window.addEventListener("resize", function () {
+    if (offen) placePanel(offen);
+  });
 
   document.addEventListener("amk-teil", function (event) {
     var teil = String(event.detail || "");
@@ -385,24 +551,6 @@
     writeUrl("push");
   });
 
-  function jumpTo(selector) {
-    var tries = 0;
-    function step() {
-      var target = document.querySelector(selector);
-      if (target && target.getBoundingClientRect().height > 0) {
-        var root = document.documentElement;
-        var previous = root.style.scrollBehavior;
-        root.style.scrollBehavior = "auto";
-        target.scrollIntoView({ block: "start" });
-        root.style.scrollBehavior = previous;
-        return;
-      }
-      tries += 1;
-      if (tries < 40) window.setTimeout(step, 50);
-    }
-    step();
-  }
-
   fetch("../data/katalog.json")
     .then(function (response) { return response.json(); })
     .then(function (data) {
@@ -417,8 +565,6 @@
       readUrl();
       render();
       writeUrl("replace");
-      if (state.gruppe === "verkehr" && (state.zeichen || state.teil)) jumpTo("#kauf-ebene-verkehr");
-      else if (state.gruppe === "anhaenger" && state.teil) jumpTo("#kauf-ebene-anhaenger");
     })
     .catch(function () {
       board.hidden = true;
