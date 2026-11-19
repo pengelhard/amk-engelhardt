@@ -42,6 +42,9 @@
     var mode = opts.mode === "laenge" ? "laenge" : "stueck";
     var qty = opts.qty == null || opts.qty === "" ? (mode === "stueck" ? "1" : "") : opts.qty;
     if (opts.kachel && mode !== "laenge" && window.AMK_BAUSTEINE) {
+      if (opts.menge === false) {
+        return window.AMK_BAUSTEINE.produkt(opts, '<input type="checkbox" name="' + esc(opts.name) + '" value="' + esc(opts.value) + '"' + (on ? " checked" : "") + ">", "");
+      }
       var start = on ? (parseInt(qty, 10) || 1) : 0;
       opts.fuss = '<div class="kauf-schnell kauf-schnell--menge"><div class="kauf-schnell-zeile"><span>Anzahl</span>' +
         window.AMK_BAUSTEINE.mengeSchritt({

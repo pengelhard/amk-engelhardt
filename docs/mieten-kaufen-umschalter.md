@@ -89,4 +89,4 @@ Im gemeinsamen Katalog nutzen dieselben Produkte die Kauf-Kachel und „Deine Au
 
 ### Was die alte Seite danach noch kann
 
-Solange `mieten/index.html` nicht gelöscht ist, bleiben Konfigurator, Meter/Felder, Sonderzubehör-Häkchen und die Schild-Miete im Quelltext. Die Adresse leitet auf den Katalog um, sobald der Umschalter die Testauswahl zeigt. Löschen erst danach und nur unter der Grenze von 300 Zeilen.
+`mieten/index.html` bleibt im Quelltext, inklusive Konfigurator, Meter/Felder, Sonderzubehör und Schild-Miete. Ein Skript im Kopf leitet die Adresse auf den Katalog mit `?modus=miete`. Die Unterseiten `mieten/bauzaun/`, `mieten/verkehrssicherung/`, `mieten/absperrung/` und `mieten/mietpark/` zeigen auf denselben Katalog. Löschen erst, wenn diese Liste abgedeckt ist und die Grenze von 300 Zeilen hält.

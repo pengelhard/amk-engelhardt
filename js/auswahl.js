@@ -276,6 +276,8 @@
     var pillsOff = node.hasAttribute("data-ohne-pills") ? "1" : "0";
     var stapel = node.hasAttribute("data-stapel") ? "1" : "0";
     var modus = window.AMK_MODUS === "miete" ? "miete" : "kauf";
+    var gleiche = node.hasAttribute("data-gleiche-kachel");
+    var kachel = vorgang === "kauf" || gleiche;
     var key = gruppe + ":" + vorgang + ":" + modus + ":" + bare + ":" + pillsOff + ":" + stapel;
     if (!teile.length) {
       node.innerHTML = "";
@@ -284,7 +286,7 @@
     }
     if (node.dataset.key === key && node.querySelector("form")) {
       if (stapel !== "1") showTeil(node, gruppe);
-      if (vorgang === "kauf") liesKarten(node);
+      if (kachel) liesKarten(node);
       else updateSum(node);
       return;
     }
@@ -297,7 +299,6 @@
         return '<button type="button" class="chip" data-teil="' + entry.id + '" aria-pressed="' + (on ? "true" : "false") + '">' + esc(entry.label) + "</button>";
       }).join("") + "</div>"
       : "";
-    var kachel = vorgang === "kauf";
     var cards = "";
     var bloecke = "";
     teile.forEach(function (entry) {
@@ -322,7 +323,7 @@
           inputId: "menge-" + gruppe + "-" + product.slug,
           extra: kachel ? "" : daten,
           kachel: kachel,
-          href: vorgang === "kauf" ? root + "produkt/" + product.slug + "/" + (modus === "miete" ? "?modus=miete" : "") : ""
+          href: kachel ? root + "produkt/" + product.slug + "/" + (modus === "miete" ? "?modus=miete" : "") : ""
         }) + (kachel ? daten : "") + "</div>";
       });
       cards += teilKarten;
@@ -331,12 +332,12 @@
       }
     });
     var aside = bare === "1" ? "" :
-      '<aside class="konfig-summary kachel-box is-leer" aria-live="polite"><h2>' + (vorgang === "kauf" ? "Deine Auswahl" : "Ihre Auswahl") + "</h2>" +
+      '<aside class="konfig-summary kachel-box is-leer" aria-live="polite"><h2>' + (kachel ? "Deine Auswahl" : "Ihre Auswahl") + "</h2>" +
       '<p class="sum-short" data-sum="short"></p><dl class="sum-full">' +
       '<div class="sum-lines" data-sum="liste"></div>' +
       "</dl><p class=\"price-once\">Preis auf Anfrage</p>" +
       '<p class="form-status" data-status role="status"></p>' +
-      (vorgang === "kauf"
+      (kachel
         ? '<a class="btn" href="' + esc(root) + 'anfrage/">Zum Anfragekorb</a>'
         : '<button class="btn" type="submit">In den Anfragekorb</button>') +
       "</aside>";
@@ -345,7 +346,7 @@
     node.innerHTML = pills +
       "<form" + formClass + ">" +
       "<div" + mainClass + ">" +
-      (vorgang === "kauf"
+      (kachel
         ? (stapel === "1" ? bloecke : '<div class="tiles">' + cards + "</div>")
         : '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' + cards + "</div></fieldset>") +
       "</div>" + aside + "</form>";
@@ -427,7 +428,7 @@
       document.dispatchEvent(new CustomEvent("amk-teil", { detail: button.getAttribute("data-teil") || "" }));
     });
     function kaufSync(event) {
-      if (node.getAttribute("data-vorgang") === "miete") return;
+      if (node.getAttribute("data-vorgang") === "miete" && !node.hasAttribute("data-gleiche-kachel")) return;
       var target = event.target;
       if (!target) return;
       var card = target.closest && target.closest(".kauf-produkt");
@@ -463,16 +464,16 @@
 
   function liesKarten(node) {
     var vorgang = node.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
-    if (vorgang !== "kauf") return;
+    if (vorgang !== "kauf" && !node.hasAttribute("data-gleiche-kachel")) return;
     var saved = cartById();
     node.querySelectorAll(".kauf-produkt").forEach(function (card) {
       var box = card.querySelector('input[name="typ"]');
       var field = card.querySelector("[data-menge]");
-      if (!box || !field) return;
+      if (!box) return;
       var item = saved[vorgang + ":" + box.value];
       var qty = item && item.qty ? item.qty : 0;
       box.checked = qty > 0;
-      field.value = String(qty > 9999 ? 9999 : qty);
+      if (field) field.value = String(qty > 9999 ? 9999 : qty);
     });
     updateSum(node);
   }

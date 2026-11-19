@@ -2,6 +2,28 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var gruppe = params.get("gruppe") || "";
+      var teil = params.get("teil") || "";
+      var next = new URLSearchParams();
+      next.set("modus", "miete");
+      if (gruppe === "schilder" || gruppe === "absperrung" || gruppe === "verkehr") {
+        next.set("gruppe", "verkehr");
+        next.set("teil", teil === "schranken" || teil === "baken" ? teil : "schranken");
+      } else if (gruppe === "anhaenger") {
+        next.set("gruppe", "anhaenger");
+        if (teil) next.set("teil", teil);
+      } else {
+        next.set("gruppe", "zaun");
+        var kat = "bauzaune";
+        if (teil === "gitter" || teil === "zubehoer" || teil === "sichtschutz" || teil === "bauzaune") kat = teil;
+        next.set("kat", kat);
+      }
+      location.replace("../kaufen/?" + next.toString());
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
   <title>Mieten – AMK Engelhardt</title>

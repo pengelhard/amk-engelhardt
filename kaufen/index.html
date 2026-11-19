@@ -93,19 +93,21 @@
             <div id="kauf-spalte">
             <p id="kauf-empty" class="kauf-empty" hidden>Keine Treffer.</p>
             <p id="kauf-verkehr-hinweis" class="verkehr-hinweis" hidden>Die verkehrsrechtliche Anordnung kann AMK für Sie bei der Behörde beantragen.</p>
+            <p id="kauf-genehmigung-zeile" class="verkehr-hinweis" hidden><label><input type="checkbox" id="kauf-genehmigung"> Anordnung durch AMK beantragen lassen</label></p>
+            <p id="kauf-miete-bauzaun" class="verkehr-hinweis" hidden>Füße und Schellen sind bei der Miete dabei.</p>
             <div id="kauf-auswahl" data-auswahl data-vorgang="kauf" data-root="../" data-ohne-pills hidden></div>
             <div id="kauf-stapel" hidden>
               <div id="kauf-stapel-zaun" data-gruppe-stapel="zaun" hidden>
-                <section class="kauf-abschnitt" id="kauf-teil-gitter" data-abschnitt="gitter"><h2>Absperrgitter</h2><div data-auswahl data-vorgang="kauf" data-gruppe="gitter" data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div></section>
+                <section class="kauf-abschnitt" id="kauf-teil-gitter" data-abschnitt="gitter"><h2>Absperrgitter</h2><div data-auswahl data-vorgang="kauf" data-gruppe="gitter" data-gleiche-kachel data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div></section>
                 <section class="kauf-abschnitt" id="kauf-teil-schwellen" data-abschnitt="schwellen"><h2>Bodenleitschwellen</h2><div data-auswahl data-vorgang="kauf" data-gruppe="schwellen" data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div></section>
                 <section class="kauf-abschnitt" id="kauf-teil-schleuse" data-abschnitt="schleuse"><h2>Schleusen</h2><div data-auswahl data-vorgang="kauf" data-gruppe="schleuse" data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div></section>
                 <section class="kauf-abschnitt" id="kauf-teil-buehne" data-abschnitt="buehne"><h2>Bühnen</h2><div data-auswahl data-vorgang="kauf" data-gruppe="buehne" data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div></section>
               </div>
               <div id="kauf-stapel-verkehr" data-gruppe-stapel="verkehr" hidden>
-                <div data-auswahl data-vorgang="kauf" data-gruppe="absperrung" data-stapel data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div>
+                <div data-auswahl data-vorgang="kauf" data-gruppe="absperrung" data-gleiche-kachel data-stapel data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div>
               </div>
               <div id="kauf-stapel-anhaenger" data-gruppe-stapel="anhaenger" hidden>
-                <div data-auswahl data-vorgang="kauf" data-gruppe="anhaenger" data-stapel data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div>
+                <div data-auswahl data-vorgang="kauf" data-gruppe="anhaenger" data-gleiche-kachel data-stapel data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div>
               </div>
             </div>
             <form class="schilder" id="schilder-bereich" data-schilder data-stapel data-vorgang="kauf" data-leer-ok data-ohne-pills hidden>
@@ -1675,13 +1677,13 @@
   <script src="../js/merkzettel.js"></script>
   <script src="../js/kauf-bausteine.js?v=aw"></script>
   <script src="../js/kauf-store.js?v=av"></script>
-  <script src="../js/typwahl.js?v=av"></script>
+  <script src="../js/typwahl.js?v=aw"></script>
   <script src="../js/zeitraum.js"></script>
   <script src="../js/bestellen.js"></script>
   <script src="../js/gruppen.js"></script>
   <script src="../js/schilder.js?v=av"></script>
   <script src="../data/anhaenger-eckdaten.js"></script>
-  <script src="../js/auswahl.js?v=aw"></script>
-  <script src="../js/kauf.js?v=ay"></script>
+  <script src="../js/auswahl.js?v=ax"></script>
+  <script src="../js/kauf.js?v=az"></script>
 </body>
 </html>

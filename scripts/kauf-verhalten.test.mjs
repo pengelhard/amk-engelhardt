@@ -837,13 +837,11 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     point("Galerie Beispielseite", thumbs > 0 || await beispiel.page.locator("#beispiel-bild").count() === 1, String(thumbs));
     await beispiel.page.close();
 
-    const miete = await open(1280, "/mieten/");
-    const mieteInfo = await miete.page.evaluate(() => ({
-      kachel: document.querySelectorAll(".kauf-produkt").length,
-      zeile: document.querySelectorAll(".pick, .chip").length,
-      spalten: document.querySelector(".konfig-layout") ? getComputedStyle(document.querySelector(".konfig-layout")).gridTemplateColumns : ""
-    }));
-    point("Mieten unverändert", mieteInfo.kachel === 0 && mieteInfo.zeile > 0 && /320px/.test(mieteInfo.spalten), JSON.stringify(mieteInfo));
+    const miete = await open(1280, "/mieten/?gruppe=zaun&teil=gitter");
+    await miete.page.waitForURL(/modus=miete/);
+    const mieteUrl = new URL(miete.page.url());
+    const mieteQuelle = await miete.page.evaluate(async () => (await fetch("/mieten/")).text());
+    point("Alte Mieten-Adresse", mieteUrl.searchParams.get("modus") === "miete" && mieteUrl.searchParams.get("gruppe") === "zaun" && mieteUrl.searchParams.get("kat") === "gitter" && mieteQuelle.includes("bauzaun-konfig") && mieteQuelle.includes("location.replace"), mieteUrl.search);
     point("Konsole Mieten", miete.errors.length === 0, miete.errors.join(" | "));
     await miete.page.close();
 
@@ -927,6 +925,77 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     const gemerktBild = await modusBild(gemerkt.page);
     point("Modus gemerkt", gemerktBild.modus === "miete" && gemerktBild.kacheln.length === 1 && gemerktBild.aktiv === "miete", JSON.stringify({ modus: gemerktBild.modus, n: gemerktBild.kacheln.length }));
     await gemerkt.page.close();
+
+    const bauMiete = await open(1280, "/kaufen/?modus=miete&gruppe=zaun&kat=bauzaune");
+    await bauMiete.page.locator("#schnell-felder-bauzaun-10075").fill("3");
+    await bauMiete.page.locator("#schnell-felder-bauzaun-10075").dispatchEvent("input");
+    const bauKorb = await bauMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));
+    const bauBox = await bauMiete.page.locator("#kauf-verkehr-summe").innerText();
+    const bauHinweis = await bauMiete.page.locator("#kauf-miete-bauzaun").innerText();
+    point("Bauzaun mieten", bauKorb.indexOf("miete:bauzaun-10075:3") !== -1 && bauKorb.every((id) => id.indexOf(":im:") === -1) && !/Komplett-Ständer/.test(bauBox) && /Füße und Schellen/.test(bauHinweis), bauKorb.join(", ") + " | " + bauBox.replace(/\s+/g, " "));
+    await bauMiete.page.close();
+
+    const anhMiete = await open(1280, "/kaufen/?modus=miete&gruppe=anhaenger&teil=hochlader");
+    const anhFeld = await anhMiete.page.locator("#kauf-teil-hochlader [data-menge]").count();
+    await anhMiete.page.locator("#kauf-teil-hochlader input[name='typ']").check();
+    const anhKorb = await anhMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").filter((item) => item.id === "miete:hochlader"));
+    point("Anhänger mieten", anhFeld === 0 && anhKorb.length === 1 && anhKorb[0].sammel === true && anhKorb[0].qty === 1, JSON.stringify(anhKorb));
+    await anhMiete.page.close();
+
+    const gitterMiete = await open(1280, "/kaufen/?modus=miete&gruppe=zaun&kat=gitter");
+    await gitterMiete.page.locator("#kauf-teil-gitter [data-menge]").fill("2");
+    await gitterMiete.page.locator("#kauf-teil-gitter [data-menge]").dispatchEvent("input");
+    const gitterKorb = await gitterMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));
+    point("Gitter mieten", gitterKorb.indexOf("miete:absperrung-10026:2") !== -1, gitterKorb.join(", "));
+    await gitterMiete.page.close();
+
+    const genehmigung = await open(1280, "/kaufen/?modus=miete&gruppe=verkehr&teil=schranken");
+    await genehmigung.page.locator("#kauf-genehmigung").check();
+    const genehmigungKorb = await genehmigung.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").some((item) => item.id === "miete:genehmigung" && item.name === "Anordnung durch AMK beantragen lassen"));
+    const genehmigungKauf = await open(1280, "/kaufen/?gruppe=verkehr&teil=schranken");
+    const genehmigungWeg = await genehmigungKauf.page.locator("#kauf-genehmigung-zeile").isHidden();
+    point("Genehmigung nur bei Miete", genehmigungKorb && genehmigungWeg, String(genehmigungKorb));
+    await genehmigung.page.close();
+    await genehmigungKauf.page.close();
+
+    const detailMiete = await open(1280, "/produkt/bauzaun-10075/?modus=miete");
+    await detailMiete.page.waitForSelector("#menge-einfach");
+    const ohneStand = await detailMiete.page.locator("#menge-staender").count();
+    await detailMiete.page.locator("#menge-einfach").fill("2");
+    await detailMiete.page.locator("#menge-einfach").dispatchEvent("input");
+    const detailKorb = await detailMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));
+    point("Detail mieten", ohneStand === 0 && detailKorb.indexOf("miete:bauzaun-10075:2") !== -1 && detailKorb.every((id) => id.indexOf(":im:") === -1), detailKorb.join(", "));
+    point("Konsole Detail mieten", detailMiete.errors.length === 0, detailMiete.errors.join(" | "));
+    await detailMiete.page.close();
+
+    const detailAnh = await open(390, "/produkt/hochlader/?modus=miete");
+    await detailAnh.page.waitForSelector("#miete-anhaenger");
+    const detailFeld = await detailAnh.page.locator("#menge-einfach").count();
+    await detailAnh.page.locator("#miete-anhaenger").check();
+    const detailAnhKorb = await detailAnh.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").filter((item) => item.id === "miete:hochlader"));
+    const detailQuer = await detailAnh.page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    point("Anhänger-Detail mieten", detailFeld === 0 && detailAnhKorb.length === 1 && detailAnhKorb[0].sammel === true && detailQuer <= 1, JSON.stringify({ korb: detailAnhKorb, quer: detailQuer, fehler: detailAnh.errors }));
+    await detailAnh.page.close();
+
+    const korbModus = await open(1280, "/anfrage/");
+    await korbModus.page.evaluate(() => {
+      localStorage.setItem("amk-wunsch", JSON.stringify([
+        { id: "miete:bauzaun-10075", name: "Bauzaun Profi 3,5 × 2,0 m", qty: 2, kat: "bauzaun" },
+        { id: "kauf:fuss-10006", name: "Kunststofffuß schwer 23 kg", qty: 1, kat: "bauzaun" },
+        { id: "miete:schild:z123", name: "Gefahrstelle", qty: 1, kat: "verkehrssicherung" }
+      ]));
+    });
+    await korbModus.page.reload({ waitUntil: "networkidle" });
+    const korbModusLinks = await korbModus.page.evaluate(() => [...document.querySelectorAll("a.cart-link")].map((el) => el.getAttribute("href")));
+    const korbText = await korbModus.page.locator("body").innerText();
+    point("Korb trennt Modus", korbModusLinks.some((href) => href.endsWith("/produkt/bauzaun-10075/?modus=miete")) && korbModusLinks.some((href) => href.endsWith("/produkt/fuss-10006/")) && korbModusLinks.some((href) => href.indexOf("/mieten/?gruppe=schilder") !== -1) && /Miete/.test(korbText) && /Kauf/.test(korbText), korbModusLinks.join(" | "));
+    await korbModus.page.close();
+
+    const sprungAlt = await open(1280, "/mieten/bauzaun/");
+    await sprungAlt.page.waitForURL(/modus=miete/);
+    const sprungUrl = new URL(sprungAlt.page.url());
+    point("Bauzaun-Adresse", sprungUrl.pathname.endsWith("/kaufen/") && sprungUrl.searchParams.get("kat") === "bauzaune" && sprungUrl.searchParams.get("modus") === "miete", sprungUrl.pathname + sprungUrl.search);
+    await sprungAlt.page.close();
 
     const bad = points.filter((entry) => !entry.ok);
     console.log(points.map((entry) => `${entry.ok ? "ok" : "FEHLER"}  ${entry.name}${entry.detail ? " — " + entry.detail : ""}`).join("\n"));

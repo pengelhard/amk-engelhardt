@@ -139,9 +139,11 @@
     var platzhalter = false;
     var platzhalterText = "";
 
-    function prefix() { return "kauf:" + slug + ":"; }
-    function plainId() { return "kauf:" + slug; }
-    function standOn() { return !!paket; }
+    function mieteModus() { return new URLSearchParams(location.search).get("modus") === "miete"; }
+    function anhaengerMiete() { return mieteModus() && product.shop === "anhaenger"; }
+    function prefix() { return (mieteModus() ? "miete:" : "kauf:") + slug + ":"; }
+    function plainId() { return (mieteModus() ? "miete:" : "kauf:") + slug; }
+    function standOn() { return !!paket && !mieteModus(); }
 
     function setListe(open) {
       var box = document.getElementById("beispiel-auswahl");
@@ -313,6 +315,13 @@
         }
         var m = feldZahl();
         if (m > 0) lines.push(lineOf(prefix() + "zusatz:felder", product.name, m, product.bild, product.kat, ZU));
+      } else if (anhaengerMiete()) {
+        var wahl = document.getElementById("miete-anhaenger");
+        if (wahl && wahl.checked) {
+          var anhaenger = lineOf(plainId(), product.name, 1, product.bild, product.kat, "");
+          anhaenger.sammel = true;
+          lines.push(anhaenger);
+        }
       } else {
         var einfach = feldZahl();
         if (einfach > 0) lines.push(lineOf(plainId(), product.name, einfach, product.bild, product.kat, ""));
@@ -337,6 +346,7 @@
       var items = window.AMK_WUNSCH.load().filter(function (item) {
         var id = String(item.id || "");
         if (id.indexOf(own) === 0) return !!wanted[id];
+        if (mieteModus() && id === plainId()) return !!wanted[id];
         if (standOn() && id === plainId()) return false;
         if (managed[id]) return !!wanted[id];
         return true;
@@ -368,6 +378,10 @@
         if (id === prefix() + "im:staender") n = item.qty;
         if (id === prefix() + "zusatz:felder") felder = item.qty;
         if (id === plainId()) einfach = item.qty;
+        if (anhaengerMiete() && id === plainId() && item.qty > 0) {
+          var haken = document.getElementById("miete-anhaenger");
+          if (haken) haken.checked = true;
+        }
         (paket && paket.wahl || []).forEach(function (entry) {
           var mark = prefix() + "im:" + entry.id + ":";
           if (id.indexOf(mark) === 0) choice[entry.id] = id.slice(mark.length);
@@ -399,6 +413,12 @@
     }
 
     function fillArten() {
+      if (anhaengerMiete()) {
+        arten.innerHTML = '<label class="beispiel-art-karte"><input type="checkbox" id="miete-anhaenger"> <strong>' + esc(product.name) + " auswählen</strong></label>";
+        inhalt.hidden = true;
+        inhalt.innerHTML = "";
+        return;
+      }
       if (standOn()) {
         arten.innerHTML =
           (platzhalter ? '<p class="beispiel-platzhalter">' + esc(platzhalterText || "Platzhalter") + "</p>" : "") +
@@ -436,6 +456,16 @@
 
     function applyConfig(data) {
       config = data || {};
+      if (mieteModus()) {
+        paket = null;
+        zubehoer = [];
+        fillArten();
+        fillZubehoer();
+        restore();
+        paintList();
+        syncCart();
+        return;
+      }
       var shops = config.staender && config.staender.shops || [];
       if (product.shop && shops.indexOf(product.shop) >= 0 && config.staender.paket) {
         paket = config.staender.paket;
@@ -520,6 +550,11 @@
       }
       if (target.getAttribute("data-wahl")) {
         choice[target.getAttribute("data-wahl")] = target.value;
+        paintList();
+        syncCart();
+        return;
+      }
+      if (target.id === "miete-anhaenger") {
         paintList();
         syncCart();
         return;

@@ -212,9 +212,30 @@
     return "../produkt/" + slug + "/";
   }
 
+  var MIETE_SLUG = {
+    "bauzaun-10075": 1,
+    "plane-10012": 1,
+    "zubehoer-10002-1": 1,
+    "fuss-10006": 1,
+    "schranke-10024-1": 1,
+    "schranke-10024-3": 1,
+    "absperrung-10026": 1,
+    hochlader: 1,
+    planenanhaenger: 1,
+    kofferanhaenger: 1,
+    fahrzeugtransporter: 1,
+    kuehlanhaenger: 1,
+    "kuehlanhaenger-events": 1
+  };
+
   function artikelHref(item) {
     var id = String(item && item.id || "");
+    if (id === "miete:genehmigung") return "../kaufen/?modus=miete&gruppe=verkehr&teil=schranken";
     if (id.indexOf("kauf:") === 0) return kaufSeite(item);
+    if (id.indexOf("miete:") === 0) {
+      var slug = id.slice("miete:".length);
+      if (slug && slug.indexOf(":") === -1 && MIETE_SLUG[slug]) return "../produkt/" + slug + "/?modus=miete";
+    }
     return editHref(item);
   }
 

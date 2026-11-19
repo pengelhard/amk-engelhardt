@@ -664,6 +664,14 @@
     board.classList.toggle("is-verkehr", false);
     board.classList.toggle("is-stapel", stapel);
     if (hinweis) hinweis.hidden = !verkehr;
+    var genehmigungZeile = document.getElementById("kauf-genehmigung-zeile");
+    if (genehmigungZeile) genehmigungZeile.hidden = !(verkehr && state.modus === "miete");
+    var bauHinweis = document.getElementById("kauf-miete-bauzaun");
+    if (bauHinweis) bauHinweis.hidden = !(state.modus === "miete" && katalogAn());
+    liesGenehmigung();
+    document.querySelectorAll("#kauf-stapel [data-gleiche-kachel]").forEach(function (node) {
+      node.setAttribute("data-vorgang", state.modus === "miete" ? "miete" : "kauf");
+    });
     var auswahlOffen = stapel || katalogAn();
     if (wahl) wahl.classList.toggle("konfig-layout", auswahlOffen);
     if (spalte) spalte.classList.toggle("konfig-main", auswahlOffen);
@@ -720,10 +728,19 @@
         var details = block.querySelector(".kauf-schnell-details");
         var href = details ? details.getAttribute("href") : "";
         var slug = block.getAttribute("data-slug") || "";
-        var stand = window.AMK_WUNSCH && window.AMK_WUNSCH.load ? zeileMenge(window.AMK_WUNSCH.load(), "kauf:" + slug + ":im:staender") : 0;
-        if (stand > 0) lines.push({ name: name, menge: String(stand), qty: stand, block: "Im Komplett-Ständer enthalten", href: href, ziel: "staender:" + slug });
-        if (felder > 0) lines.push({ name: name, menge: String(felder), qty: felder, block: "Zusätzlich", href: href, ziel: "felder:" + slug });
+        if (state.modus === "miete") {
+          if (felder > 0) lines.push({ name: name, menge: String(felder), qty: felder, href: href, ziel: "felder:" + slug });
+        } else {
+          var stand = window.AMK_WUNSCH && window.AMK_WUNSCH.load ? zeileMenge(window.AMK_WUNSCH.load(), "kauf:" + slug + ":im:staender") : 0;
+          if (stand > 0) lines.push({ name: name, menge: String(stand), qty: stand, block: "Im Komplett-Ständer enthalten", href: href, ziel: "staender:" + slug });
+          if (felder > 0) lines.push({ name: name, menge: String(felder), qty: felder, block: "Zusätzlich", href: href, ziel: "felder:" + slug });
+        }
       });
+    }
+    var genehmigung = document.getElementById("kauf-genehmigung");
+    var genehmigungZeile = document.getElementById("kauf-genehmigung-zeile");
+    if (genehmigung && genehmigungZeile && !genehmigungZeile.hidden && genehmigung.checked) {
+      lines.push({ name: "Anordnung durch AMK beantragen lassen", menge: "1", qty: 1, ziel: "genehmigung" });
     }
     if (schilder && zeile) {
       schilder.querySelectorAll('input[name="schild"]:checked').forEach(function (box) {
@@ -1244,6 +1261,23 @@
     return found;
   }
 
+  function liesGenehmigung() {
+    var box = document.getElementById("kauf-genehmigung");
+    if (!box || !window.AMK_WUNSCH || !window.AMK_WUNSCH.load) return;
+    box.checked = window.AMK_WUNSCH.load().some(function (line) { return line.id === "miete:genehmigung"; });
+  }
+
+  var genehmigung = document.getElementById("kauf-genehmigung");
+  if (genehmigung) {
+    genehmigung.addEventListener("change", function () {
+      if (!window.AMK_WUNSCH || !window.AMK_WUNSCH.load) return;
+      var items = window.AMK_WUNSCH.load().filter(function (line) { return line.id !== "miete:genehmigung"; });
+      if (genehmigung.checked) items.push({ id: "miete:genehmigung", name: "Anordnung durch AMK beantragen lassen", qty: 1, kat: "verkehrssicherung" });
+      speichere(items);
+      kaufLeiste();
+    });
+  }
+
   function zeileMenge(items, id) {
     var qty = 0;
     items.forEach(function (line) { if (line.id === id) qty = line.qty; });
@@ -1326,6 +1360,17 @@
     if (!item) return;
     var felder = mengeAus(schnellFeld(block, "felder"));
     if (felder == null) return;
+    if (state.modus === "miete") {
+      var mieteId = "miete:" + slug;
+      var mieteItems = window.AMK_WUNSCH.load().filter(function (line) { return line.id !== mieteId; });
+      if (felder > 0) mieteItems.push({ id: mieteId, name: item.name, qty: felder, bild: item.bild || "", kat: item.kat || "bauzaun" });
+      speichere(mieteItems);
+      var mieteKreis = block.parentElement ? block.parentElement.querySelector("[data-kreis='bauzaun']") : null;
+      if (mieteKreis) mieteKreis.checked = felder > 0;
+      zeigeHinweis(block, false);
+      kaufLeiste();
+      return;
+    }
     var prefix = "kauf:" + slug + ":";
     var items = window.AMK_WUNSCH.load();
     var standField = schnellFeld(block, "staender");
@@ -1350,6 +1395,14 @@
     var items = window.AMK_WUNSCH.load();
     document.querySelectorAll(".kauf-schnell[data-slug]").forEach(function (block) {
       var slug = block.getAttribute("data-slug") || "";
+      if (state.modus === "miete") {
+        var mieteFeld = schnellFeld(block, "felder");
+        if (mieteFeld) mieteFeld.value = String(zeileMenge(items, "miete:" + slug));
+        zeigeHinweis(block, false);
+        var mieteKreis = block.parentElement ? block.parentElement.querySelector("[data-kreis='bauzaun']") : null;
+        if (mieteKreis) mieteKreis.checked = (parseInt(mieteFeld && mieteFeld.value, 10) || 0) > 0;
+        return;
+      }
       var prefix = "kauf:" + slug + ":";
       var standField = schnellFeld(block, "staender");
       var feldField = schnellFeld(block, "felder");
@@ -1413,7 +1466,7 @@
       var block = tile ? tile.querySelector(".kauf-schnell") : null;
       var feldField = schnellFeld(block, "felder");
       var slug = block ? block.getAttribute("data-slug") || "" : "";
-      var standNow = window.AMK_WUNSCH && window.AMK_WUNSCH.load ? zeileMenge(window.AMK_WUNSCH.load(), "kauf:" + slug + ":im:staender") : 0;
+      var standNow = state.modus === "miete" ? 0 : (window.AMK_WUNSCH && window.AMK_WUNSCH.load ? zeileMenge(window.AMK_WUNSCH.load(), "kauf:" + slug + ":im:staender") : 0);
       var feldNow = parseInt(feldField && feldField.value, 10) || 0;
       if (box.checked) {
         if (standNow < 1 && feldNow < 1 && feldField) feldField.value = "1";
