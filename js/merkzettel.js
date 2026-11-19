@@ -88,6 +88,7 @@
       if (ort) next.ort = ort.slice(0, 160);
       var kat = String(item.kat || "");
       if (kat === "bauzaun" || kat === "verkehrssicherung" || kat === "anhaenger") next.kat = kat;
+      if (item.herkunft === "auto" || item.herkunft === "manuell") next.herkunft = item.herkunft;
       return next;
     });
   }

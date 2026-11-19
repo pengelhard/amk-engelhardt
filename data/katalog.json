@@ -3177,5 +3177,31 @@
     },
     "text": [],
     "pdf": null
+  },
+  {
+    "slug": "transportstaender-10059",
+    "name": "Transportständer",
+    "kat": "bauzaun",
+    "gruppe": "Zubehör",
+    "lead": "Platzhalter. Die Mobilzaun-Palette TP30, Artikel 10059, ist im Katalog nicht vorhanden.",
+    "bild": "images/beispiel/transportstaender.svg",
+    "bildSmall": "",
+    "width": 800,
+    "height": 600,
+    "alt": "Platzhalter ohne Produktbild für den Transportständer",
+    "kicker": "Platzhalter · Palette TP30, 10059",
+    "specs": [],
+    "quelle": "",
+    "seite": "",
+    "code": "10059",
+    "platzhalter": true,
+    "preis": null,
+    "bestand": null,
+    "shop": "",
+    "attr": {},
+    "text": [
+      "Platzhalter. Im Katalog liegt kein Artikel Mobilzaun-Palette TP30, 10059. Es sind keine Maße, kein Gewicht und kein Produktbild hinterlegt."
+    ],
+    "pdf": null
   }
 ]

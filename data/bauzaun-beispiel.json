@@ -1,6 +1,7 @@
 {
   "slug": "bauzaun-10075",
   "zubehoer": [
+    "transportstaender-10059",
     "fuss-10005",
     "fuss-10004",
     "fuss-10006",
@@ -19,19 +20,26 @@
     {
       "id": "felder",
       "label": "Einzelne Felder",
-      "einheit": "Felder",
+      "einheit": "Feldanzahl",
       "hinweis": "Einzelne Felder"
     },
     {
       "id": "staender",
-      "label": "Ständer",
-      "einheit": "Ständer",
-      "vorsatz": "Ständer à 30 Felder",
+      "label": "Komplett-Ständer",
+      "einheit": "Ständeranzahl",
+      "felderJe": 30,
       "inhalt": [
-        "30 Felder",
-        "30 Verbindungsschellen",
-        "31 Bauzaunfüße"
+        "30 Felder je Ständer",
+        "Transportständer inklusive",
+        "31 Bauzaunfüße je Ständer",
+        "30 Verbindungsschellen je Ständer"
       ],
+      "staender": {
+        "slug": "transportstaender-10059",
+        "name": "Transportständer",
+        "je": 1,
+        "vermerk": "inklusive"
+      },
       "posten": [
         { "slug": "fuss-10006", "je": 31 },
         { "slug": "zubehoer-10002-1", "je": 30 }

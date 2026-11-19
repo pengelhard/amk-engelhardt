@@ -38,7 +38,11 @@
   var wahl = root.querySelector(".beispiel-leiste-wahl");
   var haube = root.querySelector(".beispiel-haube");
   var modus = {};
-  var managed = { "kauf:beispiel:felder": 1, "kauf:beispiel:staender": 1 };
+  var managed = {
+    "kauf:beispiel:felder": 1,
+    "kauf:beispiel:staender": 1,
+    "kauf:beispiel:transportstaender": 1
+  };
 
   function artNow() {
     var chosen = root.querySelector('input[name="art"]:checked');
@@ -51,8 +55,27 @@
   }
 
   function canonical(key) {
-    if (key === "haupt") return document.getElementById("menge-beispiel");
     return document.getElementById("menge-" + key);
+  }
+
+  function staenderArt() {
+    var found = null;
+    (config.arten || []).forEach(function (entry) {
+      if (entry.id === "staender") found = entry;
+    });
+    return found || {};
+  }
+
+  function felderJe() {
+    var n = parseInt(staenderArt().felderJe, 10);
+    return n > 0 ? n : 30;
+  }
+
+  function autoMenge(je) {
+    var n = je * standZahl();
+    if (n < 1) n = 1;
+    if (n > 9999) n = 9999;
+    return n;
   }
 
   function showArt() {
@@ -72,15 +95,13 @@
     }
   }
 
-  function artText(art) {
-    var field = document.getElementById("menge-beispiel");
-    var qty = field ? field.value : "1";
-    if (art && art.vorsatz) return qty + " " + art.vorsatz;
-    return (art && (art.hinweis || art.label)) || "";
+  function standZahl() {
+    var field = document.getElementById("menge-staender");
+    return field ? clamp(field) : 1;
   }
 
-  function standZahl() {
-    var field = document.getElementById("menge-beispiel");
+  function feldZahl() {
+    var field = document.getElementById("menge-felder");
     return field ? clamp(field) : 1;
   }
 
@@ -103,11 +124,6 @@
       "</div>";
   }
 
-  function paintArt() {
-    var node = root.querySelector(".beispiel-post-art");
-    if (node) node.textContent = artText(artNow());
-  }
-
   function setChecked(slug, on) {
     var box = root.querySelector('input[name="zubehoer"][value="' + slug + '"]');
     if (!box) return;
@@ -127,7 +143,6 @@
 
   function syncStandards(entering) {
     var art = artNow();
-    var n = standZahl();
     if (!art || art.id !== "staender") {
       Object.keys(modus).forEach(function (slug) {
         if (modus[slug] !== "auto") return;
@@ -145,23 +160,33 @@
       if (state === "weg" || state === "hand") return;
       modus[row.slug] = "auto";
       setChecked(row.slug, true);
-      setMenge(row.slug, row.je * n);
+      setMenge(row.slug, autoMenge(row.je));
     });
   }
 
   function paintCount() {
     var node = document.getElementById("beispiel-posten");
-    if (!node) return;
-    var n = 1 + root.querySelectorAll('input[name="zubehoer"]:checked').length;
+    var list = document.getElementById("beispiel-liste");
+    if (!node || !list) return;
+    var n = list.querySelectorAll(".beispiel-post").length;
     node.textContent = n + " Posten";
   }
 
-  function postZeile(slug) {
+  function festZeile(name, qty, note) {
+    return '<li class="beispiel-post beispiel-post--fest">' +
+      '<p class="beispiel-post-text"><strong>' + esc(name) + "</strong>" +
+      (note ? '<span class="beispiel-post-art">' + esc(note) + "</span>" : "") +
+      '</p><p class="beispiel-post-fest">' + esc(qty) + "</p></li>";
+  }
+
+  function postZeile(slug, hint) {
     var item = bySlug[slug];
     if (!item) return "";
     var field = document.getElementById("menge-" + slug);
     return '<li class="beispiel-post">' +
-      '<p class="beispiel-post-text"><strong>' + esc(item.name) + "</strong></p>" +
+      '<p class="beispiel-post-text"><strong>' + esc(item.name) + "</strong>" +
+      (hint ? '<span class="beispiel-post-art">' + esc(hint) + "</span>" : "") +
+      "</p>" +
       '<button type="button" class="beispiel-weg" data-weg="' + esc(slug) + '" aria-label="' + esc(item.name) + ' entfernen">×</button>' +
       stepper(slug, "menge-liste-" + slug, field ? field.value : "1", "Menge " + item.name, 9999) +
       "</li>";
@@ -171,12 +196,21 @@
     var list = document.getElementById("beispiel-liste");
     if (!list || !product) return;
     var art = artNow();
-    var main = document.getElementById("menge-beispiel");
-    var html = '<li class="beispiel-post beispiel-post--haupt">' +
-      '<p class="beispiel-post-text"><strong>' + esc(product.name) + "</strong>" +
-      '<span class="beispiel-post-art">' + esc(artText(art)) + "</span></p>" +
-      stepper("haupt", "menge-liste-haupt", main ? main.value : "1", "Menge " + product.name, 9999) +
-      "</li>";
+    var html = "";
+    var stand = (art && art.staender) || {};
+    if (art && art.id === "staender") {
+      var n = standZahl();
+      var standItem = bySlug[stand.slug] || {};
+      html += festZeile(product.name, autoMenge(felderJe()), "aus " + n + " Komplett-Ständer");
+      html += festZeile(standItem.name || stand.name || "Transportständer", n, stand.vermerk || "inklusive");
+    } else {
+      var main = document.getElementById("menge-felder");
+      html += '<li class="beispiel-post beispiel-post--haupt">' +
+        '<p class="beispiel-post-text"><strong>' + esc(product.name) + "</strong>" +
+        '<span class="beispiel-post-art">Einzelne Felder</span></p>' +
+        stepper("felder", "menge-liste-felder", main ? main.value : "1", "Feldanzahl", 9999) +
+        "</li>";
+    }
     var seen = {};
     (art.posten || []).forEach(function (row) {
       var box = root.querySelector('input[name="zubehoer"][value="' + row.slug + '"]');
@@ -186,7 +220,8 @@
     });
     root.querySelectorAll('input[name="zubehoer"]:checked').forEach(function (box) {
       if (seen[box.value]) return;
-      html += postZeile(box.value);
+      var hint = art.id === "staender" && box.value === stand.slug ? "zusätzlich" : "";
+      html += postZeile(box.value, hint);
     });
     list.innerHTML = html;
     paintCount();
@@ -263,8 +298,16 @@
     var arten = document.getElementById("beispiel-arten");
     if (arten) {
       arten.innerHTML = (config.arten || []).map(function (entry, index) {
-        return '<label class="beispiel-art"><span class="beispiel-wahl"><input type="radio" name="art" value="' + esc(entry.id) + '"' +
-          (index === 0 ? " checked" : "") + '><span class="beispiel-kreis"></span></span><strong>' + esc(entry.label) + "</strong></label>";
+        var inputId = "menge-" + entry.id;
+        var unit = entry.einheit || entry.label;
+        return '<div class="beispiel-art-karte">' +
+          '<label class="beispiel-art"><span class="beispiel-wahl"><input type="radio" name="art" value="' + esc(entry.id) + '"' +
+          (index === 0 ? " checked" : "") + '><span class="beispiel-kreis"></span></span>' +
+          '<span class="beispiel-art-text"><strong>' + esc(entry.label) + '</strong><span class="beispiel-art-einheit">' + esc(unit) + "</span></span></label>" +
+          '<div class="beispiel-step"><button type="button" data-step="-1" aria-label="Weniger">−</button>' +
+          '<label class="visually-hidden" for="' + esc(inputId) + '">' + esc(unit) + "</label>" +
+          '<input id="' + esc(inputId) + '" name="' + esc(inputId) + '" type="number" min="1" max="9999" value="1" inputmode="numeric">' +
+          '<button type="button" data-step="1" aria-label="Mehr">+</button></div></div>';
       }).join("");
     }
     showArt();
@@ -289,32 +332,65 @@
         '<input id="menge-' + esc(slug) + '" name="menge-' + esc(slug) + '" type="number" min="1" max="9999" value="1" inputmode="numeric">' +
         '<button type="button" data-step="1" aria-label="Mehr">+</button>' +
         "</div>" +
-        '<a class="beispiel-details" href="' + esc(base + "produkt/" + slug + "/") + '">Details</a>' +
+        (item.platzhalter
+          ? '<span class="beispiel-platzhalter">Platzhalter</span>'
+          : '<a class="beispiel-details" href="' + esc(base + "produkt/" + slug + "/") + '">Details</a>') +
         "</div></article>";
     }).join("");
   }
 
+  function lineOf(item, qty, note, herkunft) {
+    var line = {
+      id: item.id,
+      name: item.name,
+      qty: qty,
+      bild: item.bild || "",
+      kat: item.kat || product.kat || "",
+      herkunft: herkunft
+    };
+    if (note) line.note = note;
+    return line;
+  }
+
   function linesNow() {
     var art = artNow();
-    var field = document.getElementById("menge-beispiel");
-    var lines = [{
-      id: "kauf:beispiel:" + art.id,
-      name: product.name,
-      qty: clamp(field),
-      bild: product.bild || "",
-      kat: product.kat || "",
-      note: artText(art)
-    }];
+    var lines = [];
+    if (art.id === "staender") {
+      var n = standZahl();
+      var stand = art.staender || {};
+      var standItem = bySlug[stand.slug] || {};
+      lines.push(lineOf({
+        id: "kauf:beispiel:felder",
+        name: product.name,
+        bild: product.bild,
+        kat: product.kat
+      }, autoMenge(felderJe()), "aus " + n + " Komplett-Ständer", "auto"));
+      lines.push(lineOf({
+        id: "kauf:beispiel:transportstaender",
+        name: standItem.name || stand.name || "Transportständer",
+        bild: standItem.bild || "",
+        kat: standItem.kat || product.kat
+      }, n, stand.vermerk || "inklusive", "auto"));
+    } else {
+      lines.push(lineOf({
+        id: "kauf:beispiel:felder",
+        name: product.name,
+        bild: product.bild,
+        kat: product.kat
+      }, feldZahl(), "", "manuell"));
+    }
+    var standSlug = (art.staender && art.staender.slug) || (staenderArt().staender && staenderArt().staender.slug) || "";
     root.querySelectorAll('input[name="zubehoer"]:checked').forEach(function (box) {
       var item = bySlug[box.value];
       if (!item) return;
-      lines.push({
+      var herkunft = modus[box.value] === "auto" ? "auto" : "manuell";
+      var note = art.id === "staender" && box.value === standSlug ? "zusätzlich" : "";
+      lines.push(lineOf({
         id: "kauf:" + item.slug,
         name: item.name,
-        qty: clamp(document.getElementById("menge-" + box.value)),
-        bild: item.bild || "",
-        kat: item.kat || ""
-      });
+        bild: item.bild,
+        kat: item.kat
+      }, clamp(document.getElementById("menge-" + box.value)), note, herkunft));
     });
     return lines;
   }
@@ -339,6 +415,7 @@
         found.name = line.name;
         found.bild = line.bild || "";
         found.kat = line.kat || "";
+        found.herkunft = line.herkunft;
         if (line.note) found.note = line.note;
         else delete found.note;
       } else items.push(line);
@@ -348,15 +425,24 @@
 
   function restoreCart() {
     var items = window.AMK_WUNSCH.load();
-    var main = null;
-    items.forEach(function (item) {
-      if (item.id === "kauf:beispiel:staender" || item.id === "kauf:beispiel:felder") main = item;
-    });
-    if (main) {
-      var radio = root.querySelector('input[name="art"][value="' + String(main.id).split(":").pop() + '"]');
+    var byId = {};
+    items.forEach(function (item) { byId[item.id] = item; });
+    var fields = byId["kauf:beispiel:felder"];
+    var autoStand = byId["kauf:beispiel:transportstaender"];
+    var legacy = byId["kauf:beispiel:staender"];
+    var komplett = !!(autoStand && (autoStand.herkunft === "auto" || autoStand.note === "inklusive")) || !!legacy;
+    if (komplett) {
+      var radio = root.querySelector('input[name="art"][value="staender"]');
       if (radio) radio.checked = true;
-      var field = document.getElementById("menge-beispiel");
-      if (field) field.value = String(main.qty);
+      var nField = document.getElementById("menge-staender");
+      var n = autoStand ? autoStand.qty : (legacy ? legacy.qty : 1);
+      if (nField) nField.value = String(n);
+      showArt();
+    } else if (fields) {
+      var radioFelder = root.querySelector('input[name="art"][value="felder"]');
+      if (radioFelder) radioFelder.checked = true;
+      var fField = document.getElementById("menge-felder");
+      if (fField) fField.value = String(fields.qty);
       showArt();
     }
     var known = {};
@@ -366,6 +452,7 @@
       if (slug.indexOf("kauf:") !== 0) return;
       slug = slug.slice(5);
       if (!known[slug]) return;
+      if (item.herkunft === "auto" && artNow().id !== "staender") return;
       var box = root.querySelector('input[name="zubehoer"][value="' + slug + '"]');
       if (!box) return;
       box.checked = true;
@@ -375,8 +462,10 @@
       setMenge(slug, item.qty);
       managed[item.id] = 1;
       var row = standardVon(slug);
-      if (row && artNow().id === "staender" && item.qty === row.je * standZahl()) modus[slug] = "auto";
-      else if (row) modus[slug] = "hand";
+      if (!row) return;
+      if (artNow().id === "staender" && item.herkunft === "auto") modus[slug] = "auto";
+      else if (artNow().id === "staender" && item.herkunft !== "manuell" && item.qty === autoMenge(row.je)) modus[slug] = "auto";
+      else modus[slug] = "hand";
     });
     if (artNow().id === "staender") {
       (artNow().posten || []).forEach(function (row) {
@@ -412,26 +501,26 @@
   function noteHand(slug, value) {
     var row = standardVon(slug);
     if (!row || modus[slug] !== "auto") return;
-    if (value !== row.je * standZahl()) modus[slug] = "hand";
+    if (value !== autoMenge(row.je)) modus[slug] = "hand";
   }
 
   root.addEventListener("input", function (event) {
     var target = event.target;
     if (!target || target.type !== "number") return;
     var value = clamp(target);
-    var key = target.hasAttribute("data-spiegel") ? target.getAttribute("data-spiegel") : (target.id === "menge-beispiel" ? "haupt" : target.id.replace(/^menge-/, ""));
+    var key = target.hasAttribute("data-spiegel") ? target.getAttribute("data-spiegel") : target.id.replace(/^menge-/, "");
     if (target.hasAttribute("data-spiegel")) {
       var canon = canonical(key);
-      if (canon && canon.value !== String(value)) canon.value = String(value);
+      if (canon && canon !== target && canon.value !== String(value)) canon.value = String(value);
     } else {
       root.querySelectorAll('[data-spiegel="' + key + '"]').forEach(function (mirror) {
         if (mirror.value !== String(value)) mirror.value = String(value);
       });
     }
-    if (key === "haupt") {
+    if (key === "staender" && artNow().id === "staender") {
       syncStandards(false);
-      paintArt();
-    } else noteHand(key, value);
+      paintList();
+    } else if (key !== "felder" && key !== "staender") noteHand(key, value);
     syncCart();
   });
 

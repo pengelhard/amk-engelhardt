@@ -2481,22 +2481,35 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   margin-top: 1rem;
+  align-items: stretch;
 }
-.beispiel-art {
+.beispiel-art-karte {
   display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  min-height: 4.25rem;
-  margin: 0;
-  padding: 0.55rem 0.7rem;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-width: 0;
+  padding: 0.7rem;
   border: 2px solid var(--ink);
   border-radius: 1rem;
   background: #fff;
   box-shadow: 4px 4px 0 var(--ink);
+}
+.beispiel-art-karte:has(input[name="art"]:checked) { border-color: var(--signal); }
+.beispiel-art-karte .beispiel-step { margin-top: auto; }
+.beispiel-art {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
   cursor: pointer;
 }
+.beispiel-art-text { display: flex; flex-direction: column; min-width: 0; }
 .beispiel-art strong { font-size: 0.98rem; line-height: 1.2; }
-.beispiel-art:has(input:checked) { border-color: var(--signal); }
+.beispiel-art-einheit { color: var(--gray); font-size: 0.85rem; font-weight: 600; line-height: 1.3; }
 .beispiel-wahl {
   position: relative;
   flex: 0 0 44px;
@@ -2575,6 +2588,27 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   background: #fff;
 }
 .beispiel-post--haupt { grid-template-columns: minmax(0, 1fr); }
+.beispiel-post--fest { grid-template-columns: minmax(0, 1fr) auto; }
+.beispiel-post-fest {
+  margin: 0;
+  min-width: 3.25rem;
+  min-height: 44px;
+  padding: 0 0.85rem;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 1rem;
+  font-weight: 700;
+}
+.beispiel-platzhalter {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: 44px;
+  margin: 0;
+  color: var(--gray);
+  font-weight: 700;
+}
 .beispiel-post-text { margin: 0; min-width: 0; }
 .beispiel-post-text strong { display: block; line-height: 1.25; }
 .beispiel-post-art { display: block; color: var(--gray); font-size: 0.92rem; line-height: 1.3; }

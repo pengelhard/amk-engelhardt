@@ -116,6 +116,7 @@
     }
     if (id.indexOf("kauf:") === 0 && item.kat === "anhaenger") return "../kaufen/?gruppe=anhaenger";
     if (id.indexOf("kauf:") === 0 && item.kat === "verkehrssicherung") return "../kaufen/?gruppe=absperrung";
+    if (slug === "transportstaender-10059") return "../produkt/beispiel/";
     if (id.indexOf("kauf:") === 0 || id.indexOf("miete:") === 0) return "../produkt/" + slug + "/";
     if (id.indexOf("aktuell:") === 0) return "../aktuelles/";
     return "../anfrage/";
