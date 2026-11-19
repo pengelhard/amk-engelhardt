@@ -1,19 +1,42 @@
 {
-  "hinweis": "Zubehör und Ständer. Leere Zuordnung heißt: nichts anzeigen. AMK trägt Katalog-Slugs ein. zubehoerNachProdukt überschreibt zubehoerNachShop für einen Artikel.",
+  "hinweis": "Zubehör und Ständer. Leere Zuordnung heißt: nichts anzeigen. AMK trägt Katalog-Slugs ein. zubehoerNachProdukt überschreibt zubehoerNachShop für einen Artikel. Anhänger haben kein Zubehör und stehen in keiner Liste. Späteres Anhänger-Zubehör kommt unter zubehoerNachShop.anhaenger dazu.",
   "zubehoerNachShop": {
     "bauzaune": [
-      "transportstaender-10059",
-      "fuss-10005",
-      "fuss-10004",
       "fuss-10006",
       "zubehoer-10002-1",
+      "fuss-10005",
+      "fuss-10004",
       "zubehoer-10002",
       "zubehoer-10003",
+      "plane-10012",
+      "tor-10028",
+      "tor-10028-0",
+      "tor-10028-2",
+      "tor-10028-3",
+      "transportstaender-10059",
+      "zubehoer-10008",
+      "schwelle-10005-2"
+    ],
+    "anhaenger": []
+  },
+  "zubehoerNachProdukt": {
+    "sichtschutz-10037-2": [
+      "fuss-10006",
+      "zubehoer-10002-1",
+      "fuss-10005",
+      "fuss-10004",
+      "zubehoer-10002",
+      "zubehoer-10003",
+      "plane-10012",
+      "tor-10028",
+      "tor-10028-0",
+      "tor-10028-2",
+      "tor-10028-3",
+      "transportstaender-10059",
       "zubehoer-10008",
       "schwelle-10005-2"
     ]
   },
-  "zubehoerNachProdukt": {},
   "staender": {
     "platzhalter": true,
     "hinweis": "Platzhalter aus der Beispielseite. AMK muss die Stückzahlen bestätigen.",
