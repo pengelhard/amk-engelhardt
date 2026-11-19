@@ -1,0 +1,272 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { createRequire } from "node:module";
+import { spawn } from "node:child_process";
+import { existsSync } from "node:fs";
+import http from "node:http";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const chrome = ["/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser"].find((file) => existsSync(file));
+const playwrightPkg = ["/tmp/pw/node_modules/playwright-core/package.json", path.join(root, "node_modules/playwright-core/package.json")].find((file) => existsSync(file));
+const skip = !chrome || !playwrightPkg ? "Chrome oder Playwright fehlt, Lauf übersprungen" : false;
+
+function box(el) {
+  const r = el.getBoundingClientRect();
+  return { w: Math.round(r.width), h: Math.round(r.height) };
+}
+
+test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
+  const { chromium } = createRequire(playwrightPkg)("playwright-core");
+  const port = 8899;
+  const server = spawn("python3", ["-m", "http.server", String(port), "--bind", "127.0.0.1"], { cwd: root, stdio: "ignore" });
+  const base = `http://127.0.0.1:${port}`;
+  const browser = await chromium.launch({ executablePath: chrome, headless: true, args: ["--no-sandbox"] });
+  const points = [];
+  function point(name, ok, detail) {
+    points.push({ name, ok, detail: detail || "" });
+  }
+  try {
+    await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error("Server startet nicht")), 8000);
+      const ask = () => {
+        const req = http.get(base + "/kaufen/", (res) => {
+          res.resume();
+          if (res.statusCode === 200) {
+            clearTimeout(timer);
+            resolve();
+          } else setTimeout(ask, 150);
+        });
+        req.on("error", () => setTimeout(ask, 150));
+      };
+      ask();
+    });
+
+    async function open(width, url) {
+      const page = await browser.newPage({ viewport: { width, height: width === 390 ? 844 : 1100 } });
+      const errors = [];
+      page.on("pageerror", (error) => errors.push(String(error)));
+      page.on("console", (msg) => { if (msg.type() === "error") errors.push(msg.text()); });
+      if (width === 390) {
+        const client = await page.context().newCDPSession(page);
+        await client.send("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
+        await client.send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 5 });
+        await client.send("Emulation.setEmulatedMedia", { media: "", features: [{ name: "hover", value: "none" }, { name: "pointer", value: "coarse" }] });
+      }
+      await page.goto(base + url, { waitUntil: "networkidle" });
+      return { page, errors };
+    }
+
+    async function measureCards(page, kind) {
+      return page.evaluate((kind) => {
+        function size(el) {
+          const r = el.getBoundingClientRect();
+          return { w: Math.round(r.width), h: Math.round(r.height) };
+        }
+        const root = kind === "zaun" ? document.getElementById("kauf-liste") : (kind === "schild" ? document.getElementById("schilder-bereich") : document.getElementById("kauf-auswahl"));
+        const sel = kind === "zaun" ? "article.tile:not(.kauf-produkt)" : "article.kauf-produkt";
+        const cards = [...root.querySelectorAll(sel)].filter((el) => !el.hidden && !el.closest("[hidden]") && el.getBoundingClientRect().height);
+        const grid = kind === "zaun" ? root : root.querySelector(".tiles");
+        const img = cards[0].querySelector("img");
+        return {
+          n: cards.length,
+          spalten: getComputedStyle(grid).gridTemplateColumns.split(" ").length,
+          kachel: size(cards[0]),
+          bild: size(img),
+          fit: getComputedStyle(img).objectFit,
+          name: cards[0].querySelector("h3").textContent
+        };
+      }, kind);
+    }
+
+    for (const width of [1280, 1920, 390]) {
+      const { page, errors } = await open(width, "/kaufen/?gruppe=zaun&kat=bauzaune");
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      const robots = await page.locator('meta[name="robots"]').getAttribute("content");
+      const tops = await page.locator("#kauf-gruppen .kauf-karte").count();
+      point(`Oberkacheln ${width}`, tops === 3, String(tops));
+      point(`noindex ${width}`, /noindex/i.test(robots || ""), robots || "");
+      point(`kein Quer-Scroll ${width}`, overflow <= 1, String(overflow));
+      point(`Konsole ${width} Übersicht`, errors.length === 0, errors.join(" | "));
+
+      const zaun = await measureCards(page, "zaun");
+      await page.goto(base + "/kaufen/?gruppe=anhaenger&teil=hochlader", { waitUntil: "networkidle" });
+      const anh = await measureCards(page, "anh");
+      await page.goto(base + "/kaufen/?gruppe=verkehr&teil=vorschrift", { waitUntil: "networkidle" });
+      const schild = await measureCards(page, "schild");
+      const nah = (a, b) => Math.abs(a - b) <= 2;
+      const same = nah(zaun.kachel.w, anh.kachel.w) && nah(zaun.kachel.h, anh.kachel.h) && nah(zaun.kachel.w, schild.kachel.w) && nah(zaun.kachel.h, schild.kachel.h) && nah(zaun.bild.w, anh.bild.w) && nah(zaun.bild.h, schild.bild.h) && zaun.spalten === anh.spalten && zaun.spalten === schild.spalten;
+      point(`Produktkacheln gleich ${width}`, same && zaun.n > 3 && schild.n > 3, JSON.stringify({ zaun, anh, schild }));
+      await page.close();
+    }
+
+    const desktop = await open(1280, "/kaufen/?gruppe=zaun&kat=bauzaune");
+    const html = await desktop.page.content();
+    point("Cache-Busting", /styles\.css\?v=/.test(html) && /kauf\.js\?v=/.test(html), "");
+    const namesBefore = await desktop.page.locator("#kauf-liste article.tile:not(.kauf-produkt) h3").allTextContents();
+    await desktop.page.locator("#kauf-sort").selectOption("name");
+    await desktop.page.waitForTimeout(50);
+    const namesAfter = await desktop.page.locator("#kauf-liste article.tile:not(.kauf-produkt):not([hidden]) h3").allTextContents();
+    const sorted = await desktop.page.evaluate((names) => names.join("\n") === names.slice().sort((a, b) => a.localeCompare(b, "de")).join("\n"), namesAfter);
+    point("Sortierung", sorted && namesAfter.join("\n") !== namesBefore.join("\n"), namesAfter.slice(0, 3).join(", "));
+    await desktop.page.locator("#kauf-q").fill("engmaschig");
+    await desktop.page.waitForTimeout(300);
+    const found = await desktop.page.locator("#kauf-liste article.tile:not(.kauf-produkt):not([hidden]) h3").allTextContents();
+    point("Suche", found.length > 0 && found.every((name) => /engmaschig/i.test(name)), found.join(", "));
+    const url = new URL(desktop.page.url());
+    point("URL-Parameter", url.searchParams.get("gruppe") === "zaun" && url.searchParams.get("kat") === "bauzaune", url.search);
+
+    const card = desktop.page.locator('#kauf-gruppen a[data-gruppe="verkehr"]');
+    const cardBox = await card.boundingBox();
+    await desktop.page.mouse.move(cardBox.x + cardBox.width / 2, cardBox.y + 30);
+    await desktop.page.waitForTimeout(80);
+    const panel = await desktop.page.evaluate(() => {
+      const nav = document.getElementById("kauf-ebene-verkehr");
+      const cs = getComputedStyle(nav);
+      const nr = nav.getBoundingClientRect();
+      const top = document.querySelector('#kauf-gruppen a[data-gruppe="verkehr"]').getBoundingClientRect();
+      const hit = document.elementFromPoint(nr.left + 8, nr.top + 8);
+      return {
+        open: !nav.hidden,
+        bg: cs.backgroundColor,
+        gap: Math.round(nr.top - top.bottom),
+        hit: !!(hit && hit.closest(".kauf-ebene")),
+        n: nav.querySelectorAll(".kauf-karte").length
+      };
+    });
+    point("Hover-Panel", panel.open && panel.bg === "rgb(255, 255, 255)" && panel.gap >= 0 && panel.hit && panel.n === 6, JSON.stringify(panel));
+    await desktop.page.locator("#kauf-ebene-verkehr a[data-teil='gefahr']").click();
+    await desktop.page.waitForTimeout(40);
+    const closed = await desktop.page.locator("#kauf-ebene-verkehr").evaluate((el) => el.hidden);
+    const teil = new URL(desktop.page.url()).searchParams.get("teil");
+    point("Klick schließt Panel", closed && teil === "gefahr", teil || "");
+    const expanded = await desktop.page.locator('#kauf-gruppen a[data-gruppe="zaun"]').getAttribute("aria-expanded");
+    point("Barrierefreiheit", expanded === "false" || expanded === "true", expanded || "");
+    await desktop.page.close();
+
+    const wide = await open(1920, "/kaufen/?gruppe=anhaenger&teil=hochlader");
+    const wideCard = wide.page.locator('#kauf-gruppen a[data-gruppe="anhaenger"]');
+    const wideBox = await wideCard.boundingBox();
+    await wide.page.mouse.move(wideBox.x + 40, wideBox.y + 30);
+    await wide.page.waitForTimeout(80);
+    const wideOpen = await wide.page.locator("#kauf-ebene-anhaenger").evaluate((el) => !el.hidden);
+    point("Hover-Panel 1920", wideOpen, "");
+    await wide.page.keyboard.press("Escape");
+    await wide.page.waitForTimeout(40);
+    const wideClosed = await wide.page.locator("#kauf-ebene-anhaenger").evaluate((el) => el.hidden);
+    point("Escape schließt Panel", wideClosed, "");
+    await wide.page.close();
+
+    const phone = await open(390, "/kaufen/?gruppe=zaun");
+    await phone.page.evaluate(() => document.activeElement && document.activeElement.blur());
+    await phone.page.locator('#kauf-gruppen a[data-gruppe="anhaenger"]').click();
+    await phone.page.waitForTimeout(80);
+    const tapped = await phone.page.locator("#kauf-ebene-anhaenger").evaluate((el) => !el.hidden);
+    point("Tap-Panel", tapped, "");
+    await phone.page.close();
+
+    const pick = await open(1280, "/kaufen/?gruppe=anhaenger&teil=hochlader");
+    await pick.page.locator("[data-teil-karte]:not([hidden]) article.kauf-produkt .beispiel-wahl").first().click();
+    const kreis = await pick.page.evaluate(() => {
+      const card = document.querySelector("[data-teil-karte]:not([hidden]) article.kauf-produkt");
+      const field = card.querySelector("[data-menge]");
+      return {
+        checked: card.querySelector('input[type="checkbox"]').checked,
+        menge: !card.querySelector(".pick-menge").hidden,
+        max: field.getAttribute("max"),
+        kreis: getComputedStyle(card.querySelector(".beispiel-kreis")).borderRadius
+      };
+    });
+        point("Auswahlkreis", kreis.checked && kreis.menge && kreis.kreis !== "0px" && kreis.max === "9999", JSON.stringify(kreis));
+    const baustein = await pick.page.evaluate(() => {
+      const card = document.querySelector("[data-teil-karte]:not([hidden]) article.kauf-produkt");
+      const ober = document.querySelector("#kauf-gruppen .kachel--ober");
+      return {
+        produkt: !!(card && card.classList.contains("kachel--produkt")),
+        ober: !!ober,
+        kreis: !!(card && card.querySelector(".kachel-kreis"))
+      };
+    });
+    point("gemeinsame Kachel", baustein.produkt && baustein.ober && baustein.kreis, JSON.stringify(baustein));
+    await pick.page.close();
+
+    const detail = await open(1280, "/produkt/bauzaun-10075/");
+    await detail.page.waitForSelector("#menge-staender");
+    await detail.page.locator("#menge-staender").fill("1");
+    await detail.page.locator("#menge-felder").fill("1");
+    await detail.page.waitForSelector("#block-im");
+    await detail.page.waitForSelector("#block-zusatz");
+    const detailInfo = await detail.page.evaluate(() => {
+      const liste = document.getElementById("beispiel-liste");
+      const scrolls = [...document.querySelectorAll(".beispiel-korb *")].filter((el) => {
+        const value = getComputedStyle(el).overflowY;
+        return value === "auto" || value === "scroll";
+      }).map((el) => el.id || el.className);
+      const fuss = document.getElementById("wahl-fuss");
+      const schelle = document.getElementById("wahl-schelle");
+      return {
+        im: !!document.getElementById("block-im"),
+        extra: !!document.getElementById("block-zusatz"),
+        felder: !!document.getElementById("menge-felder"),
+        staender: !!document.getElementById("menge-staender"),
+        fuss: fuss ? fuss.options.length : 0,
+        schelle: schelle ? schelle.options.length : 0,
+        zubehoer: document.querySelectorAll("#beispiel-zubehoer article").length,
+        galerie: document.querySelectorAll(".galerie, .galerie-thumbs button, figure.scene img").length,
+        scrolls,
+        liste: liste ? getComputedStyle(liste).overflowY : "",
+        max: document.getElementById("menge-staender").getAttribute("max"),
+        robots: document.querySelector('meta[name="robots"]').content
+      };
+    });
+    point("Komplett-Ständer und Einzelfelder", detailInfo.staender && detailInfo.felder, "");
+    point("Fuß- und Schellentausch", detailInfo.fuss > 1 && detailInfo.schelle > 1, `${detailInfo.fuss}/${detailInfo.schelle}`);
+    point("Blöcke enthalten und zusätzlich", detailInfo.im && detailInfo.extra, "");
+    point("Zubehör", detailInfo.zubehoer > 0, String(detailInfo.zubehoer));
+    point("Galerie", detailInfo.galerie > 0, String(detailInfo.galerie));
+    point("ein Scrollbalken", detailInfo.liste === "auto" && detailInfo.scrolls.length === 1, detailInfo.scrolls.join(", "));
+    point("Grenze 9999", detailInfo.max === "9999", detailInfo.max || "");
+    point("noindex Detail", /noindex/i.test(detailInfo.robots), "");
+    await detail.page.locator("#menge-staender").fill("10000");
+    await detail.page.locator("#menge-staender").dispatchEvent("input");
+    const capped = await detail.page.locator("#menge-staender").inputValue();
+    const count = await detail.page.locator("[data-wunsch-count]").first().textContent();
+    point("Automatischer Korb", capped === "9999" && count.trim() !== "0", `${capped} / ${count.trim()}`);
+    await detail.page.goto(base + "/anfrage/", { waitUntil: "networkidle" });
+    const cartText = await detail.page.locator("body").innerText();
+    point("Korb-Gruppe Ständer", /Komplett-Ständer/.test(cartText) && /Kauf/.test(cartText), "");
+    const cartRobots = await detail.page.locator('meta[name="robots"]').getAttribute("content");
+    point("noindex Korb", /noindex/i.test(cartRobots || ""), cartRobots || "");
+    point("Konsole Detail", detail.errors.length === 0, detail.errors.join(" | "));
+    const detailOverflow = await detail.page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    point("kein Quer-Scroll Detail", detailOverflow <= 1, String(detailOverflow));
+    await detail.page.close();
+
+    const beispiel = await open(1280, "/produkt/beispiel/");
+    await beispiel.page.waitForSelector("#beispiel-thumbs button, #beispiel-bild");
+    const thumbs = await beispiel.page.locator("#beispiel-thumbs button, #beispiel-thumbs img").count();
+    point("Galerie Beispielseite", thumbs > 0 || await beispiel.page.locator("#beispiel-bild").count() === 1, String(thumbs));
+    await beispiel.page.close();
+
+    const miete = await open(1280, "/mieten/");
+    const mieteInfo = await miete.page.evaluate(() => ({
+      kachel: document.querySelectorAll(".kauf-produkt").length,
+      zeile: document.querySelectorAll(".pick, .chip").length,
+      spalten: document.querySelector(".konfig-layout") ? getComputedStyle(document.querySelector(".konfig-layout")).gridTemplateColumns : ""
+    }));
+    point("Mieten unverändert", mieteInfo.kachel === 0 && mieteInfo.zeile > 0 && /320px/.test(mieteInfo.spalten), JSON.stringify(mieteInfo));
+    point("Konsole Mieten", miete.errors.length === 0, miete.errors.join(" | "));
+    await miete.page.close();
+
+    const bad = points.filter((entry) => !entry.ok);
+    console.log(points.map((entry) => `${entry.ok ? "ok" : "FEHLER"}  ${entry.name}${entry.detail ? " — " + entry.detail : ""}`).join("\n"));
+    assert.equal(bad.length, 0, bad.map((entry) => `${entry.name}: ${entry.detail}`).join("\n"));
+  } catch (error) {
+    if (points.length) console.log(points.map((entry) => `${entry.ok ? "ok" : "FEHLER"}  ${entry.name}${entry.detail ? " — " + entry.detail : ""}`).join("\n"));
+    throw error;
+  } finally {
+    await browser.close();
+    server.kill();
+  }
+});

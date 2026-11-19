@@ -3,7 +3,8 @@
   "private": true,
   "description": "Statische Testseite. npm run verify prüft Syntax, Links, Navigation, noindex und Secrets, ohne Abhängigkeiten.",
   "scripts": {
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "kauf": "node --test --test-timeout 180000 scripts/kauf-verhalten.test.mjs"
   },
   "engines": {
     "node": ">=20"

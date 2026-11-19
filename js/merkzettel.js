@@ -1,4 +1,5 @@
 (function () {
+  /* Korb-Speicher. Der Schlüssel ist amk-wunsch. */
   var KEY = "amk-wunsch";
 
   var ART_KEYS = { standard: 1, f1: 1, secure: 1, xxl: 1 };

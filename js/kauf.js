@@ -1,4 +1,5 @@
 (function () {
+  /* Navigation und Liste: Oberkacheln, Hover-Panel, Suche, Sortierung, Adresse. */
   var board = document.querySelector(".kauf-board");
   var liste = document.getElementById("kauf-liste");
   var empty = document.getElementById("kauf-empty");

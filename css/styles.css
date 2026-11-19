@@ -94,6 +94,15 @@
   --max: 1180px;
   --font: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --display: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+  --kachel-radius: 1rem;
+  --kachel-rand: 2px solid var(--ink);
+  --kachel-schatten: 4px 4px 0 var(--ink);
+  --kachel-schatten-ruhe: 1px 1px 0 var(--ink);
+  --kachel-luecke: 1rem;
+  --bild-quer: 16 / 10;
+  --bild-produkt: 4 / 3;
+  --kreis-groesse: 1.375rem;
+  --kachel-grund: var(--soft);
 }
 
 *,
@@ -683,9 +692,9 @@ main { position: relative; z-index: 0; padding-top: var(--top, 5.6rem); }
 .frame { display: block; overflow: hidden; background: var(--soft); }
 .tile img, .frame img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: var(--bild-produkt);
   object-fit: contain;
-  background: var(--soft);
+  background: var(--kachel-grund);
   padding: 0.65rem;
 }
 .tile:not(.tile--scene) .frame,
@@ -1450,22 +1459,22 @@ a.contact-card:hover .contact-main { color: var(--green); }
 .more-fold[open] > summary::before,
 .anhaenger-details[open] > summary::before { transform: translateY(0.12rem) rotate(45deg); }
 .kauf-board .tile .sheet { display: none; }
-.kauf-board .tiles { gap: 1rem; align-items: stretch; }
+.kauf-board .tiles { gap: var(--kachel-luecke); align-items: stretch; }
 .kauf-board .tile {
   display: flex;
   flex-direction: column;
   height: 100%;
   margin: 0;
   background: #fff;
-  border: 2px solid var(--ink);
-  border-radius: 1rem;
-  box-shadow: 4px 4px 0 var(--ink);
+  border: var(--kachel-rand);
+  border-radius: var(--kachel-radius);
+  box-shadow: var(--kachel-schatten);
   overflow: hidden;
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 .kauf-board .tile:hover {
   transform: translate(3px, 3px);
-  box-shadow: 1px 1px 0 var(--ink);
+  box-shadow: var(--kachel-schatten-ruhe);
 }
 .kauf-board .tile .order { display: none; }
 .kauf-board .tile > a { color: inherit; text-decoration: none; }
@@ -2159,13 +2168,13 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   display: flex; flex-direction: column; align-items: stretch; text-align: left;
   min-height: 0; padding: 0; overflow: hidden;
   background: var(--white); color: var(--ink);
-  border: 2px solid var(--ink); border-radius: 1rem;
-  box-shadow: 4px 4px 0 var(--ink);
+  border: var(--kachel-rand); border-radius: var(--kachel-radius);
+  box-shadow: var(--kachel-schatten);
   text-decoration: none;
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 .kauf-karte img {
-  width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: center; background: var(--soft);
+  width: 100%; aspect-ratio: var(--bild-quer); object-fit: cover; object-position: center; background: var(--kachel-grund);
 }
 .kauf-karte.kauf-piktogramm img {
   object-fit: contain;
@@ -2179,7 +2188,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   font-family: var(--display); font-weight: 400; font-size: 1.45rem; line-height: 1.05; letter-spacing: -0.03em;
 }
 .kauf-karte[aria-current="true"] strong { background: var(--signal); color: var(--signal-ink); }
-.kauf-karte:hover { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.kauf-karte:hover { transform: translate(3px, 3px); box-shadow: var(--kachel-schatten-ruhe); }
 .kauf-board:not(.is-gruppe) .kauf-sort,
 .kauf-board:not(.is-gruppe) .kauf-reset,
 .kauf-board:not(.is-gruppe) .kauf-count,
@@ -2210,7 +2219,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .js-kauf .kauf-drops { position: relative; z-index: 38; overflow: visible; }
 .js-kauf #kauf-gruppen .kauf-karte:hover {
   transform: none;
-  box-shadow: 4px 4px 0 var(--ink);
+  box-shadow: var(--kachel-schatten);
 }
 .js-kauf .kauf-ebene {
   position: absolute;
@@ -2220,9 +2229,9 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   margin: 0;
   padding: 0.9rem 0.85rem 1.05rem;
   background: var(--white);
-  border: 2px solid var(--ink);
-  border-radius: 1rem;
-  box-shadow: 4px 4px 0 var(--ink);
+  border: var(--kachel-rand);
+  border-radius: var(--kachel-radius);
+  box-shadow: var(--kachel-schatten);
 }
 .js-kauf .kauf-ebene::before {
   content: "";
@@ -2495,9 +2504,9 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .beispiel-buehne img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: var(--bild-produkt);
   object-fit: contain;
-  background: var(--soft);
+  background: var(--kachel-grund);
   padding: 0.65rem;
 }
 .beispiel-thumbs {
@@ -2560,10 +2569,10 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   gap: 0.65rem;
   min-width: 0;
   padding: 0.7rem;
-  border: 2px solid var(--ink);
-  border-radius: 1rem;
+  border: var(--kachel-rand);
+  border-radius: var(--kachel-radius);
   background: #fff;
-  box-shadow: 4px 4px 0 var(--ink);
+  box-shadow: var(--kachel-schatten);
 }
 .beispiel-art-karte .beispiel-step { margin-top: auto; }
 .beispiel-art {
@@ -2596,8 +2605,8 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   cursor: pointer;
 }
 .beispiel-kreis {
-  width: 1.375rem;
-  height: 1.375rem;
+  width: var(--kreis-groesse);
+  height: var(--kreis-groesse);
   border: 2px solid var(--ink);
   border-radius: 50%;
   background: #fff;
@@ -2884,8 +2893,8 @@ input[aria-invalid="true"] { border-color: var(--danger); }
     overflow: clip;
     background: #fff;
     border: 1px solid var(--line);
-    border-radius: 1rem;
-    box-shadow: 4px 4px 0 var(--ink);
+    border-radius: var(--kachel-radius);
+    box-shadow: var(--kachel-schatten);
     padding: 1rem 1rem 0.95rem;
   }
   .beispiel-korb .beispiel-auswahl {

@@ -1,6 +1,6 @@
 (function () {
-  /* Eine Auswahl für Miete und Kauf: Pills und die gemeinsame Typ-Karte.
-     Zeitraum nur bei Miete. Inhalte nur aus data/katalog.json. */
+  /* Katalog laden und Typ-Liste für Miete und Kauf. Die Kauf-Kachel kommt
+     aus js/kauf-bausteine.js. Zeitraum nur bei Miete. Inhalte nur aus data/katalog.json. */
   var TEILE = {
     gitter: [
       { id: "gitter", shop: "gitter" }
@@ -231,7 +231,7 @@
       });
     });
     var aside = bare === "1" ? "" :
-      '<aside class="konfig-summary is-leer" aria-live="polite"><h2>Ihre Auswahl</h2>' +
+      '<aside class="konfig-summary kachel-box is-leer" aria-live="polite"><h2>Ihre Auswahl</h2>' +
       '<p class="sum-short" data-sum="short"></p><dl class="sum-full">' +
       '<div class="sum-lines" data-sum="liste"></div>' +
       "</dl><p class=\"price-once\">Preis auf Anfrage</p>" +

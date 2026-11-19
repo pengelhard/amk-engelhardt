@@ -1,6 +1,6 @@
 (function () {
-  /* Eine Karte für alle Gruppen: Checkbox, Mengenfeld erst nach dem Anhaken.
-     Bauzaun nutzt Meter oder Felder, alle anderen die Stückzahl. */
+  /* Typ-Karte für Miete und Kauf. Die Kauf-Kachel, der Kreis und die Stückzahl
+     kommen aus js/kauf-bausteine.js. Die Miete bleibt die Zeile mit .pick. */
   function esc(value) {
     return String(value == null ? "" : value)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -16,6 +16,7 @@
   }
 
   function stueck(inputId, qty) {
+    if (window.AMK_BAUSTEINE) return window.AMK_BAUSTEINE.mengeFeld(inputId, qty);
     return '<div class="field"><label for="' + esc(inputId) + '">Anzahl</label>' +
       '<input id="' + esc(inputId) + '" data-menge type="number" min="1" max="9999" value="' + esc(qty) + '" inputmode="numeric"></div>';
   }
@@ -50,18 +51,7 @@
     }
     var box = '<input type="checkbox" name="' + esc(opts.name) + '" value="' + esc(opts.value) + '"' +
       (on ? " checked" : "") + controls + ">";
-    if (opts.kachel) {
-      var zeile = opts.note ? esc(opts.note) : "\u00a0";
-      var link = opts.href
-        ? '<a href="' + esc(opts.href) + '"><span class="frame">' + (opts.media || "") + "</span><h3>" + esc(opts.title) + "</h3></a>"
-        : '<span class="frame">' + (opts.media || "") + "</span><h3>" + esc(opts.title) + "</h3>";
-      return '<article class="tile kauf-produkt"' + dataAttrs(opts.data) + ">" +
-        link +
-        "<p>" + zeile + "</p>" +
-        '<label class="beispiel-wahl">' + box +
-        '<span class="beispiel-kreis"></span><span class="visually-hidden">' + esc(opts.title) + " auswählen</span></label>" +
-        panel + "</article>";
-    }
+    if (opts.kachel) return window.AMK_BAUSTEINE.produkt(opts, box, panel);
     if (opts.href) {
       var href = esc(opts.href);
       var mass = opts.note ? '<p class="pick-mass">' + esc(opts.note) + "</p>" : "";

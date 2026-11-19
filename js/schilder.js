@@ -1,5 +1,6 @@
 (function () {
-  /* Amtliche StVO-Zeichen. Dateien und Lizenz: images/schilder/CREDITS.md */
+  /* Schilderliste. Die Kauf-Kachel kommt über die gemeinsame Typ-Karte.
+     Dateien und Lizenz: images/schilder/CREDITS.md */
   var ZEICHEN = [
     { id: "z123", nr: "Z 123", name: "Arbeitsstelle", art: "gefahr", bild: "images/schilder/z123.svg" },
     { id: "z120", nr: "Z 120", name: "Verengte Fahrbahn", art: "gefahr", bild: "images/schilder/z120.svg" },

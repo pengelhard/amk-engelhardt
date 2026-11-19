@@ -1,4 +1,5 @@
 (function () {
+  /* Beispielseite. Kachel, Kreis und Menge aus js/kauf-bausteine.js, wie die Produktseiten. */
   var root = document.querySelector(".beispiel-form");
   if (!root || !window.AMK_WUNSCH) return;
 
@@ -110,12 +111,7 @@
   }
 
   function stepper(key, id, value, label, min) {
-    return '<div class="beispiel-step">' +
-      '<button type="button" data-step="-1" aria-label="Weniger">−</button>' +
-      '<label class="visually-hidden" for="' + esc(id) + '">' + esc(label) + "</label>" +
-      '<input id="' + esc(id) + '" data-spiegel="' + esc(key) + '" type="number" size="4" min="' + (min == null ? 1 : min) + '" max="9999" value="' + esc(value) + '" inputmode="numeric">' +
-      '<button type="button" data-step="1" aria-label="Mehr">+</button>' +
-      "</div>";
+    return window.AMK_BAUSTEINE.mengeSchritt({ key: key, id: id, value: value, label: label, min: min });
   }
 
   function setChecked(slug, on) {
@@ -308,10 +304,7 @@
 
   function karte(id, label, aria) {
     return '<div class="beispiel-art-karte"><p class="beispiel-art-text"><strong>' + esc(label) + "</strong></p>" +
-      '<div class="beispiel-step"><button type="button" data-step="-1" aria-label="Weniger">−</button>' +
-      '<label class="visually-hidden" for="' + esc(id) + '">' + esc(aria) + "</label>" +
-      '<input id="' + esc(id) + '" name="' + esc(id) + '" type="number" size="4" min="0" max="9999" value="0" inputmode="numeric">' +
-      '<button type="button" data-step="1" aria-label="Mehr">+</button></div></div>';
+      window.AMK_BAUSTEINE.mengeSchritt({ id: id, name: id, value: "0", label: aria, min: 0 }) + "</div>";
   }
 
   function fillZubehoer() {
@@ -320,23 +313,18 @@
     host.innerHTML = (config.zubehoer || []).map(function (slug) {
       var item = bySlug[slug];
       if (!item) return "";
-      return '<article class="tile beispiel-pick">' +
-        '<label class="beispiel-hit">' +
-        '<span class="frame"><img src="' + esc(base + item.bild) + '" alt="" width="' + esc(item.width || 1200) + '" height="' + esc(item.height || 675) + '" decoding="async">' +
-        '<span class="beispiel-wahl"><input type="checkbox" name="zubehoer" value="' + esc(slug) + '" aria-label="' + esc(item.name) + '"><span class="beispiel-kreis"></span></span></span>' +
-        '<span class="beispiel-name"><h3>' + esc(item.name) + '</h3><span class="beispiel-mass">' + esc(item.kicker || "") + "</span></span>" +
-        "</label>" +
-        '<div class="beispiel-fuss">' +
-        '<div class="beispiel-step" hidden>' +
-        '<button type="button" data-step="-1" aria-label="Weniger">−</button>' +
-        '<label class="visually-hidden" for="menge-' + esc(slug) + '">Menge ' + esc(item.name) + "</label>" +
-        '<input id="menge-' + esc(slug) + '" name="menge-' + esc(slug) + '" type="number" size="4" min="1" max="9999" value="1" inputmode="numeric">' +
-        '<button type="button" data-step="1" aria-label="Mehr">+</button>' +
-        "</div>" +
-        (item.platzhalter
+      return window.AMK_BAUSTEINE.zubehoerKachel({
+        src: base + item.bild,
+        width: item.width,
+        height: item.height,
+        slug: slug,
+        name: item.name,
+        kicker: item.kicker,
+        mengeName: true,
+        fuss: item.platzhalter
           ? '<span class="beispiel-platzhalter">Platzhalter</span>'
-          : '<a class="beispiel-details" href="' + esc(base + "produkt/" + slug + "/") + '">Details</a>') +
-        "</div></article>";
+          : '<a class="beispiel-details" href="' + esc(base + "produkt/" + slug + "/") + '">Details</a>'
+      });
     }).join("");
   }
 

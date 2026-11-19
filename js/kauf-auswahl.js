@@ -1,6 +1,7 @@
 (function () {
-  /* Gemeinsame Kauf-Detailansicht. Dieselbe Anordnung wie die Beispielseite,
-     gespeist aus data/katalog.json und data/kauf-auswahl.json. */
+  /* Detail und Auswahl: Komplett-Ständer, Fuß, Schelle, Zubehör, Korb.
+     Kachel, Kreis und Mengensteuerung kommen aus js/kauf-bausteine.js.
+     Gespeist aus data/katalog.json und data/kauf-auswahl.json. */
   var IM = "im Komplett-Ständer";
   var ZU = "zusätzlich";
 
@@ -91,7 +92,7 @@
     kauf.appendChild(body);
 
     var korb = document.createElement("div");
-    korb.className = "beispiel-korb";
+    korb.className = "beispiel-korb kachel-box";
     korb.innerHTML =
       '<div class="beispiel-auswahl" id="beispiel-auswahl">' +
       '<h2 id="beispiel-auswahl-titel" tabindex="-1">Deine Auswahl</h2>' +
@@ -157,11 +158,7 @@
     }
 
     function stepper(key, id, value, label, min) {
-      return '<div class="beispiel-step">' +
-        '<button type="button" data-step="-1" aria-label="Weniger">−</button>' +
-        '<label class="visually-hidden" for="' + esc(id) + '">' + esc(label) + "</label>" +
-        '<input id="' + esc(id) + '" data-spiegel="' + esc(key) + '" type="number" size="4" min="' + min + '" max="9999" value="' + esc(value) + '" inputmode="numeric">' +
-        '<button type="button" data-step="1" aria-label="Mehr">+</button></div>';
+      return window.AMK_BAUSTEINE.mengeSchritt({ key: key, id: id, value: value, label: label, min: min });
     }
 
     function karte(id, label, aria) {
@@ -405,17 +402,17 @@
         if (itemSlug === slug) return "";
         var item = bySlug[itemSlug];
         if (!item) return "";
-        return '<article class="tile beispiel-pick"><label class="beispiel-hit">' +
-          '<span class="frame"><img src="' + esc(root + (item.bild || "")) + '" alt="" width="' + esc(item.width || 1200) + '" height="' + esc(item.height || 675) + '" decoding="async">' +
-          '<span class="beispiel-wahl"><input type="checkbox" name="zubehoer" value="' + esc(itemSlug) + '" aria-label="' + esc(item.name) + '"><span class="beispiel-kreis"></span></span></span>' +
-          '<span class="beispiel-name"><h3>' + esc(item.name) + '</h3><span class="beispiel-mass">' + esc(item.kicker || "") + "</span></span></label>" +
-          '<div class="beispiel-fuss"><div class="beispiel-step" hidden>' +
-          '<button type="button" data-step="-1" aria-label="Weniger">−</button>' +
-          '<label class="visually-hidden" for="menge-' + esc(itemSlug) + '">Menge ' + esc(item.name) + "</label>" +
-          '<input id="menge-' + esc(itemSlug) + '" type="number" size="4" min="1" max="9999" value="1" inputmode="numeric">' +
-          '<button type="button" data-step="1" aria-label="Mehr">+</button></div>' +
-          (item.platzhalter ? '<span class="beispiel-platzhalter">Platzhalter</span>' : '<a class="beispiel-details" href="' + esc(root + "produkt/" + itemSlug + "/") + '">Details</a>') +
-          "</div></article>";
+        return window.AMK_BAUSTEINE.zubehoerKachel({
+          src: root + (item.bild || ""),
+          width: item.width,
+          height: item.height,
+          slug: itemSlug,
+          name: item.name,
+          kicker: item.kicker,
+          fuss: item.platzhalter
+            ? '<span class="beispiel-platzhalter">Platzhalter</span>'
+            : '<a class="beispiel-details" href="' + esc(root + "produkt/" + itemSlug + "/") + '">Details</a>'
+        });
       }).join("");
       hostTiles.innerHTML = html;
       zubehoerHost.hidden = !html;
@@ -536,10 +533,18 @@
       if (event.key === "Escape") setListe(false);
     });
 
-    fetch(root + "data/kauf-auswahl.json")
-      .then(function (response) { return response.json(); })
-      .then(applyConfig)
-      .catch(function () { applyConfig(null); });
+    var kit = new Promise(function (resolve) {
+      if (window.AMK_BAUSTEINE) { resolve(); return; }
+      var script = document.createElement("script");
+      script.src = root + "js/kauf-bausteine.js";
+      script.onload = function () { resolve(); };
+      script.onerror = function () { resolve(); };
+      document.head.appendChild(script);
+    });
+    Promise.all([
+      fetch(root + "data/kauf-auswahl.json").then(function (response) { return response.json(); }).catch(function () { return null; }),
+      kit
+    ]).then(function (result) { applyConfig(result[0]); });
   }
 
   window.AMK_KAUF_AUSWAHL = { mount: mount };
