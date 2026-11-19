@@ -1339,6 +1339,13 @@ a.contact-card:hover .contact-main { color: var(--green); }
 .cart-main p { margin: 0.15rem 0 0; }
 .qty { color: var(--heading); font-weight: 600; }
 .qty input { width: 4.5rem; margin-left: 0.45rem; min-height: 2.8rem; }
+.cart-stand { align-items: start; }
+.cart-stand img { grid-row: auto; }
+.cart-stand .beispiel-step,
+.cart-stand .cart-actions { grid-column: 1 / -1; }
+.cart-stand .beispiel-step { max-width: 18rem; margin-top: 0.35rem; }
+.cart-stand-teile { list-style: none; margin: 0.45rem 0 0; padding: 0; }
+.cart-stand-teile li { margin: 0.12rem 0; }
 .text-btn {
   justify-self: start;
   background: none;

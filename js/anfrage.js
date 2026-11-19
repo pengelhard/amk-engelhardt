@@ -160,6 +160,104 @@
       extras + note;
   }
 
+  function isIm(item) {
+    var id = String(item && item.id || "");
+    return id.indexOf("kauf:beispiel:im:") === 0 || !!(item && item.note === "im Komplett-Ständer");
+  }
+
+  function partOrder(id) {
+    id = String(id);
+    if (id.indexOf(":im:zaun") !== -1) return 0;
+    if (id.indexOf(":im:staender") !== -1) return 1;
+    if (id.indexOf(":im:fuss:") !== -1) return 2;
+    if (id.indexOf(":im:schelle:") !== -1) return 3;
+    return 9;
+  }
+
+  function standMembers(items) {
+    return items.filter(isIm).sort(function (a, b) { return partOrder(a.id) - partOrder(b.id); });
+  }
+
+  function standCount(members) {
+    var n = 0;
+    members.forEach(function (item) {
+      if (String(item.id).indexOf(":im:staender") !== -1) n = item.qty;
+    });
+    return n || (members.length ? 1 : 0);
+  }
+
+  function standProduct(members) {
+    var product = members[0];
+    members.forEach(function (item) {
+      if (String(item.id).indexOf(":im:zaun") !== -1) product = item;
+    });
+    return product;
+  }
+
+  function clampStand(value) {
+    var qty = parseInt(value, 10);
+    if (!qty || qty < 1) qty = 1;
+    if (qty > 9999) qty = 9999;
+    return qty;
+  }
+
+  function writeStand(n) {
+    n = clampStand(n);
+    var items = window.AMK_WUNSCH.load();
+    var members = standMembers(items);
+    var old = standCount(members) || 1;
+    items.forEach(function (item) {
+      if (!isIm(item)) return;
+      var je = Math.max(1, Math.round(item.qty / old));
+      var qty = je * n;
+      if (qty > 9999) qty = 9999;
+      item.qty = qty;
+    });
+    window.AMK_WUNSCH.save(items, true);
+    var title = list.querySelector("[data-stand-title]");
+    var name = title ? title.getAttribute("data-stand-name") || "" : "";
+    if (title) title.textContent = n + " × Komplett-Ständer – " + name;
+    list.querySelectorAll("[data-je]").forEach(function (node) {
+      var je = parseInt(node.getAttribute("data-je"), 10) || 1;
+      var teil = node.getAttribute("data-teil") || "";
+      var qty = je * n;
+      if (qty > 9999) qty = 9999;
+      node.textContent = qty + "× " + teil;
+    });
+  }
+
+  function standMail(items) {
+    var members = standMembers(items);
+    if (!members.length) return "";
+    var n = standCount(members);
+    var product = standProduct(members);
+    var lines = ["Kauf — " + n + " × Komplett-Ständer – " + product.name];
+    members.forEach(function (item) { lines.push(item.qty + "× " + item.name); });
+    return lines.join("\n");
+  }
+
+  function standRow(members) {
+    var n = standCount(members);
+    var product = standProduct(members);
+    var info = CATALOG[product.id] || {};
+    var bild = info.bild || product.bild;
+    var image = bild ? '<img src="../' + esc(bild) + '" alt="" width="320" height="220">' : "";
+    var parts = members.map(function (item) {
+      var je = Math.max(1, Math.round(item.qty / n));
+      return '<li data-je="' + je + '" data-teil="' + esc(item.name) + '">' + (je * n) + "× " + esc(item.name) + "</li>";
+    }).join("");
+    return '<li class="cart-row cart-stand">' + image +
+      '<div class="cart-main"><strong data-stand-title data-stand-name="' + esc(product.name) + '">' +
+      esc(n + " × Komplett-Ständer – " + product.name) + "</strong>" +
+      '<ul class="cart-stand-teile">' + parts + "</ul></div>" +
+      '<div class="beispiel-step"><button type="button" data-stand-step="-1" aria-label="Weniger Ständer">−</button>' +
+      '<label class="visually-hidden" for="menge-staender-korb">Ständeranzahl</label>' +
+      '<input id="menge-staender-korb" data-stand="1" type="number" size="4" min="1" max="9999" value="' + n + '" inputmode="numeric">' +
+      '<button type="button" data-stand-step="1" aria-label="Mehr Ständer">+</button></div>' +
+      '<div class="cart-actions"><a class="text-btn" href="../produkt/beispiel/">Ändern<span class="visually-hidden">: Komplett-Ständer</span></a>' +
+      '<button type="button" class="beispiel-weg" data-stand-weg="1" aria-label="Komplett-Ständer entfernen">×</button></div></li>';
+  }
+
   function render(items) {
     var data = items || window.AMK_WUNSCH.load();
     empty.hidden = data.length > 0;
@@ -219,8 +317,14 @@
       })]
     ];
     list.innerHTML = groups.filter(function (group) { return group[1].length; }).map(function (group) {
-      return '<li class="cart-group"><h3>' + group[0] + "</h3></li>" +
-        group[1].map(function (entry) { return row(entry.item, entry.index); }).join("");
+      var body = group[1].map(function (entry) { return row(entry.item, entry.index); }).join("");
+      if (group[0] === "Kauf") {
+        var im = group[1].filter(function (entry) { return isIm(entry.item); });
+        var rest = group[1].filter(function (entry) { return !isIm(entry.item); });
+        body = (im.length ? standRow(im.map(function (entry) { return entry.item; })) : "") +
+          rest.map(function (entry) { return row(entry.item, entry.index); }).join("");
+      }
+      return '<li class="cart-group"><h3>' + group[0] + "</h3></li>" + body;
     }).join("");
   }
 
@@ -268,7 +372,22 @@
     localStorage.setItem(META, JSON.stringify(readMeta()));
   }
 
+  list.addEventListener("input", function (event) {
+    var input = event.target.closest("[data-stand]");
+    if (!input || input.value === "") return;
+    var parsed = parseInt(input.value, 10);
+    if (!parsed || parsed < 1) return;
+    writeStand(parsed);
+  });
+
   list.addEventListener("change", function (event) {
+    var stand = event.target.closest("[data-stand]");
+    if (stand) {
+      var n = clampStand(stand.value);
+      stand.value = String(n);
+      writeStand(n);
+      return;
+    }
     var input = event.target.closest("[data-index]");
     if (!input || input.type !== "number") return;
     var qty = parseInt(input.value, 10);
@@ -282,6 +401,20 @@
   });
 
   list.addEventListener("click", function (event) {
+    var step = event.target.closest("[data-stand-step]");
+    if (step && list.contains(step)) {
+      var field = document.getElementById("menge-staender-korb");
+      if (!field) return;
+      var n = clampStand((parseInt(field.value, 10) || 1) + (parseInt(step.getAttribute("data-stand-step"), 10) || 0));
+      field.value = String(n);
+      writeStand(n);
+      return;
+    }
+    var weg = event.target.closest("[data-stand-weg]");
+    if (weg && list.contains(weg)) {
+      window.AMK_WUNSCH.save(window.AMK_WUNSCH.load().filter(function (item) { return !isIm(item); }));
+      return;
+    }
     var button = event.target.closest("button[data-index]");
     if (!button) return;
     var index = Number(button.getAttribute("data-index"));
@@ -421,7 +554,9 @@
     }
     var lines = ["Anfrage an AMK Engelhardt", ""];
     ["miete:", "kauf:", ""].forEach(function (prefix) {
+      if (prefix === "kauf:" && items.some(isIm)) lines.push(standMail(items));
       items.forEach(function (item) {
+        if (isIm(item)) return;
         var id = String(item.id);
         var match = prefix ? id.indexOf(prefix) === 0 : id.indexOf("miete:") !== 0 && id.indexOf("kauf:") !== 0;
         if (match) lines.push(lineOf(item));
