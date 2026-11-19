@@ -2,14 +2,12 @@
   var board = document.querySelector(".kauf-board");
   var liste = document.getElementById("kauf-liste");
   var cats = document.getElementById("kauf-cats");
-  var form = document.getElementById("kauf-filter");
   var empty = document.getElementById("kauf-empty");
   var countEl = document.getElementById("kauf-count");
   var qInput = document.getElementById("kauf-q");
   var sortInput = document.getElementById("kauf-sort");
-  var toggle = document.getElementById("kauf-toggle");
   var resetBtn = document.getElementById("kauf-reset");
-  if (!board || !liste || !cats || !form) return;
+  if (!board || !liste || !cats) return;
 
   var GRUPPEN = {};
   (window.AMK_GRUPPEN ? window.AMK_GRUPPEN.list : [
@@ -35,18 +33,6 @@
     if (id === "schilder" || id === "absperrung") return "verkehr";
     return id || "";
   }
-  var FACETTEN = [
-    ["hoehe", "Höhe"],
-    ["breite", "Breite"],
-    ["laenge", "Länge"],
-    ["oberflaeche", "Oberfläche"],
-    ["masche", "Maschenweite"],
-    ["draht", "Drahtstärke"],
-    ["standrohr", "Standrohr"],
-    ["material", "Material"],
-    ["fussart", "Fußart"],
-    ["art", "Art"]
-  ];
   var EBENE = { schwellen: 1, schleuse: 1, buehne: 1 };
   var HASH = {
     bauzaun: { gruppe: "zaun", kat: "bauzaune" },
@@ -75,7 +61,7 @@
     if (form) form.remove();
   });
 
-  var state = { gruppe: "", kat: "", q: "", sort: "", facets: {} };
+  var state = { gruppe: "", kat: "", q: "", sort: "" };
   var schilder = document.getElementById("schilder-bereich");
   var wahl = document.getElementById("kauf-wahl");
   var spalte = document.getElementById("kauf-spalte");
@@ -111,11 +97,6 @@
     if (kat && !gruppe) gruppe = EBENE[kat] ? "zaun" : (KAT_GRUPPE[kat] || "");
     if (gruppe && kat && !EBENE[kat] && GRUPPEN[gruppe].indexOf(kat) === -1) kat = "";
     if (!gruppe && !params.get("q")) gruppe = "zaun";
-    var facets = {};
-    FACETTEN.forEach(function (pair) {
-      var values = params.getAll(pair[0]);
-      if (values.length) facets[pair[0]] = values;
-    });
     var signs = window.AMK_SCHILDER_TEILE || [];
     var zeichen = "";
     if (gruppe === "verkehr" && signs.indexOf(teil) !== -1) {
@@ -129,8 +110,7 @@
       teil: teil,
       zeichen: zeichen,
       q: params.get("q") || "",
-      sort: params.get("sort") || "",
-      facets: facets
+      sort: params.get("sort") || ""
     };
   }
 
@@ -149,11 +129,6 @@
     if (state.sort) params.set("sort", state.sort);
     if (state.gruppe === "verkehr" && state.zeichen) params.set("teil", state.zeichen);
     else if (state.teil && teilList().indexOf(state.teil) !== -1) params.set("teil", state.teil);
-    FACETTEN.forEach(function (pair) {
-      (state.facets[pair[0]] || []).forEach(function (value) {
-        params.append(pair[0], value);
-      });
-    });
     var qs = params.toString();
     var url = location.pathname + (qs ? "?" + qs : "");
     if (mode === "push") history.pushState({ kauf: 1 }, "", url);
@@ -162,10 +137,6 @@
 
   function hay(item) {
     return (item.name + " " + item.code + " " + item.slug).toLocaleLowerCase("de");
-  }
-
-  function selected(key) {
-    return state.facets[key] || [];
   }
 
   function inGruppe(item) {
@@ -177,79 +148,11 @@
     return true;
   }
 
-  function matches(item, skipKey) {
+  function matches(item) {
     if (!inGruppe(item)) return false;
     if (state.kat && item.shop !== state.kat) return false;
     if (state.q && hay(item).indexOf(state.q.toLocaleLowerCase("de")) < 0) return false;
-    for (var i = 0; i < FACETTEN.length; i++) {
-      var key = FACETTEN[i][0];
-      if (key === skipKey) continue;
-      var want = selected(key);
-      if (!want.length) continue;
-      if (want.indexOf(item.attr[key]) < 0) return false;
-    }
     return true;
-  }
-
-  function inCategory(item) {
-    if (!inGruppe(item)) return false;
-    return !state.kat || item.shop === state.kat;
-  }
-
-  function compareValue(a, b) {
-    var na = parseFloat(String(a).replace(",", "."));
-    var nb = parseFloat(String(b).replace(",", "."));
-    if (!isNaN(na) && !isNaN(nb)) return na - nb;
-    return String(a).localeCompare(String(b), "de");
-  }
-
-  function renderFacets() {
-    var html = "";
-    var active = 0;
-    FACETTEN.forEach(function (pair) {
-      var key = pair[0];
-      var values = {};
-      items.forEach(function (item) {
-        if (!inCategory(item)) return;
-        var value = item.attr[key];
-        if (!value) return;
-        if (!values[value]) values[value] = 0;
-      });
-      var keys = Object.keys(values);
-      var chosen = selected(key);
-      chosen.forEach(function (value) { if (!values[value]) values[value] = 0; });
-      keys = Object.keys(values);
-      if (keys.length < 2 && !chosen.length) return;
-      keys.sort(compareValue);
-      keys.forEach(function (value) {
-        values[value] = 0;
-        items.forEach(function (item) {
-          if (item.attr[key] !== value) return;
-          if (matches(item, key)) values[value] += 1;
-        });
-      });
-      var rows = keys.filter(function (value) {
-        return values[value] > 0 || chosen.indexOf(value) >= 0;
-      });
-      if (rows.length < 2 && !chosen.length) return;
-      html += '<fieldset><legend>' + pair[1] + "</legend>";
-      rows.forEach(function (value) {
-        var on = chosen.indexOf(value) >= 0;
-        if (on) active += 1;
-        html += '<label class="choice"><input type="checkbox" name="' + key + '" value="' + escapeAttr(value) + '"' + (on ? " checked" : "") + "> <span>" + escapeText(value) + ' <span class="kauf-n">' + values[value] + "</span></span></label>";
-      });
-      html += "</fieldset>";
-    });
-    form.innerHTML = html;
-    toggle.textContent = active ? "Filter (" + active + ")" : "Filter";
-  }
-
-  function escapeText(value) {
-    return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  }
-
-  function escapeAttr(value) {
-    return escapeText(value).replace(/"/g, "&quot;");
   }
 
   function renderEbene() {
@@ -340,14 +243,12 @@
         delete auswahl.dataset.key;
       }
     }
-    if (!state.gruppe || signs || picker) form.innerHTML = "";
-    else renderFacets();
     qInput.placeholder = signs ? "Nummer oder Name" : "Name oder Artikelnummer";
     qInput.value = state.q;
     sortInput.value = state.sort === "name" || state.sort === "nummer" ? state.sort : "";
     var shown = 0;
     ordered(items).forEach(function (item) {
-      var on = !overview && !signs && !picker && matches(item, null);
+      var on = !overview && !signs && !picker && matches(item);
       item.el.hidden = !on;
       liste.appendChild(item.el);
       if (on) shown += 1;
@@ -391,15 +292,6 @@
     window.AMK_AUSWAHL.fillLeiste(verkehrSumme, kaufZeilen());
   }
 
-  function readFacets() {
-    var facets = {};
-    form.querySelectorAll("input:checked").forEach(function (input) {
-      if (!facets[input.name]) facets[input.name] = [];
-      facets[input.name].push(input.value);
-    });
-    state.facets = facets;
-  }
-
   var ebene = document.getElementById("kauf-ebene");
   if (ebene) {
     ebene.addEventListener("click", function (event) {
@@ -410,7 +302,6 @@
       state.kat = link.getAttribute("data-kat") || "";
       state.teil = "";
       state.zeichen = "";
-      state.facets = {};
       render();
       writeUrl("push");
     });
@@ -420,13 +311,6 @@
     var button = event.target.closest("button[data-kat]");
     if (!button) return;
     state.kat = button.getAttribute("data-kat") || "";
-    state.facets = {};
-    render();
-    writeUrl("push");
-  });
-
-  form.addEventListener("change", function () {
-    readFacets();
     render();
     writeUrl("push");
   });
@@ -456,7 +340,6 @@
       state.kat = "";
       state.teil = "";
       state.zeichen = "";
-      state.facets = {};
       state.q = "";
       state.sort = "";
       render();
@@ -477,18 +360,8 @@
     state.kat = "";
     state.q = "";
     state.sort = "";
-    state.facets = {};
-    if (form.classList.contains("is-open")) {
-      /* keep the mobile panel as the user left it */
-    }
     render();
     writeUrl("push");
-  });
-
-  toggle.addEventListener("click", function () {
-    var open = !form.classList.contains("is-open");
-    form.classList.toggle("is-open", open);
-    toggle.setAttribute("aria-expanded", open ? "true" : "false");
   });
 
   window.addEventListener("popstate", function () {

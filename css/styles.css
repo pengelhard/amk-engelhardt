@@ -2175,23 +2175,17 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .kauf-karte[aria-current="true"] strong { background: var(--signal); color: var(--signal-ink); }
 .kauf-karte:hover { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
 .kauf-board:not(.is-gruppe) .kauf-sort,
-.kauf-board:not(.is-gruppe) .kauf-more,
 .kauf-board:not(.is-gruppe) .kauf-reset,
 .kauf-board:not(.is-gruppe) .kauf-count,
 .kauf-board:not(.is-gruppe) .kauf-layout { display: none; }
 .kauf-board.is-schilder .kauf-sort,
-.kauf-board.is-schilder .kauf-more,
-.kauf-board.is-schilder .kauf-facets,
 .kauf-board.is-schilder .kauf-reset { display: none; }
 .kauf-board.is-schilder .kauf-layout { display: block; }
 .kauf-board.is-auswahl .kauf-tools,
-.kauf-board.is-auswahl .kauf-facets,
 .kauf-board.is-auswahl #kauf-liste,
 .kauf-board.is-auswahl #kauf-empty { display: none; }
 .kauf-board.is-auswahl .kauf-layout { display: block; }
 .kauf-board.is-verkehr .kauf-sort,
-.kauf-board.is-verkehr .kauf-more,
-.kauf-board.is-verkehr .kauf-facets,
 .kauf-board.is-verkehr .kauf-reset,
 .kauf-board.is-verkehr .kauf-count,
 .kauf-board.is-verkehr #kauf-liste,
@@ -2243,7 +2237,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 }
 .kauf-search, .kauf-sort { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.8rem; font-weight: 600; }
 .kauf-search input, .kauf-sort select { min-width: 14rem; }
-.kauf-more, .kauf-reset {
+.kauf-reset {
   min-height: 44px;
   padding: 0.35rem 0.2rem;
   border: 0;
@@ -2256,18 +2250,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 }
 .kauf-count { margin: 0; min-height: 44px; display: flex; align-items: center; }
 .kauf-layout { margin-top: 0.4rem; }
-.kauf-facets { display: none; margin: 0 0 1rem; }
-.kauf-facets.is-open { display: block; }
-.kauf-facets fieldset { border: 0; margin: 0 0 0.85rem; padding: 0; }
-.kauf-facets legend { font-weight: 600; margin-bottom: 0.25rem; }
-.kauf-facets .choice { min-height: 44px; margin: 0; }
-.kauf-n { color: var(--ink-soft); font-weight: 400; }
 .kauf-empty { margin: 1rem 0; }
-@media (min-width: 900px) {
-  .kauf-more { display: none; }
-  .kauf-layout { display: grid; grid-template-columns: 16.5rem minmax(0, 1fr); gap: 1.2rem 1.5rem; align-items: start; }
-  .kauf-facets { display: block; position: sticky; top: 5.2rem; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .entry::after { transition: none; }

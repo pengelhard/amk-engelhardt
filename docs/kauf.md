@@ -50,20 +50,11 @@ Die vier Gruppen und die Zeichenliste sind die gemeinsame Quelle für Miete und 
 
 ## Attribute
 
-`attr` übernimmt nur Werte, die der Name, die Gruppe oder die Tabelle hergeben. Millimeter aus einer Maßzeile werden für den Filter in Meter umgerechnet, wenn die Zahl glatt aufgeht. Die Tabelle auf der Seite behält den Wortlaut.
+`attr` übernimmt nur Werte, die der Name, die Gruppe oder die Tabelle hergeben. Millimeter aus einer Maßzeile werden in Meter umgerechnet, wenn die Zahl glatt aufgeht. Die Tabelle auf der Seite behält den Wortlaut. Die Leiste aus diesen Werten ist entfernt. Alte Adressen mit `hoehe`, `breite`, `laenge`, `oberflaeche`, `masche`, `draht`, `standrohr`, `material`, `fussart` oder `art` werden ignoriert.
 
-Filter erscheinen erst, wenn die gewählte Kategorie mindestens zwei verschiedene Werte hat.
+Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger laufen über die Pills und die Typ-Karten. Im Kauf führen Bild und Name der Typkarte und jedes Schild auf die Produktseite. Die Checkbox bleibt die Auswahl. In der Miete gibt es diese Links nicht. Die langen Datenblöcke der Katalogkacheln bleiben im HTML und sind im Kaufbrett ausgeblendet.
 
-- Bauzäune: Breite, Höhe, Maschenweite, Drahtstärke, Standrohr, Oberfläche
-- Zaunzubehör: Art, Fußart
-- Türen & Tore: Höhe, Maschenweite
-- Sichtschutz & Planen: Art
-
-Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger haben keine Attributfilter. Die Auswahl läuft über die Pills und die Typ-Karten. Im Kauf führen Bild und Name der Typkarte und jedes Schild auf die Produktseite. Die Checkbox bleibt die Auswahl. In der Miete gibt es diese Links nicht. Die langen Datenblöcke der Katalogkacheln bleiben im HTML und sind im Kaufbrett ausgeblendet.
-
-Oberfläche ist Vollfeuerverzinkt, Verzinkt oder Vorverzinkt, und nur wenn das Wort in der Artikelüberschrift, im Absatz oder in der Seitenüberschrift „Vorverzinkte Zäune“ steht. Fußart ist Beton oder Kunststoff, und nur wenn der Name das sagt. Edelstahl steht nur bei der Schelle, die so heißt.
-
-Suche trifft Name, Artikelnummer und Kennung, bei den Schildern Nummer und Name. Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger haben keine Suche. Sortierung ist Sortiment, Name oder Artikelnummer. Gruppe, Unterkategorie, Filter, Suche und Sortierung stehen in der Adresse (`?gruppe=zaun&kat=bauzaune&masche=100+x+300`). Die gewählte Pill steht als `teil` in der Adresse. Zurück im Browser stellt den Stand wieder her.
+Suche trifft Name, Artikelnummer und Kennung, bei den Schildern Nummer und Name. Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger haben keine Suche. Sortierung ist Sortiment, Name oder Artikelnummer. Gruppe, Unterkategorie, Suche und Sortierung stehen in der Adresse (`?gruppe=zaun&kat=bauzaune`). Die gewählte Pill steht als `teil` in der Adresse. Zurück im Browser stellt den Stand wieder her.
 
 ## Technische Daten
 
