@@ -136,18 +136,17 @@
     var managed = {};
     var zubehoer = [];
     var paket = null;
-    var platzhalter = false;
-    var platzhalterText = "";
 
     function mieteModus() { return new URLSearchParams(location.search).get("modus") === "miete"; }
     function anhaengerMiete() { return mieteModus() && product.shop === "anhaenger"; }
     function prefix() { return (mieteModus() ? "miete:" : "kauf:") + slug + ":"; }
     function plainId() { return (mieteModus() ? "miete:" : "kauf:") + slug; }
-    function standOn() { return !!paket && !mieteModus(); }
-    function mieteZaun() { return mieteModus() && slug === "bauzaun-10075" && !standOn(); }
-    function autoLine(teilSlug, name, qty) {
+    function standPrefix() { return "kauf:" + slug + ":"; }
+    function standOn() { return !!paket; }
+    function feldAutomatik() { return slug === "bauzaun-10075"; }
+    function autoLine(parentId, teilSlug, name, qty) {
       var item = itemOf(teilSlug, { name: name, slug: teilSlug });
-      var line = lineOf(prefix() + "auto:" + teilSlug, item.name || name, qty, item.bild, item.kat || product.kat, "automatisch");
+      var line = lineOf(parentId + ":auto:" + teilSlug, item.name || name, qty, item.bild, item.kat || product.kat, "automatisch");
       line.herkunft = "auto";
       return line;
     }
@@ -290,7 +289,7 @@
         });
       });
       if (extra) html += '<section class="beispiel-block" id="block-zusatz"><h3>Zusätzlich</h3><ul>' + extra + "</ul></section>";
-      if (mieteZaun() && feldZahl() > 0) {
+      if (feldAutomatik() && feldZahl() > 0) {
         var schelleName = itemOf("zubehoer-10002-1", { name: "Verbindungsschelle 2,5 mm" }).name;
         var fussName = itemOf("fuss-10006", { name: "Kunststofffuß schwer 23 kg" }).name;
         var autoN = feldZahl();
@@ -320,17 +319,24 @@
       if (standOn()) {
         var n = standZahl();
         if (n > 0) {
-          lines.push(lineOf(prefix() + "im:zaun", product.name, mal(paket.felderJe || 30, n), product.bild, product.kat, IM));
+          lines.push(lineOf(standPrefix() + "im:zaun", product.name, mal(paket.felderJe || 30, n), product.bild, product.kat, IM));
           var stand = itemOf(paket.stand && paket.stand.slug, paket.stand);
-          lines.push(lineOf(prefix() + "im:staender", stand.name, n, stand.bild, stand.kat || product.kat, IM));
+          lines.push(lineOf(standPrefix() + "im:staender", stand.name, n, stand.bild, stand.kat || product.kat, IM));
           (paket.wahl || []).forEach(function (entry) {
             var itemSlug = choice[entry.id] || entry.standard;
             var item = itemOf(itemSlug);
-            lines.push(lineOf(prefix() + "im:" + entry.id + ":" + itemSlug, item.name, mal(entry.je || 1, n), item.bild, item.kat || product.kat, IM));
+            lines.push(lineOf(standPrefix() + "im:" + entry.id + ":" + itemSlug, item.name, mal(entry.je || 1, n), item.bild, item.kat || product.kat, IM));
           });
         }
         var m = feldZahl();
-        if (m > 0) lines.push(lineOf(prefix() + "zusatz:felder", product.name, m, product.bild, product.kat, ZU));
+        if (m > 0) {
+          var loseId = mieteModus() ? plainId() : standPrefix() + "zusatz:felder";
+          lines.push(lineOf(loseId, product.name, m, product.bild, product.kat, mieteModus() ? "" : ZU));
+          if (feldAutomatik()) {
+            lines.push(autoLine(loseId, "zubehoer-10002-1", "Verbindungsschelle 2,5 mm", m));
+            lines.push(autoLine(loseId, "fuss-10006", "Kunststofffuß schwer 23 kg", Math.min(9999, m + 1)));
+          }
+        }
       } else if (anhaengerMiete()) {
         var wahl = document.getElementById("miete-anhaenger");
         if (wahl && wahl.checked) {
@@ -342,9 +348,9 @@
         var einfach = feldZahl();
         if (einfach > 0) {
           lines.push(lineOf(plainId(), product.name, einfach, product.bild, product.kat, ""));
-          if (mieteZaun()) {
-            lines.push(autoLine("zubehoer-10002-1", "Verbindungsschelle 2,5 mm", einfach));
-            lines.push(autoLine("fuss-10006", "Kunststofffuß schwer 23 kg", Math.min(9999, einfach + 1)));
+          if (feldAutomatik()) {
+            lines.push(autoLine(plainId(), "zubehoer-10002-1", "Verbindungsschelle 2,5 mm", einfach));
+            lines.push(autoLine(plainId(), "fuss-10006", "Kunststofffuß schwer 23 kg", Math.min(9999, einfach + 1)));
           }
         }
       }
@@ -365,11 +371,13 @@
       var wanted = {};
       lines.forEach(function (line) { wanted[line.id] = line; });
       var own = prefix();
+      var stand = standPrefix();
       var items = window.AMK_WUNSCH.load().filter(function (item) {
         var id = String(item.id || "");
+        if (id.indexOf(stand + "im:") === 0 || id.indexOf(stand + "zusatz:") === 0) return !!wanted[id];
+        if (standOn() && id === stand.slice(0, -1)) return false;
         if (id.indexOf(own) === 0) return !!wanted[id];
         if (mieteModus() && id === plainId()) return !!wanted[id];
-        if (standOn() && id === plainId()) return false;
         if (managed[id]) return !!wanted[id];
         return true;
       });
@@ -399,15 +407,15 @@
       var einfach = 0;
       items.forEach(function (item) {
         var id = String(item.id || "");
-        if (id === prefix() + "im:staender") n = item.qty;
-        if (id === prefix() + "zusatz:felder") felder = item.qty;
+        if (id === standPrefix() + "im:staender") n = item.qty;
+        if (id === standPrefix() + "zusatz:felder") felder = item.qty;
         if (id === plainId()) einfach = item.qty;
         if (anhaengerMiete() && id === plainId() && item.qty > 0) {
           var haken = document.getElementById("miete-anhaenger");
           if (haken) haken.checked = true;
         }
         (paket && paket.wahl || []).forEach(function (entry) {
-          var mark = prefix() + "im:" + entry.id + ":";
+          var mark = standPrefix() + "im:" + entry.id + ":";
           if (id.indexOf(mark) === 0) choice[entry.id] = id.slice(mark.length);
         });
         if (zubehoer.indexOf(id.slice(5)) >= 0 && (item.note === ZU || item.herkunft === "manuell")) {
@@ -424,7 +432,7 @@
       });
       if (standOn()) {
         setMenge("staender", n || 0);
-        setMenge("felder", felder || (!n ? einfach : 0) || 0);
+        setMenge("felder", mieteModus() ? (einfach || felder || 0) : (felder || (!n ? einfach : 0) || 0));
       } else {
         setMenge("einfach", einfach || 0);
       }
@@ -445,7 +453,6 @@
       }
       if (standOn()) {
         arten.innerHTML =
-          (platzhalter ? '<p class="beispiel-platzhalter">' + esc(platzhalterText || "Platzhalter") + "</p>" : "") +
           karte("menge-staender", paket.label || "Komplett-Ständer", "Ständeranzahl") +
           karte("menge-felder", paket.felderLabel || "Einzelne Felder", "Feldanzahl");
         (paket.wahl || []).forEach(function (entry) { choice[entry.id] = choice[entry.id] || entry.standard; });
@@ -480,7 +487,9 @@
 
     function applyConfig(data) {
       config = data || {};
-      if (mieteModus()) {
+      var shops = config.staender && config.staender.shops || [];
+      var hatStander = !!(product.shop && shops.indexOf(product.shop) >= 0 && config.staender && config.staender.paket);
+      if (mieteModus() && !hatStander) {
         paket = null;
         zubehoer = [];
         fillArten();
@@ -490,12 +499,7 @@
         syncCart();
         return;
       }
-      var shops = config.staender && config.staender.shops || [];
-      if (product.shop && shops.indexOf(product.shop) >= 0 && config.staender.paket) {
-        paket = config.staender.paket;
-        platzhalter = !!config.staender.platzhalter;
-        platzhalterText = config.staender.hinweis || "Platzhalter";
-      }
+      if (hatStander) paket = config.staender.paket;
       var perProduct = config.zubehoerNachProdukt && config.zubehoerNachProdukt[slug];
       var perShop = product.shop && config.zubehoerNachShop && config.zubehoerNachShop[product.shop];
       zubehoer = Array.isArray(perProduct) ? perProduct.slice() : (Array.isArray(perShop) ? perShop.slice() : []);

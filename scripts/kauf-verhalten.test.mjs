@@ -1025,10 +1025,10 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     await genehmigungKauf.page.close();
 
     const detailMiete = await open(1280, "/produkt/bauzaun-10075/?modus=miete");
-    await detailMiete.page.waitForSelector("#menge-einfach");
-    const ohneStand = await detailMiete.page.locator("#menge-staender").count();
-    await detailMiete.page.locator("#menge-einfach").fill("2");
-    await detailMiete.page.locator("#menge-einfach").dispatchEvent("input");
+    await detailMiete.page.waitForSelector("#menge-felder");
+    const staenderKarte = await detailMiete.page.locator("#menge-staender").count();
+    await detailMiete.page.locator("#menge-felder").fill("2");
+    await detailMiete.page.locator("#menge-felder").dispatchEvent("input");
     const detailKorb = await detailMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));
     const detailAuto = await detailMiete.page.evaluate(() => {
       const block = document.getElementById("block-auto");
@@ -1039,7 +1039,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
         eingabe: fest.some((el) => el.querySelector("input, button"))
       };
     });
-    point("Detail mieten", ohneStand === 0 && detailKorb.indexOf("miete:bauzaun-10075:2") !== -1 && detailKorb.indexOf("miete:bauzaun-10075:auto:zubehoer-10002-1:2") !== -1 && detailKorb.indexOf("miete:bauzaun-10075:auto:fuss-10006:3") !== -1 && detailKorb.every((id) => id.indexOf(":im:") === -1) && detailAuto.da && !detailAuto.eingabe && detailAuto.texte.length === 2, detailKorb.join(", ") + " | " + JSON.stringify(detailAuto));
+    point("Detail mieten", staenderKarte === 1 && detailKorb.indexOf("miete:bauzaun-10075:2") !== -1 && detailKorb.indexOf("miete:bauzaun-10075:auto:zubehoer-10002-1:2") !== -1 && detailKorb.indexOf("miete:bauzaun-10075:auto:fuss-10006:3") !== -1 && detailKorb.every((id) => id.indexOf(":im:") === -1) && detailAuto.da && !detailAuto.eingabe && detailAuto.texte.length === 2, detailKorb.join(", ") + " | " + JSON.stringify(detailAuto));
     point("Konsole Detail mieten", detailMiete.errors.length === 0, detailMiete.errors.join(" | "));
     await detailMiete.page.close();
 

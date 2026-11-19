@@ -747,7 +747,15 @@
       } else {
         var stand = window.AMK_WUNSCH && window.AMK_WUNSCH.load ? zeileMenge(window.AMK_WUNSCH.load(), "kauf:" + slug + ":im:staender") : 0;
         if (stand > 0) lines.push({ name: name, menge: String(stand), qty: stand, block: "Im Komplett-Ständer enthalten", href: href, ziel: "staender:" + slug });
-        if (felder > 0) lines.push({ name: name, menge: String(felder), qty: felder, block: "Zusätzlich", href: href, ziel: "felder:" + slug });
+        if (felder > 0) {
+          lines.push({ name: name, menge: String(felder), qty: felder, block: "Zusätzlich", href: href, ziel: "felder:" + slug });
+          if (slug === MIETE_ZAUN) {
+            var kaufSchelle = produktVon(AUTO_SCHELLE, { name: "Verbindungsschelle 2,5 mm" });
+            var kaufFuss = produktVon(AUTO_FUSS, { name: "Kunststofffuß schwer 23 kg" });
+            lines.push({ name: kaufSchelle.name, qty: felder, block: "Automatisch dazu", fest: true });
+            lines.push({ name: kaufFuss.name, qty: Math.min(9999, felder + 1), block: "Automatisch dazu", fest: true });
+          }
+        }
       }
     });
     var genehmigung = document.getElementById("kauf-genehmigung");
@@ -1326,10 +1334,10 @@
   var AUTO_SCHELLE = "zubehoer-10002-1";
   var AUTO_FUSS = "fuss-10006";
 
-  function autoZeile(parentSlug, teilSlug, qty) {
+  function autoZeile(parentId, teilSlug, qty) {
     var item = produktVon(teilSlug, { name: teilSlug, bild: "", kat: "bauzaun" });
     return {
-      id: "miete:" + parentSlug + ":auto:" + teilSlug,
+      id: parentId + ":auto:" + teilSlug,
       name: item.name || teilSlug,
       qty: qty,
       bild: item.bild || "",
@@ -1432,8 +1440,8 @@
       if (felder > 0) {
         mieteItems.push({ id: mieteId, name: item.name, qty: felder, bild: item.bild || "", kat: item.kat || "bauzaun" });
         if (slug === MIETE_ZAUN) {
-          mieteItems.push(autoZeile(slug, AUTO_SCHELLE, felder));
-          mieteItems.push(autoZeile(slug, AUTO_FUSS, Math.min(9999, felder + 1)));
+          mieteItems.push(autoZeile(mieteId, AUTO_SCHELLE, felder));
+          mieteItems.push(autoZeile(mieteId, AUTO_FUSS, Math.min(9999, felder + 1)));
         }
       }
       speichere(mieteItems);
@@ -1444,12 +1452,20 @@
       return;
     }
     var prefix = "kauf:" + slug + ":";
-    var items = window.AMK_WUNSCH.load();
+    var autoSchelleId = prefix + "zusatz:felder:auto:" + AUTO_SCHELLE;
+    var autoFussId = prefix + "zusatz:felder:auto:" + AUTO_FUSS;
+    var items = window.AMK_WUNSCH.load().filter(function (line) {
+      return line.id !== autoSchelleId && line.id !== autoFussId;
+    });
     var standField = schnellFeld(block, "staender");
     var stand = standField ? mengeAus(standField) : zeileMenge(items, prefix + "im:staender");
     if (standField) items = schreibStand(items, item, stand || 0);
     items = setzeZeile(items, prefix + "zusatz:felder", item.name, felder, item.bild, item.kat);
     items = items.filter(function (line) { return line.id !== "kauf:" + slug; });
+    if (felder > 0 && slug === MIETE_ZAUN) {
+      items.push(autoZeile(prefix + "zusatz:felder", AUTO_SCHELLE, felder));
+      items.push(autoZeile(prefix + "zusatz:felder", AUTO_FUSS, Math.min(9999, felder + 1)));
+    }
     speichere(items);
     var fuss = wahlEintrag("fuss");
     var schelle = wahlEintrag("schelle");
