@@ -4,6 +4,7 @@
     "fuss-10005",
     "fuss-10004",
     "fuss-10006",
+    "zubehoer-10002-1",
     "zubehoer-10002",
     "zubehoer-10003",
     "zubehoer-10008",
@@ -28,8 +29,12 @@
       "vorsatz": "Ständer à 30 Felder",
       "inhalt": [
         "30 Felder",
-        "31 Bauzaunfüße",
-        "Verbindungsschellen, Anzahl auf Anfrage"
+        "30 Verbindungsschellen",
+        "31 Bauzaunfüße"
+      ],
+      "posten": [
+        { "slug": "fuss-10006", "je": 31 },
+        { "slug": "zubehoer-10002-1", "je": 30 }
       ]
     }
   ]

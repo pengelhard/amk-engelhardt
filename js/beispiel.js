@@ -23,8 +23,10 @@
 
   function clamp(field) {
     var value = parseInt(field.value, 10);
+    var cap = parseInt(field.getAttribute("max"), 10);
+    if (!cap || cap < 1) cap = 99;
     if (!value || value < 1) value = 1;
-    if (value > 99) value = 99;
+    if (value > cap) value = cap;
     field.value = String(value);
     return value;
   }
@@ -35,6 +37,7 @@
   var bySlug = {};
   var wahl = root.querySelector(".beispiel-leiste-wahl");
   var haube = root.querySelector(".beispiel-haube");
+  var modus = {};
 
   function artNow() {
     var chosen = root.querySelector('input[name="art"]:checked');
@@ -69,14 +72,32 @@
   }
 
   function artText(art) {
-    return art.vorsatz || art.hinweis || art.label || "";
+    var field = document.getElementById("menge-beispiel");
+    var qty = field ? field.value : "1";
+    if (art && art.vorsatz) return qty + " " + art.vorsatz;
+    return (art && (art.hinweis || art.label)) || "";
   }
 
-  function stepper(key, id, value, label) {
+  function standZahl() {
+    var field = document.getElementById("menge-beispiel");
+    return field ? clamp(field) : 1;
+  }
+
+  function standardVon(slug) {
+    var found = null;
+    (config.arten || []).forEach(function (art) {
+      (art.posten || []).forEach(function (row) {
+        if (row.slug === slug) found = row;
+      });
+    });
+    return found;
+  }
+
+  function stepper(key, id, value, label, max) {
     return '<div class="beispiel-step">' +
       '<button type="button" data-step="-1" aria-label="Weniger">−</button>' +
       '<label class="visually-hidden" for="' + esc(id) + '">' + esc(label) + "</label>" +
-      '<input id="' + esc(id) + '" data-spiegel="' + esc(key) + '" type="number" min="1" max="99" value="' + esc(value) + '" inputmode="numeric">' +
+      '<input id="' + esc(id) + '" data-spiegel="' + esc(key) + '" type="number" min="1" max="' + (max || 99) + '" value="' + esc(value) + '" inputmode="numeric">' +
       '<button type="button" data-step="1" aria-label="Mehr">+</button>' +
       "</div>";
   }
@@ -86,11 +107,63 @@
     if (node) node.textContent = artText(artNow());
   }
 
+  function setChecked(slug, on) {
+    var box = root.querySelector('input[name="zubehoer"][value="' + slug + '"]');
+    if (!box) return;
+    box.checked = on;
+    var pick = box.closest(".beispiel-pick");
+    var step = pick ? pick.querySelector(".beispiel-step") : null;
+    if (step) step.hidden = !on;
+  }
+
+  function setMenge(slug, value) {
+    var field = document.getElementById("menge-" + slug);
+    if (field) field.value = String(value);
+    root.querySelectorAll('[data-spiegel="' + slug + '"]').forEach(function (mirror) {
+      mirror.value = String(value);
+    });
+  }
+
+  function syncStandards(entering) {
+    var art = artNow();
+    var n = standZahl();
+    if (!art || art.id !== "staender") {
+      Object.keys(modus).forEach(function (slug) {
+        if (modus[slug] !== "auto") return;
+        setChecked(slug, false);
+        setMenge(slug, 1);
+        delete modus[slug];
+      });
+      return;
+    }
+    (art.posten || []).forEach(function (row) {
+      var state = modus[row.slug];
+      var box = root.querySelector('input[name="zubehoer"][value="' + row.slug + '"]');
+      var kept = state === "hand" && box && box.checked;
+      if (entering && !kept) state = "auto";
+      if (state === "weg" || state === "hand") return;
+      modus[row.slug] = "auto";
+      setChecked(row.slug, true);
+      setMenge(row.slug, row.je * n);
+    });
+  }
+
   function paintCount() {
     var node = document.getElementById("beispiel-posten");
     if (!node) return;
     var n = 1 + root.querySelectorAll('input[name="zubehoer"]:checked').length;
     node.textContent = n + " Posten";
+  }
+
+  function postZeile(slug) {
+    var item = bySlug[slug];
+    if (!item) return "";
+    var field = document.getElementById("menge-" + slug);
+    return '<li class="beispiel-post">' +
+      '<p class="beispiel-post-text"><strong>' + esc(item.name) + "</strong></p>" +
+      '<button type="button" class="beispiel-weg" data-weg="' + esc(slug) + '" aria-label="' + esc(item.name) + ' entfernen">×</button>' +
+      stepper(slug, "menge-liste-" + slug, field ? field.value : "1", "Menge " + item.name, 9999) +
+      "</li>";
   }
 
   function paintList() {
@@ -101,17 +174,18 @@
     var html = '<li class="beispiel-post beispiel-post--haupt">' +
       '<p class="beispiel-post-text"><strong>' + esc(product.name) + "</strong>" +
       '<span class="beispiel-post-art">' + esc(artText(art)) + "</span></p>" +
-      stepper("haupt", "menge-liste-haupt", main ? main.value : "1", "Menge " + product.name) +
+      stepper("haupt", "menge-liste-haupt", main ? main.value : "1", "Menge " + product.name, 99) +
       "</li>";
+    var seen = {};
+    (art.posten || []).forEach(function (row) {
+      var box = root.querySelector('input[name="zubehoer"][value="' + row.slug + '"]');
+      if (!box || !box.checked) return;
+      seen[row.slug] = true;
+      html += postZeile(row.slug);
+    });
     root.querySelectorAll('input[name="zubehoer"]:checked').forEach(function (box) {
-      var item = bySlug[box.value];
-      if (!item) return;
-      var field = document.getElementById("menge-" + box.value);
-      html += '<li class="beispiel-post">' +
-        '<p class="beispiel-post-text"><strong>' + esc(item.name) + "</strong></p>" +
-        '<button type="button" class="beispiel-weg" data-weg="' + esc(box.value) + '" aria-label="' + esc(item.name) + ' entfernen">×</button>' +
-        stepper(box.value, "menge-liste-" + box.value, field ? field.value : "1", "Menge " + item.name) +
-        "</li>";
+      if (seen[box.value]) return;
+      html += postZeile(box.value);
     });
     list.innerHTML = html;
     paintCount();
@@ -211,7 +285,7 @@
         '<div class="beispiel-step" hidden>' +
         '<button type="button" data-step="-1" aria-label="Weniger">−</button>' +
         '<label class="visually-hidden" for="menge-' + esc(slug) + '">Menge ' + esc(item.name) + "</label>" +
-        '<input id="menge-' + esc(slug) + '" name="menge-' + esc(slug) + '" type="number" min="1" max="99" value="1" inputmode="numeric">' +
+        '<input id="menge-' + esc(slug) + '" name="menge-' + esc(slug) + '" type="number" min="1" max="9999" value="1" inputmode="numeric">' +
         '<button type="button" data-step="1" aria-label="Mehr">+</button>' +
         "</div>" +
         '<a class="beispiel-details" href="' + esc(base + "produkt/" + slug + "/") + '">Details</a>' +
@@ -224,11 +298,7 @@
     var art = artNow();
     var field = document.getElementById("menge-beispiel");
     var qty = clamp(field);
-    var note = art.hinweis || art.label;
-    if (art.vorsatz) {
-      note = qty + " " + art.vorsatz;
-      if (art.inhalt && art.inhalt.length > 1) note += " · " + art.inhalt.slice(1).join(" · ");
-    }
+    var note = artText(art);
     var lines = [{
       id: "kauf:beispiel:" + art.id,
       name: product.name,
@@ -271,30 +341,42 @@
     var step = parseInt(button.getAttribute("data-step"), 10) || 0;
     var value = parseInt(field.value, 10);
     if (!value || value < 1) value = 1;
-    field.value = String(Math.min(99, Math.max(1, value + step)));
+    var cap = parseInt(field.getAttribute("max"), 10) || 99;
+    field.value = String(Math.min(cap, Math.max(1, value + step)));
     field.dispatchEvent(new Event("input", { bubbles: true }));
   });
+
+  function noteHand(slug, value) {
+    var row = standardVon(slug);
+    if (!row || modus[slug] !== "auto") return;
+    if (value !== row.je * standZahl()) modus[slug] = "hand";
+  }
 
   root.addEventListener("input", function (event) {
     var target = event.target;
     if (!target || target.type !== "number") return;
     var value = clamp(target);
+    var key = target.hasAttribute("data-spiegel") ? target.getAttribute("data-spiegel") : (target.id === "menge-beispiel" ? "haupt" : target.id.replace(/^menge-/, ""));
     if (target.hasAttribute("data-spiegel")) {
-      var canon = canonical(target.getAttribute("data-spiegel"));
+      var canon = canonical(key);
       if (canon && canon.value !== String(value)) canon.value = String(value);
     } else {
-      var key = target.id === "menge-beispiel" ? "haupt" : target.id.replace(/^menge-/, "");
       root.querySelectorAll('[data-spiegel="' + key + '"]').forEach(function (mirror) {
         if (mirror.value !== String(value)) mirror.value = String(value);
       });
     }
+    if (key === "haupt") {
+      syncStandards(false);
+      paintArt();
+    } else noteHand(key, value);
   });
 
   root.addEventListener("change", function (event) {
     var target = event.target;
     if (target.name === "art") {
       showArt();
-      paintArt();
+      syncStandards(true);
+      paintList();
     }
     if (target.name === "zubehoer") {
       var pick = target.closest(".beispiel-pick");
@@ -306,6 +388,7 @@
           if (field) field.value = "1";
         }
       }
+      if (standardVon(target.value)) modus[target.value] = target.checked ? "hand" : "weg";
       paintList();
     }
     if (target.type === "number") clamp(target);

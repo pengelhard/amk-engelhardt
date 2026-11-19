@@ -2415,6 +2415,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 }
 .beispiel-galerie { grid-area: galerie; }
 .beispiel-kauf { grid-area: kauf; }
+.beispiel-korb { display: contents; }
 .beispiel-daten { grid-area: daten; }
 .beispiel-zubehoer { grid-area: zubehoer; }
 .beispiel-buehne {
@@ -2560,7 +2561,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .beispiel-step input { width: 100%; max-width: none; -moz-appearance: textfield; appearance: textfield; }
 .beispiel-step input::-webkit-outer-spin-button,
 .beispiel-step input::-webkit-inner-spin-button { appearance: none; margin: 0; }
-.beispiel-auswahl { margin-top: 0.95rem; }
+.beispiel-auswahl { margin: 0; }
 .beispiel-auswahl h2 { margin: 0 0 0.5rem; font-size: 1.15rem; }
 .beispiel-auswahl ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
 .beispiel-post {
@@ -2704,7 +2705,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
     border-radius: 1rem;
     box-shadow: 4px 4px 0 var(--ink);
   }
-  .beispiel-kauf .beispiel-senden { display: none; }
+  .beispiel-korb .beispiel-senden { display: none; }
 }
 @media (min-width: 720px) and (max-width: 979px) {
   .beispiel-zubehoer .tiles { grid-template-columns: 1fr 1fr; }
@@ -2714,19 +2715,27 @@ input[aria-invalid="true"] { border-color: var(--danger); }
     grid-template-columns: minmax(0, 1.25fr) minmax(20rem, 0.78fr);
     gap: 1.5rem 1.75rem;
     align-items: start;
-    grid-template-areas: "galerie kauf" "daten kauf" "zubehoer kauf";
+    grid-template-areas: "galerie kauf" "daten korb" "zubehoer korb";
   }
-  .beispiel-kauf {
+  .beispiel-kauf { position: static; }
+  .beispiel-korb {
+    display: flex;
+    flex-direction: column;
+    grid-area: korb;
     position: sticky;
     top: calc(var(--top, 5.6rem) + 0.75rem);
     align-self: start;
     z-index: 2;
     max-height: calc(100dvh - var(--top, 5.6rem) - 1.5rem);
-    overflow: hidden;
+    overflow: auto;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    box-shadow: 4px 4px 0 var(--ink);
+    padding: 1rem 1rem 0.95rem;
   }
-  .beispiel-kauf-body { overflow: auto; min-height: 0; padding: 0.05rem 0.4rem 0.4rem 0.05rem; }
-  .beispiel-auswahl { overflow: auto; min-height: 0; }
-  .beispiel-senden { flex: 0 0 auto; }
+  .beispiel-korb .beispiel-auswahl { overflow: auto; min-height: 0; }
+  .beispiel-korb .beispiel-senden { flex: 0 0 auto; }
   .beispiel-leiste, .beispiel-haube { display: none; }
   .beispiel-zubehoer .tiles { grid-template-columns: 1fr 1fr; }
 }
