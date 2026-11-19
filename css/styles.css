@@ -2205,8 +2205,14 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 #miete-anhaenger,
 #kauf-auswahl { margin-top: 0.9rem; }
 .schilder .field { margin-top: 0.9rem; }
+.kauf-ebene { margin-top: 0.9rem; }
+.kauf-ebene .kauf-karte strong { overflow-wrap: anywhere; }
 @media (min-width: 860px) {
   .kauf-einstieg { grid-template-columns: repeat(3, 1fr); }
+  .kauf-einstieg.kauf-ebene { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1100px) {
+  .kauf-einstieg.kauf-ebene { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
 .kauf-cats { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
 #miete-schilder .kauf-cats,

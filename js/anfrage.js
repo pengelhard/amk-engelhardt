@@ -91,6 +91,17 @@
   }
 
   var GITTER = { "absperrung-10026": 1, "absperrung-10025-0": 1, "absperrung-10041": 1 };
+  var EBENE = {
+    "schwelle-10005-4": "schwellen",
+    "schwelle-10005-2": "schwellen",
+    "schwelle-10005-3": "schwellen",
+    "absperrung-10025-1": "schleuse",
+    "absperrung-10025-2": "schleuse",
+    "absperrung-10025-3": "schleuse",
+    "absperrung-10047": "buehne",
+    "absperrung-10047-1": "buehne",
+    "absperrung-10048": "buehne"
+  };
 
   function slugOf(id) {
     var rest = String(id);
@@ -106,6 +117,11 @@
     if (id.indexOf("miete:schild:") === 0) return "../mieten/?gruppe=schilder&teil=gefahr";
     if (id.indexOf("verkehr:") !== -1) return "../mieten/?gruppe=absperrung";
     var slug = slugOf(id);
+    if (EBENE[slug]) {
+      return id.indexOf("kauf:") === 0
+        ? "../kaufen/?gruppe=zaun&kat=" + EBENE[slug]
+        : "../mieten/?gruppe=zaun&teil=" + EBENE[slug];
+    }
     if (GITTER[slug]) {
       return id.indexOf("kauf:") === 0 ? "../kaufen/?gruppe=zaun&kat=gitter" : "../mieten/?gruppe=zaun&teil=gitter";
     }

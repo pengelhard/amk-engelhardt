@@ -3,15 +3,15 @@
   var gruppen = document.getElementById("miete-gruppen");
   var zaun = document.getElementById("miete-zaun");
   var konfig = document.getElementById("miete-konfig");
-  var gitter = document.getElementById("miete-gitter");
-  var leit = document.getElementById("miete-leit");
+  var geraet = document.getElementById("miete-geraet");
   var verkehr = document.getElementById("miete-verkehr");
   var anhaenger = document.getElementById("miete-anhaenger");
   var genehmigung = document.getElementById("genehmigung-miete");
   if (!board || !gruppen || !window.AMK_GRUPPEN) return;
 
   var panels = { zaun: zaun, verkehr: verkehr, anhaenger: anhaenger };
-  var state = { gruppe: "", teil: "zaun", unter: "" };
+  var state = { gruppe: "", teil: "zaun" };
+  var ZAUN = { zaun: 1, gitter: 1, schwellen: 1, schleuse: 1, buehne: 1 };
   var zeichen = "";
   var GENEHM = "miete:genehmigung";
 
@@ -21,10 +21,10 @@
   }
 
   function allowed(gruppe, teil) {
-    if (gruppe === "zaun") return teil === "gitter" || teil === "leit" ? teil : "zaun";
+    if (gruppe === "zaun") return ZAUN[teil] ? teil : "zaun";
     var list = deviceTeile(gruppe);
     if (list && list.indexOf(teil) !== -1) return teil;
-    return gruppe === "zaun" ? "zaun" : "";
+    return "";
   }
 
   function readUrl() {
@@ -32,6 +32,11 @@
     var gruppe = window.AMK_GRUPPEN.canon(params.get("gruppe") || "");
     if (!window.AMK_GRUPPEN.byId[gruppe]) gruppe = "zaun";
     var teil = params.get("teil") || "";
+    var unter = params.get("unter") || "";
+    if (gruppe === "zaun" && teil === "leit") teil = ZAUN[unter] ? unter : "schwellen";
+    if (gruppe === "verkehr" && ZAUN[teil] && teil !== "zaun" && teil !== "gitter") {
+      gruppe = "zaun";
+    }
     var signs = window.AMK_SCHILDER_TEILE || [];
     zeichen = "";
     if (gruppe === "verkehr" && signs.indexOf(teil) !== -1) {
@@ -39,19 +44,15 @@
       if (window.AMK_SCHILDER_UI && window.AMK_SCHILDER_UI.open) window.AMK_SCHILDER_UI.open(teil);
       teil = "";
     }
-    var unter = params.get("unter") || "";
-    var inner = window.AMK_AUSWAHL && window.AMK_AUSWAHL.teile && window.AMK_AUSWAHL.teile.leit;
-    state = { gruppe: gruppe, teil: allowed(gruppe, teil), unter: "" };
-    if (state.gruppe === "zaun" && state.teil === "leit" && inner && inner.indexOf(unter) !== -1) state.unter = unter;
+    state = { gruppe: gruppe, teil: allowed(gruppe, teil) };
   }
 
   function writeUrl(mode) {
     var params = new URLSearchParams();
     if (state.gruppe) params.set("gruppe", state.gruppe);
     if (state.gruppe === "verkehr" && zeichen) params.set("teil", zeichen);
-    else if (state.gruppe === "zaun" && (state.teil === "gitter" || state.teil === "leit")) params.set("teil", state.teil);
+    else if (state.gruppe === "zaun" && state.teil && state.teil !== "zaun") params.set("teil", state.teil);
     else if (state.gruppe && state.gruppe !== "zaun" && state.teil) params.set("teil", state.teil);
-    if (state.gruppe === "zaun" && state.teil === "leit" && state.unter) params.set("unter", state.unter);
     var qs = params.toString();
     var url = location.pathname + (qs ? "?" + qs : "");
     if (mode === "push") history.pushState({ miete: 1 }, "", url);
@@ -70,11 +71,15 @@
       if (panels[id]) panels[id].hidden = id !== state.gruppe;
     });
     if (konfig) konfig.hidden = state.teil !== "zaun";
-    if (gitter) gitter.hidden = state.teil !== "gitter";
-    if (leit) leit.hidden = state.teil !== "leit";
-    document.querySelectorAll("#miete-unter [data-teil]").forEach(function (button) {
-      var on = button.getAttribute("data-teil") === state.teil;
-      button.setAttribute("aria-pressed", on ? "true" : "false");
+    if (geraet) {
+      var pick = state.teil === "gitter" || state.teil === "schwellen" || state.teil === "schleuse" || state.teil === "buehne";
+      geraet.hidden = !pick;
+      if (pick) geraet.setAttribute("data-gruppe", state.teil);
+    }
+    document.querySelectorAll("#miete-unter [data-teil]").forEach(function (link) {
+      var on = link.getAttribute("data-teil") === state.teil;
+      if (on) link.setAttribute("aria-current", "true");
+      else link.removeAttribute("aria-current");
     });
     if (window.AMK_AUSWAHL) window.AMK_AUSWAHL.sync();
     if (window.AMK_SCHILDER_UI) window.AMK_SCHILDER_UI.sync();
@@ -129,7 +134,6 @@
     event.preventDefault();
     state.gruppe = window.AMK_GRUPPEN.canon(link.getAttribute("data-gruppe") || "") || "zaun";
     state.teil = state.gruppe === "zaun" ? "zaun" : "";
-    state.unter = "";
     render();
     writeUrl("push");
   });
@@ -167,14 +171,6 @@
 
   document.addEventListener("amk-teil", function (event) {
     var detail = String(event.detail || "");
-    if (state.gruppe === "zaun" && state.teil === "leit") {
-      var inner = window.AMK_AUSWAHL && window.AMK_AUSWAHL.teile && window.AMK_AUSWAHL.teile.leit;
-      if (!inner || inner.indexOf(detail) === -1) return;
-      state.unter = detail;
-      writeUrl("push");
-      render();
-      return;
-    }
     if (!state.gruppe || state.gruppe === "zaun") return;
     var teil = allowed(state.gruppe, detail);
     if (!teil) return;
@@ -187,12 +183,12 @@
   var unter = document.getElementById("miete-unter");
   if (unter) {
     unter.addEventListener("click", function (event) {
-      var button = event.target.closest("[data-teil]");
-      if (!button) return;
+      var link = event.target.closest("a[data-teil]");
+      if (!link) return;
+      event.preventDefault();
       state.gruppe = "zaun";
-      var next = button.getAttribute("data-teil") || "";
-      state.teil = next === "gitter" || next === "leit" ? next : "zaun";
-      if (state.teil !== "leit") state.unter = "";
+      zeichen = "";
+      state.teil = allowed("zaun", link.getAttribute("data-teil") || "");
       render();
       writeUrl("push");
     });

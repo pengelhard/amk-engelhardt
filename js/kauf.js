@@ -23,9 +23,7 @@
       { id: "bauzaune", label: "Bauzäune" },
       { id: "zubehoer", label: "Zaunzubehör" },
       { id: "tore", label: "Türen & Tore" },
-      { id: "sichtschutz", label: "Sichtschutz & Planen" },
-      { id: "gitter", label: "Absperrgitter" },
-      { id: "leit", label: "Leitschwellen, Schleusen & Bühnen" }
+      { id: "sichtschutz", label: "Sichtschutz & Planen" }
     ]
   };
   var KAT_GRUPPE = {};
@@ -49,6 +47,7 @@
     ["fussart", "Fußart"],
     ["art", "Art"]
   ];
+  var EBENE = { schwellen: 1, schleuse: 1, buehne: 1 };
   var HASH = {
     bauzaun: { gruppe: "zaun", kat: "bauzaune" },
     verkehrssicherung: { gruppe: "verkehr", kat: "" },
@@ -88,25 +87,35 @@
     var gruppe = canonGruppe(params.get("gruppe") || "");
     if (!GRUPPEN[gruppe]) gruppe = "";
     var kat = params.get("kat") || "";
+    var teil = params.get("teil") || "";
     if (kat === "verkehr") kat = "";
     if (kat === "leit") {
+      kat = EBENE[teil] ? teil : "schwellen";
+      teil = "";
       if (!gruppe) gruppe = "zaun";
+    }
+    if (gruppe === "verkehr" && EBENE[teil]) {
+      gruppe = "zaun";
+      kat = teil;
+      teil = "";
+    }
+    if (EBENE[kat]) {
+      if (!gruppe) gruppe = "zaun";
+      if (gruppe !== "zaun") kat = "";
     } else if (!KAT_GRUPPE[kat]) kat = "";
     if (!gruppe && location.hash && HASH[location.hash.slice(1)]) {
       var mapped = HASH[location.hash.slice(1)];
       gruppe = mapped.gruppe;
       if (!kat) kat = mapped.kat;
     }
-    if (kat && !gruppe) gruppe = KAT_GRUPPE[kat] || "";
-    if (gruppe && kat && kat !== "leit" && GRUPPEN[gruppe].indexOf(kat) === -1) kat = "";
-    if (kat === "leit" && gruppe !== "zaun") kat = "";
+    if (kat && !gruppe) gruppe = EBENE[kat] ? "zaun" : (KAT_GRUPPE[kat] || "");
+    if (gruppe && kat && !EBENE[kat] && GRUPPEN[gruppe].indexOf(kat) === -1) kat = "";
     if (!gruppe && !params.get("q")) gruppe = "zaun";
     var facets = {};
     FACETTEN.forEach(function (pair) {
       var values = params.getAll(pair[0]);
       if (values.length) facets[pair[0]] = values;
     });
-    var teil = params.get("teil") || "";
     var signs = window.AMK_SCHILDER_TEILE || [];
     var zeichen = "";
     if (gruppe === "verkehr" && signs.indexOf(teil) !== -1) {
@@ -128,7 +137,7 @@
   function teilList() {
     var map = window.AMK_AUSWAHL && window.AMK_AUSWAHL.teile;
     if (state.gruppe === "verkehr") return (map && map.absperrung) || [];
-    if (state.gruppe === "zaun" && state.kat === "leit") return (map && map.leit) || [];
+    if (state.gruppe === "zaun" && (state.kat === "gitter" || EBENE[state.kat])) return [];
     return (map && map[state.gruppe]) || [];
   }
 
@@ -243,6 +252,17 @@
     return escapeText(value).replace(/"/g, "&quot;");
   }
 
+  function renderEbene() {
+    var nav = document.getElementById("kauf-ebene");
+    if (!nav) return;
+    nav.hidden = state.gruppe !== "zaun";
+    nav.querySelectorAll("a[data-kat]").forEach(function (link) {
+      var on = state.gruppe === "zaun" && link.getAttribute("data-kat") === state.kat;
+      if (on) link.setAttribute("aria-current", "true");
+      else link.removeAttribute("aria-current");
+    });
+  }
+
   function renderChips() {
     var list = UNTER[state.gruppe] || [];
     cats.hidden = !list.length;
@@ -285,7 +305,7 @@
     var overview = !state.gruppe && !state.q;
     var verkehr = state.gruppe === "verkehr";
     var signs = verkehr;
-    var picker = verkehr || state.gruppe === "anhaenger" || (state.gruppe === "zaun" && (state.kat === "gitter" || state.kat === "leit"));
+    var picker = verkehr || state.gruppe === "anhaenger" || (state.gruppe === "zaun" && (state.kat === "gitter" || !!EBENE[state.kat]));
     var auswahl = document.getElementById("kauf-auswahl");
     var hinweis = document.getElementById("kauf-verkehr-hinweis");
     board.classList.toggle("is-gruppe", !overview);
@@ -298,6 +318,7 @@
     if (spalte) spalte.classList.toggle("konfig-main", verkehr);
     if (verkehrSumme) verkehrSumme.hidden = !verkehr;
     renderGruppen();
+    renderEbene();
     renderChips();
     if (auswahl) {
       if (verkehr) {
@@ -310,7 +331,7 @@
       auswahl.hidden = !picker;
       if (picker) {
         var auswahlGruppe = state.gruppe;
-        if (state.gruppe === "zaun") auswahlGruppe = state.kat === "leit" ? "leit" : "gitter";
+        if (state.gruppe === "zaun") auswahlGruppe = EBENE[state.kat] ? state.kat : "gitter";
         else if (verkehr) auswahlGruppe = "absperrung";
         auswahl.setAttribute("data-gruppe", auswahlGruppe);
       }
@@ -377,6 +398,22 @@
       facets[input.name].push(input.value);
     });
     state.facets = facets;
+  }
+
+  var ebene = document.getElementById("kauf-ebene");
+  if (ebene) {
+    ebene.addEventListener("click", function (event) {
+      var link = event.target.closest("a[data-kat]");
+      if (!link) return;
+      event.preventDefault();
+      state.gruppe = "zaun";
+      state.kat = link.getAttribute("data-kat") || "";
+      state.teil = "";
+      state.zeichen = "";
+      state.facets = {};
+      render();
+      writeUrl("push");
+    });
   }
 
   cats.addEventListener("click", function (event) {

@@ -8,7 +8,7 @@
   <meta name="description" content="Einzelteile, Zubehör und Anhänger zum Kauf.">
   <link rel="icon" href="../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../assets/logo.png">
-  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/styles.css?v=ag">
   <script>document.documentElement.classList.add("js-kauf")</script>
 </head>
 <body>
@@ -45,6 +45,13 @@
           <a class="kauf-karte" href="?gruppe=zaun" data-gruppe="zaun"><img src="../images/kk/zaun-einsatz.webp" width="790" height="527" alt="" decoding="async"><strong>Bauzaun &amp; Absperrgitter</strong></a>
           <a class="kauf-karte" href="?gruppe=verkehr" data-gruppe="verkehr"><img src="../images/hero/schranke2-kachel.webp" width="800" height="450" alt="" decoding="async"><strong>Verkehrsabsicherung &amp; Schilder</strong></a>
           <a class="kauf-karte" href="?gruppe=anhaenger" data-gruppe="anhaenger"><img src="../images/fahrzeugtransporter.webp" width="800" height="534" alt="" decoding="async"><strong>Anhänger</strong></a>
+        </nav>
+        <nav class="kauf-einstieg kauf-ebene" id="kauf-ebene" aria-label="Kategorien" hidden>
+          <a class="kauf-karte" href="?gruppe=zaun&amp;kat=bauzaune" data-kat="bauzaune"><img src="../images/kk/bauzaun-10075.webp" width="1200" height="675" alt="" decoding="async"><strong>Bauzaun</strong></a>
+          <a class="kauf-karte" href="?gruppe=zaun&amp;kat=gitter" data-kat="gitter"><img src="../images/kk/absperrung-10026.webp" width="1200" height="821" alt="" decoding="async"><strong>Absperrgitter</strong></a>
+          <a class="kauf-karte" href="?gruppe=zaun&amp;kat=schwellen" data-kat="schwellen"><img src="../images/kk/schwelle-10005-2.webp" width="1200" height="675" alt="" decoding="async"><strong>Boden&shy;leitschwellen</strong></a>
+          <a class="kauf-karte" href="?gruppe=zaun&amp;kat=schleuse" data-kat="schleuse"><img src="../images/kk/absperrung-10025-3.webp" width="1024" height="701" alt="" decoding="async"><strong>Schleusen</strong></a>
+          <a class="kauf-karte" href="?gruppe=zaun&amp;kat=buehne" data-kat="buehne"><img src="../images/kk/absperrung-10047.webp" width="1024" height="576" alt="" decoding="async"><strong>Bühnen</strong></a>
         </nav>
         <div class="kauf-cats" id="kauf-cats" role="navigation" aria-label="Unterkategorien" hidden></div>
         <div class="kauf-tools">
@@ -1319,7 +1326,7 @@
       <button class="btn" type="submit">In den Anfragekorb</button>
     </form>
     </article></div></div></section>
-<section class="copy"><div class="wrap"><h2>Betonschwellen</h2><div class="tiles"><article class="tile">
+<section class="copy"><div class="wrap"><h2>Bodenleitschwellen</h2><div class="tiles"><article class="tile">
       <a href="../produkt/schwelle-10005-4/">
         <span class="frame"><img loading="lazy" src="../images/kk/schwelle-10005-4.webp" srcset="../images/kk/schwelle-10005-4-640.webp 640w, ../images/kk/schwelle-10005-4.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="675" alt="Betonleitschwelle 500 kg, 2,5 m" decoding="async"></span>
         <h3>Betonleitschwelle 500 kg, 2,5 m</h3>
@@ -1391,7 +1398,7 @@
       <button class="btn" type="submit">In den Anfragekorb</button>
     </form>
     </article></div></div></section>
-<section class="copy"><div class="wrap"><h2>Schleuse und Bühne</h2><div class="tiles"><article class="tile">
+<section class="copy"><div class="wrap"><h2>Schleusen</h2><div class="tiles"><article class="tile">
       <a href="../produkt/absperrung-10025-1/">
         <span class="frame"><img loading="lazy" src="../images/kk/absperrung-10025-1.webp" srcset="../images/kk/absperrung-10025-1-640.webp 640w, ../images/kk/absperrung-10025-1.webp 1200w" sizes="(min-width: 800px) 30vw, 100vw" width="1200" height="801" alt="Eingangsschleusensystem – Schiene" decoding="async"></span>
         <h3>Eingangsschleusensystem – Schiene</h3>
@@ -1461,7 +1468,8 @@
       <div class="field order-qty"><label for="menge-absperrung-10025-3">Menge</label><input id="menge-absperrung-10025-3" name="menge" type="number" min="1" max="9999" value="1" inputmode="numeric" required></div>
       <button class="btn" type="submit">In den Anfragekorb</button>
     </form>
-    </article><article class="tile">
+    </article></div></div></section>
+<section class="copy"><div class="wrap"><h2>Bühnen</h2><div class="tiles"><article class="tile">
       <a href="../produkt/absperrung-10047/">
         <span class="frame"><img loading="lazy" src="../images/kk/absperrung-10047.webp" srcset="../images/kk/absperrung-10047-640.webp 640w, ../images/kk/absperrung-10047.webp 1024w" sizes="(min-width: 800px) 30vw, 100vw" width="1024" height="576" alt="Bühnengeländer" decoding="async"></span>
         <h3>Bühnengeländer</h3>
@@ -1637,7 +1645,7 @@
   <script src="../js/gruppen.js"></script>
   <script src="../js/schilder.js?v=ae"></script>
   <script src="../data/anhaenger-eckdaten.js"></script>
-  <script src="../js/auswahl.js?v=ae"></script>
-  <script src="../js/kauf.js?v=ae"></script>
+  <script src="../js/auswahl.js?v=ag"></script>
+  <script src="../js/kauf.js?v=ag"></script>
 </body>
 </html>

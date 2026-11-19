@@ -13,7 +13,7 @@ Oben auf `kaufen/` stehen drei Bildkacheln: Bauzaun & Absperrgitter, Verkehrsabs
 | `absperrung` | Verkehrsabsperreinrichtungen | `verkehr` |
 | `anhaenger` | Anhänger | `anhaenger` |
 
-In Bauzaun & Absperrgitter bleiben die bisherigen Unterkategorien als Chips. Bauzäune, Zaunzubehör, Türen und Sichtschutz bleiben im Filterkatalog. Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger nutzen dieselbe Auswahl wie die Miete (`js/auswahl.js`): Unterkategorie als Pills, darunter Typ-Karten mit Bild und Anzahl. `#bauzaun`, `#verkehrssicherung` und `#anhaenger` öffnen die passende Hauptgruppe. `?kat=gitter` öffnet die Typ-Karten der Absperrgitter.
+In Bauzaun & Absperrgitter stehen Bauzaun, Absperrgitter, Bodenleitschwellen, Schleusen und Bühnen als Bildkacheln auf einer Ebene. Bauzäune, Zaunzubehör, Türen und Sichtschutz bleiben im Filterkatalog. Absperrgitter, die drei neuen Kategorien, Verkehrsabsperreinrichtungen und Anhänger nutzen dieselbe Auswahl wie die Miete (`js/auswahl.js`): Typ-Karten mit Bild und Anzahl. `#bauzaun`, `#verkehrssicherung` und `#anhaenger` öffnen die passende Hauptgruppe. `?kat=gitter` öffnet die Absperrgitter, `?kat=schwellen`, `?kat=schleuse` und `?kat=buehne` die drei Kategorien. `?kat=leit` öffnet Bodenleitschwellen.
 
 ## Kategorien
 
@@ -27,7 +27,7 @@ Die Kategorie steht in `data/katalog.json` unter `shop`. Sie folgt der bisherige
 | `sichtschutz` | Sichtschutz & Planen | Sichtschutz |
 | `gitter` | Absperrgitter | Verkehrssicherung, Gruppe Gitter |
 | `schilder` | Verkehrsschilder | bisheriger Sammelposten, jetzt die Auswahlliste |
-| `verkehr` | Verkehrsabsperreinrichtungen | Schranken, Baken, Betonschwellen, Schleusen, Bühnen |
+| `verkehr` | Verkehrsabsperreinrichtungen | Schranken, Baken. Bodenleitschwellen, Schleusen und Bühnen sind eigene Kategorien neben Bauzaun und Absperrgitter |
 | `anhaenger` | Anhänger | Anhänger |
 
 Leitkegel und Leuchten kommen im Bestand nicht vor und sind keine Kategorie. Farbe und Einsatzzweck stehen auf den Produktseiten nicht und sind keine Filter.
@@ -46,7 +46,7 @@ Typ-Karten sind Mehrfachauswahl und kommen aus einer Komponente (`js/typwahl.js`
 
 Jedes angehakte Zeichen geht mit Anzahl als eigene Zeile in den Anfragekorb (`kauf:schild:…` oder `miete:schild:…`). Das Feld „Größe, Folie, Ständer“ liegt darunter und wird, wenn es gefüllt ist, als Hinweiszeile mitgenommen. Es steht nur in dieser Gruppe und auf `produkt/verkehrsschilder/`, nicht in der Übersicht.
 
-Die vier Gruppen und die Zeichenliste sind die gemeinsame Quelle für Miete und Kauf (`js/gruppen.js`, `js/schilder.js`, `js/auswahl.js`). Auf `mieten/` liegt der Bauzaun-Konfigurator in Bauzaun & Absperrgitter, Standardzubehör inklusive, Sonderzubehör optional. Absperrgitter, Verkehrsabsperreinrichtungen und Anhänger kommen aus `data/katalog.json`. Die Pills folgen `attr.art`: Absperrschranken, Leitbaken, Betonleitschwellen, Schleusen, Bühne, und bei den Anhängern Hochlader, Planenanhänger, Kofferanhänger, Fahrzeugtransporter, Kühlanhänger. Bei der Miete kommt der Zeitraum dazu. Beides landet im selben Anfragekorb, Miete mit `miete:`, Kauf mit `kauf:`.
+Die vier Gruppen und die Zeichenliste sind die gemeinsame Quelle für Miete und Kauf (`js/gruppen.js`, `js/schilder.js`, `js/auswahl.js`). Auf `mieten/` liegt der Bauzaun-Konfigurator in Bauzaun & Absperrgitter, Standardzubehör inklusive, Sonderzubehör optional. Absperrgitter, Bodenleitschwellen, Schleusen, Bühnen, Verkehrsabsperreinrichtungen und Anhänger kommen aus `data/katalog.json`. Die Pills der Verkehrsgeräte folgen `attr.art`: Absperrschranken und Leitbaken. Bodenleitschwellen, Schleusen und Bühnen sind eigene Kategorien, Zuordnung weiter über `attr.art` Betonschwellen, Schleuse und Bühne. Bei den Anhängern: Hochlader, Planenanhänger, Kofferanhänger, Fahrzeugtransporter, Kühlanhänger. Bei der Miete kommt der Zeitraum dazu. Beides landet im selben Anfragekorb, Miete mit `miete:`, Kauf mit `kauf:`.
 
 ## Attribute
 

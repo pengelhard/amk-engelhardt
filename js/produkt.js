@@ -29,14 +29,16 @@
     verkehr: { gruppe: "verkehr", kat: "", label: "Verkehrsabsicherung & Schilder" },
     anhaenger: { gruppe: "anhaenger", kat: "", label: "Anhänger" }
   };
-  var LEIT = { Betonschwellen: 1, Schleuse: 1, "Bühne": 1 };
+  var EBENE = {
+    Betonschwellen: { gruppe: "zaun", kat: "schwellen", label: "Bodenleitschwellen" },
+    Schleuse: { gruppe: "zaun", kat: "schleuse", label: "Schleusen" },
+    "Bühne": { gruppe: "zaun", kat: "buehne", label: "Bühnen" }
+  };
 
   function crumbFor(product) {
     if (!product) return null;
     var art = product.attr && product.attr.art;
-    if (product.shop === "verkehr" && LEIT[art]) {
-      return { gruppe: "zaun", kat: "leit", label: "Leitschwellen, Schleusen & Bühnen" };
-    }
+    if (product.shop === "verkehr" && EBENE[art]) return EBENE[art];
     return SHOP[product.shop] || null;
   }
 
