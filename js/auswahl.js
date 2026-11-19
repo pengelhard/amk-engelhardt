@@ -204,6 +204,7 @@
           name: "typ",
           value: product.slug,
           title: product.name,
+          note: product.kicker || "",
           media: picture(product, root),
           checked: on,
           qty: qty,

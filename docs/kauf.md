@@ -4,7 +4,7 @@
 
 ## Hauptgruppen
 
-Oben auf `kaufen/` stehen vier Einstiege. Die Adresse trägt `gruppe`.
+Oben auf `kaufen/` stehen drei Bildkacheln: Bauzaun & Absperrgitter, Verkehrsabsicherung & Schilder, Anhänger. Die Adresse trägt `gruppe`. `schilder` und `absperrung` öffnen Verkehrsabsicherung.
 
 | `gruppe` | Anzeige | `shop` |
 | --- | --- | --- |
@@ -95,6 +95,10 @@ Die Galerie liest `data/katalog.json`. Ohne `bilder` nimmt sie `bild` und `bildS
 ]
 ```
 
-`src` ist der Pfad ab der Wurzel. `small` ist die kleinere Datei, optional. Steht `bilder`, ersetzt die Liste das einzelne `bild`, das erste Bild also mit aufnehmen. `zeichnungen` kommen dahinter und tragen in der Galerie die Kennzeichnung Zeichnung. Fehlt beides außer `bild`, zeigt die Seite nur das eine Bild, ohne Hinweistext.
+`src` ist der Pfad ab der Wurzel. `small` ist die kleinere Datei, optional. Steht `bilder`, ersetzt die Liste das einzelne `bild`, das erste Bild also mit aufnehmen. `zeichnungen` kommen dahinter und tragen in der Galerie die Kennzeichnung Zeichnung. Fehlt beides außer `bild`, zeigt die Seite nur das eine Bild, ohne Hinweistext, ohne Pfeile und ohne Vorschaureihe. Pfeile und Vorschaureihe erscheinen erst, wenn die Galerie mindestens zwei Bilder oder Zeichnungen hat.
+
+## Produktkacheln
+
+Jede Gruppe nutzt dieselbe Kachel: großes Bild, Name, Kurzmaß. Das Kurzmaß ist `kicker` in `data/katalog.json`. Fehlt es, fehlt die Zeile. Die Kacheln haben dieselbe Höhe. Ab 1100 px stehen drei nebeneinander, ab 720 px zwei, darunter eine. Bild und Name öffnen `produkt/<slug>/`. Die Checkbox bleibt die Auswahl, das Mengenfeld erscheint nach dem Anhaken. Das Mengenformular der Katalogkachel bleibt im HTML und ist im Kaufbrett ausgeblendet. Die Anfrage steht auf der Produktseite. Absperrgitter, Schilder, Verkehrsabsicherung und Anhänger nutzen dieselbe Kachel. Bei Schildern stehen Nummer und Name in der Bezeichnung.
 
 Der Pflegebereich unter `.pages.yml` schreibt nur Aktuelles (`data/aktuelles.json` und `images/aktuelles/`). Produktbilder legt er nicht an. Dafür bleiben Datei und Eintrag in `data/katalog.json`.

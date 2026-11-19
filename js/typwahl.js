@@ -52,11 +52,12 @@
       (on ? " checked" : "") + controls + ">";
     if (opts.href) {
       var href = esc(opts.href);
+      var mass = opts.note ? '<p class="pick-mass">' + esc(opts.note) + "</p>" : "";
       return '<div class="pick-block pick-linked"' + dataAttrs(opts.data) + ">" +
         '<div class="pick">' +
         '<a class="pick-media" href="' + href + '">' + (opts.media || "") + "</a>" +
-        "<span><label>" + box + '<span class="visually-hidden">' + esc(opts.title) + " auswählen</span></label>" +
-        '<a href="' + href + '"><strong>' + esc(opts.title) + "</strong></a></span></div>" +
+        '<span class="pick-text"><label>' + box + '<span class="visually-hidden">' + esc(opts.title) + " auswählen</span></label>" +
+        '<a href="' + href + '"><strong>' + esc(opts.title) + "</strong></a>" + mass + "</span></div>" +
         panel + (opts.extra || "") + "</div>";
     }
     return '<div class="pick-block"' + dataAttrs(opts.data) + ">" +

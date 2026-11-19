@@ -1443,6 +1443,132 @@ a.contact-card:hover .contact-main { color: var(--green); }
 .more-fold[open] > summary::before,
 .anhaenger-details[open] > summary::before { transform: translateY(0.12rem) rotate(45deg); }
 .kauf-board .tile .sheet { display: none; }
+.kauf-board .tiles { gap: 1rem; align-items: stretch; }
+.kauf-board .tile {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 1rem;
+  box-shadow: 4px 4px 0 var(--ink);
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.kauf-board .tile:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.kauf-board .tile .order { display: none; }
+.kauf-board .tile > a { color: inherit; text-decoration: none; }
+.kauf-board .tile h3 {
+  display: block;
+  min-height: 2.4em;
+  margin: 0.75rem 0.85rem 0.15rem;
+  font-size: 1.15rem;
+  line-height: 1.15;
+}
+.kauf-board .tile > p {
+  margin: auto 0.85rem 0.9rem;
+  color: var(--gray);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+.kauf-board .picks:has(.pick-linked) { gap: 1rem; align-items: stretch; }
+.kauf-board .pick-block.pick-linked {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 1rem;
+  box-shadow: 4px 4px 0 var(--ink);
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.kauf-board .pick-block.pick-linked:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.kauf-board .pick-linked .pick {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.65rem;
+  min-height: 0;
+  margin: 0;
+  padding: 0 0 0.8rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: default;
+}
+.kauf-board .pick-linked .pick:has(input:checked) { box-shadow: none; }
+.kauf-board .pick-block.pick-linked:has(input:checked) { box-shadow: inset 0 0 0 2px var(--ink), 4px 4px 0 var(--ink); }
+.kauf-board .pick-linked .pick-media {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.kauf-board .pick-linked .pick > a.pick-media > img,
+.kauf-board .pick-linked .pick .pick-bild {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  border-radius: 0;
+  object-fit: contain;
+  background: var(--soft);
+  padding: 0.65rem;
+  box-sizing: border-box;
+}
+.kauf-board .pick-linked .pick .pick-bild {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.kauf-board .pick-linked .pick .pick-bild img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 0;
+  aspect-ratio: auto;
+  background: transparent;
+}
+.kauf-board .pick-linked .pick-text {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-areas: "box name" "box mass";
+  align-items: start;
+  column-gap: 0.45rem;
+  row-gap: 0.15rem;
+  padding: 0 0.8rem;
+  min-width: 0;
+}
+.kauf-board .pick-linked .pick-text label { grid-area: box; }
+.kauf-board .pick-linked .pick-text > a { grid-area: name; min-width: 0; }
+.kauf-board .pick-linked .pick strong {
+  display: block;
+  min-height: 2.4em;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+.kauf-board .pick-linked .pick-mass {
+  grid-area: mass;
+  margin: 0;
+  color: var(--gray);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+.kauf-board .pick-linked .pick-menge,
+.kauf-board .pick-linked .anhaenger-details { margin: 0 0.8rem 0.75rem; }
 .pick small { color: var(--gray); font-size: 0.95rem; line-height: 1.35; }
 .pick input[type="checkbox"] { align-self: center; }
 .pick:has(input:checked)::after {
@@ -2015,6 +2141,8 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 
 @media (min-width: 1100px) {
   .plates-grid { grid-template-columns: repeat(4, 1fr); }
+  .kauf-board .tiles,
+  .kauf-board .picks:has(.pick-linked) { grid-template-columns: repeat(3, 1fr); }
 }
 
 .js-kauf section.copy { display: none; }
