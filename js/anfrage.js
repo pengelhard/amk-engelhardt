@@ -201,6 +201,41 @@
     return "../produkt/" + slug + "/";
   }
 
+  function kaufSeite(item) {
+    var id = String(item && item.id || "");
+    if (id.indexOf("kauf:schild:") === 0) {
+      var schild = id.slice("kauf:schild:".length).split(":")[0];
+      return schild ? "../produkt/schild-" + schild + "/" : "../kaufen/?gruppe=schilder";
+    }
+    var slug = slugOf(id);
+    if (!slug || slug === "beispiel") return "../produkt/beispiel/";
+    return "../produkt/" + slug + "/";
+  }
+
+  function artikelHref(item) {
+    var id = String(item && item.id || "");
+    if (id.indexOf("kauf:") === 0) return kaufSeite(item);
+    return editHref(item);
+  }
+
+  function teilHref(item, fallback) {
+    var id = String(item && item.id || "");
+    var marks = [":im:fuss:", ":im:schelle:"];
+    var i;
+    for (i = 0; i < marks.length; i++) {
+      var at = id.indexOf(marks[i]);
+      if (at === -1) continue;
+      var slug = id.slice(at + marks[i].length).split(":")[0];
+      if (slug) return "../produkt/" + slug + "/";
+    }
+    return fallback;
+  }
+
+  function bildLink(href, bild, label) {
+    if (!bild) return "";
+    return '<a class="cart-bild" href="' + esc(href) + '" aria-label="' + esc(label) + '"><img src="../' + esc(bild) + '" alt="" width="320" height="220"></a>';
+  }
+
   function partOrder(id) {
     id = String(id);
     if (id.indexOf(":im:zaun") !== -1) return 0;
@@ -271,13 +306,18 @@
     if (!row) return;
     var title = row.querySelector("[data-stand-title]");
     var name = title ? title.getAttribute("data-stand-name") || "" : "";
-    if (title) title.textContent = n + " × Komplett-Ständer – " + name;
+    var titleLink = title ? title.querySelector("a") : null;
+    var titleText = n + " × Komplett-Ständer – " + name;
+    if (titleLink) titleLink.textContent = titleText;
+    else if (title) title.textContent = titleText;
+    var bildLinkNode = row.querySelector(".cart-bild");
+    if (bildLinkNode) bildLinkNode.setAttribute("aria-label", titleText);
     row.querySelectorAll("[data-je]").forEach(function (node) {
       var je = parseInt(node.getAttribute("data-je"), 10) || 1;
-      var teil = node.getAttribute("data-teil") || "";
       var qty = je * n;
       if (qty > 9999) qty = 9999;
-      node.textContent = qty + "× " + teil;
+      var menge = node.querySelector("[data-teil-menge]");
+      if (menge) menge.textContent = qty + "×";
     });
   }
 
@@ -297,15 +337,18 @@
     var product = standProduct(members);
     var info = CATALOG[product.id] || {};
     var bild = info.bild || product.bild;
-    var image = bild ? '<img src="../' + esc(bild) + '" alt="" width="320" height="220">' : "";
+    var href = standHref(key);
+    var label = n + " × Komplett-Ständer – " + product.name;
+    var image = bildLink(href, bild, label);
     var fieldId = standFieldId(key);
     var parts = members.map(function (item) {
       var je = Math.max(1, Math.round(item.qty / n));
-      return '<li data-je="' + je + '" data-teil="' + esc(item.name) + '">' + (je * n) + "× " + esc(item.name) + "</li>";
+      return '<li data-je="' + je + '" data-teil="' + esc(item.name) + '"><span data-teil-menge>' + (je * n) + "×</span> " +
+        '<a class="cart-link" href="' + esc(teilHref(item, href)) + '">' + esc(item.name) + "</a></li>";
     }).join("");
     return '<li class="cart-row cart-stand" data-stand-key="' + esc(key) + '">' + image +
       '<div class="cart-main"><strong data-stand-title data-stand-name="' + esc(product.name) + '">' +
-      esc(n + " × Komplett-Ständer – " + product.name) + "</strong>" +
+      '<a class="cart-link" href="' + esc(href) + '">' + esc(label) + "</a></strong>" +
       '<ul class="cart-stand-teile">' + parts + "</ul></div>" +
       '<div class="beispiel-step"><button type="button" data-stand-step="-1" aria-label="Weniger Ständer">−</button>' +
       '<label class="visually-hidden" for="' + fieldId + '">Ständeranzahl</label>' +
@@ -348,7 +391,8 @@
     function row(item, index) {
       var info = CATALOG[item.id] || {};
       var bild = item.konfig && BILD[item.konfig.key] ? BILD[item.konfig.key] : (info.bild || item.bild);
-      var image = bild ? '<img src="../' + esc(bild) + '" alt="" width="320" height="220">' : "";
+      var href = artikelHref(item);
+      var image = bildLink(href, bild, item.name);
       var bits = [];
       if (item.konfig) bits.push(konfigText(item));
       else if (item.note) bits.push("<p>" + esc(item.note) + "</p>");
@@ -359,7 +403,7 @@
         ? ""
         : '<label class="qty">Menge <input type="number" min="1" max="9999" inputmode="numeric" value="' + item.qty + '" data-index="' + index + '" aria-label="Menge ' + esc(item.name) + '"></label>';
       return '<li class="cart-row">' + image +
-        '<div class="cart-main"><strong>' + esc(item.name) + "</strong>" + bits.join("") + "</div>" +
+        '<div class="cart-main"><strong><a class="cart-link" href="' + esc(href) + '">' + esc(item.name) + "</a></strong>" + bits.join("") + "</div>" +
         qty +
         '<div class="cart-actions"><a class="text-btn" href="' + esc(editHref(item)) + '">Ändern<span class="visually-hidden">: ' + esc(item.name) + '</span></a>' +
         '<button type="button" class="text-btn" data-index="' + index + '">Entfernen<span class="visually-hidden">: ' + esc(item.name) + "</span></button></div>" +

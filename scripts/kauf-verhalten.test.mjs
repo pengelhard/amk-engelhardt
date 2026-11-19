@@ -509,6 +509,92 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     point("Korb-Gruppe Ständer", /Komplett-Ständer/.test(cartText) && /Kauf/.test(cartText), "");
     const cartRobots = await detail.page.locator('meta[name="robots"]').getAttribute("content");
     point("noindex Korb", /noindex/i.test(cartRobots || ""), cartRobots || "");
+    await detail.page.evaluate(() => {
+      const items = JSON.parse(localStorage.getItem("amk-wunsch") || "[]");
+      items.push(
+        { id: "kauf:schild:z123", name: "Arbeitsstelle", qty: 1, kat: "verkehrssicherung", bild: "images/schilder/z123.svg" },
+        { id: "kauf:hochlader", name: "Hochlader", qty: 1, kat: "anhaenger", bild: "images/anhaenger-offen.webp" },
+        { id: "miete:bauzaun-standard", name: "Bauzaun Standard", qty: 2, kat: "bauzaun" },
+        { id: "miete:schild:z123", name: "Gefahrstelle", qty: 1, kat: "verkehrssicherung", bild: "images/schilder/z123.svg" }
+      );
+      localStorage.setItem("amk-wunsch", JSON.stringify(items));
+    });
+    await detail.page.reload({ waitUntil: "networkidle" });
+    const korbLinks = await detail.page.evaluate(() => {
+      const rows = [...document.querySelectorAll("li.cart-row")].map((row) => {
+        const name = row.querySelector(".cart-main > strong > a.cart-link");
+        const bild = row.querySelector(":scope > a.cart-bild");
+        const img = row.querySelector(":scope > a.cart-bild img, :scope > img");
+        return {
+          name: name ? name.getAttribute("href") : "",
+          bild: bild ? bild.getAttribute("href") : "",
+          lose: !!(img && !img.closest("a"))
+        };
+      });
+      const teile = [...document.querySelectorAll(".cart-stand-teile a")].map((a) => a.getAttribute("href"));
+      const controls = [...document.querySelectorAll(".cart-row input, .cart-row button")];
+      const nameLink = document.querySelector("[data-stand-title] a");
+      return {
+        rows,
+        teile,
+        steuern: controls.every((el) => !el.closest("a")),
+        unterstrichen: nameLink ? getComputedStyle(nameLink).textDecorationLine : "",
+        rahmen: nameLink ? getComputedStyle(nameLink).outlineStyle : ""
+      };
+    });
+    const korbHref = korbLinks.rows.map((row) => row.name).concat(korbLinks.rows.map((row) => row.bild), korbLinks.teile).filter(Boolean);
+    const korbStatus = await detail.page.evaluate(async (hrefs) => {
+      const seen = {};
+      const out = [];
+      for (const href of hrefs) {
+        if (seen[href]) continue;
+        seen[href] = true;
+        const res = await fetch(new URL(href, location.href), { method: "GET" });
+        out.push(href + ":" + res.status);
+      }
+      return out;
+    }, korbHref);
+    const standZeile = korbLinks.rows.find((row) => (row.name || "").indexOf("/produkt/bauzaun-10075/") !== -1) || {};
+    point("Korb-Zeilen verlinkt", korbLinks.rows.length > 0 && korbLinks.rows.every((row) => row.name && !row.lose && row.bild === row.name), JSON.stringify(korbLinks.rows));
+    point("Ständer zur Bauzaunseite", (standZeile.name || "").endsWith("/produkt/bauzaun-10075/") && standZeile.bild === standZeile.name, standZeile.name || "");
+    point("Fuß und Schelle eigene Seite", korbLinks.teile.some((href) => href.endsWith("/produkt/fuss-10006/")) && korbLinks.teile.some((href) => href.endsWith("/produkt/zubehoer-10002-1/")) && korbLinks.teile.filter((href) => href.indexOf("/produkt/bauzaun-10075/") === -1).every((href) => /\/produkt\/(fuss-|zubehoer-)/.test(href)), korbLinks.teile.join(" | "));
+    point("Schild, Anhänger, Miete", korbLinks.rows.some((row) => (row.name || "").endsWith("/produkt/schild-z123/")) && korbLinks.rows.some((row) => (row.name || "").endsWith("/produkt/hochlader/")) && korbLinks.rows.some((row) => (row.name || "").endsWith("/produkt/bauzaun-standard/")) && korbLinks.rows.some((row) => (row.name || "").indexOf("/mieten/?gruppe=schilder") !== -1), korbLinks.rows.map((row) => row.name).join(" | "));
+    point("Korb-Links vorhanden", korbStatus.every((entry) => entry.endsWith(":200")), korbStatus.join(" | "));
+    point("Menge und Löschen ohne Link", korbLinks.steuern, "");
+    point("Link erkennbar", korbLinks.unterstrichen.indexOf("underline") !== -1, korbLinks.unterstrichen);
+    await detail.page.locator("[data-stand-title] a").focus();
+    const fokus = await detail.page.evaluate(() => getComputedStyle(document.activeElement).outlineStyle);
+    point("Link-Fokus", fokus !== "none", fokus);
+    const korbUrl = detail.page.url();
+    await detail.page.locator("input[data-stand-key]").fill("2");
+    await detail.page.locator("input[data-stand-key]").dispatchEvent("change");
+    const nachMenge = await detail.page.evaluate(() => ({
+      url: location.pathname,
+      titel: (document.querySelector("[data-stand-title] a") || {}).textContent || "",
+      fuss: (document.querySelector('.cart-stand-teile a[href$="/produkt/fuss-10006/"]') || {}).textContent || "",
+      menge: (document.querySelector(".cart-stand-teile [data-teil-menge]") || {}).textContent || ""
+    }));
+    point("Menge bleibt im Korb", nachMenge.url.endsWith("/anfrage/") && /2 × Komplett-Ständer/.test(nachMenge.titel) && nachMenge.fuss.length > 0, JSON.stringify(nachMenge));
+    await detail.page.locator("[data-stand-title] a").click();
+    await detail.page.waitForURL(/\/produkt\/bauzaun-10075\//);
+    await detail.page.goBack({ waitUntil: "networkidle" });
+    const korbZurueck = await detail.page.locator("[data-stand-title]").innerText();
+    const gespeichert = await detail.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").length);
+    point("Korb bleibt beim Zurück", /Komplett-Ständer/.test(korbZurueck) && gespeichert > 0 && detail.page.url() === korbUrl, korbZurueck);
+    const korbRoh = await detail.page.evaluate(() => localStorage.getItem("amk-wunsch"));
+    const telefon = await open(390, "/anfrage/");
+    await telefon.page.evaluate((raw) => localStorage.setItem("amk-wunsch", raw), korbRoh);
+    await telefon.page.reload({ waitUntil: "networkidle" });
+    const telefonLinks = await telefon.page.locator("li.cart-row .cart-main > strong > a.cart-link").count();
+    const telefonUrl = telefon.page.url();
+    await telefon.page.locator("[data-stand-step='-1']").click();
+    const telefonNach = await telefon.page.evaluate(() => ({
+      url: location.href,
+      titel: (document.querySelector("[data-stand-title] a") || {}).textContent || ""
+    }));
+    point("Korb Telefon", telefonLinks > 0 && telefonNach.url === telefonUrl && /1 × Komplett-Ständer/.test(telefonNach.titel), telefonLinks + " " + telefonNach.titel);
+    point("Konsole Korb Telefon", telefon.errors.length === 0, telefon.errors.join(" | "));
+    await telefon.page.close();
     point("Konsole Detail", detail.errors.length === 0, detail.errors.join(" | "));
     const detailOverflow = await detail.page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     point("kein Quer-Scroll Detail", detailOverflow <= 1, String(detailOverflow));
