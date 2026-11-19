@@ -16,34 +16,35 @@
     "images/beispiel/bild-3.svg",
     "images/beispiel/bild-4.svg"
   ],
-  "arten": [
-    {
-      "id": "felder",
-      "label": "Einzelne Felder",
-      "einheit": "Feldanzahl",
-      "hinweis": "Einzelne Felder"
+  "paket": {
+    "label": "Komplett-Ständer",
+    "felderLabel": "Einzelne Felder",
+    "felderJe": 30,
+    "inhalt": [
+      "30 Felder je Ständer",
+      "Transportständer inklusive",
+      "31 Bauzaunfüße je Ständer",
+      "30 Verbindungsschellen je Ständer"
+    ],
+    "stand": {
+      "slug": "transportstaender-10059",
+      "name": "Transportständer"
     },
-    {
-      "id": "staender",
-      "label": "Komplett-Ständer",
-      "einheit": "Ständeranzahl",
-      "felderJe": 30,
-      "inhalt": [
-        "30 Felder je Ständer",
-        "Transportständer inklusive",
-        "31 Bauzaunfüße je Ständer",
-        "30 Verbindungsschellen je Ständer"
-      ],
-      "staender": {
-        "slug": "transportstaender-10059",
-        "name": "Transportständer",
-        "je": 1,
-        "vermerk": "inklusive"
+    "wahl": [
+      {
+        "id": "fuss",
+        "label": "Füße",
+        "je": 31,
+        "standard": "fuss-10006",
+        "optionen": ["fuss-10006", "fuss-10004", "fuss-10005"]
       },
-      "posten": [
-        { "slug": "fuss-10006", "je": 31 },
-        { "slug": "zubehoer-10002-1", "je": 30 }
-      ]
-    }
-  ]
+      {
+        "id": "schelle",
+        "label": "Schellen",
+        "je": 30,
+        "standard": "zubehoer-10002-1",
+        "optionen": ["zubehoer-10002-1", "zubehoer-10002", "zubehoer-10003"]
+      }
+    ]
+  }
 }
