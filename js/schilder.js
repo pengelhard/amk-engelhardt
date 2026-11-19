@@ -155,7 +155,7 @@
         if (!box || !box.checked) return;
         var qtyField = form.querySelector("#menge-schild-" + entry.id);
         var qty = parseInt(qtyField && qtyField.value, 10);
-        if (!qty || qty < 1 || qty > 99) {
+        if (!qty || qty < 1 || qty > 9999) {
           invalid = qtyField;
           return;
         }

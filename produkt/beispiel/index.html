@@ -40,6 +40,7 @@
           </div>
           <div class="beispiel-thumbs" id="beispiel-thumbs" aria-label="Bilder"></div>
         </div>
+        <div class="beispiel-rechts">
         <div class="beispiel-kauf">
           <div class="beispiel-kauf-body">
             <nav class="crumbs" aria-label="Brotkrumen"><a href="../../">Start</a> <span aria-hidden="true">›</span> <a href="../../kaufen/">Kaufen</a> <span aria-hidden="true">›</span> <span id="beispiel-krume" aria-current="page">Bauzaun</span></nav>
@@ -53,7 +54,7 @@
               <div class="beispiel-step">
                 <button type="button" data-step="-1" aria-label="Weniger">−</button>
                 <label class="visually-hidden" for="menge-beispiel">Menge</label>
-                <input id="menge-beispiel" name="menge" type="number" min="1" max="99" value="1" inputmode="numeric" required>
+                <input id="menge-beispiel" name="menge" type="number" min="1" max="9999" value="1" inputmode="numeric" required>
                 <button type="button" data-step="1" aria-label="Mehr">+</button>
               </div>
             </div>
@@ -66,8 +67,9 @@
             <ul id="beispiel-liste"></ul>
           </div>
           <div class="beispiel-senden">
-            <button class="btn" type="submit">In den Anfragekorb</button>
+            <a class="btn" href="../../anfrage/">Zum Anfragekorb</a>
           </div>
+        </div>
         </div>
         <div class="beispiel-daten">
           <div id="beispiel-text"></div>
@@ -80,7 +82,7 @@
       </div>
       <div class="beispiel-leiste">
         <button type="button" class="beispiel-leiste-wahl" aria-expanded="false" aria-controls="beispiel-auswahl"><span id="beispiel-posten">1 Posten</span></button>
-        <button class="btn" type="submit">In den Anfragekorb</button>
+        <a class="btn" href="../../anfrage/">Zum Anfragekorb</a>
       </div>
       <button type="button" class="beispiel-haube" hidden aria-label="Auswahl schließen"></button>
     </form>

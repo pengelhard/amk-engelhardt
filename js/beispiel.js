@@ -24,7 +24,7 @@
   function clamp(field) {
     var value = parseInt(field.value, 10);
     var cap = parseInt(field.getAttribute("max"), 10);
-    if (!cap || cap < 1) cap = 99;
+    if (!cap || cap < 1) cap = 9999;
     if (!value || value < 1) value = 1;
     if (value > cap) value = cap;
     field.value = String(value);
@@ -38,6 +38,7 @@
   var wahl = root.querySelector(".beispiel-leiste-wahl");
   var haube = root.querySelector(".beispiel-haube");
   var modus = {};
+  var managed = { "kauf:beispiel:felder": 1, "kauf:beispiel:staender": 1 };
 
   function artNow() {
     var chosen = root.querySelector('input[name="art"]:checked');
@@ -97,7 +98,7 @@
     return '<div class="beispiel-step">' +
       '<button type="button" data-step="-1" aria-label="Weniger">−</button>' +
       '<label class="visually-hidden" for="' + esc(id) + '">' + esc(label) + "</label>" +
-      '<input id="' + esc(id) + '" data-spiegel="' + esc(key) + '" type="number" min="1" max="' + (max || 99) + '" value="' + esc(value) + '" inputmode="numeric">' +
+      '<input id="' + esc(id) + '" data-spiegel="' + esc(key) + '" type="number" min="1" max="' + (max || 9999) + '" value="' + esc(value) + '" inputmode="numeric">' +
       '<button type="button" data-step="1" aria-label="Mehr">+</button>' +
       "</div>";
   }
@@ -174,7 +175,7 @@
     var html = '<li class="beispiel-post beispiel-post--haupt">' +
       '<p class="beispiel-post-text"><strong>' + esc(product.name) + "</strong>" +
       '<span class="beispiel-post-art">' + esc(artText(art)) + "</span></p>" +
-      stepper("haupt", "menge-liste-haupt", main ? main.value : "1", "Menge " + product.name, 99) +
+      stepper("haupt", "menge-liste-haupt", main ? main.value : "1", "Menge " + product.name, 9999) +
       "</li>";
     var seen = {};
     (art.posten || []).forEach(function (row) {
@@ -293,33 +294,95 @@
     }).join("");
   }
 
-  function submit(event) {
-    event.preventDefault();
+  function linesNow() {
     var art = artNow();
     var field = document.getElementById("menge-beispiel");
-    var qty = clamp(field);
-    var note = artText(art);
     var lines = [{
       id: "kauf:beispiel:" + art.id,
       name: product.name,
-      qty: qty,
+      qty: clamp(field),
       bild: product.bild || "",
       kat: product.kat || "",
-      note: note
+      note: artText(art)
     }];
     root.querySelectorAll('input[name="zubehoer"]:checked').forEach(function (box) {
       var item = bySlug[box.value];
       if (!item) return;
-      var menge = document.getElementById("menge-" + box.value);
       lines.push({
         id: "kauf:" + item.slug,
         name: item.name,
-        qty: clamp(menge),
+        qty: clamp(document.getElementById("menge-" + box.value)),
         bild: item.bild || "",
         kat: item.kat || ""
       });
     });
-    window.AMK_WUNSCH.add(lines);
+    return lines;
+  }
+
+  function syncCart() {
+    if (!product || !window.AMK_WUNSCH || typeof window.AMK_WUNSCH.save !== "function") return;
+    var lines = linesNow();
+    var wanted = {};
+    lines.forEach(function (line) {
+      wanted[line.id] = line;
+      managed[line.id] = 1;
+    });
+    var items = window.AMK_WUNSCH.load().filter(function (item) {
+      if (!managed[item.id]) return true;
+      return !!wanted[item.id];
+    });
+    lines.forEach(function (line) {
+      var found = null;
+      items.forEach(function (item) { if (item.id === line.id) found = item; });
+      if (found) {
+        found.qty = line.qty;
+        found.name = line.name;
+        found.bild = line.bild || "";
+        found.kat = line.kat || "";
+        if (line.note) found.note = line.note;
+        else delete found.note;
+      } else items.push(line);
+    });
+    window.AMK_WUNSCH.save(items, true);
+  }
+
+  function restoreCart() {
+    var items = window.AMK_WUNSCH.load();
+    var main = null;
+    items.forEach(function (item) {
+      if (item.id === "kauf:beispiel:staender" || item.id === "kauf:beispiel:felder") main = item;
+    });
+    if (main) {
+      var radio = root.querySelector('input[name="art"][value="' + String(main.id).split(":").pop() + '"]');
+      if (radio) radio.checked = true;
+      var field = document.getElementById("menge-beispiel");
+      if (field) field.value = String(main.qty);
+      showArt();
+    }
+    var known = {};
+    (config.zubehoer || []).forEach(function (slug) { known[slug] = 1; });
+    items.forEach(function (item) {
+      var slug = String(item.id || "");
+      if (slug.indexOf("kauf:") !== 0) return;
+      slug = slug.slice(5);
+      if (!known[slug]) return;
+      var box = root.querySelector('input[name="zubehoer"][value="' + slug + '"]');
+      if (!box) return;
+      box.checked = true;
+      var pick = box.closest(".beispiel-pick");
+      var step = pick ? pick.querySelector(".beispiel-step") : null;
+      if (step) step.hidden = false;
+      setMenge(slug, item.qty);
+      managed[item.id] = 1;
+      var row = standardVon(slug);
+      if (row && artNow().id === "staender" && item.qty === row.je * standZahl()) modus[slug] = "auto";
+      else if (row) modus[slug] = "hand";
+    });
+    if (artNow().id === "staender") {
+      (artNow().posten || []).forEach(function (row) {
+        if (!modus[row.slug]) modus[row.slug] = "weg";
+      });
+    }
   }
 
   root.addEventListener("click", function (event) {
@@ -341,7 +404,7 @@
     var step = parseInt(button.getAttribute("data-step"), 10) || 0;
     var value = parseInt(field.value, 10);
     if (!value || value < 1) value = 1;
-    var cap = parseInt(field.getAttribute("max"), 10) || 99;
+    var cap = parseInt(field.getAttribute("max"), 10) || 9999;
     field.value = String(Math.min(cap, Math.max(1, value + step)));
     field.dispatchEvent(new Event("input", { bubbles: true }));
   });
@@ -369,6 +432,7 @@
       syncStandards(false);
       paintArt();
     } else noteHand(key, value);
+    syncCart();
   });
 
   root.addEventListener("change", function (event) {
@@ -392,9 +456,13 @@
       paintList();
     }
     if (target.type === "number") clamp(target);
+    syncCart();
   });
 
-  root.addEventListener("submit", submit);
+  root.addEventListener("submit", function (event) {
+    event.preventDefault();
+    syncCart();
+  });
 
   if (wahl) {
     wahl.addEventListener("click", function () {
@@ -416,6 +484,8 @@
     if (!product) return;
     fillProduct();
     fillZubehoer();
+    restoreCart();
     paintList();
+    syncCart();
   }).catch(function () {});
 })();

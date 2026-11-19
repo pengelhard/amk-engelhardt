@@ -17,7 +17,7 @@
 
   function stueck(inputId, qty) {
     return '<div class="field"><label for="' + esc(inputId) + '">Anzahl</label>' +
-      '<input id="' + esc(inputId) + '" data-menge type="number" min="1" max="99" value="' + esc(qty) + '" inputmode="numeric"></div>';
+      '<input id="' + esc(inputId) + '" data-menge type="number" min="1" max="9999" value="' + esc(qty) + '" inputmode="numeric"></div>';
   }
 
   function laenge(opts, qty) {

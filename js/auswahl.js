@@ -255,7 +255,7 @@
     var lines = [];
     for (var i = 0; i < list.length; i++) {
       var entry = list[i];
-      if (!entry.ohne && (!entry.qty || entry.qty < 1 || entry.qty > 99)) {
+      if (!entry.ohne && (!entry.qty || entry.qty < 1 || entry.qty > 9999)) {
         if (status) {
           status.textContent = "Bitte die Anzahl angeben.";
           status.classList.add("is-error");

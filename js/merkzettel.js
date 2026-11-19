@@ -29,7 +29,7 @@
     if (!EXTRA_NAMES[name]) return null;
     if (!COUNTED[name]) return { name: name };
     if (!menge || menge < 1) menge = 1;
-    if (menge > 99) menge = 99;
+    if (menge > 9999) menge = 9999;
     return { name: name, menge: menge };
   }
 
@@ -74,7 +74,7 @@
     }).map(function (item) {
       var qty = parseInt(item.qty, 10);
       if (!qty || qty < 1) qty = 1;
-      if (qty > 99) qty = 99;
+      if (qty > 9999) qty = 9999;
       var next = { id: String(item.id), name: String(item.name || item.id), qty: qty };
       var konfig = cleanKonfig(item.konfig);
       if (konfig) next.konfig = konfig;
@@ -244,7 +244,7 @@
         if (existing.id === incoming.id && (existing.von || "") === (incoming.von || "") && (existing.bis || "") === (incoming.bis || "")) found = existing;
       });
     }
-    if (found && !incoming.sammel) found.qty = Math.min(99, found.qty + incoming.qty);
+    if (found && !incoming.sammel) found.qty = Math.min(9999, found.qty + incoming.qty);
     else if (!found) items.push(incoming);
   }
 

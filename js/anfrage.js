@@ -201,7 +201,7 @@
       if (item.genehmigung) bits.push("<p>Genehmigung durch AMK</p>");
       var qty = item.konfig || sammel(item)
         ? ""
-        : '<label class="qty">Menge <input type="number" min="1" max="99" inputmode="numeric" value="' + item.qty + '" data-index="' + index + '" aria-label="Menge ' + esc(item.name) + '"></label>';
+        : '<label class="qty">Menge <input type="number" min="1" max="9999" inputmode="numeric" value="' + item.qty + '" data-index="' + index + '" aria-label="Menge ' + esc(item.name) + '"></label>';
       return '<li class="cart-row">' + image +
         '<div class="cart-main"><strong>' + esc(item.name) + "</strong>" + bits.join("") + "</div>" +
         qty +
@@ -272,7 +272,7 @@
     if (!input || input.type !== "number") return;
     var qty = parseInt(input.value, 10);
     if (!qty || qty < 1) qty = 1;
-    if (qty > 99) qty = 99;
+    if (qty > 9999) qty = 9999;
     input.value = String(qty);
     var items = window.AMK_WUNSCH.load();
     var index = Number(input.getAttribute("data-index"));

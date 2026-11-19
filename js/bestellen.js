@@ -17,7 +17,7 @@
       } else {
         var qtyField = form.elements.menge;
         qty = parseInt(qtyField.value, 10);
-        if (!qty || qty < 1 || qty > 99) {
+        if (!qty || qty < 1 || qty > 9999) {
           qtyField.focus();
           return;
         }
