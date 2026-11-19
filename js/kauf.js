@@ -24,6 +24,33 @@
     if (id === "schilder" || id === "absperrung") return "verkehr";
     return id || "";
   }
+  var MERK = "amk-kauf-unter";
+  function merkeUnter(id, value) {
+    if (!id || !value) return;
+    var all = {};
+    try { all = JSON.parse(sessionStorage.getItem(MERK) || "{}"); } catch (error) { all = {}; }
+    all[id] = value;
+    try { sessionStorage.setItem(MERK, JSON.stringify(all)); } catch (error) { /* Speicher kann gesperrt sein */ }
+  }
+  function unterVon(link) {
+    return { kat: link.getAttribute("data-kat") || "", teil: link.getAttribute("data-teil") || "" };
+  }
+  function ersteUnter(id) {
+    var link = document.querySelector('.kauf-ebene[data-fuer="' + id + '"] a');
+    return link ? unterVon(link) : { kat: "", teil: "" };
+  }
+  function gemerkteUnter(id) {
+    var saved = "";
+    try { saved = (JSON.parse(sessionStorage.getItem(MERK) || "{}"))[id] || ""; } catch (error) { saved = ""; }
+    if (saved) {
+      var links = document.querySelectorAll('.kauf-ebene[data-fuer="' + id + '"] a');
+      var i;
+      for (i = 0; i < links.length; i++) {
+        if (links[i].getAttribute("data-kat") === saved || links[i].getAttribute("data-teil") === saved) return unterVon(links[i]);
+      }
+    }
+    return ersteUnter(id);
+  }
   var EBENE = { schwellen: 1, schleuse: 1, buehne: 1 };
   var HASH = {
     bauzaun: { gruppe: "zaun", kat: "bauzaune" },
@@ -103,6 +130,9 @@
       q: params.get("q") || "",
       sort: params.get("sort") || ""
     };
+    if (state.gruppe === "zaun" && state.kat) merkeUnter("zaun", state.kat);
+    if (state.gruppe === "verkehr" && (state.zeichen || state.teil)) merkeUnter("verkehr", state.zeichen || state.teil);
+    if (state.gruppe === "anhaenger" && state.teil) merkeUnter("anhaenger", state.teil);
   }
 
   function teilList() {
@@ -273,7 +303,7 @@
         auswahl.removeAttribute("data-ohne-leiste");
         auswahl.removeAttribute("data-leer-ok");
       }
-      auswahl.hidden = !picker;
+      auswahl.hidden = !picker || (verkehr && !!state.zeichen);
       if (picker) {
         var auswahlGruppe = state.gruppe;
         if (state.gruppe === "zaun") auswahlGruppe = EBENE[state.kat] ? state.kat : "gitter";
@@ -295,7 +325,7 @@
       liste.appendChild(item.el);
       if (on) shown += 1;
     });
-    if (schilder) schilder.hidden = !signs;
+    if (schilder) schilder.hidden = !(verkehr && state.zeichen);
     filterSchilder();
     var signShown = signs && schilder ? schilder.querySelectorAll("[data-schild]:not([hidden])").length : 0;
     empty.hidden = overview || picker || (signs ? signShown !== 0 : shown !== 0);
@@ -334,29 +364,34 @@
     window.AMK_AUSWAHL.fillLeiste(verkehrSumme, kaufZeilen());
   }
 
+  function setzeUnter(id, spec) {
+    var signs = window.AMK_SCHILDER_TEILE || [];
+    var kat = spec.kat || "";
+    var teil = spec.teil || "";
+    state.gruppe = id || state.gruppe;
+    if (kat) {
+      state.kat = kat;
+      state.teil = "";
+      state.zeichen = "";
+    } else if (signs.indexOf(teil) !== -1) {
+      state.kat = "";
+      state.teil = "";
+      state.zeichen = teil;
+      if (window.AMK_SCHILDER_UI && window.AMK_SCHILDER_UI.open) window.AMK_SCHILDER_UI.open(teil);
+    } else {
+      state.kat = "";
+      state.zeichen = "";
+      state.teil = teil;
+    }
+    merkeUnter(state.gruppe, kat || state.zeichen || state.teil);
+  }
+
   document.querySelectorAll(".kauf-ebene").forEach(function (nav) {
     nav.addEventListener("click", function (event) {
       var link = event.target.closest("a");
       if (!link || !nav.contains(link)) return;
       event.preventDefault();
-      var fuer = nav.getAttribute("data-fuer") || "";
-      var signs = window.AMK_SCHILDER_TEILE || [];
-      var teil = link.getAttribute("data-teil") || "";
-      state.gruppe = fuer || state.gruppe;
-      if (link.hasAttribute("data-kat")) {
-        state.kat = link.getAttribute("data-kat") || "";
-        state.teil = "";
-        state.zeichen = "";
-      } else if (signs.indexOf(teil) !== -1) {
-        state.kat = "";
-        state.teil = "";
-        state.zeichen = teil;
-        if (window.AMK_SCHILDER_UI && window.AMK_SCHILDER_UI.open) window.AMK_SCHILDER_UI.open(teil);
-      } else {
-        state.kat = "";
-        state.zeichen = "";
-        state.teil = teil;
-      }
+      setzeUnter(nav.getAttribute("data-fuer") || state.gruppe, unterVon(link));
       auswahlHalt = true;
       closePanel();
       writeUrl("push");
@@ -453,12 +488,13 @@
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
       event.preventDefault();
       var id = canonGruppe(link.getAttribute("data-gruppe") || "");
-      if (!hoverFein()) {
-        if (offen === id) closePanel();
-        else openPanel(id);
-        return;
-      }
-      openPanel(id);
+      setzeUnter(id, gemerkteUnter(id));
+      auswahlHalt = true;
+      if (hoverFein()) closePanel();
+      else openPanel(id);
+      writeUrl("push");
+      render();
+      if (hoverFein()) zeigeAnsicht();
     });
     gruppen.querySelectorAll("a[data-gruppe]").forEach(function (link) {
       var id = link.getAttribute("data-gruppe") || "";
@@ -573,9 +609,12 @@
     var id = String(event.detail || "");
     var signs = window.AMK_SCHILDER_TEILE || [];
     if (signs.indexOf(id) === -1) return;
+    state.kat = "";
     state.zeichen = id;
     state.teil = "";
+    merkeUnter("verkehr", id);
     writeUrl("push");
+    render();
   });
 
   fetch("../data/katalog.json")

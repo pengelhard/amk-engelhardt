@@ -96,8 +96,37 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
       await page.goto(base + "/kaufen/?gruppe=verkehr&teil=vorschrift", { waitUntil: "networkidle" });
       const schild = await measureCards(page, "schild");
       const nah = (a, b) => Math.abs(a - b) <= 2;
-      const same = nah(zaun.kachel.w, anh.kachel.w) && nah(zaun.kachel.h, anh.kachel.h) && nah(zaun.kachel.w, schild.kachel.w) && nah(zaun.kachel.h, schild.kachel.h) && nah(zaun.bild.w, anh.bild.w) && nah(zaun.bild.h, schild.bild.h) && zaun.spalten === anh.spalten && zaun.spalten === schild.spalten;
-      point(`Produktkacheln gleich ${width}`, same && zaun.n > 3 && schild.n > 3, JSON.stringify({ zaun, anh, schild }));
+      const paar = nah(anh.kachel.w, schild.kachel.w) && nah(anh.kachel.h, schild.kachel.h) && nah(anh.bild.w, schild.bild.w) && nah(anh.bild.h, schild.bild.h) && anh.spalten === schild.spalten && zaun.spalten === anh.spalten;
+      const breite = width < 900 ? nah(zaun.kachel.w, anh.kachel.w) : zaun.kachel.w > anh.kachel.w + 20;
+      point(`Produktkacheln gleich ${width}`, paar && breite && zaun.n > 3 && schild.n > 3 && zaun.fit === "contain" && anh.fit === "contain", JSON.stringify({ zaun, anh, schild }));
+      if (width >= 980) {
+        const verkehrBox = await page.evaluate(() => {
+          const summary = document.getElementById("kauf-verkehr-summe");
+          const list = document.getElementById("kauf-spalte");
+          const sr = summary.getBoundingClientRect();
+          const lr = list.getBoundingClientRect();
+          return {
+            sticky: getComputedStyle(summary).position,
+            neben: sr.left >= lr.right - 8 && sr.top < lr.bottom,
+            oben: Math.abs(sr.top - lr.top) < 80,
+            hoehe: Math.round(sr.height)
+          };
+        });
+        await page.goto(base + "/kaufen/?gruppe=anhaenger&teil=hochlader", { waitUntil: "networkidle" });
+        const anhBox = await page.evaluate(() => {
+          const summary = document.querySelector("#kauf-auswahl .konfig-summary");
+          const list = document.querySelector("#kauf-auswahl .tiles");
+          const sr = summary.getBoundingClientRect();
+          const lr = list.getBoundingClientRect();
+          return {
+            sticky: getComputedStyle(summary).position,
+            neben: sr.left >= lr.right - 8 && sr.top < lr.bottom,
+            oben: Math.abs(sr.top - lr.top) < 80,
+            hoehe: Math.round(sr.height)
+          };
+        });
+        point(`Auswahl rechts ${width}`, verkehrBox.sticky === "sticky" && verkehrBox.neben && verkehrBox.oben && verkehrBox.hoehe > 40 && anhBox.sticky === "sticky" && anhBox.neben && anhBox.oben && anhBox.hoehe > 40, JSON.stringify({ verkehrBox, anhBox }));
+      }
       await page.close();
     }
 
@@ -159,12 +188,76 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     await wide.page.close();
 
     const phone = await open(390, "/kaufen/?gruppe=zaun");
-    await phone.page.evaluate(() => document.activeElement && document.activeElement.blur());
+    await phone.page.evaluate(() => { sessionStorage.removeItem("amk-kauf-unter"); if (document.activeElement) document.activeElement.blur(); });
     await phone.page.locator('#kauf-gruppen a[data-gruppe="anhaenger"]').click();
     await phone.page.waitForTimeout(80);
-    const tapped = await phone.page.locator("#kauf-ebene-anhaenger").evaluate((el) => !el.hidden);
-    point("Tap-Panel", tapped, "");
+    const tapped = await phone.page.evaluate(() => {
+      const nav = document.getElementById("kauf-ebene-anhaenger");
+      const link = nav.querySelector("a");
+      const rect = link.getBoundingClientRect();
+      const adresse = new URL(location.href);
+      return {
+        open: !nav.hidden,
+        gruppe: adresse.searchParams.get("gruppe"),
+        teil: adresse.searchParams.get("teil"),
+        sichtbar: rect.height > 0 && rect.top >= 0 && rect.top < window.innerHeight
+      };
+    });
+    point("Tap-Panel", tapped.open && tapped.gruppe === "anhaenger" && tapped.teil === "hochlader" && tapped.sichtbar, JSON.stringify(tapped));
     await phone.page.close();
+
+    const sprache = await open(1280, "/kaufen/");
+    await sprache.page.evaluate(() => sessionStorage.removeItem("amk-kauf-unter"));
+    await sprache.page.locator('#kauf-gruppen a[data-gruppe="zaun"]').click();
+    await sprache.page.waitForTimeout(40);
+    const erste = new URL(sprache.page.url());
+    point("Oberkachel erste Unterkategorie", erste.searchParams.get("gruppe") === "zaun" && erste.searchParams.get("kat") === "bauzaune", erste.search);
+    const zaunKarte = sprache.page.locator('#kauf-gruppen a[data-gruppe="zaun"]');
+    await sprache.page.mouse.move(20, 700);
+    await zaunKarte.scrollIntoViewIfNeeded();
+    const zaunBox = await zaunKarte.boundingBox();
+    await sprache.page.mouse.move(zaunBox.x + zaunBox.width / 2, zaunBox.y + 30);
+    await sprache.page.waitForTimeout(80);
+    await sprache.page.locator('#kauf-ebene a[data-kat="gitter"]').click();
+    await sprache.page.waitForTimeout(40);
+    await sprache.page.locator('#kauf-gruppen a[data-gruppe="zaun"]').click();
+    await sprache.page.waitForTimeout(40);
+    const letzte = new URL(sprache.page.url());
+    point("Oberkachel letzte Unterkategorie", letzte.searchParams.get("kat") === "gitter", letzte.search);
+    await sprache.page.close();
+
+    async function namen(url) {
+      const view = await open(1280, url);
+      const info = await view.page.evaluate(() => {
+        function sichtbar(el) {
+          return !el.hidden && !el.closest("[hidden]") && el.getBoundingClientRect().height > 0;
+        }
+        function texte(sel) {
+          return [...document.querySelectorAll(sel)].filter(sichtbar).map((el) => el.querySelector("h3").textContent);
+        }
+        return { geraete: texte("#kauf-auswahl article.kauf-produkt"), schilder: texte("#schilder-bereich article") };
+      });
+      await view.page.close();
+      return info;
+    }
+    const vorschrift = await namen("/kaufen/?gruppe=verkehr&teil=vorschrift");
+    const schranken = await namen("/kaufen/?gruppe=verkehr&teil=schranken");
+    const baken = await namen("/kaufen/?gruppe=verkehr&teil=baken");
+    const hochlader = await namen("/kaufen/?gruppe=anhaenger&teil=hochlader");
+    point("Schranken nur bei Absperrschranken", vorschrift.geraete.length === 0 && vorschrift.schilder.length > 3 && schranken.geraete.length === 2 && schranken.geraete.every((name) => /Folie/.test(name)) && schranken.schilder.length === 0 && baken.geraete.length === 1 && baken.geraete.every((name) => !/Folie/.test(name)) && hochlader.geraete.length === 1 && /Hochlader/.test(hochlader.geraete[0]), JSON.stringify({ vorschrift, schranken, baken, hochlader }));
+
+    const leiste = await open(390, "/kaufen/?gruppe=anhaenger&teil=hochlader");
+    await leiste.page.locator("[data-teil-karte]:not([hidden]) article.kauf-produkt .beispiel-wahl").first().click();
+    const handyLeiste = await leiste.page.evaluate(() => {
+      const summary = document.querySelector("#kauf-auswahl .konfig-summary");
+      const rect = summary.getBoundingClientRect();
+      return {
+        position: getComputedStyle(summary).position,
+        unten: rect.top > window.innerHeight * 0.45 && rect.bottom <= window.innerHeight + 1
+      };
+    });
+    point("Auswahl Handy unten", handyLeiste.position === "fixed" && handyLeiste.unten, JSON.stringify(handyLeiste));
+    await leiste.page.close();
 
     const pick = await open(1280, "/kaufen/?gruppe=anhaenger&teil=hochlader");
     await pick.page.locator("[data-teil-karte]:not([hidden]) article.kauf-produkt .beispiel-wahl").first().click();

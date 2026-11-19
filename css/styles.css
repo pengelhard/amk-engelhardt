@@ -2253,6 +2253,14 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .kauf-hinweis strong { font-weight: 400; background: var(--signal); color: var(--signal-ink); padding: 0.05rem 0.35rem; }
 .js-kauf .kauf-cats { display: none !important; }
 .js-kauf .konfig-layout { display: block; }
+@media (min-width: 980px) {
+  .js-kauf .konfig-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: 1.75rem;
+    align-items: start;
+  }
+}
 .js-kauf .tiles > [data-teil-karte] {
   display: flex;
   flex-direction: column;
@@ -2270,7 +2278,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .js-kauf .kauf-produkt .pick-menge,
 .js-kauf .tiles > [data-teil-karte] > .anhaenger-details { margin: 0.35rem 0.85rem 0.75rem; }
 @media (min-width: 980px) {
-  .js-kauf .konfig-summary { width: 20rem; margin-left: auto; }
+  .js-kauf .konfig-summary { width: auto; margin-left: 0; }
 }
 .js-kauf .kauf-ebene .kauf-karte { height: 100%; }
 .js-kauf .kauf-ebene .kauf-karte strong {
