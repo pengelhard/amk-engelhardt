@@ -2464,6 +2464,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   border-radius: 0.75rem;
 }
 .beispiel-kauf {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   background: #fff;
@@ -2478,10 +2479,13 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .beispiel-kauf .specs { margin-top: 0.85rem; }
 .beispiel-arten {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 1rem;
   margin-top: 1rem;
   align-items: stretch;
+}
+@container (min-width: 24rem) {
+  .beispiel-arten { grid-template-columns: 1fr 1fr; }
 }
 .beispiel-art-karte {
   display: flex;
@@ -2553,9 +2557,10 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .beispiel-daten p { max-width: 42rem; }
 .beispiel-step {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  grid-template-columns: 44px minmax(3.25rem, 1fr) 44px;
   gap: 0.45rem;
   align-items: center;
+  min-width: 0;
 }
 .beispiel-step[hidden] { display: none; }
 .beispiel-step button,
@@ -2569,8 +2574,21 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   font: inherit;
   font-weight: 700;
   text-align: center;
+  touch-action: manipulation;
 }
-.beispiel-step input { width: 100%; max-width: none; -moz-appearance: textfield; appearance: textfield; }
+.beispiel-step button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+.beispiel-step input {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding: 0 0.2rem;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
 .beispiel-step input::-webkit-outer-spin-button,
 .beispiel-step input::-webkit-inner-spin-button { appearance: none; margin: 0; }
 .beispiel-auswahl { margin: 0; }
@@ -2795,14 +2813,28 @@ input[aria-invalid="true"] { border-color: var(--danger); }
     width: 100%;
     z-index: 2;
     max-height: calc(100dvh - var(--top, 5.6rem) - 1.5rem);
-    overflow: auto;
+    overflow: hidden;
     background: #fff;
     border: 1px solid var(--line);
     border-radius: 1rem;
     box-shadow: 4px 4px 0 var(--ink);
     padding: 1rem 1rem 0.95rem;
   }
-  .beispiel-korb .beispiel-auswahl { overflow: auto; min-height: 0; }
+  .beispiel-korb .beispiel-auswahl {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .beispiel-korb .beispiel-auswahl h2 { flex: 0 0 auto; }
+  .beispiel-korb #beispiel-liste {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
   .beispiel-korb .beispiel-senden { flex: 0 0 auto; }
   .beispiel-leiste, .beispiel-haube { display: none; }
   .beispiel-zubehoer .tiles { grid-template-columns: 1fr 1fr; }

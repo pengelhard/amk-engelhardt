@@ -113,7 +113,7 @@
     return '<div class="beispiel-step">' +
       '<button type="button" data-step="-1" aria-label="Weniger">−</button>' +
       '<label class="visually-hidden" for="' + esc(id) + '">' + esc(label) + "</label>" +
-      '<input id="' + esc(id) + '" data-spiegel="' + esc(key) + '" type="number" min="' + (min == null ? 1 : min) + '" max="9999" value="' + esc(value) + '" inputmode="numeric">' +
+      '<input id="' + esc(id) + '" data-spiegel="' + esc(key) + '" type="number" size="4" min="' + (min == null ? 1 : min) + '" max="9999" value="' + esc(value) + '" inputmode="numeric">' +
       '<button type="button" data-step="1" aria-label="Mehr">+</button>' +
       "</div>";
   }
@@ -310,7 +310,7 @@
     return '<div class="beispiel-art-karte"><p class="beispiel-art-text"><strong>' + esc(label) + "</strong></p>" +
       '<div class="beispiel-step"><button type="button" data-step="-1" aria-label="Weniger">−</button>' +
       '<label class="visually-hidden" for="' + esc(id) + '">' + esc(aria) + "</label>" +
-      '<input id="' + esc(id) + '" name="' + esc(id) + '" type="number" min="0" max="9999" value="0" inputmode="numeric">' +
+      '<input id="' + esc(id) + '" name="' + esc(id) + '" type="number" size="4" min="0" max="9999" value="0" inputmode="numeric">' +
       '<button type="button" data-step="1" aria-label="Mehr">+</button></div></div>';
   }
 
@@ -330,7 +330,7 @@
         '<div class="beispiel-step" hidden>' +
         '<button type="button" data-step="-1" aria-label="Weniger">−</button>' +
         '<label class="visually-hidden" for="menge-' + esc(slug) + '">Menge ' + esc(item.name) + "</label>" +
-        '<input id="menge-' + esc(slug) + '" name="menge-' + esc(slug) + '" type="number" min="1" max="9999" value="1" inputmode="numeric">' +
+        '<input id="menge-' + esc(slug) + '" name="menge-' + esc(slug) + '" type="number" size="4" min="1" max="9999" value="1" inputmode="numeric">' +
         '<button type="button" data-step="1" aria-label="Mehr">+</button>' +
         "</div>" +
         (item.platzhalter
