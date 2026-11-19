@@ -184,14 +184,15 @@
     var teile = liveTeile(gruppe);
     var bare = node.hasAttribute("data-ohne-leiste") ? "1" : "0";
     var pillsOff = node.hasAttribute("data-ohne-pills") ? "1" : "0";
-    var key = gruppe + ":" + vorgang + ":" + bare + ":" + pillsOff;
+    var stapel = node.hasAttribute("data-stapel") ? "1" : "0";
+    var key = gruppe + ":" + vorgang + ":" + bare + ":" + pillsOff + ":" + stapel;
     if (!teile.length) {
       node.innerHTML = "";
       delete node.dataset.key;
       return;
     }
     if (node.dataset.key === key && node.querySelector("form")) {
-      showTeil(node, gruppe);
+      if (stapel !== "1") showTeil(node, gruppe);
       updateSum(node);
       return;
     }
@@ -206,14 +207,17 @@
       : "";
     var kachel = vorgang === "kauf";
     var cards = "";
+    var bloecke = "";
     teile.forEach(function (entry) {
+      var teilKarten = "";
       products.filter(function (product) { return matches(product, entry); }).forEach(function (product) {
         var existing = saved[vorgang + ":" + product.slug];
         var on = !!existing;
         var qty = existing && existing.qty ? existing.qty : 1;
-        var hide = entry.id === teilId ? "" : " hidden";
+        var hide = stapel === "1" || entry.id === teilId ? "" : " hidden";
         var daten = gruppe === "anhaenger" ? eckdaten(product.slug) : "";
-        cards += '<div data-teil-karte="' + esc(entry.id) + '"' + hide + ">" + window.AMK_TYPWAHL.card({
+        var suche = (product.name + " " + (product.code || "") + " " + product.slug).toLocaleLowerCase("de");
+        teilKarten += '<div data-teil-karte="' + esc(entry.id) + '"' + hide + ' data-code="' + esc(product.code || "") + '" data-suche="' + esc(suche) + '">' + window.AMK_TYPWAHL.card({
           name: "typ",
           value: product.slug,
           title: product.name,
@@ -229,6 +233,10 @@
           href: vorgang === "kauf" ? root + "produkt/" + product.slug + "/" : ""
         }) + (kachel ? daten : "") + "</div>";
       });
+      cards += teilKarten;
+      if (stapel === "1" && teilKarten) {
+        bloecke += '<section class="kauf-abschnitt" data-abschnitt="' + esc(entry.id) + '" id="kauf-teil-' + esc(entry.id) + '"><h2>' + esc(entry.label || entry.id) + '</h2><div class="tiles">' + teilKarten + '</div></section>';
+      }
     });
     var aside = bare === "1" ? "" :
       '<aside class="konfig-summary kachel-box is-leer" aria-live="polite"><h2>Ihre Auswahl</h2>' +
@@ -246,7 +254,7 @@
       "<form" + formClass + ">" +
       "<div" + mainClass + ">" +
       (vorgang === "kauf"
-        ? '<div class="tiles">' + cards + "</div>"
+        ? (stapel === "1" ? bloecke : '<div class="tiles">' + cards + "</div>")
         : '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' + cards + "</div></fieldset>") +
       "</div>" + aside + "</form>";
     updateSum(node);

@@ -52,6 +52,7 @@
     return ersteUnter(id);
   }
   var EBENE = { schwellen: 1, schleuse: 1, buehne: 1 };
+  var ZAUN_STAPEL = { gitter: 1, schwellen: 1, schleuse: 1, buehne: 1 };
   var HASH = {
     bauzaun: { gruppe: "zaun", kat: "bauzaune" },
     verkehrssicherung: { gruppe: "verkehr", kat: "" },
@@ -130,6 +131,8 @@
       q: params.get("q") || "",
       sort: params.get("sort") || ""
     };
+    if (state.gruppe === "verkehr" && !state.zeichen && !state.teil) state.teil = "schranken";
+    if (state.gruppe === "anhaenger" && !state.teil) state.teil = "hochlader";
     if (state.gruppe === "zaun" && state.kat) merkeUnter("zaun", state.kat);
     if (state.gruppe === "verkehr" && (state.zeichen || state.teil)) merkeUnter("verkehr", state.zeichen || state.teil);
     if (state.gruppe === "anhaenger" && state.teil) merkeUnter("anhaenger", state.teil);
@@ -276,45 +279,279 @@
     return copy;
   }
 
-  function render() {
+  var sprung = false;
+  var pendingSprung = "";
+  var beobachter = null;
+
+  function stapelAn() {
+    return state.gruppe === "verkehr" || state.gruppe === "anhaenger" || (state.gruppe === "zaun" && !!ZAUN_STAPEL[state.kat]);
+  }
+
+  function zielId() {
+    if (state.gruppe === "zaun") return ZAUN_STAPEL[state.kat] ? state.kat : "";
+    if (state.gruppe === "verkehr") return state.zeichen || state.teil || "";
+    if (state.gruppe === "anhaenger") return state.teil || "";
+    return "";
+  }
+
+  function kopfAbstand() {
+    var kopf = document.querySelector(".top");
+    var bar = document.getElementById("kauf-leiste");
+    return (kopf ? kopf.offsetHeight : 0) + (bar && !bar.hidden ? bar.offsetHeight : 0) + 8;
+  }
+
+  function elternVersteckt(el) {
+    var parent = el.parentElement;
+    while (parent) {
+      if (parent.hidden) return true;
+      parent = parent.parentElement;
+    }
+    return false;
+  }
+
+  function maleLeiste() {
+    var bar = document.getElementById("kauf-leiste");
+    if (!bar) return;
+    if (!state.gruppe) { bar.hidden = true; return; }
+    bar.hidden = false;
+    var nav = document.querySelector('.kauf-ebene[data-fuer="' + state.gruppe + '"]');
+    if (!nav) return;
+    function an(kat, teil) {
+      return (kat && kat === state.kat) || (teil && (teil === state.teil || teil === state.zeichen));
+    }
+    if (bar.getAttribute("data-fuer") === state.gruppe && bar.querySelector("a")) {
+      bar.querySelectorAll("a").forEach(function (link) {
+        if (an(link.getAttribute("data-kat") || "", link.getAttribute("data-teil") || "")) link.setAttribute("aria-current", "true");
+        else link.removeAttribute("aria-current");
+      });
+    } else {
+      var row = document.createElement("div");
+      row.className = "kauf-leiste-row";
+      nav.querySelectorAll("a").forEach(function (link) {
+        var a = document.createElement("a");
+        var kat = link.getAttribute("data-kat") || "";
+        var teil = link.getAttribute("data-teil") || "";
+        a.className = "kauf-leiste-link";
+        a.href = link.getAttribute("href") || "#";
+        if (kat) a.setAttribute("data-kat", kat);
+        if (teil) a.setAttribute("data-teil", teil);
+        if (an(kat, teil)) a.setAttribute("aria-current", "true");
+        var img = link.querySelector("img");
+        if (img) {
+          var copy = document.createElement("img");
+          copy.src = img.getAttribute("src") || "";
+          copy.alt = "";
+          a.appendChild(copy);
+        }
+        var name = document.createElement("span");
+        name.textContent = textOf(link);
+        a.appendChild(name);
+        row.appendChild(a);
+      });
+      bar.textContent = "";
+      bar.appendChild(row);
+      bar.setAttribute("data-fuer", state.gruppe);
+    }
+    document.documentElement.style.setProperty("--kauf-leiste", bar.offsetHeight + "px");
+  }
+
+  function filterStapel() {
+    if (!stapelAn()) return;
+    var q = (state.q || "").toLocaleLowerCase("de");
+    document.querySelectorAll("#kauf-stapel .kauf-abschnitt").forEach(function (section) {
+      if (elternVersteckt(section)) return;
+      var wraps = section.querySelectorAll("[data-teil-karte]");
+      var n = 0;
+      wraps.forEach(function (el) {
+        var text = (el.getAttribute("data-suche") || "").toLocaleLowerCase("de");
+        var on = !q || text.indexOf(q) !== -1;
+        el.hidden = !on;
+        if (on) n += 1;
+      });
+      section.hidden = n === 0;
+    });
+  }
+
+  function sortiereStapel() {
+    if (state.sort !== "name" && state.sort !== "nummer") return;
+    document.querySelectorAll("#kauf-stapel .tiles, #schilder-bereich .kauf-abschnitt .tiles").forEach(function (grid) {
+      var items = Array.prototype.slice.call(grid.children);
+      items.sort(function (a, b) {
+        var ah = a.querySelector("h3");
+        var bh = b.querySelector("h3");
+        var an = ah ? ah.textContent : "";
+        var bn = bh ? bh.textContent : "";
+        if (state.sort === "nummer") {
+          return (a.getAttribute("data-code") || an).localeCompare(b.getAttribute("data-code") || bn, "de", { numeric: true });
+        }
+        return an.localeCompare(bn, "de");
+      });
+      items.forEach(function (el) { grid.appendChild(el); });
+    });
+  }
+
+  function aktuelle() {
+    if (sprung || pendingSprung || !stapelAn()) return;
+    var nodes = [];
+    document.querySelectorAll("#kauf-stapel .kauf-abschnitt, #schilder-bereich .kauf-abschnitt").forEach(function (section) {
+      if (!section.hidden && !elternVersteckt(section)) nodes.push(section);
+    });
+    if (!nodes.length) return;
+    var margin = parseFloat(getComputedStyle(nodes[0]).scrollMarginTop) || 0;
+    var pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+    var line = Math.max(margin + pad, kopfAbstand()) + 16;
+    var best = null;
+    var bestTop = -Infinity;
+    nodes.forEach(function (node) {
+      var top = node.getBoundingClientRect().top;
+      if (top <= line && top > bestTop) {
+        bestTop = top;
+        best = node;
+      }
+    });
+    if (best) markiere(best.getAttribute("data-abschnitt") || "");
+  }
+
+  function springe(id, mode) {
+    var ziel = document.getElementById("kauf-teil-" + id);
+    if (!ziel || ziel.hidden || elternVersteckt(ziel)) return false;
+    sprung = true;
+    var last = window.scrollY;
+    var still = 0;
+    var seen = false;
+    var fertig = false;
+    var ende = function () {
+      if (fertig) return;
+      fertig = true;
+      sprung = false;
+      aktuelle();
+    };
+    var watch = function () {
+      if (fertig) return;
+      var y = window.scrollY;
+      if (Math.abs(y - last) > 1) {
+        seen = true;
+        last = y;
+        still = 0;
+      } else still += 1;
+      if ((seen && still < 4) || (!seen && still < 8)) {
+        window.requestAnimationFrame(watch);
+        return;
+      }
+      ende();
+    };
+    window.requestAnimationFrame(watch);
+    window.setTimeout(ende, 1500);
+    ziel.scrollIntoView({ behavior: mode === "smooth" ? "smooth" : "auto", block: "start" });
+    return true;
+  }
+
+  function beobachte() {
+    if (beobachter) beobachter.disconnect();
+    beobachter = null;
+    if (!stapelAn() || !window.IntersectionObserver) return;
+    var nodes = [];
+    document.querySelectorAll("#kauf-stapel .kauf-abschnitt, #schilder-bereich .kauf-abschnitt").forEach(function (section) {
+      if (!section.hidden && !elternVersteckt(section)) nodes.push(section);
+    });
+    if (!nodes.length) return;
+    var abstand = kopfAbstand();
+    beobachter = new IntersectionObserver(function () {
+      aktuelle();
+    }, { rootMargin: "-" + abstand + "px 0px -40% 0px", threshold: [0, 0.25, 0.6] });
+    nodes.forEach(function (node) { beobachter.observe(node); });
+  }
+
+  function markiere(id) {
+    if (!id || sprung) return;
+    if (state.gruppe === "zaun") {
+      if (!ZAUN_STAPEL[id] || state.kat === id) return;
+      state.kat = id;
+    } else if (state.gruppe === "verkehr") {
+      var signs = window.AMK_SCHILDER_TEILE || [];
+      if (signs.indexOf(id) !== -1) {
+        if (state.zeichen === id) return;
+        state.zeichen = id;
+        state.teil = "";
+      } else if (state.teil === id && !state.zeichen) return;
+      else {
+        state.teil = id;
+        state.zeichen = "";
+      }
+    } else if (state.gruppe === "anhaenger") {
+      if (state.teil === id) return;
+      state.teil = id;
+    } else return;
+    merkeUnter(state.gruppe, state.kat || state.zeichen || state.teil);
+    writeUrl("replace");
+    renderEbene();
+    renderHinweis();
+    maleLeiste();
+  }
+
+  function nachPaint() {
+    filterStapel();
+    if (window.AMK_SCHILDER_UI) window.AMK_SCHILDER_UI.filter(state.q);
+    sortiereStapel();
+    if (stapelAn()) {
+      var n = 0;
+      document.querySelectorAll("#kauf-stapel article.kauf-produkt, #schilder-bereich article.kauf-produkt").forEach(function (el) {
+        if (!el.hidden && !elternVersteckt(el)) n += 1;
+      });
+      if (empty) empty.hidden = n !== 0;
+      if (countEl) {
+        countEl.hidden = false;
+        countEl.textContent = n === 1 ? "1 Artikel" : n + " Artikel";
+      }
+    }
+    maleLeiste();
+    if (pendingSprung) {
+      var id = pendingSprung.id;
+      var mode = pendingSprung.mode;
+      var ziel = id ? document.getElementById("kauf-teil-" + id) : null;
+      if (ziel && !ziel.hidden && !elternVersteckt(ziel)) {
+        pendingSprung = "";
+        springe(id, mode);
+      } else if (!id) {
+        pendingSprung = "";
+        if (mode === "smooth") zeigeAnsicht();
+      }
+    }
+    beobachte();
+    kaufLeiste();
+  }
+
+  function render(opts) {
     var overview = !state.gruppe && !state.q;
     var verkehr = state.gruppe === "verkehr";
     var signs = verkehr;
-    var picker = verkehr || state.gruppe === "anhaenger" || (state.gruppe === "zaun" && (state.kat === "gitter" || !!EBENE[state.kat]));
+    var stapel = stapelAn();
+    var picker = stapel;
+    if (opts && opts.sprung) pendingSprung = { mode: opts.sanft ? "smooth" : "auto", id: zielId() };
     var auswahl = document.getElementById("kauf-auswahl");
     var hinweis = document.getElementById("kauf-verkehr-hinweis");
     board.classList.toggle("is-gruppe", !overview);
     board.classList.toggle("is-schilder", false);
-    board.classList.toggle("is-auswahl", picker && !verkehr);
+    board.classList.toggle("is-auswahl", false);
     board.classList.toggle("is-anhaenger", state.gruppe === "anhaenger");
-    board.classList.toggle("is-verkehr", verkehr);
+    board.classList.toggle("is-verkehr", false);
+    board.classList.toggle("is-stapel", stapel);
     if (hinweis) hinweis.hidden = !verkehr;
-    if (wahl) wahl.classList.toggle("konfig-layout", verkehr);
-    if (spalte) spalte.classList.toggle("konfig-main", verkehr);
-    if (verkehrSumme) verkehrSumme.hidden = !verkehr;
+    if (wahl) wahl.classList.toggle("konfig-layout", stapel);
+    if (spalte) spalte.classList.toggle("konfig-main", stapel);
+    if (verkehrSumme) verkehrSumme.hidden = !stapel;
     renderGruppen();
     renderEbene();
     renderHinweis();
-    if (auswahl) {
-      if (verkehr) {
-        auswahl.setAttribute("data-ohne-leiste", "");
-        auswahl.setAttribute("data-leer-ok", "");
-      } else {
-        auswahl.removeAttribute("data-ohne-leiste");
-        auswahl.removeAttribute("data-leer-ok");
-      }
-      auswahl.hidden = !picker || (verkehr && !!state.zeichen);
-      if (picker) {
-        var auswahlGruppe = state.gruppe;
-        if (state.gruppe === "zaun") auswahlGruppe = EBENE[state.kat] ? state.kat : "gitter";
-        else if (verkehr) auswahlGruppe = "absperrung";
-        auswahl.setAttribute("data-gruppe", auswahlGruppe);
-      }
-      else {
-        auswahl.innerHTML = "";
-        delete auswahl.dataset.key;
-      }
-    }
+    if (auswahl) auswahl.hidden = true;
+    var stapelBox = document.getElementById("kauf-stapel");
+    if (stapelBox) stapelBox.hidden = !stapel;
+    ["zaun", "verkehr", "anhaenger"].forEach(function (name) {
+      var block = document.getElementById("kauf-stapel-" + name);
+      if (!block) return;
+      var on = stapel && ((name === "zaun" && state.gruppe === "zaun") || (name === "verkehr" && verkehr) || (name === "anhaenger" && state.gruppe === "anhaenger"));
+      block.hidden = !on;
+    });
     qInput.placeholder = signs ? "Nummer oder Name" : "Name oder Artikelnummer";
     qInput.value = state.q;
     sortInput.value = state.sort === "name" || state.sort === "nummer" ? state.sort : "";
@@ -325,27 +562,27 @@
       liste.appendChild(item.el);
       if (on) shown += 1;
     });
-    if (schilder) schilder.hidden = !(verkehr && state.zeichen);
-    filterSchilder();
-    var signShown = signs && schilder ? schilder.querySelectorAll("[data-schild]:not([hidden])").length : 0;
-    empty.hidden = overview || picker || (signs ? signShown !== 0 : shown !== 0);
-    countEl.hidden = overview || signs || picker;
+    if (schilder) schilder.hidden = !verkehr;
+    empty.hidden = overview || stapel || shown !== 0;
+    countEl.hidden = overview;
+    if (!stapel) countEl.textContent = shown === 1 ? "1 Artikel" : shown + " Artikel";
     if (window.AMK_AUSWAHL) window.AMK_AUSWAHL.sync();
-    kaufLeiste();
-    countEl.textContent = shown === 1 ? "1 Artikel" : shown + " Artikel";
     document.querySelectorAll("main section.copy").forEach(function (section) {
       section.hidden = true;
     });
     board.hidden = false;
+    nachPaint();
   }
 
   function kaufZeilen() {
     var lines = [];
     var zeile = window.AMK_AUSWAHL && window.AMK_AUSWAHL.zeileVon;
-    var geraete = document.getElementById("kauf-auswahl");
-    if (geraete && zeile && geraete.getAttribute("data-gruppe") === "absperrung") {
-      geraete.querySelectorAll('input[name="typ"]:checked').forEach(function (box) {
-        lines.push(zeile(box));
+    if (zeile) {
+      document.querySelectorAll("#kauf-stapel [data-auswahl]").forEach(function (geraete) {
+        if (geraete.hidden || elternVersteckt(geraete)) return;
+        geraete.querySelectorAll('input[name="typ"]:checked').forEach(function (box) {
+          lines.push(zeile(box));
+        });
       });
     }
     if (schilder && zeile) {
@@ -395,8 +632,7 @@
       auswahlHalt = true;
       closePanel();
       writeUrl("push");
-      render();
-      zeigeAnsicht();
+      render({ sprung: true, sanft: true });
     });
   });
 
@@ -468,16 +704,12 @@
   }
 
   function zeigeAnsicht() {
-    var schmal = window.matchMedia("(max-width: 859px)").matches;
-    var ziel = schmal ? document.getElementById("kauf-hinweis") : document.querySelector(".kauf-board");
-    if (!ziel || ziel.hidden) ziel = document.getElementById("kauf-wahl");
+    var ziel = document.getElementById("kauf-wahl");
     if (!ziel) return;
-    var kopf = document.querySelector(".top");
-    var abstand = kopf ? kopf.offsetHeight + 8 : 0;
     var root = document.documentElement;
     var previous = root.style.scrollBehavior;
     root.style.scrollBehavior = "auto";
-    window.scrollTo(0, Math.max(0, ziel.getBoundingClientRect().top + window.scrollY - abstand));
+    window.scrollTo(0, Math.max(0, ziel.getBoundingClientRect().top + window.scrollY - kopfAbstand()));
     root.style.scrollBehavior = previous;
   }
 
@@ -490,11 +722,9 @@
       var id = canonGruppe(link.getAttribute("data-gruppe") || "");
       setzeUnter(id, gemerkteUnter(id));
       auswahlHalt = true;
-      if (hoverFein()) closePanel();
-      else openPanel(id);
+      closePanel();
       writeUrl("push");
-      render();
-      if (hoverFein()) zeigeAnsicht();
+      render({ sprung: true, sanft: true });
     });
     gruppen.querySelectorAll("a[data-gruppe]").forEach(function (link) {
       var id = link.getAttribute("data-gruppe") || "";
@@ -578,7 +808,6 @@
   });
 
   resetBtn.addEventListener("click", function () {
-    state.kat = "";
     state.q = "";
     state.sort = "";
     render();
@@ -587,14 +816,28 @@
 
   window.addEventListener("popstate", function () {
     readUrl();
-    render();
+    render({ sprung: true, sanft: false });
   });
 
   if (wahl) {
     wahl.addEventListener("change", kaufLeiste);
     wahl.addEventListener("input", kaufLeiste);
   }
-  document.addEventListener("amk-auswahl", kaufLeiste);
+  document.addEventListener("amk-auswahl", nachPaint);
+  var leiste = document.getElementById("kauf-leiste");
+  if (leiste) {
+    leiste.addEventListener("click", function (event) {
+      var link = event.target.closest("a");
+      if (!link || !leiste.contains(link)) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+      event.preventDefault();
+      setzeUnter(state.gruppe, unterVon(link));
+      auswahlHalt = true;
+      closePanel();
+      writeUrl("push");
+      render({ sprung: true, sanft: true });
+    });
+  }
   var kaufKorb = document.getElementById("kauf-verkehr-korb");
   if (kaufKorb) {
     var korbLink = document.createElement("a");
@@ -629,7 +872,7 @@
         if (product.name) item.name = product.name;
       });
       readUrl();
-      render();
+      render({ sprung: true, sanft: false });
       writeUrl("replace");
     })
     .catch(function () {

@@ -61,6 +61,7 @@
     var teil = teilNow();
     var q = query.toLocaleLowerCase("de");
     document.querySelectorAll("[data-schilder]").forEach(function (form) {
+      var stapel = form.hasAttribute("data-stapel");
       form.querySelectorAll(".kauf-cats [data-teil]").forEach(function (button) {
         var on = button.getAttribute("data-teil") === teil;
         button.setAttribute("aria-pressed", on ? "true" : "false");
@@ -68,8 +69,14 @@
       form.querySelectorAll("[data-schild]").forEach(function (row) {
         var title = row.querySelector("strong, h3");
         var text = (title ? title.textContent : "").toLocaleLowerCase("de");
-        row.hidden = row.getAttribute("data-teil") !== teil || !!(q && text.indexOf(q) === -1);
+        var such = !(q && text.indexOf(q) === -1);
+        row.hidden = stapel ? !such : row.getAttribute("data-teil") !== teil || !such;
       });
+      if (stapel) {
+        form.querySelectorAll(".kauf-abschnitt").forEach(function (section) {
+          section.hidden = !section.querySelector("[data-schild]:not([hidden])");
+        });
+      }
     });
   }
 
@@ -124,9 +131,29 @@
         href: kachel ? assetRoot() + "produkt/schild-" + entry.id + "/" : ""
       });
     }).join("");
-    list.innerHTML = kachel
-      ? '<div class="tiles">' + karten + "</div>"
-      : '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' + karten + "</div></fieldset>";
+    if (kachel && form.hasAttribute("data-stapel")) {
+      list.innerHTML = TEILE.map(function (teil) {
+        var teilKarten = ZEICHEN.filter(function (entry) { return teilOf(entry) === teil.id; }).map(function (entry) {
+          var bild = '<img src="' + esc(assetRoot() + entry.bild) + '" alt="" width="96" height="96" decoding="async">';
+          return window.AMK_TYPWAHL.card({
+            name: "schild",
+            value: entry.id,
+            title: entry.nr + " " + entry.name,
+            media: bild,
+            panelId: "menge-panel-schild-" + entry.id,
+            inputId: "menge-schild-" + entry.id,
+            data: { schild: entry.id, teil: teil.id },
+            kachel: true,
+            href: assetRoot() + "produkt/schild-" + entry.id + "/"
+          });
+        }).join("");
+        return '<section class="kauf-abschnitt" data-abschnitt="' + teil.id + '" id="kauf-teil-' + teil.id + '"><h2>' + esc(teil.label) + '</h2><div class="tiles">' + teilKarten + '</div></section>';
+      }).join("");
+    } else {
+      list.innerHTML = kachel
+        ? '<div class="tiles">' + karten + "</div>"
+        : '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' + karten + "</div></fieldset>";
+    }
 
     var vorgangForm = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
     if (window.AMK_WUNSCH && window.AMK_WUNSCH.load) {

@@ -8,7 +8,7 @@
   <meta name="description" content="Einzelteile, Zubehör und Anhänger zum Kauf.">
   <link rel="icon" href="../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../assets/logo.png">
-  <link rel="stylesheet" href="../css/styles.css?v=ao">
+  <link rel="stylesheet" href="../css/styles.css?v=ap">
   <script>document.documentElement.classList.add("js-kauf")</script>
 </head>
 <body>
@@ -73,6 +73,7 @@
           <a class="kauf-karte kachel kachel--unter" href="?gruppe=anhaenger&amp;teil=kuehl" data-teil="kuehl"><img src="../images/kuehlanhaenger-13.webp" width="540" height="405" alt="" decoding="async"><strong>Kühl&shy;anhänger</strong></a>
         </nav>
         </div>
+        <nav id="kauf-leiste" class="kauf-leiste" aria-label="Kategorien" hidden></nav>
         <p class="kauf-hinweis" id="kauf-hinweis" hidden></p>
         <div class="kauf-tools">
           <label class="kauf-search">Suche
@@ -94,7 +95,21 @@
             <p id="kauf-empty" class="kauf-empty" hidden>Keine Treffer.</p>
             <p id="kauf-verkehr-hinweis" class="verkehr-hinweis" hidden>Die verkehrsrechtliche Anordnung kann AMK für Sie bei der Behörde beantragen.</p>
             <div id="kauf-auswahl" data-auswahl data-vorgang="kauf" data-root="../" data-ohne-pills hidden></div>
-            <form class="schilder" id="schilder-bereich" data-schilder data-vorgang="kauf" data-leer-ok data-ohne-pills hidden>
+            <div id="kauf-stapel" hidden>
+              <div id="kauf-stapel-zaun" data-gruppe-stapel="zaun" hidden>
+                <section class="kauf-abschnitt" id="kauf-teil-gitter" data-abschnitt="gitter"><h2>Absperrgitter</h2><div data-auswahl data-vorgang="kauf" data-gruppe="gitter" data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div></section>
+                <section class="kauf-abschnitt" id="kauf-teil-schwellen" data-abschnitt="schwellen"><h2>Bodenleitschwellen</h2><div data-auswahl data-vorgang="kauf" data-gruppe="schwellen" data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div></section>
+                <section class="kauf-abschnitt" id="kauf-teil-schleuse" data-abschnitt="schleuse"><h2>Schleusen</h2><div data-auswahl data-vorgang="kauf" data-gruppe="schleuse" data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div></section>
+                <section class="kauf-abschnitt" id="kauf-teil-buehne" data-abschnitt="buehne"><h2>Bühnen</h2><div data-auswahl data-vorgang="kauf" data-gruppe="buehne" data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div></section>
+              </div>
+              <div id="kauf-stapel-verkehr" data-gruppe-stapel="verkehr" hidden>
+                <div data-auswahl data-vorgang="kauf" data-gruppe="absperrung" data-stapel data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div>
+              </div>
+              <div id="kauf-stapel-anhaenger" data-gruppe-stapel="anhaenger" hidden>
+                <div data-auswahl data-vorgang="kauf" data-gruppe="anhaenger" data-stapel data-root="../" data-ohne-pills data-ohne-leiste data-leer-ok></div>
+              </div>
+            </div>
+            <form class="schilder" id="schilder-bereich" data-schilder data-stapel data-vorgang="kauf" data-leer-ok data-ohne-pills hidden>
               <div class="schild-liste" data-schild-liste></div>
               <div class="field"><label for="hinweis-schilder">Größe, Folie, Ständer</label><textarea id="hinweis-schilder" name="hinweis"></textarea></div>
             </form>
@@ -1662,9 +1677,9 @@
   <script src="../js/zeitraum.js"></script>
   <script src="../js/bestellen.js"></script>
   <script src="../js/gruppen.js"></script>
-  <script src="../js/schilder.js?v=am"></script>
+  <script src="../js/schilder.js?v=ap"></script>
   <script src="../data/anhaenger-eckdaten.js"></script>
-  <script src="../js/auswahl.js?v=am"></script>
-  <script src="../js/kauf.js?v=an"></script>
+  <script src="../js/auswahl.js?v=ap"></script>
+  <script src="../js/kauf.js?v=ap"></script>
 </body>
 </html>

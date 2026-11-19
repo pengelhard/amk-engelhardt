@@ -2315,6 +2315,60 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 @media (min-width: 980px) {
   .js-kauf .konfig-summary { width: auto; margin-left: 0; }
 }
+.kauf-leiste {
+  position: sticky;
+  top: var(--top, 6rem);
+  z-index: 32;
+  margin: 0.35rem 0 0;
+  max-width: 100%;
+  min-width: 0;
+  background: var(--paper);
+}
+.kauf-leiste-row {
+  display: flex;
+  gap: 0.45rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.15rem 0 0.4rem;
+}
+.kauf-leiste-link {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  max-width: 15rem;
+  min-height: 2.75rem;
+  margin: 0;
+  padding: 0.15rem 0.65rem 0.15rem 0.15rem;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--white);
+  color: inherit;
+  font-size: 0.92rem;
+  line-height: 1.15;
+  text-decoration: none;
+}
+.kauf-leiste-link img {
+  width: 2.35rem;
+  height: 2.35rem;
+  object-fit: contain;
+  border-radius: 999px;
+  background: var(--kachel-grund);
+}
+.kauf-leiste-link[aria-current="true"] { background: var(--signal); color: var(--signal-ink); }
+.kauf-abschnitt { scroll-margin-top: calc(var(--top, 6rem) + var(--kauf-leiste, 3.4rem) + 0.6rem); }
+.kauf-abschnitt h2 {
+  margin: 1.15rem 0 0.15rem;
+  font-family: var(--display);
+  font-size: 1.85rem;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+@media (min-width: 980px) {
+  .js-kauf .kauf-board.is-stapel .kauf-leiste { width: calc(100% - var(--korb-breite) - var(--korb-luecke)); }
+}
+.js-kauf .kauf-board.is-stapel #kauf-liste { display: none; }
 .js-kauf .kauf-ebene .kauf-karte { height: 100%; }
 .js-kauf .kauf-ebene .kauf-karte strong {
   box-sizing: border-box;
