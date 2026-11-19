@@ -2276,39 +2276,88 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   min-width: 0;
   background: var(--paper);
 }
-.kauf-leiste-row {
-  display: flex;
-  gap: 0.45rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 0.15rem 0 0.4rem;
+.js-kauf .kauf-leiste-haupt {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.3rem;
 }
-.kauf-leiste-link {
-  flex: 0 0 auto;
+.js-kauf .kauf-leiste-gruppe {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  max-width: 15rem;
-  min-height: 2.75rem;
+  justify-content: center;
+  min-width: 0;
+  min-height: 2.15rem;
   margin: 0;
-  padding: 0.15rem 0.65rem 0.15rem 0.15rem;
-  border: 2px solid var(--ink);
-  border-radius: 999px;
+  padding: 0.2rem 0.28rem;
+  border: var(--kachel-rand);
+  border-radius: 0.55rem;
   background: var(--white);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 0.78rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-align: center;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.js-kauf .kauf-leiste-gruppe[aria-current="true"] { background: var(--signal); color: var(--signal-ink); }
+.js-kauf .kauf-leiste-wahl {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 44px;
+  margin: 0.28rem 0 0;
+  padding: 0 0.75rem;
+  border: var(--kachel-rand);
+  border-radius: 0.55rem;
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.15rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-align: left;
+  cursor: pointer;
+}
+.js-kauf .kauf-leiste-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.js-kauf .kauf-leiste-pfeil { flex: 0 0 auto; font-size: 1.1rem; line-height: 1; }
+.js-kauf .kauf-leiste-menu {
+  position: absolute;
+  z-index: 34;
+  left: 0;
+  right: 0;
+  top: 100%;
+  display: grid;
+  max-height: calc(100dvh - var(--top, 6rem) - 7.5rem - var(--tabbar, 4.75rem));
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #fff;
+  border: var(--kachel-rand);
+  border-radius: var(--kachel-radius);
+  box-shadow: var(--kachel-schatten);
+}
+.js-kauf .kauf-leiste-menu a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.35rem 0.85rem;
+  border-bottom: 1px solid var(--line);
   color: inherit;
-  font-size: 0.92rem;
-  line-height: 1.15;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.2rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
   text-decoration: none;
 }
-.kauf-leiste-link img {
-  width: 2.35rem;
-  height: 2.35rem;
-  object-fit: contain;
-  border-radius: 999px;
-  background: var(--kachel-grund);
-}
-.kauf-leiste-link[aria-current="true"] { background: var(--signal); color: var(--signal-ink); }
-.kauf-abschnitt { scroll-margin-top: calc(var(--top, 6rem) + var(--kauf-leiste, 3.4rem) + 0.6rem); }
+.js-kauf .kauf-leiste-menu a:last-child { border-bottom: 0; }
+.js-kauf .kauf-leiste-menu a[aria-current="true"] { background: var(--signal); color: var(--signal-ink); }
+.kauf-abschnitt { scroll-margin-top: calc(var(--top, 6rem) + var(--kauf-leiste, 6.25rem) + 0.6rem); }
 @media (min-width: 980px) {
   .js-kauf { --kauf-schrift: 4.6rem; }
   .js-kauf .kauf-abschnitt { scroll-margin-top: calc(var(--top, 6rem) + var(--kauf-schrift, 4.6rem) + 0.6rem); }
@@ -2323,18 +2372,10 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   line-height: 1.05;
 }
 @media (max-width: 979px) {
-  .js-kauf .kauf-leiste-row {
+  .js-kauf .kauf-leiste {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    overflow: visible;
+    padding-bottom: 0.3rem;
   }
-  .js-kauf .kauf-leiste-link {
-    flex: none;
-    max-width: none;
-    min-width: 0;
-    min-height: 44px;
-  }
-  .js-kauf .kauf-leiste-link span { min-width: 0; overflow-wrap: anywhere; }
 }
 .js-kauf .kauf-board.is-stapel #kauf-liste { display: none; }
 .js-kauf .kauf-schnell {

@@ -44,13 +44,14 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     });
 
     async function open(width, url) {
-      const page = await browser.newPage({ viewport: { width, height: width === 390 ? 844 : 1100 } });
+      const height = width >= 980 ? 1100 : (width <= 360 ? 740 : 844);
+      const page = await browser.newPage({ viewport: { width, height } });
       const errors = [];
       page.on("pageerror", (error) => errors.push(String(error)));
       page.on("console", (msg) => { if (msg.type() === "error") errors.push(msg.text()); });
-      if (width === 390) {
+      if (width < 980) {
         const client = await page.context().newCDPSession(page);
-        await client.send("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
+        await client.send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: true });
         await client.send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 5 });
         await client.send("Emulation.setEmulatedMedia", { media: "", features: [{ name: "hover", value: "none" }, { name: "pointer", value: "coarse" }] });
       }
@@ -276,31 +277,131 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
       const nav = document.getElementById("kauf-ebene-anhaenger");
       const leiste = document.getElementById("kauf-leiste");
       const ziel = document.getElementById("kauf-teil-hochlader");
-      const kopf = document.querySelector(".top").getBoundingClientRect().bottom;
       const zr = ziel.getBoundingClientRect();
       const adresse = new URL(location.href);
-      const aktuell = leiste.querySelector("[aria-current='true']");
-      const row = leiste.querySelector(".kauf-leiste-row");
-      const knoepfe = [...leiste.querySelectorAll("a")];
-      const breiten = knoepfe.map((el) => Math.round(el.getBoundingClientRect().width));
-      const hoehen = knoepfe.map((el) => el.getBoundingClientRect().height);
+      const knopf = leiste.querySelector(".kauf-leiste-wahl");
+      const gruppen = [...leiste.querySelectorAll(".kauf-leiste-gruppe")];
+      const breiten = gruppen.map((el) => Math.round(el.getBoundingClientRect().width));
       const schrift = document.getElementById("kauf-schrift");
+      const band = leiste.getBoundingClientRect();
       return {
         panelZu: nav.hidden,
         gruppe: adresse.searchParams.get("gruppe"),
         teil: adresse.searchParams.get("teil"),
         leiste: !leiste.hidden && getComputedStyle(leiste).position === "sticky",
-        marke: aktuell ? aktuell.textContent.replace(/\s+/g, " ").trim() : "",
-        kopfFrei: zr.top >= kopf - 2,
-        umbruch: row && getComputedStyle(row).overflowX !== "auto" && getComputedStyle(row).overflowX !== "scroll",
-        gleich: breiten.length > 1 && Math.max(...breiten) - Math.min(...breiten) <= 1,
-        tast: hoehen.length > 0 && Math.min(...hoehen) >= 44,
-        imBild: knoepfe.every((el) => el.getBoundingClientRect().right <= window.innerWidth + 1),
+        marke: knopf ? knopf.textContent.replace(/\s+/g, " ").trim() : "",
+        kopfFrei: zr.top >= band.bottom - 8,
+        bilder: leiste.querySelectorAll("img").length,
+        pills: leiste.querySelectorAll(".kauf-leiste-row, .kauf-leiste-link").length,
+        gleich: breiten.length === 3 && Math.max(...breiten) - Math.min(...breiten) <= 1,
+        hoehe: Math.round(band.height),
+        imBild: band.right <= window.innerWidth + 1 && band.left >= -1,
         schriftWeg: schrift && getComputedStyle(schrift).display === "none"
       };
     });
-    point("Tap springt zur Überschrift", tapped.panelZu && tapped.gruppe === "anhaenger" && tapped.teil === "hochlader" && tapped.leiste && /Hochlader/.test(tapped.marke) && tapped.kopfFrei && tapped.umbruch && tapped.gleich && tapped.tast && tapped.imBild && tapped.schriftWeg, JSON.stringify(tapped));
+    point("Tap springt zur Überschrift", tapped.panelZu && tapped.gruppe === "anhaenger" && tapped.teil === "hochlader" && tapped.leiste && /Hochlader/.test(tapped.marke) && tapped.marke.indexOf("▾") !== -1 && tapped.kopfFrei && tapped.bilder === 0 && tapped.pills === 0 && tapped.gleich && tapped.hoehe <= 100 && tapped.imBild && tapped.schriftWeg, JSON.stringify(tapped));
     await phone.page.close();
+
+    async function handyNav(width) {
+      const view = await open(width, "/kaufen/?gruppe=zaun&kat=gitter");
+      const ruhe = await view.page.evaluate(() => {
+        const leiste = document.getElementById("kauf-leiste");
+        const gruppen = [...leiste.querySelectorAll(".kauf-leiste-gruppe")];
+        const breiten = gruppen.map((el) => Math.round(el.getBoundingClientRect().width));
+        const aktiv = gruppen.find((el) => el.getAttribute("aria-current") === "true");
+        const ober = getComputedStyle(document.querySelector("#kauf-gruppen a strong"));
+        const stil = aktiv ? getComputedStyle(aktiv) : null;
+        const knopf = leiste.querySelector(".kauf-leiste-wahl");
+        const menu = document.getElementById("kauf-leiste-menu");
+        const scrolls = [...document.querySelectorAll("body *")].filter((el) => {
+          const value = getComputedStyle(el).overflowY;
+          return (value === "auto" || value === "scroll") && el.scrollHeight > el.clientHeight + 2;
+        }).map((el) => el.id || String(el.className).slice(0, 40));
+        return {
+          n: gruppen.length,
+          gleich: breiten.length === 3 && Math.max(...breiten) - Math.min(...breiten) <= 1,
+          gruen: stil ? stil.backgroundColor : "",
+          schrift: !!(stil && stil.fontFamily === ober.fontFamily && stil.fontWeight === ober.fontWeight && stil.letterSpacing !== "normal"),
+          schriftWerte: stil ? { familie: stil.fontFamily === ober.fontFamily, gewicht: stil.fontWeight + "/" + ober.fontWeight, abstand: stil.letterSpacing } : null,
+          label: knopf ? knopf.textContent.replace(/\s+/g, " ").trim() : "",
+          menuZu: !!(menu && menu.hidden),
+          hoehe: Math.round(leiste.getBoundingClientRect().height),
+          bilder: leiste.querySelectorAll("img").length,
+          kacheln: document.querySelectorAll("#kauf-gruppen img").length,
+          kachelFest: ["sticky", "fixed"].indexOf(getComputedStyle(document.getElementById("kauf-gruppen")).position) === -1,
+          pills: leiste.querySelectorAll(".kauf-leiste-row").length,
+          quer: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+          scrolls,
+          unten: !!document.querySelector("#kauf-verkehr-summe .beispiel-leiste-wahl"),
+          schriftWeg: getComputedStyle(document.getElementById("kauf-schrift")).display === "none"
+        };
+      });
+      await view.page.locator(".kauf-leiste-wahl").click();
+      const offen = await view.page.evaluate(() => {
+        const menu = document.getElementById("kauf-leiste-menu");
+        const links = [...menu.querySelectorAll("a")];
+        const ebenen = document.querySelectorAll("#kauf-ebene a").length;
+        const hoehen = links.map((el) => el.getBoundingClientRect().height);
+        const deckend = getComputedStyle(menu).backgroundColor === "rgb(255, 255, 255)";
+        return {
+          auf: menu && !menu.hidden && document.querySelector(".kauf-leiste-wahl").getAttribute("aria-expanded") === "true",
+          n: links.length,
+          ebenen,
+          tast: hoehen.length > 0 && Math.min(...hoehen) >= 44,
+          deckend,
+          ebeneZu: document.getElementById("kauf-ebene").hidden
+        };
+      });
+      await view.page.keyboard.press("Escape");
+      const esc = await view.page.evaluate(() => document.getElementById("kauf-leiste-menu").hidden);
+      await view.page.locator(".kauf-leiste-wahl").click();
+      await view.page.locator("h1").click();
+      const aussen = await view.page.evaluate(() => document.getElementById("kauf-leiste-menu").hidden);
+      await view.page.locator(".kauf-leiste-wahl").click();
+      await view.page.locator("#kauf-leiste-menu a[data-kat='schleuse']").click();
+      await view.page.waitForFunction(() => {
+        const ziel = document.getElementById("kauf-teil-schleuse");
+        const band = document.getElementById("kauf-leiste").getBoundingClientRect();
+        const top = ziel.getBoundingClientRect().top;
+        return new URL(location.href).searchParams.get("kat") === "schleuse" && top >= band.bottom - 8 && top < window.innerHeight * 0.7;
+      });
+      const sprung = await view.page.evaluate(() => {
+        const ziel = document.getElementById("kauf-teil-schleuse");
+        const band = document.getElementById("kauf-leiste").getBoundingClientRect();
+        const zr = ziel.getBoundingClientRect();
+        return {
+          kat: new URL(location.href).searchParams.get("kat"),
+          zu: document.getElementById("kauf-leiste-menu").hidden,
+          frei: zr.top >= band.bottom - 8 && zr.top < window.innerHeight * 0.7,
+          label: document.querySelector(".kauf-leiste-name").textContent.replace(/\s+/g, " ").trim()
+        };
+      });
+      await view.page.waitForTimeout(1600);
+      await view.page.evaluate(() => {
+        const root = document.documentElement;
+        const previous = root.style.scrollBehavior;
+        root.style.scrollBehavior = "auto";
+        document.getElementById("kauf-teil-buehne").scrollIntoView({ block: "start", behavior: "auto" });
+        root.style.scrollBehavior = previous;
+      });
+      await view.page.waitForTimeout(400);
+      const scroll = await view.page.evaluate(() => {
+        const leiste = document.getElementById("kauf-leiste");
+        const kopf = document.querySelector(".top").getBoundingClientRect().bottom;
+        const band = leiste.getBoundingClientRect();
+        return {
+          label: document.querySelector(".kauf-leiste-name").textContent.replace(/\s+/g, " ").trim(),
+          haengt: Math.abs(band.top - kopf) <= 4,
+          quer: document.documentElement.scrollWidth - document.documentElement.clientWidth
+        };
+      });
+      const ok = ruhe.n === 3 && ruhe.gleich && ruhe.gruen === "rgb(118, 183, 41)" && ruhe.schrift && /Absperrgitter/.test(ruhe.label) && ruhe.label.indexOf("▾") !== -1 && ruhe.menuZu && ruhe.hoehe <= 100 && ruhe.bilder === 0 && ruhe.kacheln === 3 && ruhe.kachelFest && ruhe.pills === 0 && ruhe.quer <= 1 && ruhe.scrolls.length === 0 && ruhe.unten && ruhe.schriftWeg && offen.auf && offen.n === offen.ebenen && offen.n >= 6 && offen.tast && offen.deckend && offen.ebeneZu && esc && aussen && sprung.kat === "schleuse" && sprung.zu && sprung.frei && /Schleusen/.test(sprung.label) && /Bühnen/.test(scroll.label) && scroll.haengt && scroll.quer <= 1;
+      point(`Handy-Leiste ${width}`, ok, JSON.stringify({ ruhe, offen, esc, aussen, sprung, scroll, fehler: view.errors }));
+      point(`Konsole Handy ${width}`, view.errors.length === 0, view.errors.join(" | "));
+      await view.page.close();
+    }
+    await handyNav(390);
+    await handyNav(360);
 
     const sprache = await open(1280, "/kaufen/");
     await sprache.page.evaluate(() => sessionStorage.removeItem("amk-kauf-unter"));

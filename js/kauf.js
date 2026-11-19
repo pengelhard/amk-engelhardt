@@ -284,6 +284,21 @@
     return false;
   }
 
+  function unterAn(kat, teil) {
+    return (kat && kat === state.kat) || (teil && (teil === state.teil || teil === state.zeichen));
+  }
+
+  function menuSchalter(auf) {
+    var bar = document.getElementById("kauf-leiste");
+    if (!bar) return;
+    var menu = document.getElementById("kauf-leiste-menu");
+    var knopf = bar.querySelector(".kauf-leiste-wahl");
+    if (!menu || !knopf) return;
+    var next = typeof auf === "boolean" ? auf : !!menu.hidden;
+    menu.hidden = !next;
+    knopf.setAttribute("aria-expanded", next ? "true" : "false");
+  }
+
   function maleLeiste() {
     var bar = document.getElementById("kauf-leiste");
     if (!bar) return;
@@ -291,42 +306,63 @@
     bar.hidden = false;
     var nav = document.querySelector('.kauf-ebene[data-fuer="' + state.gruppe + '"]');
     if (!nav) return;
-    function an(kat, teil) {
-      return (kat && kat === state.kat) || (teil && (teil === state.teil || teil === state.zeichen));
-    }
-    if (bar.getAttribute("data-fuer") === state.gruppe && bar.querySelector("a")) {
-      bar.querySelectorAll("a").forEach(function (link) {
-        if (an(link.getAttribute("data-kat") || "", link.getAttribute("data-teil") || "")) link.setAttribute("aria-current", "true");
-        else link.removeAttribute("aria-current");
+    if (bar.getAttribute("data-fuer") !== state.gruppe || !bar.querySelector(".kauf-leiste-wahl")) {
+      bar.textContent = "";
+      var haupt = document.createElement("div");
+      haupt.className = "kauf-leiste-haupt";
+      document.querySelectorAll("#kauf-gruppen a[data-gruppe]").forEach(function (src) {
+        var a = document.createElement("a");
+        a.className = "kauf-leiste-gruppe";
+        a.href = src.getAttribute("href") || "#";
+        a.setAttribute("data-gruppe", src.getAttribute("data-gruppe") || "");
+        a.textContent = textOf(src);
+        haupt.appendChild(a);
       });
-    } else {
-      var row = document.createElement("div");
-      row.className = "kauf-leiste-row";
+      var knopf = document.createElement("button");
+      knopf.type = "button";
+      knopf.className = "kauf-leiste-wahl";
+      knopf.setAttribute("aria-expanded", "false");
+      knopf.setAttribute("aria-controls", "kauf-leiste-menu");
+      var name = document.createElement("span");
+      name.className = "kauf-leiste-name";
+      var pfeil = document.createElement("span");
+      pfeil.className = "kauf-leiste-pfeil";
+      pfeil.setAttribute("aria-hidden", "true");
+      pfeil.textContent = "▾";
+      knopf.appendChild(name);
+      knopf.appendChild(pfeil);
+      var menu = document.createElement("div");
+      menu.id = "kauf-leiste-menu";
+      menu.className = "kauf-leiste-menu";
+      menu.hidden = true;
       nav.querySelectorAll("a").forEach(function (link) {
         var a = document.createElement("a");
         var kat = link.getAttribute("data-kat") || "";
         var teil = link.getAttribute("data-teil") || "";
-        a.className = "kauf-leiste-link";
         a.href = link.getAttribute("href") || "#";
         if (kat) a.setAttribute("data-kat", kat);
         if (teil) a.setAttribute("data-teil", teil);
-        if (an(kat, teil)) a.setAttribute("aria-current", "true");
-        var img = link.querySelector("img");
-        if (img) {
-          var copy = document.createElement("img");
-          copy.src = img.getAttribute("src") || "";
-          copy.alt = "";
-          a.appendChild(copy);
-        }
-        var name = document.createElement("span");
-        name.textContent = textOf(link);
-        a.appendChild(name);
-        row.appendChild(a);
+        a.textContent = textOf(link);
+        menu.appendChild(a);
       });
-      bar.textContent = "";
-      bar.appendChild(row);
+      bar.appendChild(haupt);
+      bar.appendChild(knopf);
+      bar.appendChild(menu);
       bar.setAttribute("data-fuer", state.gruppe);
     }
+    bar.querySelectorAll(".kauf-leiste-gruppe").forEach(function (link) {
+      if (link.getAttribute("data-gruppe") === state.gruppe) link.setAttribute("aria-current", "true");
+      else link.removeAttribute("aria-current");
+    });
+    var key = state.gruppe === "zaun" ? state.kat : (state.zeichen || state.teil);
+    var attr = state.gruppe === "zaun" ? "data-kat" : "data-teil";
+    var sub = /^[a-z0-9-]+$/.test(key || "") ? nav.querySelector('a[' + attr + '="' + key + '"]') : null;
+    var nameEl = bar.querySelector(".kauf-leiste-name");
+    if (nameEl) nameEl.textContent = sub ? textOf(sub) : "";
+    bar.querySelectorAll(".kauf-leiste-menu a").forEach(function (link) {
+      if (unterAn(link.getAttribute("data-kat") || "", link.getAttribute("data-teil") || "")) link.setAttribute("aria-current", "true");
+      else link.removeAttribute("aria-current");
+    });
     document.documentElement.style.setProperty("--kauf-leiste", bar.offsetHeight + "px");
   }
 
@@ -734,7 +770,16 @@
   }
 
   document.addEventListener("keydown", function (event) {
-    if (event.key !== "Escape" || !offen) return;
+    if (event.key !== "Escape") return;
+    var menu = document.getElementById("kauf-leiste-menu");
+    if (menu && !menu.hidden) {
+      event.preventDefault();
+      menuSchalter(false);
+      var knopf = document.querySelector("#kauf-leiste .kauf-leiste-wahl");
+      if (knopf) knopf.focus();
+      return;
+    }
+    if (!offen) return;
     event.preventDefault();
     var id = offen;
     var trigger = document.querySelector((panelAnker === "schrift" ? "#kauf-schrift" : "#kauf-gruppen") + ' a[data-gruppe="' + id + '"]');
@@ -745,6 +790,9 @@
   });
 
   document.addEventListener("pointerdown", function (event) {
+    var menu = document.getElementById("kauf-leiste-menu");
+    var knopf = document.querySelector("#kauf-leiste .kauf-leiste-wahl");
+    if (menu && !menu.hidden && !menu.contains(event.target) && !(knopf && knopf.contains(event.target))) menuSchalter(false);
     if (!offen || !drops || drops.contains(event.target)) return;
     closePanel();
   });
@@ -857,11 +905,18 @@
   var leiste = document.getElementById("kauf-leiste");
   if (leiste) {
     leiste.addEventListener("click", function (event) {
+      var knopf = event.target.closest(".kauf-leiste-wahl");
+      if (knopf && leiste.contains(knopf)) {
+        menuSchalter();
+        return;
+      }
       var link = event.target.closest("a");
       if (!link || !leiste.contains(link)) return;
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
       event.preventDefault();
-      setzeUnter(state.gruppe, unterVon(link));
+      menuSchalter(false);
+      if (link.hasAttribute("data-gruppe")) setzeUnter(canonGruppe(link.getAttribute("data-gruppe") || ""), gemerkteUnter(canonGruppe(link.getAttribute("data-gruppe") || "")));
+      else setzeUnter(state.gruppe, unterVon(link));
       auswahlHalt = true;
       closePanel();
       writeUrl("push");
