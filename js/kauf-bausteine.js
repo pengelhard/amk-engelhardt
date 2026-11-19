@@ -30,6 +30,7 @@
     var min = opts.min == null ? 1 : opts.min;
     var attrs = "";
     if (opts.key != null && opts.key !== "") attrs += ' data-spiegel="' + esc(opts.key) + '"';
+    if (opts.merk) attrs += ' data-schnell="' + esc(opts.merk) + '"';
     if (opts.name) attrs += ' name="' + esc(opts.name) + '"';
     return '<div class="beispiel-step kachel-menge"' + (opts.hidden ? " hidden" : "") + ">" +
       '<button type="button" data-step="-1" aria-label="Weniger">−</button>' +
@@ -47,7 +48,7 @@
       "<p>" + zeile + "</p>" +
       '<label class="beispiel-wahl">' + box + kreis() +
       '<span class="visually-hidden">' + esc(opts.title) + " auswählen</span></label>" +
-      (panel || "") + "</article>";
+      (panel || "") + schnellLeer() + "</article>";
   }
 
   function zubehoerKachel(opts) {
@@ -68,12 +69,32 @@
       "</div></article>";
   }
 
+  function schnellZeile(label, id, merk) {
+    return '<div class="kauf-schnell-zeile"><span>' + esc(label) + "</span>" +
+      mengeSchritt({ id: id, value: "0", label: label, min: 0, merk: merk }) + "</div>";
+  }
+
+  function schnell(opts) {
+    var slug = opts.slug || "";
+    return '<div class="kauf-schnell" data-slug="' + esc(slug) + '">' +
+      schnellZeile("Ständer", "schnell-staender-" + slug, "staender") +
+      schnellZeile("Einzelfelder", "schnell-felder-" + slug, "felder") +
+      '<p class="kauf-schnell-fuss"><a class="kauf-schnell-details" href="' + esc(opts.href || "") + '">Details anpassen</a>' +
+      '<span class="kauf-schnell-hinweis" hidden>angepasst</span></p></div>';
+  }
+
+  function schnellLeer() {
+    return '<div class="kauf-schnell kauf-schnell--leer" aria-hidden="true"></div>';
+  }
+
   window.AMK_BAUSTEINE = {
     esc: esc,
     kreis: kreis,
     mengeFeld: mengeFeld,
     mengeSchritt: mengeSchritt,
     produkt: produkt,
+    schnell: schnell,
+    schnellLeer: schnellLeer,
     zubehoerKachel: zubehoerKachel
   };
 })();

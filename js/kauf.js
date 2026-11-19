@@ -287,6 +287,10 @@
     return state.gruppe === "verkehr" || state.gruppe === "anhaenger" || (state.gruppe === "zaun" && !!ZAUN_STAPEL[state.kat]);
   }
 
+  function katalogAn() {
+    return state.gruppe === "zaun" && state.kat === "bauzaune";
+  }
+
   function zielId() {
     if (state.gruppe === "zaun") return ZAUN_STAPEL[state.kat] ? state.kat : "";
     if (state.gruppe === "verkehr") return state.zeichen || state.teil || "";
@@ -537,9 +541,10 @@
     board.classList.toggle("is-verkehr", false);
     board.classList.toggle("is-stapel", stapel);
     if (hinweis) hinweis.hidden = !verkehr;
-    if (wahl) wahl.classList.toggle("konfig-layout", stapel);
-    if (spalte) spalte.classList.toggle("konfig-main", stapel);
-    if (verkehrSumme) verkehrSumme.hidden = !stapel;
+    var auswahlOffen = stapel || katalogAn();
+    if (wahl) wahl.classList.toggle("konfig-layout", auswahlOffen);
+    if (spalte) spalte.classList.toggle("konfig-main", auswahlOffen);
+    if (verkehrSumme) verkehrSumme.hidden = !auswahlOffen;
     renderGruppen();
     renderEbene();
     renderHinweis();
@@ -583,6 +588,17 @@
         geraete.querySelectorAll('input[name="typ"]:checked').forEach(function (box) {
           lines.push(zeile(box));
         });
+      });
+    }
+    if (katalogAn()) {
+      document.querySelectorAll("#kauf-liste .kauf-schnell[data-slug]").forEach(function (block) {
+        if (block.hidden || elternVersteckt(block)) return;
+        var titel = block.parentElement ? block.parentElement.querySelector("h3") : null;
+        var name = titel ? titel.textContent.replace(/\s+/g, " ").trim() : "";
+        var stand = schnellZahl(block, "staender");
+        var felder = schnellZahl(block, "felder");
+        if (stand > 0) lines.push({ name: name + " · Ständer", menge: String(stand) });
+        if (felder > 0) lines.push({ name: name + " · Einzelfelder", menge: String(felder) });
       });
     }
     if (schilder && zeile) {
@@ -860,22 +876,221 @@
     render();
   });
 
-  fetch("../data/katalog.json")
-    .then(function (response) { return response.json(); })
-    .then(function (data) {
-      data.forEach(function (product) {
-        var item = bySlug[product.slug];
-        if (!item) return;
-        item.code = product.code || "";
-        item.shop = product.shop || "";
-        item.attr = product.attr || {};
-        if (product.name) item.name = product.name;
-      });
-      readUrl();
-      render({ sprung: true, sanft: false });
-      writeUrl("replace");
-    })
-    .catch(function () {
-      board.hidden = true;
+  var IM = "im Komplett-Ständer";
+  var ZU = "zusätzlich";
+  var schnellStill = false;
+  var staenderPaket = {
+    felderJe: 30,
+    stand: { slug: "transportstaender-10059", name: "Transportständer" },
+    wahl: [
+      { id: "fuss", je: 31, standard: "fuss-10006" },
+      { id: "schelle", je: 30, standard: "zubehoer-10002-1" }
+    ]
+  };
+
+  function wahlEintrag(id) {
+    var found = null;
+    (staenderPaket.wahl || []).forEach(function (entry) { if (entry.id === id) found = entry; });
+    return found || { id: id, je: 1, standard: "" };
+  }
+
+  function mal(je, n) {
+    var qty = (je || 1) * n;
+    return qty > 9999 ? 9999 : qty;
+  }
+
+  function schnellFeld(block, merk) {
+    return block ? block.querySelector('[data-schnell="' + merk + '"]') : null;
+  }
+
+  function schnellZahl(block, merk) {
+    var field = schnellFeld(block, merk);
+    var qty = field ? parseInt(field.value, 10) : 0;
+    if (!qty || qty < 0) return 0;
+    return qty > 9999 ? 9999 : qty;
+  }
+
+  function mengeAus(field) {
+    if (!field || field.value === "") return null;
+    var qty = parseInt(field.value, 10);
+    if (!qty || qty < 0) qty = 0;
+    if (qty > 9999) qty = 9999;
+    if (String(qty) !== field.value) field.value = String(qty);
+    return qty;
+  }
+
+  function zeigeHinweis(block, an) {
+    var hint = block.querySelector(".kauf-schnell-hinweis");
+    if (hint) hint.hidden = !an;
+  }
+
+  function wahlTreffer(items, prefix, id) {
+    var mark = prefix + "im:" + id + ":";
+    var found = "";
+    items.forEach(function (line) {
+      if (String(line.id || "").indexOf(mark) === 0) found = line.id;
     });
+    return found;
+  }
+
+  function zeileMenge(items, id) {
+    var qty = 0;
+    items.forEach(function (line) { if (line.id === id) qty = line.qty; });
+    return qty || 0;
+  }
+
+  function skaliere(items, id, qty) {
+    items.forEach(function (line) { if (line.id === id && qty > 0) line.qty = qty; });
+    return items;
+  }
+
+  function setzeZeile(items, id, name, qty, bild, kat) {
+    var found = null;
+    items.forEach(function (line) { if (line.id === id) found = line; });
+    if (!qty) return items.filter(function (line) { return line.id !== id; });
+    if (found) {
+      found.qty = qty;
+      found.name = name;
+      found.bild = bild || "";
+      found.kat = kat || "";
+      found.note = id.indexOf(":zusatz:") !== -1 ? ZU : IM;
+      return items;
+    }
+    items.push({ id: id, name: name, qty: qty, bild: bild || "", kat: kat || "", note: id.indexOf(":zusatz:") !== -1 ? ZU : IM });
+    return items;
+  }
+
+  function produktVon(slug, fallback) {
+    return bySlug[slug] || fallback || { name: slug, bild: "", kat: "bauzaun" };
+  }
+
+  function schreibSchnell(block) {
+    if (schnellStill || !block || !window.AMK_WUNSCH || !window.AMK_WUNSCH.load) return;
+    var slug = block.getAttribute("data-slug") || "";
+    var item = bySlug[slug];
+    if (!item) return;
+    var stand = mengeAus(schnellFeld(block, "staender"));
+    var felder = mengeAus(schnellFeld(block, "felder"));
+    if (stand == null || felder == null) return;
+    var prefix = "kauf:" + slug + ":";
+    var items = window.AMK_WUNSCH.load();
+    var fuss = wahlEintrag("fuss");
+    var schelle = wahlEintrag("schelle");
+    var fussId = wahlTreffer(items, prefix, "fuss");
+    var schelleId = wahlTreffer(items, prefix, "schelle");
+    var fussAnders = !!(fussId && fussId !== prefix + "im:fuss:" + fuss.standard);
+    var schelleAnders = !!(schelleId && schelleId !== prefix + "im:schelle:" + schelle.standard);
+    if (stand > 0) {
+      items = setzeZeile(items, prefix + "im:zaun", item.name, mal(staenderPaket.felderJe || 30, stand), item.bild, item.kat);
+      var standItem = produktVon(staenderPaket.stand.slug, staenderPaket.stand);
+      items = setzeZeile(items, prefix + "im:staender", standItem.name || staenderPaket.stand.name, stand, standItem.bild, standItem.kat || item.kat);
+      if (fussAnders) items = skaliere(items, fussId, mal(fuss.je, stand));
+      else {
+        items = items.filter(function (line) { return String(line.id).indexOf(prefix + "im:fuss:") !== 0; });
+        var fussItem = produktVon(fuss.standard, { name: fuss.standard });
+        items = setzeZeile(items, prefix + "im:fuss:" + fuss.standard, fussItem.name, mal(fuss.je, stand), fussItem.bild, fussItem.kat || item.kat);
+      }
+      if (schelleAnders) items = skaliere(items, schelleId, mal(schelle.je, stand));
+      else {
+        items = items.filter(function (line) { return String(line.id).indexOf(prefix + "im:schelle:") !== 0; });
+        var schelleItem = produktVon(schelle.standard, { name: schelle.standard });
+        items = setzeZeile(items, prefix + "im:schelle:" + schelle.standard, schelleItem.name, mal(schelle.je, stand), schelleItem.bild, schelleItem.kat || item.kat);
+      }
+    } else {
+      items = items.filter(function (line) { return String(line.id).indexOf(prefix + "im:") !== 0; });
+    }
+    items = setzeZeile(items, prefix + "zusatz:felder", item.name, felder, item.bild, item.kat);
+    items = items.filter(function (line) { return line.id !== "kauf:" + slug; });
+    window.AMK_WUNSCH.save(items, true);
+    zeigeHinweis(block, stand > 0 && (fussAnders || schelleAnders));
+    kaufLeiste();
+  }
+
+  function liesSchnell() {
+    if (!window.AMK_WUNSCH || !window.AMK_WUNSCH.load) return;
+    schnellStill = true;
+    var items = window.AMK_WUNSCH.load();
+    document.querySelectorAll(".kauf-schnell[data-slug]").forEach(function (block) {
+      var slug = block.getAttribute("data-slug") || "";
+      var prefix = "kauf:" + slug + ":";
+      var standField = schnellFeld(block, "staender");
+      var feldField = schnellFeld(block, "felder");
+      if (standField) standField.value = String(zeileMenge(items, prefix + "im:staender"));
+      if (feldField) feldField.value = String(zeileMenge(items, prefix + "zusatz:felder"));
+      var fuss = wahlEintrag("fuss");
+      var schelle = wahlEintrag("schelle");
+      var fussId = wahlTreffer(items, prefix, "fuss");
+      var schelleId = wahlTreffer(items, prefix, "schelle");
+      var stand = standField ? parseInt(standField.value, 10) || 0 : 0;
+      zeigeHinweis(block, stand > 0 && ((fussId && fussId !== prefix + "im:fuss:" + fuss.standard) || (schelleId && schelleId !== prefix + "im:schelle:" + schelle.standard)));
+    });
+    schnellStill = false;
+  }
+
+  function schmuecke() {
+    if (!window.AMK_BAUSTEINE || !window.AMK_BAUSTEINE.schnell) return;
+    items.forEach(function (item) {
+      if (item.el.querySelector(".kauf-schnell")) return;
+      if (item.shop === "bauzaune") {
+        item.el.insertAdjacentHTML("beforeend", window.AMK_BAUSTEINE.schnell({
+          slug: item.slug,
+          href: "../produkt/" + item.slug + "/"
+        }));
+      } else {
+        item.el.insertAdjacentHTML("beforeend", window.AMK_BAUSTEINE.schnellLeer());
+      }
+    });
+    liesSchnell();
+  }
+
+  liste.addEventListener("click", function (event) {
+    var button = event.target.closest(".kauf-schnell [data-step]");
+    if (!button || !liste.contains(button)) return;
+    var wrap = button.closest(".beispiel-step");
+    var field = wrap ? wrap.querySelector("input[type='number']") : null;
+    if (!field) return;
+    var step = parseInt(button.getAttribute("data-step"), 10) || 0;
+    var value = parseInt(field.value, 10);
+    if (isNaN(value)) value = 0;
+    field.value = String(Math.min(9999, Math.max(0, value + step)));
+    schreibSchnell(button.closest(".kauf-schnell"));
+  });
+
+  liste.addEventListener("input", function (event) {
+    var field = event.target;
+    if (!field || !field.matches || !field.matches(".kauf-schnell [data-schnell]")) return;
+    schreibSchnell(field.closest(".kauf-schnell"));
+  });
+
+  liste.addEventListener("change", function (event) {
+    var field = event.target;
+    if (!field || !field.matches || !field.matches(".kauf-schnell [data-schnell]")) return;
+    if (field.value === "") field.value = "0";
+    schreibSchnell(field.closest(".kauf-schnell"));
+  });
+
+  Promise.all([
+    fetch("../data/katalog.json").then(function (response) { return response.json(); }),
+    fetch("../data/kauf-auswahl.json").then(function (response) { return response.json(); }).catch(function () { return null; })
+  ]).then(function (result) {
+    var data = result[0];
+    var config = result[1];
+    if (config && config.staender && config.staender.paket) staenderPaket = config.staender.paket;
+    data.forEach(function (product) {
+      var item = bySlug[product.slug];
+      if (!item) return;
+      item.code = product.code || "";
+      item.shop = product.shop || "";
+      item.attr = product.attr || {};
+      item.bild = product.bild || "";
+      item.kat = product.kat || "";
+      if (product.name) item.name = product.name;
+    });
+    schmuecke();
+    readUrl();
+    render({ sprung: true, sanft: false });
+    writeUrl("replace");
+  }).catch(function () {
+    board.hidden = true;
+  });
 })();

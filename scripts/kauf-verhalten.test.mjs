@@ -147,7 +147,21 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
       point(`Konsole ${width}`, errors.length === 0, errors.join(" | "));
       if (width >= 980) {
         await page.goto(base + "/kaufen/?gruppe=zaun&kat=bauzaune", { waitUntil: "networkidle" });
-        const ohneBox = await page.evaluate(() => [...document.querySelectorAll(".konfig-summary")].filter((el) => getComputedStyle(el).display !== "none" && el.getBoundingClientRect().height > 0).length);
+        await page.locator("#kauf-verkehr-summe").scrollIntoViewIfNeeded();
+        const bauBox = await page.evaluate(() => {
+          const summary = document.getElementById("kauf-verkehr-summe");
+          const list = document.querySelector("#kauf-liste .tile");
+          const sr = summary.getBoundingClientRect();
+          const lr = list.getBoundingClientRect();
+          const hit = document.elementFromPoint(sr.left + Math.min(40, sr.width / 2), Math.min(sr.top + 40, sr.bottom - 4));
+          return {
+            sticky: getComputedStyle(summary).position,
+            neben: sr.left >= lr.right - 8,
+            bündig: Math.abs(sr.top - lr.top) < 40,
+            hoehe: Math.round(sr.height),
+            treffer: !!(hit && hit.closest("#kauf-verkehr-summe"))
+          };
+        });
         await page.goto(base + "/kaufen/?gruppe=verkehr&teil=vorschrift", { waitUntil: "networkidle" });
         const verkehrBox = await page.evaluate(() => {
           const summary = document.getElementById("kauf-verkehr-summe");
@@ -185,7 +199,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
             treffer: !!(hit && hit.closest("#kauf-verkehr-summe"))
           };
         });
-        point(`Auswahl rechts ${width}`, ohneBox === 0 && verkehrBox.sticky === "sticky" && verkehrBox.neben && verkehrBox.oben && verkehrBox.hoehe > 40 && verkehrBox.treffer && haengt.top > 40 && haengt.top < haengt.header + 40 && anhBox.sticky === "sticky" && anhBox.neben && anhBox.oben && anhBox.hoehe > 40 && anhBox.treffer, JSON.stringify({ ohneBox, verkehrBox, haengt, anhBox }));
+        point(`Auswahl rechts ${width}`, bauBox.sticky === "sticky" && bauBox.neben && bauBox.bündig && bauBox.hoehe > 40 && bauBox.treffer && verkehrBox.sticky === "sticky" && verkehrBox.neben && verkehrBox.oben && verkehrBox.hoehe > 40 && verkehrBox.treffer && haengt.top > 40 && haengt.top < haengt.header + 40 && anhBox.sticky === "sticky" && anhBox.neben && anhBox.oben && anhBox.hoehe > 40 && anhBox.treffer, JSON.stringify({ bauBox, verkehrBox, haengt, anhBox }));
       }
       await page.close();
     }
@@ -398,6 +412,55 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 180000 }, async () => {
     });
     point("gemeinsame Kachel", baustein.produkt && baustein.ober && baustein.kreis, JSON.stringify(baustein));
     await pick.page.close();
+
+    const schnell = await open(1280, "/kaufen/?gruppe=zaun&kat=bauzaune");
+    await schnell.page.evaluate(() => localStorage.removeItem("amk-wunsch"));
+    await schnell.page.reload({ waitUntil: "networkidle" });
+    const schnellKarte = schnell.page.locator("#kauf-liste article.tile").first();
+    const schnellInfo = await schnell.page.evaluate(() => {
+      const block = document.querySelector("#kauf-liste .kauf-schnell[data-slug]");
+      const stand = block.querySelector("[data-schnell='staender']");
+      const feld = block.querySelector("[data-schnell='felder']");
+      const link = block.querySelector(".kauf-schnell-details");
+      return {
+        slug: block.getAttribute("data-slug"),
+        max: stand.getAttribute("max"),
+        min: stand.getAttribute("min"),
+        link: link.getAttribute("href"),
+        text: link.textContent.trim(),
+        felder: feld.getAttribute("max")
+      };
+    });
+    point("Schnellauswahl", schnellInfo.slug === "bauzaun-10075" && schnellInfo.max === "9999" && schnellInfo.min === "0" && schnellInfo.felder === "9999" && /bauzaun-10075\/$/.test(schnellInfo.link) && schnellInfo.text === "Details anpassen", JSON.stringify(schnellInfo));
+    await schnellKarte.locator("[data-schnell='staender']").fill("2");
+    await schnellKarte.locator("[data-schnell='felder']").fill("3");
+    await schnell.page.waitForTimeout(100);
+    const korb = await schnell.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty + ":" + (item.note || "")));
+    point("Korb aus der Liste", korb.indexOf("kauf:bauzaun-10075:im:staender:2:im Komplett-Ständer") !== -1 && korb.indexOf("kauf:bauzaun-10075:im:zaun:60:im Komplett-Ständer") !== -1 && korb.indexOf("kauf:bauzaun-10075:im:fuss:fuss-10006:62:im Komplett-Ständer") !== -1 && korb.indexOf("kauf:bauzaun-10075:im:schelle:zubehoer-10002-1:60:im Komplett-Ständer") !== -1 && korb.indexOf("kauf:bauzaun-10075:zusatz:felder:3:zusätzlich") !== -1, korb.join(" | "));
+    await schnell.page.goto(base + "/produkt/bauzaun-10075/", { waitUntil: "networkidle" });
+    await schnell.page.waitForFunction(() => document.getElementById("menge-staender") && document.getElementById("menge-staender").value === "2" && document.getElementById("menge-felder") && document.getElementById("menge-felder").value === "3");
+    await schnell.page.selectOption("#wahl-fuss", "fuss-10004");
+    await schnell.page.waitForTimeout(150);
+    await schnell.page.goto(base + "/kaufen/?gruppe=zaun&kat=bauzaune", { waitUntil: "networkidle" });
+    const angepasst = await schnell.page.evaluate(() => {
+      const block = document.querySelector(".kauf-schnell[data-slug='bauzaun-10075']");
+      const hint = block.querySelector(".kauf-schnell-hinweis");
+      return {
+        stand: block.querySelector("[data-schnell='staender']").value,
+        feld: block.querySelector("[data-schnell='felder']").value,
+        hinweis: hint && !hint.hidden && hint.textContent.trim()
+      };
+    });
+    point("Angepasst bleibt", angepasst.stand === "2" && angepasst.feld === "3" && angepasst.hinweis === "angepasst", JSON.stringify(angepasst));
+    await schnell.page.locator(".kauf-schnell[data-slug='bauzaun-10075'] [data-schnell='staender']").fill("3");
+    await schnell.page.waitForTimeout(100);
+    const bewahrt = await schnell.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").filter((item) => String(item.id).indexOf("kauf:bauzaun-10075:im:fuss:") === 0).map((item) => item.id + ":" + item.qty));
+    point("Liste überschreibt den Fuß nicht", bewahrt.length === 1 && bewahrt[0] === "kauf:bauzaun-10075:im:fuss:fuss-10004:93", bewahrt.join(", "));
+    await schnell.page.locator(".kauf-schnell[data-slug='bauzaun-10075'] [data-schnell='staender']").fill("10000");
+    const begrenzt = await schnell.page.locator(".kauf-schnell[data-slug='bauzaun-10075'] [data-schnell='staender']").inputValue();
+    point("Schnellauswahl Grenze 9999", begrenzt === "9999", begrenzt);
+    await schnell.page.evaluate(() => localStorage.removeItem("amk-wunsch"));
+    await schnell.page.close();
 
     const detail = await open(1280, "/produkt/bauzaun-10075/");
     await detail.page.waitForSelector("#menge-staender");
