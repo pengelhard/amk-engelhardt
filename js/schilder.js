@@ -65,7 +65,7 @@
         button.setAttribute("aria-pressed", on ? "true" : "false");
       });
       form.querySelectorAll("[data-schild]").forEach(function (row) {
-        var title = row.querySelector("strong");
+        var title = row.querySelector("strong, h3");
         var text = (title ? title.textContent : "").toLocaleLowerCase("de");
         row.hidden = row.getAttribute("data-teil") !== teil || !!(q && text.indexOf(q) === -1);
       });
@@ -108,19 +108,24 @@
         document.dispatchEvent(new CustomEvent("amk-zeichen", { detail: id }));
       });
     }
-    list.innerHTML = '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' +
-      ZEICHEN.map(function (entry) {
-        return window.AMK_TYPWAHL.card({
-          name: "schild",
-          value: entry.id,
-          title: entry.nr + " " + entry.name,
-          media: '<span class="pick-bild"><img src="' + esc(assetRoot() + entry.bild) + '" alt="" width="96" height="96"></span>',
-          panelId: "menge-panel-schild-" + entry.id,
-          inputId: "menge-schild-" + entry.id,
-          data: { schild: entry.id, teil: teilOf(entry) },
-          href: form.getAttribute("data-vorgang") === "miete" ? "" : assetRoot() + "produkt/schild-" + entry.id + "/"
-        });
-      }).join("") + "</div></fieldset>";
+    var kachel = form.getAttribute("data-vorgang") !== "miete";
+    var karten = ZEICHEN.map(function (entry) {
+      var bild = '<img src="' + esc(assetRoot() + entry.bild) + '" alt="" width="96" height="96" decoding="async">';
+      return window.AMK_TYPWAHL.card({
+        name: "schild",
+        value: entry.id,
+        title: entry.nr + " " + entry.name,
+        media: kachel ? bild : '<span class="pick-bild">' + bild + "</span>",
+        panelId: "menge-panel-schild-" + entry.id,
+        inputId: "menge-schild-" + entry.id,
+        data: { schild: entry.id, teil: teilOf(entry) },
+        kachel: kachel,
+        href: kachel ? assetRoot() + "produkt/schild-" + entry.id + "/" : ""
+      });
+    }).join("");
+    list.innerHTML = kachel
+      ? '<div class="tiles">' + karten + "</div>"
+      : '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' + karten + "</div></fieldset>";
 
     var vorgangForm = form.getAttribute("data-vorgang") === "miete" ? "miete" : "kauf";
     if (window.AMK_WUNSCH && window.AMK_WUNSCH.load) {

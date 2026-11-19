@@ -50,6 +50,18 @@
     }
     var box = '<input type="checkbox" name="' + esc(opts.name) + '" value="' + esc(opts.value) + '"' +
       (on ? " checked" : "") + controls + ">";
+    if (opts.kachel) {
+      var zeile = opts.note ? esc(opts.note) : "\u00a0";
+      var link = opts.href
+        ? '<a href="' + esc(opts.href) + '"><span class="frame">' + (opts.media || "") + "</span><h3>" + esc(opts.title) + "</h3></a>"
+        : '<span class="frame">' + (opts.media || "") + "</span><h3>" + esc(opts.title) + "</h3>";
+      return '<article class="tile kauf-produkt"' + dataAttrs(opts.data) + ">" +
+        link +
+        "<p>" + zeile + "</p>" +
+        '<label class="beispiel-wahl">' + box +
+        '<span class="beispiel-kreis"></span><span class="visually-hidden">' + esc(opts.title) + " auswählen</span></label>" +
+        panel + "</article>";
+    }
     if (opts.href) {
       var href = esc(opts.href);
       var mass = opts.note ? '<p class="pick-mass">' + esc(opts.note) + "</p>" : "";
@@ -88,7 +100,7 @@
 
   document.addEventListener("change", function (event) {
     var box = event.target;
-    if (!box || !box.matches || !box.matches('.pick input[type="checkbox"][aria-controls]')) return;
+    if (!box || !box.matches || !box.matches('.pick input[type="checkbox"][aria-controls], .kauf-produkt input[type="checkbox"][aria-controls]')) return;
     reveal(box, true);
   });
 

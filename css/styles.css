@@ -2165,8 +2165,14 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 .kauf-karte img {
-  width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: var(--soft);
+  width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: center; background: var(--soft);
 }
+.kauf-karte.kauf-piktogramm img {
+  object-fit: contain;
+  background: #fff;
+  padding: 0.7rem;
+}
+.kauf-karte.kauf-foto-hoch img { object-position: center 32%; }
 .kauf-karte strong {
   display: flex; align-items: center; min-height: 3.25rem;
   padding: 0.7rem 0.9rem 0.8rem;
@@ -2237,6 +2243,26 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 }
 .kauf-hinweis strong { font-weight: 400; background: var(--signal); color: var(--signal-ink); padding: 0.05rem 0.35rem; }
 .js-kauf .kauf-cats { display: none !important; }
+.js-kauf .konfig-layout { display: block; }
+.js-kauf .tiles > [data-teil-karte] {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.js-kauf .kauf-produkt { position: relative; height: auto; flex: 0 0 auto; width: 100%; }
+.js-kauf .kauf-produkt .beispiel-wahl {
+  position: absolute;
+  z-index: 1;
+  top: 0.45rem;
+  right: 0.45rem;
+}
+.js-kauf .kauf-produkt:has(input:checked) { border-color: var(--signal); }
+.js-kauf .kauf-produkt .beispiel-wahl:focus-within .beispiel-kreis { outline: 2px solid var(--ink); outline-offset: 2px; }
+.js-kauf .kauf-produkt .pick-menge,
+.js-kauf .tiles > [data-teil-karte] > .anhaenger-details { margin: 0.35rem 0.85rem 0.75rem; }
+@media (min-width: 980px) {
+  .js-kauf .konfig-summary { width: 20rem; margin-left: auto; }
+}
 .js-kauf .kauf-ebene .kauf-karte { height: 100%; }
 .js-kauf .kauf-ebene .kauf-karte strong {
   box-sizing: border-box;

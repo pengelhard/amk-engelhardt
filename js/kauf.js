@@ -31,7 +31,7 @@
   };
 
   var vorlage = document.getElementById("kauf-vorlage");
-  var nodes = Array.prototype.slice.call((vorlage ? vorlage.content : document).querySelectorAll("article.tile"));
+  var nodes = Array.prototype.slice.call((vorlage ? vorlage.content : document).querySelectorAll(vorlage ? "article.tile" : "section.copy article.tile"));
   var items = nodes.map(function (el, index) {
     var order = el.querySelector("form[data-order]");
     return {

@@ -111,8 +111,8 @@
   }
 
   function zeileVon(box) {
-    var block = box && box.closest ? box.closest(".pick-block") : null;
-    var title = block ? block.querySelector("strong") : null;
+    var block = box && box.closest ? box.closest(".pick-block, .kauf-produkt") : null;
+    var title = block ? block.querySelector("strong, h3") : null;
     var field = block ? block.querySelector("[data-menge]") : null;
     var name = title ? title.textContent.trim() : "";
     var menge = "";
@@ -204,6 +204,7 @@
         return '<button type="button" class="chip" data-teil="' + entry.id + '" aria-pressed="' + (on ? "true" : "false") + '">' + esc(entry.label) + "</button>";
       }).join("") + "</div>"
       : "";
+    var kachel = vorgang === "kauf";
     var cards = "";
     teile.forEach(function (entry) {
       products.filter(function (product) { return matches(product, entry); }).forEach(function (product) {
@@ -211,6 +212,7 @@
         var on = !!existing;
         var qty = existing && existing.qty ? existing.qty : 1;
         var hide = entry.id === teilId ? "" : " hidden";
+        var daten = gruppe === "anhaenger" ? eckdaten(product.slug) : "";
         cards += '<div data-teil-karte="' + esc(entry.id) + '"' + hide + ">" + window.AMK_TYPWAHL.card({
           name: "typ",
           value: product.slug,
@@ -222,9 +224,10 @@
           menge: !(vorgang === "miete" && gruppe === "anhaenger"),
           panelId: "menge-panel-" + gruppe + "-" + product.slug,
           inputId: "menge-" + gruppe + "-" + product.slug,
-          extra: gruppe === "anhaenger" ? eckdaten(product.slug) : "",
+          extra: kachel ? "" : daten,
+          kachel: kachel,
           href: vorgang === "kauf" ? root + "produkt/" + product.slug + "/" : ""
-        }) + "</div>";
+        }) + (kachel ? daten : "") + "</div>";
       });
     });
     var aside = bare === "1" ? "" :
@@ -242,7 +245,9 @@
     node.innerHTML = pills +
       "<form" + formClass + ">" +
       "<div" + mainClass + ">" +
-      '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' + cards + "</div></fieldset>" +
+      (vorgang === "kauf"
+        ? '<div class="tiles">' + cards + "</div>"
+        : '<fieldset class="pick-set"><legend>Typ</legend><div class="picks">' + cards + "</div></fieldset>") +
       "</div>" + aside + "</form>";
     updateSum(node);
   }
