@@ -161,10 +161,25 @@ a:hover { color: var(--forest); }
   align-items: center;
   gap: 1rem;
   min-height: 4rem;
+  transition: min-height 0.28s ease;
 }
 
-.brand { display: flex; }
-.brand img { height: 44px; width: auto; }
+.brand {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  max-width: calc(100% - 3.75rem);
+}
+.brand img {
+  display: block;
+  width: auto;
+  height: 80px;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left center;
+  transition: height 0.28s ease;
+}
+html.logo-klein .brand img { height: 44px; }
 
 .nav { display: none; }
 .nav ul { list-style: none; display: flex; gap: 1.35rem; margin: 0; padding: 0; }
@@ -1081,7 +1096,8 @@ html { scroll-padding-bottom: calc(var(--tabbar, 4.75rem) + 0.75rem); }
 }
 
 @media (min-width: 980px) {
-  .brand img { height: 46px; }
+  .brand { max-width: none; }
+  html.logo-klein .brand img { height: 46px; }
   .header-bar { min-height: 4rem; }
   .nav { display: block; margin-left: auto; }
   .nav-toggle { display: none; }
@@ -1103,7 +1119,8 @@ html { scroll-padding-bottom: calc(var(--tabbar, 4.75rem) + 0.75rem); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .slide, .btn, .entry::after, .plate-img img, .tile img, .mosaic img, .site-header { transition: none; }
+  .slide, .btn, .entry::after, .plate-img img, .tile img, .mosaic img, .site-header,
+  .brand img, .header-bar { transition: none; }
   .btn:hover { transform: none; }
 }
 

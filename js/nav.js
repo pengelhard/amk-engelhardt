@@ -20,9 +20,18 @@
     document.documentElement.style.setProperty("--top", bar.offsetHeight + "px");
   }
 
+  function shrinkLogo() {
+    document.documentElement.classList.toggle("logo-klein", window.scrollY > 24);
+  }
+
+  shrinkLogo();
   pinTop();
-  window.addEventListener("scroll", pinTop, { passive: true });
+  window.addEventListener("scroll", function () {
+    shrinkLogo();
+    pinTop();
+  }, { passive: true });
   window.addEventListener("resize", pinTop);
+  if (bar && window.ResizeObserver) new ResizeObserver(pinTop).observe(bar);
 
   if (bar && bar.classList.contains("top--overlay")) {
     function solidTop() {
