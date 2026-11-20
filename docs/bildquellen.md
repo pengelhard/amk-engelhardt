@@ -30,7 +30,9 @@ Status jeder dieser Dateien: **Nutzungsrecht in Klärung**. Kein Logo und kein L
 | `images/kk/bauzaun-10069-1.webp` | Bauzaun Profi Press engmaschig 3,5 × 2,0 m | https://kkservice.de/wp-content/uploads/2024/09/10069.1-1280-x-720.webp | https://kkservice.de/vorverzinkte-zaune/ | Nutzungsrecht in Klärung |
 | `images/kk/bauzaun-10069-4.webp` | Bauzaun Round 3,5 × 2,0 m Masche 100 × 300 mm | https://kkservice.de/wp-content/uploads/2024/09/10069.4-1280-x-720.webp | https://kkservice.de/vorverzinkte-zaune/ | Nutzungsrecht in Klärung |
 | `images/kk/sichtschutz-10037-2.webp` | Geschlossenes Paneel 2,8 × 2,0 m | https://kkservice.de/wp-content/uploads/2024/09/10037.2-1280-x-720.webp | https://kkservice.de/geschlossene-zaune/ | Nutzungsrecht in Klärung |
-| `images/kk/plane-10012.webp` | Sichtschutzplane | https://kkservice.de/wp-content/uploads/2024/09/100022-.webp | https://kkservice.de/zubehor/ | Nutzungsrecht in Klärung |
+| `images/kk/plane-10012.webp` | Nicht mehr für die Sichtschutzplane. Die Datei zeigt ein verzinktes Rinnenstück (Lieferantendatei 100022). | https://kkservice.de/wp-content/uploads/2024/09/100022-.webp | https://kkservice.de/zubehor/ | Nicht verwendet |
+| `images/bauzaun-plane.webp` | Sichtschutzplane, weiße Plane vor dem Gitter | vorhandenes Foto im Repo, Herkunft hier bisher nicht geführt | | vorhanden |
+| `images/start/kat-bauzaun.webp` | Sichtschutzplane, zweites Galeriebild, grüne Plane vor Rohbau | dasselbe Motiv wie die Startkachel Bauzaun | | vorhanden |
 | `images/kk/tor-10028.webp` | Lauftor 1,2 × 2,0 m | https://kkservice.de/wp-content/uploads/2024/09/10028-1.2-x-2.0-10028-1024x701-1.webp | https://kkservice.de/lauftore/ | Nutzungsrecht in Klärung |
 | `images/kk/tor-10028-0.webp` | Tor 1,2 × 1,2 m | https://kkservice.de/wp-content/uploads/2024/09/10028.0-1.2-x-1.2-10028.0-1024x701-1.webp | https://kkservice.de/lauftore/ | Nutzungsrecht in Klärung |
 | `images/kk/tor-10028-2.webp` | Lauftor mit Rahmen und Schloss schwer | https://kkservice.de/wp-content/uploads/2024/09/10028.2-10028.2-1024x701-1.webp | https://kkservice.de/lauftore/ | Nutzungsrecht in Klärung |

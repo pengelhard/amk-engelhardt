@@ -1116,17 +1116,17 @@
     "kat": "bauzaun",
     "gruppe": "Sichtschutz",
     "lead": "Plane vor dem Gitterfeld.",
-    "bild": "images/kk/plane-10012.webp",
-    "bildSmall": "images/kk/plane-10012-640.webp",
-    "width": 1024,
-    "height": 576,
-    "alt": "Sichtschutzplane",
+    "bild": "images/bauzaun-plane.webp",
+    "bildSmall": "",
+    "width": 800,
+    "height": 521,
+    "alt": "Bauzaunfelder mit weißer Plane",
     "kicker": "",
     "specs": [],
-    "quelle": "https://kkservice.de/wp-content/uploads/2024/09/100022-.webp",
-    "seite": "https://kkservice.de/zubehor/",
+    "quelle": "",
+    "seite": "",
     "code": "10012",
-    "rechte": "Nutzungsrecht in Klärung",
+    "rechte": "Vorhandenes Foto im Repo. Das Lieferantenbild 100022 ist ein Rinnenstück und wird nicht mehr gezeigt.",
     "preis": null,
     "bestand": null,
     "shop": "sichtschutz",
@@ -1135,6 +1135,21 @@
     },
     "text": [],
     "pdf": null,
+    "bilder": [
+      {
+        "src": "images/bauzaun-plane.webp",
+        "w": 800,
+        "h": 521,
+        "alt": "Bauzaunfelder mit weißer Plane"
+      },
+      {
+        "src": "images/start/kat-bauzaun.webp",
+        "small": "images/start/kat-bauzaun-768.webp",
+        "w": 1280,
+        "h": 720,
+        "alt": "Bauzaunfelder mit grüner Plane vor einem Rohbau"
+      }
+    ],
     "modi": [
       "kauf",
       "miete"
