@@ -945,11 +945,19 @@
     }, 250);
   }
 
+  function markiereGruppe(id) {
+    document.querySelectorAll("#kauf-gruppen a[data-gruppe]").forEach(function (link) {
+      if (id && link.getAttribute("data-gruppe") === id) link.setAttribute("aria-current", "true");
+      else link.removeAttribute("aria-current");
+    });
+  }
+
   function closePanel() {
     window.clearTimeout(closeTimer);
     if (!offen) return;
     offen = "";
     paintPanel();
+    if (!desktopBreit()) markiereGruppe(state.gruppe);
   }
 
   function zeigeAnsicht() {
@@ -970,6 +978,14 @@
       event.preventDefault();
       var id = canonGruppe(link.getAttribute("data-gruppe") || "");
       if (!hoverFein()) {
+        if (!desktopBreit()) {
+          if (offen === id) closePanel();
+          else {
+            openPanel(id);
+            markiereGruppe(id);
+          }
+          return;
+        }
         if (offen === id) closePanel();
         else openPanel(id);
         return;
@@ -995,7 +1011,7 @@
         scheduleClose();
       });
       link.addEventListener("focus", function () {
-        if (focusQuiet || fromPointer) return;
+        if (focusQuiet || fromPointer || !desktopBreit()) return;
         openPanel(id);
       });
       link.addEventListener("keydown", function (event) {
@@ -1133,7 +1149,7 @@
         scheduleClose();
       });
       link.addEventListener("focus", function () {
-        if (focusQuiet || fromPointer) return;
+        if (focusQuiet || fromPointer || !desktopBreit()) return;
         openPanel(id, "schrift");
       });
       link.addEventListener("keydown", function (event) {

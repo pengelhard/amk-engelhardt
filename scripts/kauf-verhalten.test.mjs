@@ -45,8 +45,9 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
 
     async function open(width, url, opts) {
       const height = width >= 980 ? 1100 : (width <= 360 ? 740 : 844);
-      const touchLaptop = !!(opts && opts.touch);
-      const page = await browser.newPage({ viewport: { width, height }, hasTouch: touchLaptop });
+    const touchLaptop = !!(opts && opts.touch);
+    const mobil = !!(opts && opts.mobil);
+    const page = await browser.newPage({ viewport: { width, height }, hasTouch: touchLaptop || mobil, isMobile: mobil });
       const errors = [];
       page.on("pageerror", (error) => errors.push(String(error)));
       page.on("console", (msg) => { if (msg.type() === "error") errors.push(msg.text()); });
@@ -542,6 +543,44 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     });
     point("Tap springt zur Überschrift", tapped.panelZu && tapped.gruppe === "anhaenger" && tapped.teil === "hochlader" && tapped.leiste && /Hochlader/.test(tapped.marke) && tapped.marke.indexOf("▾") !== -1 && tapped.kopfFrei && tapped.bilder === 0 && tapped.pills === 0 && tapped.gleich && tapped.zeile && tapped.hoehe <= 100 && tapped.imBild && tapped.schriftWeg, JSON.stringify(tapped));
     await phone.page.close();
+
+    const einmal = await open(390, "/kaufen/?gruppe=zaun&kat=bauzaune", { mobil: true });
+    const einTipp = [];
+    for (const id of ["zaun", "verkehr", "anhaenger"]) {
+      const ziel = einmal.page.locator(`#kauf-gruppen a[data-gruppe="${id}"]`);
+      const kasten = await ziel.boundingBox();
+      await einmal.page.touchscreen.tap(kasten.x + kasten.width / 2, kasten.y + 24);
+      await einmal.page.waitForTimeout(120);
+      einTipp.push(await einmal.page.evaluate((id) => {
+        const nav = document.querySelector(`.kauf-ebene[data-fuer="${id}"]`);
+        const zeilen = [...nav.querySelectorAll("a:not([hidden])")].map((el) => Math.round(el.getBoundingClientRect().height));
+        const ringe = [...document.querySelectorAll("#kauf-gruppen a[data-gruppe]")].filter((el) => {
+          const rand = getComputedStyle(el, "::after");
+          return rand.borderTopWidth === "2px" && rand.borderTopColor === "rgb(118, 183, 41)";
+        }).map((el) => el.getAttribute("data-gruppe"));
+        return {
+          id,
+          offen: !!(nav && !nav.hidden),
+          url: location.href,
+          ringe,
+          zeilen,
+          min: zeilen.length ? Math.min(...zeilen) : 0,
+          max: zeilen.length ? Math.max(...zeilen) : 0
+        };
+      }, id));
+    }
+    const letzter = einTipp[einTipp.length - 1];
+    await einmal.page.locator("#kauf-ebene-anhaenger a[data-teil='hochlader']").click();
+    await einmal.page.waitForFunction(() => new URL(location.href).searchParams.get("teil") === "hochlader" && /Hochlader/.test(document.querySelector(".kauf-leiste-name").textContent));
+    const nachUnter = await einmal.page.evaluate(() => ({
+      teil: new URL(location.href).searchParams.get("teil"),
+      label: document.querySelector(".kauf-leiste-name").textContent.replace(/\s+/g, " ").trim(),
+      zu: document.getElementById("kauf-ebene-anhaenger").hidden,
+      ring: document.querySelector("#kauf-gruppen a[aria-current='true']").getAttribute("data-gruppe")
+    }));
+    const einOk = einTipp.every((eintrag) => eintrag.offen && eintrag.ringe.length === 1 && eintrag.ringe[0] === eintrag.id && eintrag.min >= 44 && eintrag.max <= 52 && eintrag.url.indexOf("teil=hochlader") === -1);
+    point("Ein Tipp öffnet alle Kacheln", einOk && nachUnter.teil === "hochlader" && /Hochlader/.test(nachUnter.label) && nachUnter.zu && nachUnter.ring === "anhaenger", JSON.stringify({ einTipp, nachUnter }));
+    await einmal.page.close();
 
     async function handyNav(width) {
       const view = await open(width, "/kaufen/?gruppe=zaun&kat=gitter");
