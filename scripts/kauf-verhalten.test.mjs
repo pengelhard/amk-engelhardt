@@ -1474,6 +1474,41 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     const korbModusLinks = await korbModus.page.evaluate(() => [...document.querySelectorAll("a.cart-link")].map((el) => el.getAttribute("href")));
     const korbText = await korbModus.page.locator("body").innerText();
     point("Korb trennt Modus", korbModusLinks.some((href) => href.endsWith("/produkt/bauzaun-10075/?modus=miete")) && korbModusLinks.some((href) => href.endsWith("/produkt/fuss-10006/")) && korbModusLinks.some((href) => href.indexOf("/mieten/?gruppe=schilder") !== -1) && /Miete/.test(korbText) && /Kauf/.test(korbText), korbModusLinks.join(" | "));
+    async function kopfMass(page) {
+      return page.evaluate(() => {
+        function px(el) { return el ? parseFloat(getComputedStyle(el).fontSize) : 0; }
+        const auswahl = [...document.querySelectorAll("#anfrage-form > h2")].map((el) => ({ tag: el.tagName, text: el.textContent.trim(), px: px(el) }));
+        const gruppen = [...document.querySelectorAll(".cart-group h3")].map((el) => ({ tag: el.tagName, text: el.textContent.trim(), px: px(el) }));
+        const unter = [...document.querySelectorAll("#anfrage-zeit-titel, #anfrage-fahrt-titel")].map((el) => ({ tag: el.tagName, text: el.textContent.trim(), px: px(el) }));
+        const label = px(document.querySelector("#anfrage-form .field label"));
+        const bereich = document.getElementById("anfrage-miete-bereich");
+        const zeit = document.getElementById("anfrage-zeit-titel");
+        const fahrt = document.getElementById("anfrage-fahrt-titel");
+        const texte = [...document.querySelectorAll("#anfrage-form h2, #anfrage-form h3, #anfrage-form h4, #anfrage-form legend")].map((el) => el.textContent);
+        const felder = ["von", "bis", "ort", "plz", "name", "email"].every((id) => document.getElementById(id));
+        return {
+          auswahl, gruppen, unter, label, felder,
+          drin: !!(bereich && zeit && fahrt && bereich.contains(zeit) && bereich.contains(fahrt)),
+          klammer: texte.some((text) => /\(Miete\)/.test(text)),
+          quer: document.documentElement.scrollWidth - document.documentElement.clientWidth
+        };
+      });
+    }
+    function kopfPasst(kopf) {
+      const eben = (list) => list.length >= 2 && list.every((item) => item.px === list[0].px);
+      const listen = kopf.gruppen.filter((item) => item.text === "Miete" || item.text === "Kauf");
+      return !kopf.klammer && kopf.felder && kopf.drin && kopf.quer <= 1 &&
+        kopf.auswahl.length === 2 && kopf.auswahl.every((item) => item.tag === "H2") && eben(kopf.auswahl) &&
+        listen.length === 2 && listen.every((item) => item.tag === "H3") && eben(listen) &&
+        kopf.unter.length === 2 && kopf.unter.every((item) => item.tag === "H4") && eben(kopf.unter) &&
+        kopf.unter.some((item) => item.text === "Zeitraum") && kopf.unter.some((item) => item.text === "Anfahrt & Leistungen") &&
+        kopf.auswahl[0].px > listen[0].px && listen[0].px > kopf.unter[0].px && kopf.unter[0].px > kopf.label;
+    }
+    const kopfDesktop = await kopfMass(korbModus.page);
+    point("Anfrage-Überschriften Desktop", kopfPasst(kopfDesktop), JSON.stringify(kopfDesktop));
+    await korbModus.page.setViewportSize({ width: 390, height: 844 });
+    const kopfHandy = await kopfMass(korbModus.page);
+    point("Anfrage-Überschriften Handy", kopfPasst(kopfHandy), JSON.stringify(kopfHandy));
     await korbModus.page.close();
 
     const autoKorb = await open(390, "/anfrage/");

@@ -411,8 +411,8 @@
     var bereich = document.getElementById("anfrage-miete-bereich");
     if (bereich) bereich.hidden = !renting(data);
     if (period) period.hidden = !askPeriod;
-    if (periodTitle) periodTitle.textContent = "Zeitraum (Miete)";
-    if (fahrtTitle) fahrtTitle.textContent = "Anfahrt & Leistungen (Miete)";
+    if (periodTitle) periodTitle.textContent = "Zeitraum";
+    if (fahrtTitle) fahrtTitle.textContent = "Anfahrt & Leistungen";
     if (verkehr) verkehr.hidden = true;
     if (einsatz) einsatz.hidden = true;
     if (fence) fence.hidden = !fencing(data);
