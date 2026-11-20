@@ -117,11 +117,20 @@ test("Neuheiten nutzen dieselben Katalogprodukte", () => {
   const entries = JSON.parse(fs.readFileSync(path.join(root, "data/aktuelles.json"), "utf8"));
   const slugs = entries.filter((entry) => entry.sichtbar !== false).map((entry) => entry.slug);
   assert.deepEqual(slugs, ["bauzaun-10075", "plane-10012", "schranke-10024-1", "fahrzeugtransporter"]);
+  const katalog = JSON.parse(fs.readFileSync(path.join(root, "data/katalog.json"), "utf8"));
+  const mietbar = new Set(katalog.filter((item) => Array.isArray(item.modi) && item.modi.includes("miete")).map((item) => item.slug));
   for (const entry of entries) {
     assert.ok(entry.typ === "Neu" || entry.typ === "Angebot");
+    assert.ok(entry.art === "miete" || entry.art === "kauf" || entry.art === "beides", entry.slug);
+    if (entry.art === "miete") assert.ok(mietbar.has(entry.slug), entry.slug);
     assert.equal(entry.preis, "");
     assert.equal(fs.existsSync(path.join(root, "produkt", entry.slug, "index.html")), true, entry.slug);
   }
+  const kauf = fs.readFileSync(path.join(root, "kaufen/index.html"), "utf8");
+  const entwurf = fs.readFileSync(path.join(root, "entwurf/katalog-modern.html"), "utf8");
+  assert.doesNotMatch(kauf, /data-aktuelles/);
+  assert.doesNotMatch(entwurf, /data-aktuelles/);
+  assert.doesNotMatch(entwurf, /Neuheiten/);
   const home = fs.readFileSync(path.join(root, "index.html"), "utf8");
   const news = fs.readFileSync(path.join(root, "aktuelles/index.html"), "utf8");
   assert.match(home, /data-aktuelles/);

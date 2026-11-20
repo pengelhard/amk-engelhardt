@@ -651,6 +651,8 @@ main { position: relative; z-index: 0; padding-top: var(--top, 5.6rem); }
   padding: 0.16rem 0.45rem;
   border-radius: 999px;
 }
+.badge--miete { background: var(--forest); color: #fff; }
+.badge--kauf { background: var(--ink); color: #fff; }
 .badge--mvas {
   background: var(--green);
   color: #fff;

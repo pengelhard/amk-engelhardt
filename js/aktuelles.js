@@ -60,6 +60,12 @@
     return "beides";
   }
 
+  function artOf(entry) {
+    var value = String(entry.art || "").trim().toLowerCase();
+    if (value === "miete" || value === "kauf" || value === "beides") return value;
+    return wegOf(entry);
+  }
+
   function gruppeOf(entry) {
     var raw = String(entry.gruppe || "").trim();
     var id = GRUPPEN[raw] || GRUPPEN[raw.toLowerCase()] || "";
@@ -69,12 +75,13 @@
 
   function ziel(entry, root) {
     var product = String(entry.slug || "").trim();
+    var miete = artOf(entry) === "miete";
     if (/^[a-z0-9-]+$/.test(product)) {
-      return root + "produkt/" + product + "/" + (wegOf(entry) === "miete" ? "?modus=miete" : "");
+      return root + "produkt/" + product + "/" + (miete ? "?modus=miete" : "");
     }
     var gruppe = gruppeOf(entry);
     var query = gruppe ? "?gruppe=" + encodeURIComponent(gruppe) : "";
-    if (wegOf(entry) === "miete") query += (query ? "&" : "?") + "modus=miete";
+    if (miete) query += (query ? "&" : "?") + "modus=miete";
     return root + "kaufen/" + query;
   }
 
@@ -96,6 +103,9 @@
       ? '<span class="frame"><img loading="lazy" src="' + esc(root + img) + '" srcset="' + srcset + '" sizes="(min-width: 1100px) 22vw, (min-width: 720px) 45vw, 100vw" width="' + width + '" height="' + height + '" alt="' + esc(entry.alt || title) + '" decoding="async"></span>'
       : "";
     var badge = etikett(entry) ? '<span class="badge">' + esc(etikett(entry)) + "</span> " : "";
+    var art = artOf(entry);
+    if (art === "miete" || art === "beides") badge += '<span class="badge badge--miete">Miete</span> ';
+    if (art === "kauf" || art === "beides") badge += '<span class="badge badge--kauf">Kauf</span> ';
     return (
       '<article class="tile"><a href="' + esc(ziel(entry, root)) + '">' + picture +
       "<h3>" + esc(title) + "</h3></a><p>" + badge + esc(entry.text || "") + "</p></article>"

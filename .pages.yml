@@ -66,6 +66,16 @@ content:
             - Miete
             - Kauf
             - Beides
+      - name: art
+        label: Miet- oder Kaufangebot
+        type: select
+        required: true
+        description: miete nur, wenn der Artikel mietbar ist. kauf für ein reines Kaufangebot. beides, wenn beides gilt. Die Kachel zeigt die Kennzeichnung und öffnet die passende Ansicht.
+        options:
+          values:
+            - miete
+            - kauf
+            - beides
       - name: gruppe
         label: Gruppe
         type: select
