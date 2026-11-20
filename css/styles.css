@@ -3285,3 +3285,63 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 @media (min-width: 1100px) {
   .start-neu .kauf-board .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+
+/* Kartenstil der Beispielansicht, auf der gemeinsamen Mieten- und Kaufen-Seite. */
+html.js-kauf .kauf-karte,
+html.js-kauf .kauf-board .tile,
+html.js-kauf .modus-schalter a,
+html.js-kauf .beispiel-korb,
+html.js-kauf .btn,
+html.js-kauf .btn:hover {
+  border: 0;
+  box-shadow: none;
+  transform: none;
+}
+html.js-kauf .kauf-karte,
+html.js-kauf .kauf-board .tile {
+  border-radius: 16px;
+  background: #f6f4ef;
+}
+html.js-kauf .kauf-karte:hover,
+html.js-kauf .kauf-board .tile:hover { transform: none; box-shadow: none; }
+html.js-kauf .kauf-board .tiles { gap: 1.15rem; align-items: stretch; }
+html.js-kauf .kauf-board .frame,
+html.js-kauf .kauf-board .tile img,
+html.js-kauf .kauf-board .frame img {
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  object-position: center;
+  padding: 0.85rem;
+  background: #fff;
+  border-radius: 12px;
+}
+html.js-kauf .kauf-produkt:has(input:checked)::after,
+html.js-kauf #kauf-liste > .tile:has(input:checked)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--signal);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Dieselben Karten auf Aktuelles. Die Startseite behält ihre eigene Leiste. */
+body:not(.entwurf-start) .start-neu .kauf-board .tile,
+body:not(.entwurf-start) .start-neu .kauf-board .tile:hover {
+  border: 0;
+  box-shadow: none;
+  transform: none;
+  border-radius: 16px;
+  background: #f6f4ef;
+}
+body:not(.entwurf-start) .start-neu .frame,
+body:not(.entwurf-start) .start-neu .tile img,
+body:not(.entwurf-start) .start-neu .frame img {
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  object-position: center;
+  padding: 0.85rem;
+  background: #fff;
+  border-radius: 12px;
+}

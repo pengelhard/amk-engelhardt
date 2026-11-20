@@ -53,9 +53,15 @@
 .entwurf-katalog[data-modus="miete"] #kauf-liste > .tile > p::after,
 .entwurf-katalog[data-modus="miete"] .kauf-produkt > p::after { content: " · Miete"; }
 
-html.js-kauf .entwurf-katalog .kauf-produkt:has(input:checked),
-html.js-kauf .entwurf-katalog #kauf-liste > .tile:has(input:checked) {
-  box-shadow: inset 0 0 0 2px var(--signal);
+html.js-kauf .entwurf-katalog .kauf-produkt:has(input:checked)::after,
+html.js-kauf .entwurf-katalog #kauf-liste > .tile:has(input:checked)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--signal);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
 }
 
 @media (prefers-reduced-motion: reduce) {
