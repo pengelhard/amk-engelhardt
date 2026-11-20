@@ -20,7 +20,7 @@ Die Startadresse `index.html` ist der Einstieg, mit zwei Flächen Mieten und Kau
 | `kaufen/` | Einzelteile inkl. Zubehör und Anhänger, nur Kauf, mit Menge. Kategorien: Bauzaun (Standard 3,5 × 2,0 m zuerst, 1,2 m zuletzt), Verkehrssicherung, Anhänger |
 | `bauzaun/`, `verkehrssicherung/`, `anhaenger/`, `bauzaun/konfigurator/` | Weiterleitung auf `kaufen/` oder `mieten/` |
 | `produkt/<slug>/` | Detail zum Kauf, Menge oder bei Verkehrsschildern ein Freitext |
-| `service/` | Full Service und die zwei genannten Partner |
+| `service/` | Leistungen, ohne Partnerblock |
 | `anfrage/` | Anfrageliste. Versand über `js/form-config.js`, sonst `mailto`. Leer zusätzlich „Individuelle Beratung anfragen“. `anfrage/danke/` nach erfolgreichem Versand |
 | `ueber-uns/` | Firma, Standort |
 | `kontakt/` | Kontaktdaten, Zeiten, Terminabsprache, Karte nach Einwilligung, Route in neuem Tab |
@@ -81,7 +81,6 @@ Gelesen wurden die öffentliche Seite [bauzaun-mieten.net](https://bauzaun-miete
 - Hinweis, vor einem Besuch einen Termin zu vereinbaren, weil das Team oft unterwegs ist
 - Gründung 2011 durch Michael Engelhardt, gelernter Metallbaumeister, Ergänzung des väterlichen Betriebs (Schlosserei, Schmiede und Zaunbau)
 - Anspruch, einer der führenden Anbieter von Absperrsystemen in Süddeutschland zu sein
-- Partnernetz in Deutschland und im angrenzenden Raum
 - Sortiment zur Miete: Bauzäune in verschiedenen Höhen und Festigkeiten, Bauzaunfüße, Türen oder Tore, Bauzaunschloss, Personengitter und Demogitter aus feuerverzinktem Stahl in verschiedenen Gewichtsklassen, klappbare Polizeigitter (Hamburger Gitter), Absturzsicherungen, Drahtgitterzaun, Sichtschutz aus Blech
 - Zubehör: Notausgangsfahnen, Feuerlöscher, Kabelbrücken sowie Teile für Sicherheit, Stabilität, Transport, Sichtschutz und Zugangskontrolle
 - Großflächige Transportfahrzeuge und Anhänger, Fahrzeuge mit großem Ladevolumen auch zur Miete für den Selbsttransport
@@ -91,10 +90,11 @@ Gelesen wurden die öffentliche Seite [bauzaun-mieten.net](https://bauzaun-miete
 - Kennzahlen der alten Startseite: 1.000+ Kundinnen und Kunden, 200+ Produkte
 - Keine Namen von Referenzkunden online; Kontakt zu Referenzen nur nach Rücksprache und Freigabe
 - Angebot unverbindlich nach eigenen Vorgaben, keine öffentlichen Einzelpreise für Bauzaun und Absperrung
-- Partner Bauzaun Nord / E.A.D. Mobilzaun GmbH, Dieter Blicke, Erichstr. 3, 30449 Hannover, 0511 2700815, www.mietzaun.de
-- Partner bauzaun.net / Pizeu ltd., Barbarastr. 10, 53925 Kall, 02447 913542, Handy 0151 56011394 tagsüber, www.bauzaun.net
-
 Die alte Angabe „7+ Jahre Erfahrung“ steht nicht mehr auf der Seite. Stattdessen steht das Gründungsjahr 2011.
+
+## Offen: Partner mit AMK klären
+
+Peter, 20.11.2026 09:05 MEZ: „mach die erst mal raus“. Der Block steht nicht mehr auf der Seite. Die Angaben liegen in `docs/partner-offen.md`, damit sie später wieder eingesetzt werden können.
 
 
 ## Produktkarten
@@ -191,7 +191,7 @@ Dazu:
 10. Die USt-IdNr. ist unbekannt und steht nicht im Impressum. § 18 Abs. 2 MStV ist nicht als Pflicht gesetzt. Impressum und Datenschutz vor Veröffentlichung rechtlich prüfen. Die DPF-Zeile nur nach der Liste vom 15.11.2026, ohne eigene Zusage.
 11. AGB der alten Seite sind nur „in Überarbeitung“. Sollen sie auf die neue Seite, und in welcher Fassung?
 12. Der Link zum väterlichen Betrieb ist auf der alten Seite als `htttp://www.fahrzeugbau-engelhardt.de` geschrieben. Welche Adresse soll auf die neue Seite, falls überhaupt?
-13. Partner Bauzaun Nord und bauzaun.net weiter öffentlich nennen?
+13. Partner Bauzaun Nord und bauzaun.net sind von der Seite genommen. Ob sie wieder öffentlich genannt werden, klärt AMK. Angaben in `docs/partner-offen.md`.
 14. Die Zahlen 1.000+ und 200+ stehen nicht auf der Seite. Die alte Seite beschriftet sie nicht.
 15. Teamfotos gibt es nicht. Auf der Seite steht kein Platzhalter. Wer soll später zu sehen sein?
 16. Soll die Anfrage später ein richtiges Formular werden, und bleibt `info@bauzaun-mieten.net` die einzige Adresse? Der Merkzettel liegt nur im Browser.
