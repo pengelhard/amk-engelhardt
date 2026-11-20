@@ -100,13 +100,13 @@ Das Logo bleibt das der bestehenden Website.
 
 ## Hero und Startkacheln
 
-Mieten und Kaufen nutzen dieselben drei Motive als Oberkategorie: `images/kk/zaun-einsatz.webp` (Rechte in Klärung), `images/hero/schranke2-kachel.webp` (Pexels) und `images/fahrzeugtransporter.webp` (CC BY-SA 4.0). Die Startseite nutzt ein Foto. Es liegt lokal als WebP und AVIF in 768, 1280, 1920 und 2560 px Breite, 16:9. Nichts wird von Pexels eingebunden. `?hero=2` zeigt das zweite Schranken-Foto. Die älteren Dateien `schranke`, `zeichen`, `zaun`, `baustelle` und `anhaenger` bleiben im Ordner und stehen nicht mehr auf der Startseite.
+Die drei Oberkacheln auf der Startseite, bei Mieten und bei Kaufen stehen nur in `js/ober-kacheln.js`: `images/start/kat-bauzaun.webp`, `images/hero/schranke2-kachel.webp` und `images/start/kat-anhaenger.webp`. Die Startseite nutzt ein Foto. Es liegt lokal als WebP und AVIF in 768, 1280, 1920 und 2560 px Breite, 16:9. Nichts wird von Pexels eingebunden. `?hero=2` zeigt das zweite Schranken-Foto. Die älteren Dateien `schranke`, `zeichen`, `zaun`, `baustelle` und `anhaenger` bleiben im Ordner und stehen nicht mehr auf der Startseite.
 
 | Datei | Motiv | Fotograf | Seite | Lizenz |
 | --- | --- | --- | --- | --- |
 | `images/hero/leuchten-*` | Rot-weiße Schranken mit Warnleuchten, 5619×3161 | Wolfgang Weiser | https://www.pexels.com/photo/38733801/ | https://www.pexels.com/license/ |
 | `images/hero/schranke2-*` | Rot-weiße Schranken an einer Baustelle, auch die Kachel Verkehrsabsperreinrichtungen | Wolfgang Weiser | https://www.pexels.com/photo/39142590/ | https://www.pexels.com/license/ |
-| `images/kk/zaun-einsatz.webp` | Aufgestellte Zaunfelder, Kachel Bauzaun und Eintrag VDE-zertifizierte Bauzäune | KK Service | https://kkservice.at/wp-content/uploads/2026/02/1-Zaunsysteme-790x527.webp | Rechte in Klärung |
+| `images/kk/zaun-einsatz.webp` | Aufgestellte Zaunfelder, nicht mehr die Oberkachel | KK Service | https://kkservice.at/wp-content/uploads/2026/02/1-Zaunsysteme-790x527.webp | Rechte in Klärung |
 
 ## Datenblätter
 
