@@ -931,11 +931,6 @@
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
       event.preventDefault();
       var id = canonGruppe(link.getAttribute("data-gruppe") || "");
-      if (!hoverFein()) {
-        if (offen === id) closePanel();
-        else openPanel(id);
-        return;
-      }
       setzeUnter(id, gemerkteUnter(id));
       haltSetzen(id);
       closePanel();

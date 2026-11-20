@@ -134,16 +134,24 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
           return img ? Math.round(img.getBoundingClientRect().height) : 0;
         });
         const aktiv = links.find((el) => el.getAttribute("aria-current") === "true");
+        const rand = aktiv ? getComputedStyle(aktiv, "::after") : null;
+        const schatten = links.map((el) => getComputedStyle(el).boxShadow);
         return {
           h: Math.round(bar.getBoundingClientRect().height),
           zeile: zeile.length === 3 && Math.max(...zeile) - Math.min(...zeile) <= 2,
           bilder,
-          rand: aktiv ? getComputedStyle(aktiv, "::after").borderTopColor : "",
+          rand: rand ? [rand.borderTopColor, rand.borderRightColor, rand.borderBottomColor, rand.borderLeftColor].join("|") : "",
+          schatten,
           quer: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-          gross: links.some((el) => el.getBoundingClientRect().height > 140)
+          gross: links.some((el) => el.getBoundingClientRect().height > 180)
         };
       });
-      point(`Kategorieleiste ${width}`, kompakt.zeile && kompakt.h > 0 && kompakt.h <= 120 && kompakt.bilder.every((h) => h >= 16 && h <= 40) && kompakt.rand === "rgb(118, 183, 41)" && kompakt.quer <= 1 && !kompakt.gross, JSON.stringify(kompakt));
+      const bildOk = width <= 430
+        ? kompakt.bilder.every((h) => h >= 34 && h <= 56)
+        : kompakt.bilder.every((h) => h >= 16 && h <= 40);
+      const ring = kompakt.rand === "rgb(118, 183, 41)|rgb(118, 183, 41)|rgb(118, 183, 41)|rgb(118, 183, 41)";
+      const ruhig = kompakt.schatten.every((wert) => wert === "none" || /inset/.test(wert));
+      point(`Kategorieleiste ${width}`, kompakt.zeile && kompakt.h > 0 && kompakt.h <= (width <= 430 ? 160 : 120) && bildOk && ring && ruhig && kompakt.quer <= 1 && !kompakt.gross, JSON.stringify(kompakt));
       point(`noindex ${width}`, /noindex/i.test(robots || ""), robots || "");
       const gemessen = {};
       for (const [name, url, kind] of gruppen) {
@@ -278,7 +286,15 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     await desktop.page.mouse.move(nachbarBox.x + 40, nachbarBox.y + 30);
     await desktop.page.waitForTimeout(80);
     const nachWahl = await desktop.page.locator("#kauf-ebene").evaluate((el) => !el.hidden);
-    point("Hover nach Auswahl", nachWahl, "");
+    const desktopRand = await desktop.page.evaluate(() => {
+      const karten = [...document.querySelectorAll("#kauf-gruppen a[data-gruppe]")];
+      const aktiv = karten.find((el) => el.getAttribute("aria-current") === "true");
+      return {
+        gruppe: aktiv ? aktiv.getAttribute("data-gruppe") : "",
+        schatten: karten.map((el) => getComputedStyle(el).boxShadow)
+      };
+    });
+    point("Hover nach Auswahl", nachWahl && desktopRand.schatten.every((wert) => wert === "none" || /inset/.test(wert)), JSON.stringify({ nachWahl, desktopRand }));
     const expanded = await desktop.page.locator('#kauf-gruppen a[data-gruppe="zaun"]').getAttribute("aria-expanded");
     point("Barrierefreiheit", expanded === "false" || expanded === "true", expanded || "");
     await desktop.page.close();
@@ -300,11 +316,35 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     const phone = await open(390, "/kaufen/?gruppe=zaun");
     await phone.page.evaluate(() => { sessionStorage.removeItem("amk-kauf-unter"); if (document.activeElement) document.activeElement.blur(); });
     await phone.page.locator('#kauf-gruppen a[data-gruppe="anhaenger"]').click();
-    await phone.page.waitForTimeout(80);
-    const tipp = await phone.page.locator("#kauf-ebene-anhaenger").evaluate((el) => !el.hidden);
-    point("Antippen öffnet die Optionen", tipp, "");
-    await phone.page.locator("#kauf-ebene-anhaenger a[data-teil='hochlader']").click();
-    await phone.page.waitForTimeout(900);
+    await phone.page.waitForFunction(() => {
+      const adresse = new URL(location.href);
+      const name = document.querySelector(".kauf-leiste-name");
+      const aktiv = document.querySelector("#kauf-gruppen a[aria-current='true']");
+      const ziel = document.getElementById("kauf-teil-hochlader");
+      return adresse.searchParams.get("gruppe") === "anhaenger"
+        && adresse.searchParams.get("teil") === "hochlader"
+        && aktiv && aktiv.getAttribute("data-gruppe") === "anhaenger"
+        && name && /Hochlader/.test(name.textContent)
+        && ziel && ziel.getBoundingClientRect().top < window.innerHeight;
+    });
+    const tipp = await phone.page.evaluate(() => {
+      const karten = [...document.querySelectorAll("#kauf-gruppen a[data-gruppe]")];
+      const aktiv = karten.find((el) => el.getAttribute("aria-current") === "true");
+      const rand = aktiv ? getComputedStyle(aktiv, "::after") : null;
+      const seiten = rand ? [rand.borderTopColor, rand.borderRightColor, rand.borderBottomColor, rand.borderLeftColor] : [];
+      return {
+        gruppe: aktiv ? aktiv.getAttribute("data-gruppe") : "",
+        label: document.querySelector(".kauf-leiste-name").textContent.replace(/\s+/g, " ").trim(),
+        ring: seiten.every((farbe) => farbe === "rgb(118, 183, 41)"),
+        nurEine: karten.filter((el) => el.getAttribute("aria-current") === "true").length === 1,
+        schatten: karten.every((el) => {
+          const wert = getComputedStyle(el).boxShadow;
+          return wert === "none" || /inset/.test(wert);
+        }),
+        panelZu: document.getElementById("kauf-ebene-anhaenger").hidden
+      };
+    });
+    point("Antippen wechselt Rand und Dropdown", tipp.gruppe === "anhaenger" && /Hochlader/.test(tipp.label) && tipp.ring && tipp.nurEine && tipp.schatten && tipp.panelZu, JSON.stringify(tipp));
     const tapped = await phone.page.evaluate(() => {
       const nav = document.getElementById("kauf-ebene-anhaenger");
       const leiste = document.getElementById("kauf-leiste");
@@ -441,6 +481,44 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     await handyNav(390);
     await handyNav(360);
     await handyNav(320);
+
+    for (const modus of ["kauf", "miete"]) {
+      const wechsel = await open(390, modus === "miete" ? "/kaufen/?modus=miete&gruppe=zaun&kat=bauzaune" : "/kaufen/?gruppe=zaun&kat=bauzaune");
+      const vorher = await wechsel.page.locator(".kauf-leiste-name").innerText();
+      await wechsel.page.locator("#kauf-gruppen a[data-gruppe='verkehr']").click();
+      await wechsel.page.waitForFunction(() => {
+        const name = document.querySelector(".kauf-leiste-name").textContent;
+        const aktiv = document.querySelector("#kauf-gruppen a[aria-current='true']");
+        return new URL(location.href).searchParams.get("gruppe") === "verkehr" && aktiv && aktiv.getAttribute("data-gruppe") === "verkehr" && !/Bauzaun/.test(name);
+      });
+      const nach = await wechsel.page.evaluate(() => {
+        const karten = [...document.querySelectorAll("#kauf-gruppen a[data-gruppe]")].filter((el) => !el.hidden);
+        const aktiv = karten.find((el) => el.getAttribute("aria-current") === "true");
+        const rand = getComputedStyle(aktiv, "::after");
+        const tops = karten.map((el) => Math.round(el.getBoundingClientRect().top));
+        const menu = [...document.querySelectorAll("#kauf-leiste-menu a")].map((el) => el.textContent.replace(/\s+/g, " ").trim());
+        return {
+          modus: new URL(location.href).searchParams.get("modus") || "kauf",
+          label: document.querySelector(".kauf-leiste-name").textContent.replace(/\s+/g, " ").trim(),
+          menu,
+          ring: [rand.borderTopColor, rand.borderRightColor, rand.borderBottomColor, rand.borderLeftColor].every((farbe) => farbe === "rgb(118, 183, 41)"),
+          schatten: karten.every((el) => {
+            const wert = getComputedStyle(el).boxShadow;
+            return wert === "none" || /inset/.test(wert);
+          }),
+          zeile: Math.max(...tops) - Math.min(...tops) <= 2,
+          quer: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+          bild: Math.round(aktiv.querySelector("img").getBoundingClientRect().height),
+          h2: document.querySelector("#kauf-teil-schranken h2").textContent.replace(/\s+/g, " ").trim()
+        };
+      });
+      const listeOk = modus === "miete"
+        ? nach.menu.includes("Absperrschranken") && !nach.menu.some((name) => /Gefahrzeichen|Bauzaun/.test(name))
+        : nach.menu.includes("Absperrschranken") && nach.menu.includes("Gefahrzeichen") && !nach.menu.some((name) => /Bauzaun/.test(name));
+      const ok = nach.ring && nach.schatten && nach.zeile && nach.quer <= 1 && nach.bild >= 34 && nach.bild <= 56 && /schranken/i.test(nach.label) && /schranken/i.test(nach.h2) && nach.modus === modus && listeOk;
+      point(`Wechsel ${modus}`, ok, JSON.stringify({ vorher, nach }));
+      await wechsel.page.close();
+    }
 
     const sprache = await open(1280, "/kaufen/");
     await sprache.page.evaluate(() => sessionStorage.removeItem("amk-kauf-unter"));
