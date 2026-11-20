@@ -45,10 +45,16 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
 
     async function open(width, url, opts) {
       const height = width >= 980 ? 1100 : (width <= 360 ? 740 : 844);
-      const page = await browser.newPage({ viewport: { width, height } });
+      const touchLaptop = !!(opts && opts.touch);
+      const page = await browser.newPage({ viewport: { width, height }, hasTouch: touchLaptop });
       const errors = [];
       page.on("pageerror", (error) => errors.push(String(error)));
       page.on("console", (msg) => { if (msg.type() === "error") errors.push(msg.text()); });
+      if (touchLaptop && width >= 768) {
+        const client = await page.context().newCDPSession(page);
+        await client.send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 10 });
+        await client.send("Emulation.setEmulatedMedia", { media: "", features: [{ name: "hover", value: "none" }, { name: "pointer", value: "coarse" }] });
+      }
       if (width < 980) {
         const client = await page.context().newCDPSession(page);
         await client.send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: true });
@@ -403,6 +409,67 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     const wideClosed = await wide.page.locator("#kauf-ebene-anhaenger").evaluate((el) => el.hidden);
     point("Escape schließt Panel", wideClosed, "");
     await wide.page.close();
+
+    for (const modus of ["kauf", "miete"]) {
+      const laptop = await open(1280, modus === "miete" ? "/kaufen/?modus=miete" : "/kaufen/", { touch: true });
+      const medien = await laptop.page.evaluate(() => ({
+        fein: window.matchMedia("(hover: hover) and (pointer: fine)").matches,
+        punkte: navigator.maxTouchPoints
+      }));
+      const kachelnVor = await laptop.page.evaluate(() => {
+        window.__cls = 0;
+        if (!window.__clsWatch) {
+          window.__clsWatch = new PerformanceObserver((list) => {
+            list.getEntries().forEach((entry) => {
+              if (!entry.hadRecentInput) window.__cls += entry.value;
+            });
+          });
+          window.__clsWatch.observe({ type: "layout-shift", buffered: false });
+        }
+        return [...document.querySelectorAll("#kauf-gruppen a[data-gruppe]")].map((el) => {
+          const r = el.getBoundingClientRect();
+          return { id: el.getAttribute("data-gruppe"), x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) };
+        });
+      });
+      const gesehen = [];
+      for (const id of ["zaun", "verkehr", "anhaenger", "zaun"]) {
+        const ziel = laptop.page.locator(`#kauf-gruppen a[data-gruppe="${id}"]`);
+        const kasten = await ziel.boundingBox();
+        await laptop.page.mouse.move(kasten.x + 48, kasten.y + 36);
+        await laptop.page.waitForTimeout(90);
+        const sel = id === "zaun" ? "#kauf-ebene" : `#kauf-ebene-${id}`;
+        const navBox = await laptop.page.locator(sel).boundingBox();
+        if (navBox) await laptop.page.mouse.move(navBox.x + 36, navBox.y + 48);
+        await laptop.page.waitForTimeout(320);
+        const stand = await laptop.page.evaluate((sel) => {
+          const nav = document.querySelector(sel);
+          const bild = nav.querySelector("img");
+          const stil = bild ? getComputedStyle(bild) : null;
+          return {
+            offen: !!(nav && !nav.hidden),
+            bild: bild ? Math.round(bild.getBoundingClientRect().height) : 0,
+            sichtbar: !!(stil && stil.display !== "none")
+          };
+        }, sel);
+        gesehen.push({ id, ...stand, insPanel: !!navBox });
+      }
+      const nachher = await laptop.page.evaluate(() => ({
+        cls: window.__cls || 0,
+        y: window.scrollY,
+        kacheln: [...document.querySelectorAll("#kauf-gruppen a[data-gruppe]")].map((el) => {
+          const r = el.getBoundingClientRect();
+          return { id: el.getAttribute("data-gruppe"), x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) };
+        })
+      }));
+      const karte = laptop.page.locator("#kauf-ebene a[data-kat]:not([hidden])").first();
+      await karte.click();
+      await laptop.page.waitForTimeout(80);
+      const gewaehlt = new URL(laptop.page.url()).searchParams.get("kat");
+      const still = JSON.stringify(kachelnVor) === JSON.stringify(nachher.kacheln);
+      const hoverOk = gesehen.every((eintrag) => eintrag.offen && eintrag.bild >= 40 && eintrag.sichtbar && eintrag.insPanel);
+      point(`Hover auf Touchscreen-Laptop ${modus}`, !medien.fein && medien.punkte > 0 && hoverOk && !!gewaehlt && still && nachher.cls < 0.05 && nachher.y < 2, JSON.stringify({ medien, gesehen, gewaehlt, cls: nachher.cls, y: nachher.y }));
+      await laptop.page.close();
+    }
 
     const phone = await open(390, "/kaufen/?gruppe=zaun");
     await phone.page.evaluate(() => { sessionStorage.removeItem("amk-kauf-unter"); if (document.activeElement) document.activeElement.blur(); });

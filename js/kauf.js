@@ -860,12 +860,26 @@
 
   function haltSetzen() {}
 
+  var zeigerMaus = false;
+
+  document.addEventListener("pointerover", function (event) {
+    if (event.pointerType === "mouse") zeigerMaus = true;
+    else if (event.pointerType) zeigerMaus = false;
+  }, true);
+  document.addEventListener("pointerdown", function (event) {
+    zeigerMaus = event.pointerType === "mouse";
+  }, true);
+
+  function desktopBreit() {
+    return window.matchMedia("(min-width: 768px)").matches;
+  }
+
   function hoverFrei() {
     return hoverFein();
   }
 
   function hoverFein() {
-    return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    return desktopBreit() && zeigerMaus;
   }
 
   function placePanel(id) {
@@ -978,12 +992,14 @@
       link.addEventListener("pointerdown", function () { fromPointer = true; });
       link.addEventListener("pointerup", function () { fromPointer = false; });
       link.addEventListener("pointercancel", function () { fromPointer = false; });
-      link.addEventListener("mouseenter", function () {
-        if (!hoverFein()) return;
+      link.addEventListener("pointerenter", function (event) {
+        if (event.pointerType !== "mouse" || !desktopBreit()) return;
+        zeigerMaus = true;
         openPanel(id);
       });
-      link.addEventListener("mouseleave", function () {
-        if (hoverFein()) scheduleClose();
+      link.addEventListener("pointerleave", function (event) {
+        if (event.pointerType !== "mouse" || !desktopBreit()) return;
+        scheduleClose();
       });
       link.addEventListener("focus", function () {
         if (focusQuiet || fromPointer) return;
@@ -1001,12 +1017,14 @@
 
   document.querySelectorAll(".kauf-ebene").forEach(function (nav) {
     var id = nav.getAttribute("data-fuer") || "";
-    nav.addEventListener("mouseenter", function () {
-      if (!hoverFein()) return;
+    nav.addEventListener("pointerenter", function (event) {
+      if (event.pointerType !== "mouse" || !desktopBreit()) return;
+      zeigerMaus = true;
       openPanel(id);
     });
-    nav.addEventListener("mouseleave", function () {
-      if (hoverFein()) scheduleClose();
+    nav.addEventListener("pointerleave", function (event) {
+      if (event.pointerType !== "mouse" || !desktopBreit()) return;
+      scheduleClose();
     });
   });
 
@@ -1112,12 +1130,14 @@
     });
     schrift.querySelectorAll("a[data-gruppe]").forEach(function (link) {
       var id = link.getAttribute("data-gruppe") || "";
-      link.addEventListener("mouseenter", function () {
-        if (!hoverFrei(id)) return;
+      link.addEventListener("pointerenter", function (event) {
+        if (event.pointerType !== "mouse" || !desktopBreit()) return;
+        zeigerMaus = true;
         openPanel(id, "schrift");
       });
-      link.addEventListener("mouseleave", function () {
-        if (hoverFein()) scheduleClose();
+      link.addEventListener("pointerleave", function (event) {
+        if (event.pointerType !== "mouse" || !desktopBreit()) return;
+        scheduleClose();
       });
       link.addEventListener("focus", function () {
         if (focusQuiet || fromPointer) return;
