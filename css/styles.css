@@ -3345,3 +3345,82 @@ body:not(.entwurf-start) .start-neu .frame img {
   background: #fff;
   border-radius: 12px;
 }
+
+/* Kompakte Kategorieleiste. Die drei großen Oberkacheln bleiben die Links, nur klein. */
+html.js-kauf {
+  --kauf-gruppen: 4.5rem;
+}
+html.js-kauf .kauf-drops { display: contents; }
+html.js-kauf .kauf-schrift { display: none; }
+html.js-kauf #kauf-gruppen {
+  position: sticky;
+  top: var(--top, 6rem);
+  z-index: 33;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+  margin: 0.15rem 0 0.35rem;
+  padding: 0.15rem 0 0.25rem;
+  background: var(--paper);
+}
+html.js-kauf #kauf-gruppen .kauf-karte {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #f6f4ef;
+  text-decoration: none;
+}
+html.js-kauf #kauf-gruppen .kauf-karte[hidden] { display: none; }
+html.js-kauf #kauf-gruppen .kauf-karte img {
+  width: 100%;
+  height: 1.7rem;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: center;
+  padding: 0;
+  background: #fff;
+  border-radius: 0;
+}
+html.js-kauf #kauf-gruppen .kauf-karte strong {
+  display: block;
+  min-height: 0;
+  padding: 0.28rem 0.3rem 0.38rem;
+  background: transparent;
+  color: var(--ink);
+  font-size: clamp(0.68rem, 2.5vw, 0.95rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+html.js-kauf #kauf-gruppen .kauf-karte[aria-current="true"] strong {
+  background: transparent;
+  color: var(--ink);
+}
+html.js-kauf #kauf-gruppen .kauf-karte[aria-current="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--signal);
+  border-radius: inherit;
+  pointer-events: none;
+}
+html.js-kauf .kauf-leiste {
+  top: calc(var(--top, 6rem) + var(--kauf-gruppen, 4.5rem));
+}
+html.js-kauf .kauf-abschnitt {
+  scroll-margin-top: calc(var(--top, 6rem) + var(--kauf-gruppen, 4.5rem) + var(--kauf-leiste, 0px) + 0.6rem);
+}
+@media (min-width: 980px) {
+  html.js-kauf #kauf-verkehr-summe {
+    top: calc(var(--top, 6rem) + var(--kauf-gruppen, 4.5rem) + 0.65rem);
+  }
+}
+@media (max-width: 420px) {
+  html.js-kauf #kauf-gruppen { gap: 0.25rem; }
+  html.js-kauf #kauf-gruppen .kauf-karte img { height: 1.4rem; }
+  html.js-kauf #kauf-gruppen .kauf-karte strong { padding: 0.2rem 0.16rem 0.28rem; }
+}

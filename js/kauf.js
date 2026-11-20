@@ -409,12 +409,20 @@
     return "";
   }
 
+  function gruppenMass() {
+    var el = document.getElementById("kauf-gruppen");
+    if (!el) return;
+    document.documentElement.style.setProperty("--kauf-gruppen", el.offsetHeight + "px");
+  }
+
   function kopfAbstand() {
     var kopf = document.querySelector(".top");
     var bar = document.getElementById("kauf-leiste");
-    var schrift = document.getElementById("kauf-schrift");
-    var schriftHoch = schrift && window.matchMedia("(min-width: 980px)").matches ? schrift.offsetHeight : 0;
-    return (kopf ? kopf.offsetHeight : 0) + (bar && !bar.hidden ? bar.offsetHeight : 0) + schriftHoch + 8;
+    var gruppen = document.getElementById("kauf-gruppen");
+    var hoch = kopf ? kopf.offsetHeight : 0;
+    if (gruppen) hoch += gruppen.offsetHeight;
+    if (bar && !bar.hidden && getComputedStyle(bar).display !== "none") hoch += bar.offsetHeight;
+    return hoch + 8;
   }
 
   function elternVersteckt(el) {
@@ -443,6 +451,7 @@
 
   function maleLeiste() {
     var bar = document.getElementById("kauf-leiste");
+    gruppenMass();
     if (!bar) return;
     if (!state.gruppe) { bar.hidden = true; return; }
     bar.hidden = false;
@@ -451,17 +460,6 @@
     var stempel = state.gruppe + ":" + (state.modus === "miete" ? "miete" : "kauf");
     if (bar.getAttribute("data-fuer") !== stempel || !bar.querySelector(".kauf-leiste-wahl")) {
       bar.textContent = "";
-      var haupt = document.createElement("div");
-      haupt.className = "kauf-leiste-haupt";
-      document.querySelectorAll("#kauf-gruppen a[data-gruppe]").forEach(function (src) {
-        if (src.hidden) return;
-        var a = document.createElement("a");
-        a.className = "kauf-leiste-gruppe";
-        a.href = src.getAttribute("href") || "#";
-        a.setAttribute("data-gruppe", src.getAttribute("data-gruppe") || "");
-        a.textContent = textOf(src);
-        haupt.appendChild(a);
-      });
       var knopf = document.createElement("button");
       knopf.type = "button";
       knopf.className = "kauf-leiste-wahl";
@@ -490,7 +488,6 @@
         a.textContent = textOf(link);
         menu.appendChild(a);
       });
-      bar.appendChild(haupt);
       bar.appendChild(knopf);
       bar.appendChild(menu);
       bar.setAttribute("data-fuer", stempel);
@@ -509,6 +506,7 @@
       else link.removeAttribute("aria-current");
     });
     document.documentElement.style.setProperty("--kauf-leiste", bar.offsetHeight + "px");
+    gruppenMass();
   }
 
   function aktuelle() {
@@ -869,28 +867,17 @@
     if (!drops) return;
     var nav = document.querySelector('.kauf-ebene[data-fuer="' + id + '"]');
     if (!nav) return;
-    if (panelAnker === "schrift") {
-      var bar = document.getElementById("kauf-schrift");
-      var wrap = document.querySelector(".kauf-board .wrap");
-      if (!bar || !wrap) return;
-      var band = bar.getBoundingClientRect();
-      var box = wrap.getBoundingClientRect();
-      nav.style.position = "fixed";
-      nav.style.top = band.bottom + "px";
-      nav.style.left = box.left + "px";
-      nav.style.right = "auto";
-      nav.style.width = box.width + "px";
-      nav.style.zIndex = "37";
-      return;
-    }
-    var link = document.querySelector('#kauf-gruppen a[data-gruppe="' + id + '"]');
-    if (!link) return;
-    nav.style.position = "";
-    nav.style.left = "";
-    nav.style.right = "";
-    nav.style.width = "";
-    nav.style.zIndex = "";
-    nav.style.top = (link.offsetTop + link.offsetHeight + 4) + "px";
+    var link = document.querySelector((panelAnker === "schrift" ? "#kauf-schrift" : "#kauf-gruppen") + ' a[data-gruppe="' + id + '"]');
+    var wrap = document.querySelector(".kauf-board .wrap");
+    if (!link || !wrap) return;
+    var band = link.getBoundingClientRect();
+    var box = wrap.getBoundingClientRect();
+    nav.style.position = "fixed";
+    nav.style.top = Math.round(band.bottom) + "px";
+    nav.style.left = Math.round(box.left) + "px";
+    nav.style.right = "auto";
+    nav.style.width = Math.round(box.width) + "px";
+    nav.style.zIndex = "37";
   }
 
   function paintPanel() {
@@ -1037,6 +1024,7 @@
   });
 
   window.addEventListener("resize", function () {
+    gruppenMass();
     if (offen) placePanel(offen);
   });
 
@@ -1119,7 +1107,10 @@
       });
     });
   }
-  window.addEventListener("scroll", schriftSync, { passive: true });
+  window.addEventListener("scroll", function () {
+    schriftSync();
+    if (offen) placePanel(offen);
+  }, { passive: true });
   window.addEventListener("resize", schriftSync);
 
   document.addEventListener("amk-wunsch-frisch", function () {
