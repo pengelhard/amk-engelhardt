@@ -558,10 +558,17 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
         menge: !!(step && getComputedStyle(step).display !== "none" && field && field.value === "1"),
         max: field.getAttribute("max"),
         kreis: getComputedStyle(card.querySelector(".beispiel-kreis")).borderRadius,
-        plus: sichtbar.length > 0 && sichtbar.every((el) => {
-          const steuer = el.querySelector(".beispiel-step");
-          return steuer && getComputedStyle(steuer).display !== "none";
-        })
+        plus: (() => {
+          const karten = [...document.querySelectorAll("article.kauf-produkt")].filter((el) => !el.hidden && !el.closest("[hidden]") && el.getBoundingClientRect().height > 0);
+          return karten.length > 1 && karten.every((el) => {
+            const step = el.querySelector(".beispiel-step");
+            const an = el.querySelector('input[type="checkbox"]').checked;
+            if (!step) return !an;
+            const cs = getComputedStyle(step);
+            const offen = cs.visibility !== "hidden" && Number(cs.opacity) > 0.9;
+            return an ? offen : !offen;
+          });
+        })()
       };
     });
         point("Auswahlkreis", kreis.checked && kreis.menge && kreis.plus && kreis.kreis !== "0px" && kreis.max === "9999", JSON.stringify(kreis));
@@ -655,6 +662,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
       };
     });
     point("Schnellauswahl", schnellInfo.slug === "bauzaun-10075" && !schnellInfo.stand && schnellInfo.zeilen === 1 && schnellInfo.label === "Einzelfelder" && schnellInfo.max === "9999" && schnellInfo.min === "0" && /bauzaun-10075\/$/.test(schnellInfo.link) && schnellInfo.text === "Details anpassen", JSON.stringify(schnellInfo));
+    await schnellKarte.locator("[data-kreis]").check();
     await schnellKarte.locator("[data-schnell='felder']").fill("3");
     await schnell.page.waitForTimeout(100);
     const korb = await schnell.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty + ":" + (item.note || "")));
@@ -927,6 +935,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     await gemerkt.page.close();
 
     const bauMiete = await open(1280, "/kaufen/?modus=miete&gruppe=zaun&kat=bauzaune");
+    await bauMiete.page.locator("#schnell-felder-bauzaun-10075").locator("xpath=ancestor::article[1]").locator("[data-kreis]").check();
     await bauMiete.page.locator("#schnell-felder-bauzaun-10075").fill("3");
     await bauMiete.page.locator("#schnell-felder-bauzaun-10075").dispatchEvent("input");
     const bauKorb = await bauMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty + ":" + (item.note || "")));
@@ -956,6 +965,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     point("Konsole Bauzaun mieten", bauMiete.errors.length === 0 && bauQuer <= 1, bauMiete.errors.join(" | ") + " quer " + bauQuer);
     await bauMiete.page.close();
     const bauHandy = await open(390, "/kaufen/?modus=miete&gruppe=zaun&kat=bauzaune");
+    await bauHandy.page.locator("#schnell-felder-bauzaun-10075").locator("xpath=ancestor::article[1]").locator("[data-kreis]").check();
     await bauHandy.page.locator("#schnell-felder-bauzaun-10075").fill("5");
     await bauHandy.page.locator("#schnell-felder-bauzaun-10075").dispatchEvent("input");
     await bauHandy.page.locator("#kauf-verkehr-summe [data-sum='kurz']").click();
@@ -994,6 +1004,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     const plane = await open(1280, "/kaufen/?modus=miete&gruppe=zaun&kat=sichtschutz");
     await plane.page.evaluate(() => localStorage.removeItem("amk-wunsch"));
     await plane.page.reload({ waitUntil: "networkidle" });
+    await plane.page.locator("#kauf-liste article.tile:has(#schnell-menge-plane-10012) [data-kreis]").check();
     await plane.page.locator("#schnell-menge-plane-10012").fill("2");
     await plane.page.locator("#schnell-menge-plane-10012").dispatchEvent("input");
     const planeKorb = await plane.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));
@@ -1009,6 +1020,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     await anhMiete.page.close();
 
     const gitterMiete = await open(1280, "/kaufen/?modus=miete&gruppe=zaun&kat=gitter");
+    await gitterMiete.page.locator("#kauf-teil-gitter article.kauf-produkt input[name='typ']").first().check();
     await gitterMiete.page.locator("#kauf-teil-gitter [data-menge]").fill("2");
     await gitterMiete.page.locator("#kauf-teil-gitter [data-menge]").dispatchEvent("input");
     const gitterKorb = await gitterMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));

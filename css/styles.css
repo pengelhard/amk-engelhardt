@@ -2505,6 +2505,24 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 }
 .js-kauf .kauf-schnell-details { color: inherit; text-decoration: underline; white-space: nowrap; }
 .js-kauf .kauf-schnell-hinweis { font-weight: 700; white-space: nowrap; }
+.js-kauf .kauf-schnell--menge,
+.js-kauf .kauf-schnell:not(.kauf-schnell--menge) > .kauf-schnell-zeile {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 180ms ease, visibility 0s linear 0s;
+}
+.js-kauf article:not(:has(input:checked)) > .kauf-schnell--menge,
+.js-kauf article:not(:has(input:checked)) > .kauf-schnell:not(.kauf-schnell--menge) > .kauf-schnell-zeile,
+.js-kauf .kauf-produkt:not(:has(input:checked)) .kauf-schnell--menge {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 180ms ease, visibility 0s linear 180ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js-kauf .kauf-schnell--menge,
+  .js-kauf .kauf-schnell-zeile { transition: none; }
+}
 .js-kauf .kauf-ebene .kauf-karte { height: 100%; }
 .js-kauf .kauf-ebene .kauf-karte strong {
   box-sizing: border-box;
