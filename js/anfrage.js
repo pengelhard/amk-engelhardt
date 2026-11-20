@@ -508,7 +508,8 @@
     if (kaufList) {
       var kaufHtml = groups.slice(1).filter(function (group) { return group[1].length; }).map(groupHtml).join("");
       kaufList.innerHTML = kaufHtml;
-      kaufList.hidden = !kaufHtml;
+      var kaufBereich = document.getElementById("anfrage-kauf-bereich");
+      if (kaufBereich) kaufBereich.hidden = !kaufHtml;
     }
   }
 

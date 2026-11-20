@@ -8,7 +8,7 @@
   <meta name="description" content="Anfrage an AMK Engelhardt. Der Button öffnet das eigene E-Mail-Programm.">
   <link rel="icon" href="../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../assets/logo.png">
-  <link rel="stylesheet" href="../css/styles.css?v=bi">
+  <link rel="stylesheet" href="../css/styles.css?v=bj">
 </head>
 <body>
   <a class="skip" href="#inhalt">Zum Inhalt</a>
@@ -58,7 +58,7 @@
           <h2>Ihre Auswahl</h2>
           <p class="price-once">Preis auf Anfrage</p>
           <div id="anfrage-liste">
-            <div class="miete-bereich" id="anfrage-miete-bereich" hidden>
+            <div class="auswahl-kasten" id="anfrage-miete-bereich" hidden>
               <ul class="cart" id="anfrage-liste-miete"></ul>
               <div id="anfrage-miete">
             <div id="anfrage-zeit">
@@ -94,7 +94,9 @@
             </div>
               </div>
             </div>
-            <ul class="cart" id="anfrage-liste-kauf" hidden></ul>
+            <div class="auswahl-kasten" id="anfrage-kauf-bereich" hidden>
+              <ul class="cart" id="anfrage-liste-kauf"></ul>
+            </div>
           </div>
           <div id="anfrage-verkehr" hidden>
             <label class="choice"><input type="checkbox" name="genehmigung" value="ja"> <span>Genehmigung/Verkehrsrechtliche Anordnung durch AMK</span></label>
@@ -200,6 +202,6 @@
   <script src="../js/zeitraum.js"></script>
   <script src="../js/form-config.js"></script>
   <script src="../js/formular.js"></script>
-  <script src="../js/anfrage.js?v=bi"></script>
+  <script src="../js/anfrage.js?v=bj"></script>
 </body>
 </html>

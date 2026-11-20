@@ -1898,7 +1898,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .more-parts li { margin: 0.12rem 0; }
 .cart-group { margin: 0.2rem 0 0.45rem; padding: 0; }
 .cart-group h3 { margin: 0; font-size: clamp(1.7rem, 2.6vw, 2.15rem); line-height: 1; }
-.miete-bereich {
+.auswahl-kasten {
   margin: 0 0 1.4rem;
   padding: 0.85rem 1rem 0.75rem;
   background: #fff;
@@ -1906,9 +1906,8 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   border-radius: var(--kachel-radius);
   box-shadow: var(--kachel-schatten);
 }
-.miete-bereich[hidden],
-#anfrage-liste-kauf[hidden] { display: none; }
-.miete-bereich .cart { margin: 0; }
+.auswahl-kasten[hidden] { display: none; }
+.auswahl-kasten .cart { margin: 0; }
 #anfrage-form > h2 { margin-bottom: 0.75rem; }
 #anfrage-form h4 {
   margin: 1.2rem 0 0.5rem;

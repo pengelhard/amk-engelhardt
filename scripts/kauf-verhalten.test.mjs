@@ -1482,13 +1482,21 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
         const unter = [...document.querySelectorAll("#anfrage-zeit-titel, #anfrage-fahrt-titel")].map((el) => ({ tag: el.tagName, text: el.textContent.trim(), px: px(el) }));
         const label = px(document.querySelector("#anfrage-form .field label"));
         const bereich = document.getElementById("anfrage-miete-bereich");
+        const kaufBereich = document.getElementById("anfrage-kauf-bereich");
         const zeit = document.getElementById("anfrage-zeit-titel");
         const fahrt = document.getElementById("anfrage-fahrt-titel");
         const texte = [...document.querySelectorAll("#anfrage-form h2, #anfrage-form h3, #anfrage-form h4, #anfrage-form legend")].map((el) => el.textContent);
         const felder = ["von", "bis", "ort", "plz", "name", "email"].every((id) => document.getElementById(id));
+        function kasten(el) {
+          if (!el) return "";
+          const s = getComputedStyle(el);
+          return [s.display, s.backgroundColor, s.borderTopWidth, s.borderTopStyle, s.borderTopColor, s.borderRadius, s.paddingTop, s.paddingRight, s.paddingBottom, s.paddingLeft, s.boxShadow, s.marginBottom].join("|");
+        }
+        const kaufTitel = kaufBereich ? kaufBereich.querySelector(".cart-group h3") : null;
         return {
           auswahl, gruppen, unter, label, felder,
           drin: !!(bereich && zeit && fahrt && bereich.contains(zeit) && bereich.contains(fahrt)),
+          kasten: !!(kaufBereich && !kaufBereich.hidden && kaufTitel && kaufTitel.textContent.trim() === "Kauf" && kasten(kaufBereich) === kasten(bereich)),
           klammer: texte.some((text) => /\(Miete\)/.test(text)),
           quer: document.documentElement.scrollWidth - document.documentElement.clientWidth
         };
@@ -1497,7 +1505,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     function kopfPasst(kopf) {
       const eben = (list) => list.length >= 2 && list.every((item) => item.px === list[0].px);
       const listen = kopf.gruppen.filter((item) => item.text === "Miete" || item.text === "Kauf");
-      return !kopf.klammer && kopf.felder && kopf.drin && kopf.quer <= 1 &&
+      return !kopf.klammer && kopf.felder && kopf.drin && kopf.kasten && kopf.quer <= 1 &&
         kopf.auswahl.length === 2 && kopf.auswahl.every((item) => item.tag === "H2") && eben(kopf.auswahl) &&
         listen.length === 2 && listen.every((item) => item.tag === "H3") && eben(listen) &&
         kopf.unter.length === 2 && kopf.unter.every((item) => item.tag === "H4") && eben(kopf.unter) &&
