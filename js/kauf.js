@@ -282,6 +282,7 @@
       if (link.getAttribute("data-modus") === modus) link.setAttribute("aria-current", "true");
       else link.removeAttribute("aria-current");
     });
+    if (window.AMK_HAUPTNAV && window.AMK_HAUPTNAV.markiere) window.AMK_HAUPTNAV.markiere(modus);
     var name = modus === "miete" ? "Mieten" : "Kaufen";
     var titel = document.querySelector("main h1");
     if (titel) titel.textContent = name;

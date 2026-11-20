@@ -33,6 +33,48 @@
   window.addEventListener("resize", pinTop);
   if (bar && window.ResizeObserver) new ResizeObserver(pinTop).observe(bar);
 
+  function navZiel(href) {
+    var probe = document.createElement("a");
+    probe.href = href || "";
+    var path = probe.pathname || "";
+    if (path.slice(-11) === "/index.html") path = path.slice(0, -10);
+    if (path.charAt(path.length - 1) !== "/") path += "/";
+    if (/\/mieten\/$/.test(path)) return "miete";
+    if (/\/kaufen\/$/.test(path)) return "kauf";
+    return "";
+  }
+
+  function seitenModus() {
+    var path = location.pathname || "";
+    var katalog = /\/kaufen\/$/.test(path) || /\/kaufen\/index\.html$/.test(path);
+    var produkt = path.indexOf("/produkt/") !== -1;
+    if (!katalog && !produkt) return "";
+    return new URLSearchParams(location.search).get("modus") === "miete" ? "miete" : "kauf";
+  }
+
+  function markiereHauptnav(modus) {
+    if (modus !== "miete" && modus !== "kauf") return;
+    Array.prototype.forEach.call(document.querySelectorAll("#nav a, .menu-nav a, .footer-links a"), function (link) {
+      var rolle = navZiel(link.getAttribute("href") || "");
+      if (!rolle) return;
+      if (rolle === modus) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+    });
+  }
+
+  window.AMK_HAUPTNAV = { markiere: markiereHauptnav };
+  markiereHauptnav(seitenModus());
+  window.addEventListener("popstate", function () {
+    markiereHauptnav(seitenModus());
+  });
+  document.addEventListener("click", function (event) {
+    var link = event.target.closest("a");
+    if (!link || !link.closest("#nav, .menu-nav, .footer-links, .hero-copy")) return;
+    var rolle = navZiel(link.getAttribute("href") || "");
+    if (rolle !== "miete" && rolle !== "kauf") return;
+    try { sessionStorage.setItem("amk-modus", rolle); } catch (error) { /* Speicher kann gesperrt sein */ }
+  }, true);
+
   if (bar && bar.classList.contains("top--overlay")) {
     function solidTop() {
       bar.classList.toggle("is-solid", window.scrollY > 24);
