@@ -1010,7 +1010,7 @@ textarea { min-height: 7rem; width: 100%; resize: vertical; }
   background: var(--paper-deep);
   color: var(--ink-soft);
   border-top: 0;
-  padding: 2.4rem 0 2.6rem;
+  padding: 1.15rem 0 1.25rem;
 }
 .site-footer a {
   color: var(--ink);
@@ -1021,17 +1021,39 @@ textarea { min-height: 7rem; width: 100%; resize: vertical; }
 }
 .site-footer a:hover { color: var(--forest); }
 .site-footer :focus-visible { outline-color: var(--ink); }
-.footer-name { margin: 0 0 0.35rem; color: var(--ink); font-family: var(--display); font-weight: 700; font-size: 1.6rem; letter-spacing: 0; }
-.site-footer p { margin: 0.2rem 0; }
+.footer-name { margin: 0 0 0.2rem; color: var(--ink); font-family: var(--display); font-weight: 700; font-size: 1.45rem; letter-spacing: 0; }
+.site-footer p { margin: 0.12rem 0; }
 .footer-links {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.15rem 1.2rem;
-  margin: 1.15rem 0 0;
-  padding: 0.9rem 0 0;
+  grid-template-columns: max-content max-content;
+  column-gap: clamp(1rem, 4vw, 2.4rem);
+  row-gap: 0;
+  align-content: start;
+  margin: 0.75rem 0 0;
+  padding: 0.65rem 0 0;
   list-style: none;
   border-top: 1px solid var(--line);
 }
+.footer-links::before,
+.footer-links::after {
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+.footer-links::before { content: "Angebot"; grid-area: 1 / 1; }
+.footer-links::after { content: "Firma"; grid-area: 1 / 2; }
+.footer-links li:nth-child(1) { grid-area: 2 / 1; }
+.footer-links li:nth-child(2) { grid-area: 3 / 1; }
+.footer-links li:nth-child(3) { grid-area: 4 / 1; }
+.footer-links li:nth-child(6) { grid-area: 5 / 1; }
+.footer-links li:nth-child(5) { grid-area: 6 / 1; }
+.footer-links li:nth-child(7) { grid-area: 2 / 2; }
+.footer-links li:nth-child(4) { grid-area: 3 / 2; }
+.footer-links li:nth-child(8) { grid-area: 4 / 2; }
+.footer-links li:nth-child(9) { grid-area: 5 / 2; }
 .footer-links a { display: flex; align-items: center; min-height: 44px; padding: 0; font-weight: 600; }
 .anfahrt { padding: 0.4rem 0 2.4rem; }
 .anfahrt h2 { margin-bottom: 0.8rem; }
@@ -1107,7 +1129,24 @@ html { scroll-padding-bottom: calc(var(--tabbar, 4.75rem) + 0.75rem); }
   .news-grid { grid-template-columns: repeat(3, 1fr); align-items: stretch; }
   .mosaic--sale { grid-template-columns: 1fr 1fr 1fr; }
   .mosaic-wide { grid-column: 1 / -1; aspect-ratio: 21 / 9; }
-  .footer-links { grid-template-columns: repeat(4, max-content); gap: 0.15rem 1.8rem; }
+  .site-footer { padding: 0.95rem 0 1.05rem; }
+  .site-footer .wrap {
+    display: grid;
+    grid-template-columns: minmax(14rem, 20rem) minmax(0, 1fr);
+    column-gap: 2rem;
+    align-items: center;
+  }
+  .site-footer .wrap > p { grid-column: 1; }
+  .footer-links {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    justify-self: end;
+    align-self: center;
+    margin: 0;
+    padding: 0;
+    border-top: 0;
+  }
+  .footer-links a { min-height: 1.85rem; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
