@@ -151,8 +151,7 @@
     };
     window.AMK_MODUS = state.modus === "miete" ? "miete" : "kauf";
     try { sessionStorage.setItem(MODUS_MERK, window.AMK_MODUS); } catch (error) { /* Speicher kann gesperrt sein */ }
-    if (state.gruppe === "verkehr" && !state.zeichen && !state.teil) state.teil = "schranken";
-    if (state.gruppe === "anhaenger" && !state.teil) state.teil = "hochlader";
+    state.alles = state.gruppe === "zaun" ? !state.kat : !(state.zeichen || state.teil);
     if (state.gruppe === "zaun" && state.kat) merkeUnter("zaun", state.kat);
     if (state.gruppe === "verkehr" && (state.zeichen || state.teil)) merkeUnter("verkehr", state.zeichen || state.teil);
     if (state.gruppe === "anhaenger" && state.teil) merkeUnter("anhaenger", state.teil);
@@ -219,6 +218,8 @@
       var any = false;
       if (nav) nav.querySelectorAll("a").forEach(function (sub) { if (!sub.hidden) any = true; });
       link.hidden = state.modus === "miete" && !any;
+      var drop = link.closest(".kauf-drop");
+      if (drop) drop.hidden = link.hidden;
     });
     ["gitter", "schwellen", "schleuse", "buehne"].forEach(function (id) {
       var section = document.getElementById("kauf-teil-" + id);
@@ -245,6 +246,7 @@
   }
 
   function sichereStelle() {
+    if (state.alles) return false;
     var link = aktuelleLink();
     if (link && !link.hidden) return false;
     var nav = document.querySelector('.kauf-ebene[data-fuer="' + state.gruppe + '"]');
@@ -315,9 +317,11 @@
         var kat = link.getAttribute("data-kat") || "";
         var teil = link.getAttribute("data-teil") || "";
         var on = false;
-        if (fuer === "zaun") on = !!state.kat && kat === state.kat;
-        else if (signs.indexOf(teil) !== -1) on = state.zeichen === teil || (!state.zeichen && !state.teil && teil === signs[0]);
-        else if (teil) on = state.teil === teil || (!state.teil && !state.zeichen && teil === (teilList()[0] || ""));
+        if (fuer === state.gruppe && !state.alles) {
+          if (fuer === "zaun") on = !!state.kat && kat === state.kat;
+          else if (signs.indexOf(teil) !== -1) on = state.zeichen === teil;
+          else if (teil) on = state.teil === teil;
+        }
         if (on) link.setAttribute("aria-current", "true");
         else link.removeAttribute("aria-current");
       });
@@ -395,7 +399,7 @@
   var beobachter = null;
 
   function stapelAn() {
-    return state.gruppe === "verkehr" || state.gruppe === "anhaenger" || (state.gruppe === "zaun" && !!ZAUN_STAPEL[state.kat]);
+    return state.gruppe === "verkehr" || state.gruppe === "anhaenger" || (state.gruppe === "zaun" && (state.alles || !!ZAUN_STAPEL[state.kat]));
   }
 
   function katalogAn() {
@@ -412,7 +416,8 @@
   function gruppenMass() {
     var el = document.getElementById("kauf-gruppen");
     if (!el) return;
-    document.documentElement.style.setProperty("--kauf-gruppen", el.offsetHeight + "px");
+    var sticky = getComputedStyle(el).position === "sticky";
+    document.documentElement.style.setProperty("--kauf-gruppen", sticky ? el.offsetHeight + "px" : "0px");
   }
 
   function kopfAbstand() {
@@ -420,7 +425,7 @@
     var bar = document.getElementById("kauf-leiste");
     var gruppen = document.getElementById("kauf-gruppen");
     var hoch = kopf ? kopf.offsetHeight : 0;
-    if (gruppen) hoch += gruppen.offsetHeight;
+    if (gruppen && getComputedStyle(gruppen).position === "sticky") hoch += gruppen.offsetHeight;
     if (bar && !bar.hidden && getComputedStyle(bar).display !== "none") hoch += bar.offsetHeight;
     return hoch + 8;
   }
@@ -500,7 +505,12 @@
     var attr = state.gruppe === "zaun" ? "data-kat" : "data-teil";
     var sub = /^[a-z0-9-]+$/.test(key || "") ? nav.querySelector('a[' + attr + '="' + key + '"]') : null;
     var nameEl = bar.querySelector(".kauf-leiste-name");
-    if (nameEl) nameEl.textContent = sub ? textOf(sub) : "";
+    if (nameEl) {
+      if (state.alles) {
+        var gLink = document.querySelector('#kauf-gruppen a[data-gruppe="' + state.gruppe + '"]');
+        nameEl.textContent = textOf(gLink);
+      } else nameEl.textContent = sub ? textOf(sub) : "";
+    }
     bar.querySelectorAll(".kauf-leiste-menu a").forEach(function (link) {
       if (unterAn(link.getAttribute("data-kat") || "", link.getAttribute("data-teil") || "")) link.setAttribute("aria-current", "true");
       else link.removeAttribute("aria-current");
@@ -591,7 +601,7 @@
   }
 
   function markiere(id) {
-    if (!id || sprung) return;
+    if (!id || sprung || state.alles) return;
     if (state.gruppe === "zaun") {
       if (!ZAUN_STAPEL[id] || state.kat === id) return;
       state.kat = id;
@@ -662,6 +672,7 @@
     board.classList.toggle("is-anhaenger", state.gruppe === "anhaenger");
     board.classList.toggle("is-verkehr", false);
     board.classList.toggle("is-stapel", stapel);
+    board.classList.toggle("is-alles", !!(state.alles && state.gruppe === "zaun"));
     if (hinweis) hinweis.hidden = !verkehr;
     var genehmigungZeile = document.getElementById("kauf-genehmigung-zeile");
     if (genehmigungZeile) genehmigungZeile.hidden = !(verkehr && state.modus === "miete");
@@ -692,7 +703,7 @@
     });
     var shown = 0;
     ordered(items).forEach(function (item) {
-      var on = !overview && !signs && !picker && matches(item);
+      var on = !overview && !signs && matches(item) && (!picker || (state.alles && state.gruppe === "zaun"));
       item.el.hidden = !on;
       liste.appendChild(item.el);
       if (on) shown += 1;
@@ -780,10 +791,21 @@
     window.AMK_AUSWAHL.fillLeiste(verkehrSumme, kaufZeilen());
   }
 
+  function setzeAlles(id) {
+    state.gruppe = id || state.gruppe;
+    state.kat = "";
+    state.teil = "";
+    state.zeichen = "";
+    state.alles = true;
+    var bar = document.getElementById("kauf-leiste");
+    if (bar) bar.removeAttribute("data-fuer");
+  }
+
   function setzeUnter(id, spec) {
     var signs = window.AMK_SCHILDER_TEILE || [];
     var kat = spec.kat || "";
     var teil = spec.teil || "";
+    state.alles = false;
     state.gruppe = id || state.gruppe;
     if (kat) {
       state.kat = kat;
@@ -846,17 +868,10 @@
   var auswahlHalt = false;
   var haltGruppe = "";
 
-  function haltSetzen(id) {
-    auswahlHalt = true;
-    haltGruppe = id || "";
-  }
+  function haltSetzen() {}
 
-  function hoverFrei(id) {
-    if (!hoverFein()) return false;
-    if (auswahlHalt && haltGruppe === id) return false;
-    auswahlHalt = false;
-    haltGruppe = "";
-    return true;
+  function hoverFrei() {
+    return hoverFein();
   }
 
   function hoverFein() {
@@ -864,20 +879,28 @@
   }
 
   function placePanel(id) {
-    if (!drops) return;
     var nav = document.querySelector('.kauf-ebene[data-fuer="' + id + '"]');
     if (!nav) return;
-    var link = document.querySelector((panelAnker === "schrift" ? "#kauf-schrift" : "#kauf-gruppen") + ' a[data-gruppe="' + id + '"]');
-    var wrap = document.querySelector(".kauf-board .wrap");
-    if (!link || !wrap) return;
+    var eng = window.matchMedia("(max-width: 767px)").matches;
+    if (!eng) {
+      nav.style.position = "";
+      nav.style.top = "";
+      nav.style.left = "";
+      nav.style.right = "";
+      nav.style.width = "";
+      return;
+    }
+    var bar = document.getElementById("kauf-gruppen");
+    var link = document.querySelector('#kauf-gruppen a[data-gruppe="' + id + '"]');
+    if (!bar || !link) return;
+    var box = bar.getBoundingClientRect();
     var band = link.getBoundingClientRect();
-    var box = wrap.getBoundingClientRect();
     nav.style.position = "fixed";
     nav.style.top = Math.round(band.bottom) + "px";
     nav.style.left = Math.round(box.left) + "px";
     nav.style.right = "auto";
     nav.style.width = Math.round(box.width) + "px";
-    nav.style.zIndex = "37";
+    nav.style.zIndex = "40";
   }
 
   function paintPanel() {
@@ -931,22 +954,28 @@
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
       event.preventDefault();
       var id = canonGruppe(link.getAttribute("data-gruppe") || "");
-      setzeUnter(id, gemerkteUnter(id));
-      haltSetzen(id);
+      if (!hoverFein()) {
+        if (offen === id) closePanel();
+        else openPanel(id);
+        return;
+      }
+      setzeAlles(id);
       closePanel();
       writeUrl("push");
       render({ sprung: true, sanft: true });
     });
-    gruppen.querySelectorAll("a[data-gruppe]").forEach(function (link) {
+    gruppen.querySelectorAll(".kauf-drop").forEach(function (drop) {
+      var link = drop.querySelector("a[data-gruppe]");
+      if (!link) return;
       var id = link.getAttribute("data-gruppe") || "";
       link.addEventListener("pointerdown", function () { fromPointer = true; });
       link.addEventListener("pointerup", function () { fromPointer = false; });
       link.addEventListener("pointercancel", function () { fromPointer = false; });
-      link.addEventListener("mouseenter", function () {
-        if (!hoverFrei(id)) return;
+      drop.addEventListener("mouseenter", function () {
+        if (!hoverFein()) return;
         openPanel(id);
       });
-      link.addEventListener("mouseleave", function () {
+      drop.addEventListener("mouseleave", function () {
         if (hoverFein()) scheduleClose();
       });
       link.addEventListener("focus", function () {
@@ -962,17 +991,6 @@
       });
     });
   }
-
-  document.querySelectorAll(".kauf-ebene").forEach(function (nav) {
-    var id = nav.getAttribute("data-fuer") || "";
-    nav.addEventListener("mouseenter", function () {
-      if (auswahlHalt || !hoverFein()) return;
-      openPanel(id);
-    });
-    nav.addEventListener("mouseleave", function () {
-      if (hoverFein()) scheduleClose();
-    });
-  });
 
   if (drops) {
     drops.addEventListener("focusout", function (event) {
@@ -1008,14 +1026,6 @@
     if (menu && !menu.hidden && !menu.contains(event.target) && !(knopf && knopf.contains(event.target))) menuSchalter(false);
     if (!offen || !drops || drops.contains(event.target)) return;
     closePanel();
-  });
-
-  document.addEventListener("mousemove", function (event) {
-    if (!auswahlHalt || !drops) return;
-    var ziel = event.target;
-    if (ziel && ziel.closest && ziel.closest("#kauf-drops")) return;
-    auswahlHalt = false;
-    haltGruppe = "";
   });
 
   window.addEventListener("resize", function () {

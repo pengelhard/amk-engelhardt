@@ -123,7 +123,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     for (const width of [1280, 1920, 390]) {
       const { page, errors } = await open(width, gruppen[0][1]);
       const robots = await page.locator('meta[name="robots"]').getAttribute("content");
-      const tops = await page.locator("#kauf-gruppen .kauf-karte").count();
+      const tops = await page.locator("#kauf-gruppen a[data-gruppe]").count();
       point(`Oberkacheln ${width}`, tops === 3, String(tops));
       const kompakt = await page.evaluate(() => {
         const bar = document.getElementById("kauf-gruppen");
@@ -146,12 +146,13 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
           gross: links.some((el) => el.getBoundingClientRect().height > 180)
         };
       });
-      const bildOk = width <= 430
+      const bildOk = width <= 767
         ? kompakt.bilder.every((h) => h >= 34 && h <= 56)
-        : kompakt.bilder.every((h) => h >= 16 && h <= 40);
+        : kompakt.bilder.every((h) => h >= 120);
       const ring = kompakt.rand === "rgb(118, 183, 41)|rgb(118, 183, 41)|rgb(118, 183, 41)|rgb(118, 183, 41)";
       const ruhig = kompakt.schatten.every((wert) => wert === "none" || /inset/.test(wert));
-      point(`Kategorieleiste ${width}`, kompakt.zeile && kompakt.h > 0 && kompakt.h <= (width <= 430 ? 160 : 120) && bildOk && ring && ruhig && kompakt.quer <= 1 && !kompakt.gross, JSON.stringify(kompakt));
+      const hoeheOk = width <= 767 ? kompakt.h > 0 && kompakt.h <= 160 && !kompakt.gross : kompakt.gross && kompakt.h <= 520;
+      point(`Kategorieleiste ${width}`, kompakt.zeile && hoeheOk && bildOk && ring && ruhig && kompakt.quer <= 1, JSON.stringify(kompakt));
       point(`noindex ${width}`, /noindex/i.test(robots || ""), robots || "");
       const gemessen = {};
       for (const [name, url, kind] of gruppen) {
@@ -218,7 +219,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
             top: Math.round(top),
             header: Math.round(header),
             band: Math.round(band),
-            unter: top >= band - 2 && top < band + 40
+            unter: top >= header - 2 && top < header + 40 && band < header
           };
         });
         await page.goto(base + "/kaufen/?gruppe=anhaenger&teil=hochlader", { waitUntil: "networkidle" });
@@ -271,10 +272,11 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
         bg: cs.backgroundColor,
         gap: Math.round(nr.top - top.bottom),
         hit: !!(hit && hit.closest(".kauf-ebene")),
-        n: nav.querySelectorAll(".kauf-karte").length
+        n: nav.querySelectorAll(".kauf-karte").length,
+        fremd: !document.querySelector("#kauf-ebene-verkehr a[aria-current='true']")
       };
     });
-    point("Hover-Panel", panel.open && panel.bg === "rgb(255, 255, 255)" && panel.gap >= 0 && panel.hit && panel.n === 6, JSON.stringify(panel));
+    point("Hover-Panel", panel.open && panel.bg === "rgb(255, 255, 255)" && panel.gap >= 0 && panel.hit && panel.n === 6 && panel.fremd, JSON.stringify(panel));
     await desktop.page.locator("#kauf-ebene-verkehr a[data-teil='gefahr']").click();
     await desktop.page.waitForTimeout(40);
     const closed = await desktop.page.locator("#kauf-ebene-verkehr").evaluate((el) => el.hidden);
@@ -295,6 +297,45 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
       };
     });
     point("Hover nach Auswahl", nachWahl && desktopRand.schatten.every((wert) => wert === "none" || /inset/.test(wert)), JSON.stringify({ nachWahl, desktopRand }));
+    await desktop.page.mouse.move(20, 20);
+    await desktop.page.waitForTimeout(350);
+    const gleiche = desktop.page.locator('#kauf-gruppen a[data-gruppe="zaun"]');
+    await gleiche.scrollIntoViewIfNeeded();
+    const gleicheBox = await gleiche.boundingBox();
+    await desktop.page.mouse.move(gleicheBox.x + gleicheBox.width / 2, gleicheBox.y + 40);
+    await desktop.page.waitForTimeout(80);
+    const menueNamen = await desktop.page.evaluate(() => [...document.querySelectorAll("#kauf-ebene a:not([hidden]) strong")].map((el) => el.textContent.replace(/\s+/g, " ").trim()));
+    await desktop.page.mouse.move(gleicheBox.x + 24, gleicheBox.y + gleicheBox.height + 28);
+    await desktop.page.waitForTimeout(300);
+    const imMenue = await desktop.page.locator("#kauf-ebene").evaluate((el) => !el.hidden);
+    await desktop.page.mouse.move(gleicheBox.x + gleicheBox.width / 2, gleicheBox.y + 40);
+    await desktop.page.locator("#kauf-ebene a[data-kat='gitter']").click();
+    await desktop.page.waitForTimeout(80);
+    async function obenHovern(selector) {
+      await desktop.page.evaluate(() => {
+        const root = document.documentElement;
+        const previous = root.style.scrollBehavior;
+        root.style.scrollBehavior = "auto";
+        window.scrollTo(0, 0);
+        root.style.scrollBehavior = previous;
+      });
+      await desktop.page.waitForFunction(() => window.scrollY < 2);
+      const karte = desktop.page.locator(selector);
+      const box = await karte.boundingBox();
+      await desktop.page.mouse.move(box.x + 40, box.y + 36);
+      await desktop.page.waitForTimeout(120);
+      return box;
+    }
+    await obenHovern('#kauf-gruppen a[data-gruppe="zaun"]');
+    const erneut = await desktop.page.locator("#kauf-ebene").evaluate((el) => !el.hidden);
+    await obenHovern('#kauf-gruppen a[data-gruppe="verkehr"]');
+    const dritte = await desktop.page.locator("#kauf-ebene-verkehr").evaluate((el) => !el.hidden);
+    const ankerBox = await obenHovern('#kauf-gruppen a[data-gruppe="anhaenger"]');
+    const vierte = await desktop.page.locator("#kauf-ebene-anhaenger").evaluate((el) => !el.hidden);
+    await desktop.page.mouse.move(ankerBox.x + 40, ankerBox.y + ankerBox.height + 36);
+    await desktop.page.waitForTimeout(320);
+    const ankerOffen = await desktop.page.locator("#kauf-ebene-anhaenger").evaluate((el) => !el.hidden);
+    point("Hover mehrfach", imMenue && erneut && dritte && vierte && ankerOffen && menueNamen.indexOf("Bauzaun") !== -1 && menueNamen.indexOf("Absperrgitter") !== -1, JSON.stringify({ menueNamen, imMenue, erneut, dritte, vierte, ankerOffen }));
     const expanded = await desktop.page.locator('#kauf-gruppen a[data-gruppe="zaun"]').getAttribute("aria-expanded");
     point("Barrierefreiheit", expanded === "false" || expanded === "true", expanded || "");
     await desktop.page.close();
@@ -315,7 +356,16 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
 
     const phone = await open(390, "/kaufen/?gruppe=zaun");
     await phone.page.evaluate(() => { sessionStorage.removeItem("amk-kauf-unter"); if (document.activeElement) document.activeElement.blur(); });
+    const vorTipp = phone.page.url();
     await phone.page.locator('#kauf-gruppen a[data-gruppe="anhaenger"]').click();
+    await phone.page.waitForFunction(() => !document.getElementById("kauf-ebene-anhaenger").hidden);
+    const menuOffen = await phone.page.evaluate(() => ({
+      url: location.href,
+      offen: !document.getElementById("kauf-ebene-anhaenger").hidden,
+      namen: [...document.querySelectorAll("#kauf-ebene-anhaenger a:not([hidden]) strong")].map((el) => el.textContent.replace(/\s+/g, " ").trim())
+    }));
+    point("Antippen öffnet das Menü", menuOffen.offen && menuOffen.url === vorTipp && menuOffen.namen.indexOf("Hochlader") !== -1, JSON.stringify(menuOffen));
+    await phone.page.locator("#kauf-ebene-anhaenger a[data-teil='hochlader']").click();
     await phone.page.waitForFunction(() => {
       const adresse = new URL(location.href);
       const name = document.querySelector(".kauf-leiste-name");
@@ -403,7 +453,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
           menuZu: !!(menu && menu.hidden),
           hoehe: Math.round(leiste.getBoundingClientRect().height),
           bilder: leiste.querySelectorAll("img").length,
-          kacheln: document.querySelectorAll("#kauf-gruppen img").length,
+          kacheln: document.querySelectorAll("#kauf-gruppen .kauf-drop > .kauf-karte img").length,
           kachelFest: getComputedStyle(document.getElementById("kauf-gruppen")).position === "sticky",
           barHoch: Math.round(document.getElementById("kauf-gruppen").getBoundingClientRect().height),
           pills: leiste.querySelectorAll(".kauf-leiste-gruppe, .kauf-leiste-row").length,
@@ -486,10 +536,13 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
       const wechsel = await open(390, modus === "miete" ? "/kaufen/?modus=miete&gruppe=zaun&kat=bauzaune" : "/kaufen/?gruppe=zaun&kat=bauzaune");
       const vorher = await wechsel.page.locator(".kauf-leiste-name").innerText();
       await wechsel.page.locator("#kauf-gruppen a[data-gruppe='verkehr']").click();
+      await wechsel.page.waitForFunction(() => !document.getElementById("kauf-ebene-verkehr").hidden);
+      await wechsel.page.locator("#kauf-ebene-verkehr a[data-teil='schranken']").click();
       await wechsel.page.waitForFunction(() => {
-        const name = document.querySelector(".kauf-leiste-name").textContent;
+        const name = document.querySelector(".kauf-leiste-name");
         const aktiv = document.querySelector("#kauf-gruppen a[aria-current='true']");
-        return new URL(location.href).searchParams.get("gruppe") === "verkehr" && aktiv && aktiv.getAttribute("data-gruppe") === "verkehr" && !/Bauzaun/.test(name);
+        const kopf = document.querySelector("#kauf-teil-schranken h2");
+        return new URL(location.href).searchParams.get("gruppe") === "verkehr" && aktiv && aktiv.getAttribute("data-gruppe") === "verkehr" && name && /schranken/i.test(name.textContent) && kopf && /schranken/i.test(kopf.textContent);
       });
       const nach = await wechsel.page.evaluate(() => {
         const karten = [...document.querySelectorAll("#kauf-gruppen a[data-gruppe]")].filter((el) => !el.hidden);
@@ -523,9 +576,20 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     const sprache = await open(1280, "/kaufen/");
     await sprache.page.evaluate(() => sessionStorage.removeItem("amk-kauf-unter"));
     await sprache.page.locator('#kauf-gruppen a[data-gruppe="zaun"]').click();
-    await sprache.page.waitForTimeout(40);
+    await sprache.page.waitForTimeout(80);
     const erste = new URL(sprache.page.url());
-    point("Oberkachel erste Unterkategorie", erste.searchParams.get("gruppe") === "zaun" && erste.searchParams.get("kat") === "bauzaune", erste.search);
+    const alleZaun = await sprache.page.evaluate(() => {
+      function sichtbar(sel) {
+        const el = document.querySelector(sel);
+        return !!(el && !el.hidden && !el.closest("[hidden]") && el.getBoundingClientRect().height > 0);
+      }
+      return {
+        bauzaun: sichtbar("#kauf-liste article.tile h3"),
+        gitter: sichtbar("#kauf-teil-gitter h2"),
+        kat: new URL(location.href).searchParams.get("kat") || ""
+      };
+    });
+    point("Kachel zeigt alle Zaunprodukte", erste.searchParams.get("gruppe") === "zaun" && !erste.searchParams.get("kat") && alleZaun.bauzaun && alleZaun.gitter, JSON.stringify({ search: erste.search, alleZaun }));
     const zaunKarte = sprache.page.locator('#kauf-gruppen a[data-gruppe="zaun"]');
     await sprache.page.mouse.move(20, 700);
     await zaunKarte.scrollIntoViewIfNeeded();
@@ -537,7 +601,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     await sprache.page.locator('#kauf-gruppen a[data-gruppe="zaun"]').click();
     await sprache.page.waitForTimeout(40);
     const letzte = new URL(sprache.page.url());
-    point("Oberkachel letzte Unterkategorie", letzte.searchParams.get("kat") === "gitter", letzte.search);
+    point("Kachel nach Unterkategorie zeigt wieder alles", letzte.searchParams.get("gruppe") === "zaun" && !letzte.searchParams.get("kat"), letzte.search);
     await sprache.page.close();
 
     async function namen(url) {
@@ -583,7 +647,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
       return {
         schrift: getComputedStyle(schrift).display,
         unterKopf: bar.top >= kopf - 2,
-        bilder: document.querySelectorAll("#kauf-gruppen img").length
+        bilder: document.querySelectorAll("#kauf-gruppen .kauf-drop > .kauf-karte img").length
       };
     });
     await sprung.page.evaluate(() => window.scrollTo(0, 1400));
@@ -599,7 +663,8 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
         schrift: getComputedStyle(document.getElementById("kauf-schrift")).display
       };
     });
-    point("Kategorieleiste bleibt", ruhe.schrift === "none" && ruhe.unterKopf && ruhe.bilder === 3 && band.haengt && /Bauzaun/.test(band.text) && band.leiste === "none" && band.schrift === "none", JSON.stringify({ ruhe, band }));
+    point("Kategorieleiste bleibt", ruhe.schrift === "none" && ruhe.unterKopf && ruhe.bilder === 3 && !band.haengt && /Bauzaun/.test(band.text) && band.leiste === "none" && band.schrift === "none", JSON.stringify({ ruhe, band }));
+    await sprung.page.locator("#kauf-gruppen").scrollIntoViewIfNeeded();
     const schriftKarte = sprung.page.locator("#kauf-gruppen a[data-gruppe='verkehr']");
     const schriftBox = await schriftKarte.boundingBox();
     await sprung.page.mouse.move(schriftBox.x + schriftBox.width / 2, schriftBox.y + schriftBox.height / 2);
@@ -633,8 +698,14 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     await sprung.page.waitForTimeout(200);
     const zurueck = new URL(sprung.page.url());
     point("Zurück", zurueck.searchParams.get("gruppe") === "zaun" && !zurueck.searchParams.get("teil"), sprung.page.url());
-    await sprung.page.evaluate(() => window.scrollTo(0, 0));
-    await sprung.page.waitForTimeout(40);
+    await sprung.page.evaluate(() => {
+      const root = document.documentElement;
+      const previous = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto";
+      window.scrollTo(0, 0);
+      root.style.scrollBehavior = previous;
+    });
+    await sprung.page.waitForFunction(() => window.scrollY < 2);
     const wieder = await sprung.page.evaluate(() => {
       const bar = document.getElementById("kauf-gruppen").getBoundingClientRect();
       const kopf = document.querySelector(".top").getBoundingClientRect().bottom;
@@ -645,7 +716,7 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     await sprung.page.locator("#kauf-gruppen a[data-gruppe='zaun']").click();
     await sprung.page.waitForTimeout(40);
     const wieKachel = new URL(sprung.page.url());
-    point("Leiste wählt die Kategorie", wieKachel.searchParams.get("gruppe") === "zaun" && wieKachel.searchParams.get("kat") === "bauzaune", wieKachel.search);
+    point("Leiste wählt die Kategorie", wieKachel.searchParams.get("gruppe") === "zaun" && !wieKachel.searchParams.get("kat"), wieKachel.search);
     await sprung.page.close();
 
     const start = await open(1280, "/");

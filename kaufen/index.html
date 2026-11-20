@@ -8,7 +8,7 @@
   <meta name="description" content="Einzelteile, Zubehör und Anhänger zum Kauf.">
   <link rel="icon" href="../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../assets/logo.png">
-  <link rel="stylesheet" href="../css/styles.css?v=bd">
+  <link rel="stylesheet" href="../css/styles.css?v=be">
   <script>document.documentElement.classList.add("js-kauf");(function(){var params=new URLSearchParams(location.search);var modus=params.get("modus");if(modus!=="miete"&&modus!=="kauf"){try{modus=sessionStorage.getItem("amk-modus")==="miete"?"miete":"kauf";}catch(e){modus="kauf";}}window.AMK_MODUS=modus==="miete"?"miete":"kauf";})();</script>
 </head>
 <body>
@@ -48,36 +48,42 @@
       <div class="wrap">
         <div class="kauf-drops" id="kauf-drops">
         <nav class="kauf-einstieg" id="kauf-gruppen" aria-label="Hauptgruppen">
-          <a class="kauf-karte kachel kachel--ober" href="?gruppe=zaun" data-gruppe="zaun" data-ober="zaun" aria-expanded="false" aria-controls="kauf-ebene"><strong>Bauzaun &amp; Absperrgitter</strong></a>
-          <a class="kauf-karte kachel kachel--ober" href="?gruppe=verkehr" data-gruppe="verkehr" data-ober="verkehr" aria-expanded="false" aria-controls="kauf-ebene-verkehr"><strong>Verkehrsabsicherung &amp; Schilder</strong></a>
-          <a class="kauf-karte kachel kachel--ober" href="?gruppe=anhaenger" data-gruppe="anhaenger" data-ober="anhaenger" aria-expanded="false" aria-controls="kauf-ebene-anhaenger"><strong>Anhänger</strong></a>
+          <div class="kauf-drop">
+            <a class="kauf-karte kachel kachel--ober" href="?gruppe=zaun" data-gruppe="zaun" data-ober="zaun" aria-expanded="false" aria-controls="kauf-ebene"><strong>Bauzaun &amp; Absperrgitter</strong></a>
+            <nav class="kauf-einstieg kauf-ebene" id="kauf-ebene" data-fuer="zaun" aria-label="Kategorien" hidden>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=bauzaune" data-kat="bauzaune"><img src="../images/kk/bauzaun-10075.webp" width="1200" height="675" alt="" decoding="async"><strong>Bauzaun</strong></a>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=gitter" data-kat="gitter"><img src="../images/kk/absperrung-10026.webp" width="1200" height="821" alt="" decoding="async"><strong>Absperrgitter</strong></a>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=schwellen" data-kat="schwellen"><img src="../images/kk/schwelle-10005-2.webp" width="1200" height="675" alt="" decoding="async"><strong>Boden&shy;leitschwellen</strong></a>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=schleuse" data-kat="schleuse"><img src="../images/kk/absperrung-10025-3.webp" width="1024" height="701" alt="" decoding="async"><strong>Schleusen</strong></a>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=buehne" data-kat="buehne"><img src="../images/kk/absperrung-10047.webp" width="1024" height="576" alt="" decoding="async"><strong>Bühnen</strong></a>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=zubehoer" data-kat="zubehoer"><img src="../images/kk/fuss-10006.webp" width="1200" height="675" alt="" decoding="async"><strong>Zaun&shy;zubehör</strong></a>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=tore" data-kat="tore"><img src="../images/kk/tor-10028.webp" width="1024" height="701" alt="" decoding="async"><strong>Türen &amp; Tore</strong></a>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=sichtschutz" data-kat="sichtschutz"><img src="../images/kk/sichtschutz-10037-2.webp" width="1200" height="675" alt="" decoding="async"><strong>Sichtschutz &amp; Planen</strong></a>
+            </nav>
+          </div>
+          <div class="kauf-drop">
+            <a class="kauf-karte kachel kachel--ober" href="?gruppe=verkehr" data-gruppe="verkehr" data-ober="verkehr" aria-expanded="false" aria-controls="kauf-ebene-verkehr"><strong>Verkehrsabsicherung &amp; Schilder</strong></a>
+            <nav class="kauf-einstieg kauf-ebene" id="kauf-ebene-verkehr" data-fuer="verkehr" aria-label="Kategorien" hidden>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=verkehr&amp;teil=schranken" data-teil="schranken"><img src="../images/schranke-folie-ra1.webp" width="610" height="420" alt="" decoding="async"><strong>Absperr&shy;schranken</strong></a>
+              <a class="kauf-karte kachel kachel--unter kauf-foto-hoch" href="?gruppe=verkehr&amp;teil=baken" data-teil="baken"><img src="../images/leitbake-hell.webp" width="429" height="1024" alt="" decoding="async"><strong>Leitbaken</strong></a>
+              <a class="kauf-karte kachel kachel--unter kauf-piktogramm" href="?gruppe=verkehr&amp;teil=gefahr" data-teil="gefahr"><img src="../images/schilder/z123.svg" width="96" height="96" alt="" decoding="async"><strong>Gefahr&shy;zeichen</strong></a>
+              <a class="kauf-karte kachel kachel--unter kauf-piktogramm" href="?gruppe=verkehr&amp;teil=vorschrift" data-teil="vorschrift"><img src="../images/schilder/z250.svg" width="96" height="96" alt="" decoding="async"><strong>Vorschrift&shy;zeichen</strong></a>
+              <a class="kauf-karte kachel kachel--unter kauf-piktogramm" href="?gruppe=verkehr&amp;teil=richt" data-teil="richt"><img src="../images/schilder/z454.svg" width="96" height="96" alt="" decoding="async"><strong>Richt&shy;zeichen</strong></a>
+              <a class="kauf-karte kachel kachel--unter kauf-piktogramm" href="?gruppe=verkehr&amp;teil=einrichtung" data-teil="einrichtung"><img src="../images/schilder/z600.svg" width="96" height="96" alt="" decoding="async"><strong>Verkehrs&shy;einrichtungen</strong></a>
+            </nav>
+          </div>
+          <div class="kauf-drop">
+            <a class="kauf-karte kachel kachel--ober" href="?gruppe=anhaenger" data-gruppe="anhaenger" data-ober="anhaenger" aria-expanded="false" aria-controls="kauf-ebene-anhaenger"><strong>Anhänger</strong></a>
+            <nav class="kauf-einstieg kauf-ebene" id="kauf-ebene-anhaenger" data-fuer="anhaenger" aria-label="Kategorien" hidden>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=anhaenger&amp;teil=hochlader" data-teil="hochlader"><img src="../images/anhaenger-offen.webp" width="720" height="481" alt="" decoding="async"><strong>Hochlader</strong></a>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=anhaenger&amp;teil=plane" data-teil="plane"><img src="../images/anhaenger-plane.webp" width="2440" height="1580" alt="" decoding="async"><strong>Planen&shy;anhänger</strong></a>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=anhaenger&amp;teil=koffer" data-teil="koffer"><img src="../images/kofferanhaenger.webp" width="800" height="534" alt="" decoding="async"><strong>Koffer&shy;anhänger</strong></a>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=anhaenger&amp;teil=transporter" data-teil="transporter"><img src="../images/fahrzeugtransporter.webp" width="800" height="534" alt="" decoding="async"><strong>Fahrzeug&shy;transporter</strong></a>
+              <a class="kauf-karte kachel kachel--unter" href="?gruppe=anhaenger&amp;teil=kuehl" data-teil="kuehl"><img src="../images/kuehlanhaenger-13.webp" width="540" height="405" alt="" decoding="async"><strong>Kühl&shy;anhänger</strong></a>
+            </nav>
+          </div>
         </nav>
         <script src="../js/ober-kacheln.js?v=au"></script>
-        <nav class="kauf-einstieg kauf-ebene" id="kauf-ebene" data-fuer="zaun" aria-label="Kategorien" hidden>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=bauzaune" data-kat="bauzaune"><img src="../images/kk/bauzaun-10075.webp" width="1200" height="675" alt="" decoding="async"><strong>Bauzaun</strong></a>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=gitter" data-kat="gitter"><img src="../images/kk/absperrung-10026.webp" width="1200" height="821" alt="" decoding="async"><strong>Absperrgitter</strong></a>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=schwellen" data-kat="schwellen"><img src="../images/kk/schwelle-10005-2.webp" width="1200" height="675" alt="" decoding="async"><strong>Boden&shy;leitschwellen</strong></a>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=schleuse" data-kat="schleuse"><img src="../images/kk/absperrung-10025-3.webp" width="1024" height="701" alt="" decoding="async"><strong>Schleusen</strong></a>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=buehne" data-kat="buehne"><img src="../images/kk/absperrung-10047.webp" width="1024" height="576" alt="" decoding="async"><strong>Bühnen</strong></a>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=zubehoer" data-kat="zubehoer"><img src="../images/kk/fuss-10006.webp" width="1200" height="675" alt="" decoding="async"><strong>Zaun&shy;zubehör</strong></a>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=tore" data-kat="tore"><img src="../images/kk/tor-10028.webp" width="1024" height="701" alt="" decoding="async"><strong>Türen &amp; Tore</strong></a>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=zaun&amp;kat=sichtschutz" data-kat="sichtschutz"><img src="../images/kk/sichtschutz-10037-2.webp" width="1200" height="675" alt="" decoding="async"><strong>Sichtschutz &amp; Planen</strong></a>
-        </nav>
-        <nav class="kauf-einstieg kauf-ebene" id="kauf-ebene-verkehr" data-fuer="verkehr" aria-label="Kategorien" hidden>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=verkehr&amp;teil=schranken" data-teil="schranken"><img src="../images/schranke-folie-ra1.webp" width="610" height="420" alt="" decoding="async"><strong>Absperr&shy;schranken</strong></a>
-          <a class="kauf-karte kachel kachel--unter kauf-foto-hoch" href="?gruppe=verkehr&amp;teil=baken" data-teil="baken"><img src="../images/leitbake-hell.webp" width="429" height="1024" alt="" decoding="async"><strong>Leitbaken</strong></a>
-          <a class="kauf-karte kachel kachel--unter kauf-piktogramm" href="?gruppe=verkehr&amp;teil=gefahr" data-teil="gefahr"><img src="../images/schilder/z123.svg" width="96" height="96" alt="" decoding="async"><strong>Gefahr&shy;zeichen</strong></a>
-          <a class="kauf-karte kachel kachel--unter kauf-piktogramm" href="?gruppe=verkehr&amp;teil=vorschrift" data-teil="vorschrift"><img src="../images/schilder/z250.svg" width="96" height="96" alt="" decoding="async"><strong>Vorschrift&shy;zeichen</strong></a>
-          <a class="kauf-karte kachel kachel--unter kauf-piktogramm" href="?gruppe=verkehr&amp;teil=richt" data-teil="richt"><img src="../images/schilder/z454.svg" width="96" height="96" alt="" decoding="async"><strong>Richt&shy;zeichen</strong></a>
-          <a class="kauf-karte kachel kachel--unter kauf-piktogramm" href="?gruppe=verkehr&amp;teil=einrichtung" data-teil="einrichtung"><img src="../images/schilder/z600.svg" width="96" height="96" alt="" decoding="async"><strong>Verkehrs&shy;einrichtungen</strong></a>
-        </nav>
-        <nav class="kauf-einstieg kauf-ebene" id="kauf-ebene-anhaenger" data-fuer="anhaenger" aria-label="Kategorien" hidden>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=anhaenger&amp;teil=hochlader" data-teil="hochlader"><img src="../images/anhaenger-offen.webp" width="720" height="481" alt="" decoding="async"><strong>Hochlader</strong></a>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=anhaenger&amp;teil=plane" data-teil="plane"><img src="../images/anhaenger-plane.webp" width="2440" height="1580" alt="" decoding="async"><strong>Planen&shy;anhänger</strong></a>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=anhaenger&amp;teil=koffer" data-teil="koffer"><img src="../images/kofferanhaenger.webp" width="800" height="534" alt="" decoding="async"><strong>Koffer&shy;anhänger</strong></a>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=anhaenger&amp;teil=transporter" data-teil="transporter"><img src="../images/fahrzeugtransporter.webp" width="800" height="534" alt="" decoding="async"><strong>Fahrzeug&shy;transporter</strong></a>
-          <a class="kauf-karte kachel kachel--unter" href="?gruppe=anhaenger&amp;teil=kuehl" data-teil="kuehl"><img src="../images/kuehlanhaenger-13.webp" width="540" height="405" alt="" decoding="async"><strong>Kühl&shy;anhänger</strong></a>
-        </nav>
         </div>
         <nav id="kauf-schrift" class="kauf-schrift is-weg" aria-label="Hauptgruppen" aria-hidden="true">
           <div class="wrap">
@@ -1692,6 +1698,6 @@
   <script src="../js/schilder.js?v=av"></script>
   <script src="../data/anhaenger-eckdaten.js"></script>
   <script src="../js/auswahl.js?v=ay"></script>
-  <script src="../js/kauf.js?v=bd"></script>
+  <script src="../js/kauf.js?v=be"></script>
 </body>
 </html>
