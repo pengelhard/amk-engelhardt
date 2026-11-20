@@ -408,6 +408,8 @@
     var verkehr = document.getElementById("anfrage-verkehr");
     var einsatz = document.getElementById("anfrage-einsatz");
     if (rent) rent.hidden = !renting(data);
+    var bereich = document.getElementById("anfrage-miete-bereich");
+    if (bereich) bereich.hidden = !renting(data);
     if (period) period.hidden = !askPeriod;
     if (periodTitle) periodTitle.textContent = "Zeitraum (Miete)";
     if (fahrtTitle) fahrtTitle.textContent = "Anfahrt & Leistungen (Miete)";
@@ -482,7 +484,7 @@
       if (!kinder[parent]) kinder[parent] = [];
       kinder[parent].push(item);
     });
-    list.innerHTML = groups.filter(function (group) { return group[1].length; }).map(function (group) {
+    function groupHtml(group) {
       function zeilen(entries) {
         return entries.filter(function (entry) {
           return !istAuto(entry.item) || !eltern[autoEltern(entry.item.id)];
@@ -499,7 +501,15 @@
         body = standGroups(group[1].map(function (entry) { return entry.item; })).map(standRow).join("") + zeilen(rest);
       }
       return '<li class="cart-group"><h3>' + group[0] + "</h3></li>" + body;
-    }).join("");
+    }
+    var mieteList = document.getElementById("anfrage-liste-miete");
+    var kaufList = document.getElementById("anfrage-liste-kauf");
+    if (mieteList) mieteList.innerHTML = groups[0][1].length ? groupHtml(groups[0]) : "";
+    if (kaufList) {
+      var kaufHtml = groups.slice(1).filter(function (group) { return group[1].length; }).map(groupHtml).join("");
+      kaufList.innerHTML = kaufHtml;
+      kaufList.hidden = !kaufHtml;
+    }
   }
 
   function fill(meta) {

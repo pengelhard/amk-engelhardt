@@ -8,7 +8,7 @@
   <meta name="description" content="Anfrage an AMK Engelhardt. Der Button öffnet das eigene E-Mail-Programm.">
   <link rel="icon" href="../assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../assets/logo.png">
-  <link rel="stylesheet" href="../css/styles.css?v=ak">
+  <link rel="stylesheet" href="../css/styles.css?v=ar">
 </head>
 <body>
   <a class="skip" href="#inhalt">Zum Inhalt</a>
@@ -57,15 +57,10 @@
           
           <h2>Ihre Auswahl</h2>
           <p class="price-once">Preis auf Anfrage</p>
-          <ul class="cart" id="anfrage-liste"></ul>
-          <div id="anfrage-verkehr" hidden>
-            <label class="choice"><input type="checkbox" name="genehmigung" value="ja"> <span>Genehmigung/Verkehrsrechtliche Anordnung durch AMK</span></label>
-            <div class="field" id="anfrage-einsatz" hidden>
-              <label for="einsatzort">Einsatzort</label>
-              <input id="einsatzort" name="einsatzort" type="text" autocomplete="address-level2">
-            </div>
-          </div>
-          <div id="anfrage-miete">
+          <div id="anfrage-liste">
+            <div class="miete-bereich" id="anfrage-miete-bereich" hidden>
+              <ul class="cart" id="anfrage-liste-miete"></ul>
+              <div id="anfrage-miete">
             <div id="anfrage-zeit">
             <h2 id="anfrage-zeit-titel">Zeitraum (Miete)</h2>
             <div class="form-grid">
@@ -96,6 +91,16 @@
                 <label for="plz">PLZ</label>
                 <input id="plz" name="plz" type="text" inputmode="numeric" autocomplete="postal-code">
               </div>
+            </div>
+              </div>
+            </div>
+            <ul class="cart" id="anfrage-liste-kauf" hidden></ul>
+          </div>
+          <div id="anfrage-verkehr" hidden>
+            <label class="choice"><input type="checkbox" name="genehmigung" value="ja"> <span>Genehmigung/Verkehrsrechtliche Anordnung durch AMK</span></label>
+            <div class="field" id="anfrage-einsatz" hidden>
+              <label for="einsatzort">Einsatzort</label>
+              <input id="einsatzort" name="einsatzort" type="text" autocomplete="address-level2">
             </div>
           </div>
           <div id="anfrage-zaun" hidden>
@@ -195,6 +200,6 @@
   <script src="../js/zeitraum.js"></script>
   <script src="../js/form-config.js"></script>
   <script src="../js/formular.js"></script>
-  <script src="../js/anfrage.js?v=ak"></script>
+  <script src="../js/anfrage.js?v=ar"></script>
 </body>
 </html>

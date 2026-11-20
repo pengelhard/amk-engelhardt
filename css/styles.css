@@ -1857,6 +1857,18 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .more-parts li { margin: 0.12rem 0; }
 .cart-group { margin: 1.15rem 0 0.2rem; padding: 0; }
 .cart-group h3 { margin: 0; font-size: 1.2rem; }
+.miete-bereich {
+  margin: 0 0 1.4rem;
+  padding: 0.2rem 1rem 0.6rem;
+  background: #fff;
+  border: var(--kachel-rand);
+  border-radius: var(--kachel-radius);
+  box-shadow: var(--kachel-schatten);
+}
+.miete-bereich[hidden],
+#anfrage-liste-kauf[hidden] { display: none; }
+.miete-bereich .cart { margin: 0; }
+.miete-bereich h2 { margin-top: 0.85rem; }
 @media (min-width: 720px) {
   .more-parts { columns: 2; }
 }
