@@ -5,6 +5,50 @@
   var IM = "im Komplett-Ständer";
   var ZU = "zusätzlich";
 
+  function zahl(text) {
+    var value = parseFloat(String(text).replace(",", "."));
+    return isFinite(value) && value > 0 ? value : null;
+  }
+
+  function meter(text) {
+    if (text == null) return null;
+    var raw = String(text).trim();
+    var mm = /^(\d+(?:[.,]\d+)?)\s*mm$/i.exec(raw);
+    if (mm) {
+      var mmValue = zahl(mm[1]);
+      return mmValue == null ? null : Math.round(mmValue) / 1000;
+    }
+    var m = /^(\d+(?:[.,]\d+)?)\s*m$/i.exec(raw);
+    return m ? zahl(m[1]) : null;
+  }
+
+  function hoeheAusTitel(name) {
+    var match = /(\d+(?:[.,]\d+)?)\s*[×x]\s*(\d+(?:[.,]\d+)?)\s*m(?!m)/i.exec(String(name || ""));
+    return match ? zahl(match[2]) : null;
+  }
+
+  function hoeheMeter(item) {
+    if (!item) return null;
+    var ausAttr = item.attr ? meter(item.attr.hoehe) : null;
+    var ausTitel = hoeheAusTitel(item.name);
+    if (ausAttr != null && ausTitel != null && Math.abs(ausAttr - ausTitel) > 0.011) return null;
+    return ausAttr != null ? ausAttr : ausTitel;
+  }
+
+  function hoehenpflicht(item) {
+    if (!item) return false;
+    if (item.shop === "tore") return true;
+    return /plane|folie/i.test(item.name || "");
+  }
+
+  function zubehoerPasst(host, item) {
+    if (!item || !hoehenpflicht(item)) return !!item;
+    var ziel = hoeheMeter(host);
+    var eigene = hoeheMeter(item);
+    if (ziel == null || eigene == null) return false;
+    return Math.abs(ziel - eigene) <= 0.011;
+  }
+
   document.querySelectorAll("main form.order[data-order]").forEach(function (form) {
     form.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -503,6 +547,7 @@
       var perProduct = config.zubehoerNachProdukt && config.zubehoerNachProdukt[slug];
       var perShop = product.shop && config.zubehoerNachShop && config.zubehoerNachShop[product.shop];
       zubehoer = Array.isArray(perProduct) ? perProduct.slice() : (Array.isArray(perShop) ? perShop.slice() : []);
+      zubehoer = zubehoer.filter(function (itemSlug) { return zubehoerPasst(product, bySlug[itemSlug]); });
       fillArten();
       fillZubehoer();
       restore();

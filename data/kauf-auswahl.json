@@ -1,5 +1,5 @@
 {
-  "hinweis": "Zubehör und Ständer. Leere Zuordnung heißt: nichts anzeigen. AMK trägt Katalog-Slugs ein. zubehoerNachProdukt überschreibt zubehoerNachShop für einen Artikel. Anhänger haben kein Zubehör und stehen in keiner Liste. Späteres Anhänger-Zubehör kommt unter zubehoerNachShop.anhaenger dazu.",
+  "hinweis": "Zubehör und Ständer. Leere Zuordnung heißt: nichts anzeigen. AMK trägt Katalog-Slugs ein. zubehoerNachProdukt überschreibt zubehoerNachShop für einen Artikel. Anhänger haben kein Zubehör und stehen in keiner Liste. Späteres Anhänger-Zubehör kommt unter zubehoerNachShop.anhaenger dazu. Tore und Planen zeigt die Seite nur, wenn ihre Höhe aus attr.hoehe oder dem zweiten Maß im Titel dieselbe ist wie beim Feld. Ohne eindeutige Höhe erscheinen sie nicht. Schellen, Füße und Streben bleiben bei jeder Höhe.",
   "zubehoerNachShop": {
     "bauzaune": [
       "fuss-10006",
@@ -8,11 +8,8 @@
       "fuss-10004",
       "zubehoer-10002",
       "zubehoer-10003",
-      "plane-10012",
       "tor-10028",
       "tor-10028-0",
-      "tor-10028-2",
-      "tor-10028-3",
       "transportstaender-10059",
       "zubehoer-10008",
       "schwelle-10005-2"
@@ -27,11 +24,8 @@
       "fuss-10004",
       "zubehoer-10002",
       "zubehoer-10003",
-      "plane-10012",
       "tor-10028",
       "tor-10028-0",
-      "tor-10028-2",
-      "tor-10028-3",
       "transportstaender-10059",
       "zubehoer-10008",
       "schwelle-10005-2"
