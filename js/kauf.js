@@ -667,6 +667,8 @@
     if (hinweis) hinweis.hidden = !verkehr;
     var genehmigungZeile = document.getElementById("kauf-genehmigung-zeile");
     if (genehmigungZeile) genehmigungZeile.hidden = !(verkehr && state.modus === "miete");
+    var staenderHinweis = document.getElementById("kauf-miete-staender");
+    if (staenderHinweis) staenderHinweis.hidden = !(verkehr && state.modus === "miete");
     var bauHinweis = document.getElementById("kauf-miete-bauzaun");
     if (bauHinweis) bauHinweis.hidden = !(state.modus === "miete" && katalogAn());
     liesGenehmigung();
