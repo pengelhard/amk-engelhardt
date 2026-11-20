@@ -2668,6 +2668,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   color: var(--ink);
 }
 .trust-points span { display: block; margin-top: 0.28rem; max-width: 38ch; color: var(--ink-soft); }
+.trust-mehr { margin: 1.1rem 0 0; }
 .trust-points .trust-stars {
   margin-top: 0.2rem;
   color: var(--signal);
@@ -2696,7 +2697,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 @media (min-width: 800px) {
   .shots-grid { grid-template-columns: 1fr 1fr; }
   .shot:nth-child(odd) { border-right: 1px solid var(--line); }
-  .trust-points { grid-template-columns: 0.8fr 1.5fr 0.7fr 0.7fr; align-items: start; }
+  .trust-points { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
   .trust-quotes { grid-template-columns: 1fr 1fr; gap: 1.4rem; }
   #aktuelles .news-grid { grid-template-columns: 1fr 1fr; }
 }
