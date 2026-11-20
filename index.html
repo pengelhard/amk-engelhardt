@@ -12,8 +12,9 @@
   <link rel="icon" href="assets/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/logo.png">
   <link rel="stylesheet" href="css/styles.css?v=ap">
+  <link rel="stylesheet" href="css/entwurf-start.css?v=aw">
 </head>
-<body>
+<body class="entwurf-start">
   <a class="skip" href="#inhalt">Zum Inhalt</a>
   <div class="top">
     <header class="site-header">
@@ -52,7 +53,7 @@
         </div>
       </div>
     </section>
-    <section class="start-block" aria-label="Kategorien">
+    <section class="start-block start-kat" aria-label="Kategorien">
       <div class="wrap">
         <div class="kauf-einstieg start-kat-grid">
           <a class="kauf-karte" href="kaufen/?gruppe=zaun" data-ober="zaun"><strong>Bauzaun &amp; Absperrgitter</strong></a>
@@ -62,7 +63,7 @@
         <script src="js/ober-kacheln.js?v=au"></script>
       </div>
     </section>
-    <section class="start-block" aria-labelledby="sicherung-titel">
+    <section class="start-block sicherung" aria-labelledby="sicherung-titel">
       <div class="wrap">
         <h2 id="sicherung-titel">Verkehrssicherung aus einer Hand</h2>
         <p class="start-beispiel">Straßensperrungen brauchen eine verkehrsrechtliche Anordnung der Straßenverkehrsbehörde.</p>
@@ -76,6 +77,22 @@
           <a class="btn" href="service/">Leistungen</a>
           <a class="btn btn-ghost" href="anfrage/">Anfrage</a>
         </div>
+      </div>
+    </section>
+    <section class="start-block start-neu" id="neuheiten" aria-labelledby="neuheiten-titel">
+      <div class="wrap">
+        <div class="angebot-kopf">
+          <h2 id="neuheiten-titel">Neuheiten &amp; Angebote</h2>
+          <div class="angebot-pfeile">
+            <button type="button" class="angebot-pfeil angebot-pfeil--zurueck" aria-label="Vorherige Angebote" hidden>←</button>
+            <button type="button" class="angebot-pfeil angebot-pfeil--vor" aria-label="Nächste Angebote" hidden>→</button>
+          </div>
+        </div>
+        <p class="start-beispiel">Beispiel aus dem Katalog. Keine Preise.</p>
+        <div class="kauf-board">
+          <div class="tiles" data-aktuelles data-home="ja" data-root=""></div>
+        </div>
+        <p class="offer-more"><a href="aktuelles/">Alle ansehen</a></p>
       </div>
     </section>
     <section class="trust" aria-labelledby="warum-titel">
@@ -94,16 +111,6 @@
           <li><strong>200+</strong><span>Produkte</span></li>
         </ul>
         <p class="trust-mehr"><a href="ueber-uns/#geschichte">Firmengeschichte</a></p>
-      </div>
-    </section>
-    <section class="start-block start-neu" id="neuheiten" aria-labelledby="neuheiten-titel">
-      <div class="wrap">
-        <h2 id="neuheiten-titel">Neuheiten &amp; Angebote</h2>
-        <p class="start-beispiel">Beispiel aus dem Katalog. Keine Preise.</p>
-        <div class="kauf-board">
-          <div class="tiles" data-aktuelles data-home="ja" data-root=""></div>
-        </div>
-        <p class="offer-more"><a href="aktuelles/">Alle ansehen</a></p>
       </div>
     </section>
   </main>
@@ -157,5 +164,34 @@
 <script src="js/nav.js?v=an"></script>
 <script src="js/aktuelles.js?v=ag"></script>
 <script src="js/merkzettel.js"></script>
+<script>
+  (function () {
+    var scroller = document.querySelector(".entwurf-start .start-neu .tiles");
+    var back = document.querySelector(".angebot-pfeil--zurueck");
+    var next = document.querySelector(".angebot-pfeil--vor");
+    if (!scroller || !back || !next) return;
+    var motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    function step() {
+      var card = scroller.querySelector(".tile");
+      var gap = 14;
+      return card ? card.getBoundingClientRect().width + gap : 300;
+    }
+    function paint() {
+      var max = scroller.scrollWidth - scroller.clientWidth;
+      var desk = window.matchMedia("(min-width: 800px)").matches && max > 8;
+      back.hidden = !desk || scroller.scrollLeft < 8;
+      next.hidden = !desk || scroller.scrollLeft > max - 8;
+    }
+    function move(dir) {
+      scroller.scrollBy({ left: dir * step(), behavior: motion.matches ? "auto" : "smooth" });
+    }
+    back.addEventListener("click", function () { move(-1); });
+    next.addEventListener("click", function () { move(1); });
+    scroller.addEventListener("scroll", paint, { passive: true });
+    window.addEventListener("resize", paint);
+    new MutationObserver(paint).observe(scroller, { childList: true });
+    paint();
+  })();
+</script>
 </body>
 </html>
