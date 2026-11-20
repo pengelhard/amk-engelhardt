@@ -253,6 +253,13 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     const closed = await desktop.page.locator("#kauf-ebene-verkehr").evaluate((el) => el.hidden);
     const teil = new URL(desktop.page.url()).searchParams.get("teil");
     point("Klick schließt Panel", closed && teil === "gefahr", teil || "");
+    const nachbar = desktop.page.locator('#kauf-gruppen a[data-gruppe="zaun"]');
+    await nachbar.scrollIntoViewIfNeeded();
+    const nachbarBox = await nachbar.boundingBox();
+    await desktop.page.mouse.move(nachbarBox.x + 40, nachbarBox.y + 30);
+    await desktop.page.waitForTimeout(80);
+    const nachWahl = await desktop.page.locator("#kauf-ebene").evaluate((el) => !el.hidden);
+    point("Hover nach Auswahl", nachWahl, "");
     const expanded = await desktop.page.locator('#kauf-gruppen a[data-gruppe="zaun"]').getAttribute("aria-expanded");
     point("Barrierefreiheit", expanded === "false" || expanded === "true", expanded || "");
     await desktop.page.close();
@@ -274,6 +281,10 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     const phone = await open(390, "/kaufen/?gruppe=zaun");
     await phone.page.evaluate(() => { sessionStorage.removeItem("amk-kauf-unter"); if (document.activeElement) document.activeElement.blur(); });
     await phone.page.locator('#kauf-gruppen a[data-gruppe="anhaenger"]').click();
+    await phone.page.waitForTimeout(80);
+    const tipp = await phone.page.locator("#kauf-ebene-anhaenger").evaluate((el) => !el.hidden);
+    point("Antippen öffnet die Optionen", tipp, "");
+    await phone.page.locator("#kauf-ebene-anhaenger a[data-teil='hochlader']").click();
     await phone.page.waitForTimeout(900);
     const tapped = await phone.page.evaluate(() => {
       const nav = document.getElementById("kauf-ebene-anhaenger");

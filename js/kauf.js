@@ -831,7 +831,7 @@
       if (!link || !nav.contains(link)) return;
       event.preventDefault();
       setzeUnter(nav.getAttribute("data-fuer") || state.gruppe, unterVon(link));
-      auswahlHalt = true;
+      haltSetzen(nav.getAttribute("data-fuer") || state.gruppe);
       closePanel();
       writeUrl("push");
       render({ sprung: true, sanft: true });
@@ -846,6 +846,20 @@
   var focusQuiet = false;
   var fromPointer = false;
   var auswahlHalt = false;
+  var haltGruppe = "";
+
+  function haltSetzen(id) {
+    auswahlHalt = true;
+    haltGruppe = id || "";
+  }
+
+  function hoverFrei(id) {
+    if (!hoverFein()) return false;
+    if (auswahlHalt && haltGruppe === id) return false;
+    auswahlHalt = false;
+    haltGruppe = "";
+    return true;
+  }
 
   function hoverFein() {
     return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -930,8 +944,13 @@
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
       event.preventDefault();
       var id = canonGruppe(link.getAttribute("data-gruppe") || "");
+      if (!hoverFein()) {
+        if (offen === id) closePanel();
+        else openPanel(id);
+        return;
+      }
       setzeUnter(id, gemerkteUnter(id));
-      auswahlHalt = true;
+      haltSetzen(id);
       closePanel();
       writeUrl("push");
       render({ sprung: true, sanft: true });
@@ -942,7 +961,7 @@
       link.addEventListener("pointerup", function () { fromPointer = false; });
       link.addEventListener("pointercancel", function () { fromPointer = false; });
       link.addEventListener("mouseenter", function () {
-        if (auswahlHalt || !hoverFein()) return;
+        if (!hoverFrei(id)) return;
         openPanel(id);
       });
       link.addEventListener("mouseleave", function () {
@@ -1014,6 +1033,7 @@
     var ziel = event.target;
     if (ziel && ziel.closest && ziel.closest("#kauf-drops")) return;
     auswahlHalt = false;
+    haltGruppe = "";
   });
 
   window.addEventListener("resize", function () {
@@ -1066,8 +1086,13 @@
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
       event.preventDefault();
       var id = canonGruppe(link.getAttribute("data-gruppe") || "");
+      if (!hoverFein()) {
+        if (offen === id) closePanel();
+        else openPanel(id, "schrift");
+        return;
+      }
       setzeUnter(id, gemerkteUnter(id));
-      auswahlHalt = true;
+      haltSetzen(id);
       closePanel();
       writeUrl("push");
       render({ sprung: true, sanft: true });
@@ -1075,7 +1100,7 @@
     schrift.querySelectorAll("a[data-gruppe]").forEach(function (link) {
       var id = link.getAttribute("data-gruppe") || "";
       link.addEventListener("mouseenter", function () {
-        if (auswahlHalt || !hoverFein()) return;
+        if (!hoverFrei(id)) return;
         openPanel(id, "schrift");
       });
       link.addEventListener("mouseleave", function () {
@@ -1127,9 +1152,14 @@
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
       event.preventDefault();
       menuSchalter(false);
-      if (link.hasAttribute("data-gruppe")) setzeUnter(canonGruppe(link.getAttribute("data-gruppe") || ""), gemerkteUnter(canonGruppe(link.getAttribute("data-gruppe") || "")));
-      else setzeUnter(state.gruppe, unterVon(link));
-      auswahlHalt = true;
+      if (link.hasAttribute("data-gruppe")) {
+        var gruppe = canonGruppe(link.getAttribute("data-gruppe") || "");
+        setzeUnter(gruppe, gemerkteUnter(gruppe));
+        haltSetzen(gruppe);
+      } else {
+        setzeUnter(state.gruppe, unterVon(link));
+        haltSetzen(state.gruppe);
+      }
       closePanel();
       writeUrl("push");
       render({ sprung: true, sanft: true });
