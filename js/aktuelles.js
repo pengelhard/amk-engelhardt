@@ -106,6 +106,8 @@
     var art = artOf(entry);
     if (art === "miete" || art === "beides") badge += '<span class="badge badge--miete">Miete</span> ';
     if (art === "kauf" || art === "beides") badge += '<span class="badge badge--kauf">Kauf</span> ';
+    var extra = String(entry.badge || "").trim();
+    if (extra) badge += '<span class="badge">' + esc(extra) + "</span> ";
     return (
       '<article class="tile"><a href="' + esc(ziel(entry, root)) + '">' + picture +
       "<h3>" + esc(title) + "</h3></a><p>" + badge + esc(entry.text || "") + "</p></article>"

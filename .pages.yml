@@ -76,6 +76,11 @@ content:
             - miete
             - kauf
             - beides
+      - name: badge
+        label: Zusatz-Badge
+        type: string
+        required: false
+        description: Optional. Kurzer Hinweis auf der Kachel, zum Beispiel VDE-zertifiziert. Leer lassen, wenn keiner nötig ist.
       - name: gruppe
         label: Gruppe
         type: select

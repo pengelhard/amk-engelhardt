@@ -123,6 +123,7 @@ test("Neuheiten nutzen dieselben Katalogprodukte", () => {
     assert.ok(entry.typ === "Neu" || entry.typ === "Angebot");
     assert.ok(entry.art === "miete" || entry.art === "kauf" || entry.art === "beides", entry.slug);
     if (entry.art === "miete") assert.ok(mietbar.has(entry.slug), entry.slug);
+    if (entry.badge != null) assert.equal(typeof entry.badge, "string", entry.slug);
     assert.equal(entry.preis, "");
     assert.equal(fs.existsSync(path.join(root, "produkt", entry.slug, "index.html")), true, entry.slug);
   }
@@ -133,6 +134,15 @@ test("Neuheiten nutzen dieselben Katalogprodukte", () => {
   assert.doesNotMatch(entwurf, /Neuheiten/);
   const home = fs.readFileSync(path.join(root, "index.html"), "utf8");
   const news = fs.readFileSync(path.join(root, "aktuelles/index.html"), "utf8");
+  const bySlug = Object.fromEntries(entries.map((entry) => [entry.slug, entry]));
+  assert.equal(bySlug["bauzaun-10075"].art, "miete");
+  assert.equal(bySlug["bauzaun-10075"].badge, "VDE-zertifiziert");
+  assert.equal(bySlug["fahrzeugtransporter"].art, "kauf");
+  assert.equal(bySlug["plane-10012"].art, "beides");
+  assert.equal(bySlug["schranke-10024-1"].art, "beides");
+  assert.equal(bySlug["plane-10012"].badge, undefined);
+  const script = fs.readFileSync(path.join(root, "js/aktuelles.js"), "utf8");
+  assert.match(script, /entry\.badge/);
   assert.match(home, /data-aktuelles/);
   assert.match(news, /data-aktuelles/);
   assert.match(home, /Beispiel aus dem Katalog\. Keine Preise\./);
