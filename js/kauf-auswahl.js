@@ -187,7 +187,7 @@
     function plainId() { return (mieteModus() ? "miete:" : "kauf:") + slug; }
     function standPrefix() { return "kauf:" + slug + ":"; }
     function standOn() { return !!paket; }
-    function feldAutomatik() { return slug === "bauzaun-10075"; }
+    function feldAutomatik() { return mieteModus() && slug === "bauzaun-10075"; }
     function autoLine(parentId, teilSlug, name, qty) {
       var item = itemOf(teilSlug, { name: name, slug: teilSlug });
       var line = lineOf(parentId + ":auto:" + teilSlug, item.name || name, qty, item.bild, item.kat || product.kat, "automatisch");

@@ -1012,7 +1012,8 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     await schnellKarte.locator("[data-schnell='felder']").fill("3");
     await schnell.page.waitForTimeout(100);
     const korb = await schnell.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty + ":" + (item.note || "")));
-    point("Korb aus der Liste", korb.indexOf("kauf:bauzaun-10075:zusatz:felder:3:zusätzlich") !== -1 && !korb.some((line) => line.indexOf(":im:") !== -1), korb.join(" | "));
+    const kaufBox = await schnell.page.locator("#kauf-verkehr-summe").innerText();
+    point("Korb aus der Liste", korb.indexOf("kauf:bauzaun-10075:zusatz:felder:3:zusätzlich") !== -1 && !korb.some((line) => line.indexOf(":auto:") !== -1) && !korb.some((line) => line.indexOf(":im:") !== -1) && !/Automatisch dazu/.test(kaufBox), korb.join(" | ") + " | " + kaufBox.replace(/\s+/g, " "));
     await schnell.page.goto(base + "/produkt/bauzaun-10075/", { waitUntil: "networkidle" });
     await schnell.page.locator("#menge-staender").fill("2");
     await schnell.page.locator("#menge-staender").dispatchEvent("input");
@@ -1043,6 +1044,32 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     point("Schnellauswahl Grenze 9999", begrenzt === "9999", begrenzt);
     await schnell.page.evaluate(() => localStorage.removeItem("amk-wunsch"));
     await schnell.page.close();
+
+    const umstellen = await open(1280, "/kaufen/?gruppe=zaun&kat=bauzaune");
+    await umstellen.page.evaluate(() => {
+      localStorage.setItem("amk-wunsch", JSON.stringify([
+        { id: "kauf:bauzaun-10075:zusatz:felder", name: "Bauzaun Profi", qty: 3, note: "zusätzlich", kat: "bauzaun", bild: "" },
+        { id: "kauf:bauzaun-10075:zusatz:felder:auto:zubehoer-10002-1", name: "Verbindungsschelle 2,5 mm", qty: 3, note: "automatisch", herkunft: "auto", kat: "bauzaun", bild: "" },
+        { id: "kauf:bauzaun-10075:zusatz:felder:auto:fuss-10006", name: "Kunststofffuß schwer 23 kg", qty: 4, note: "automatisch", herkunft: "auto", kat: "bauzaun", bild: "" },
+        { id: "kauf:bauzaun-10075:im:staender", name: "Transportständer", qty: 2, note: "inklusive", kat: "bauzaun", bild: "" },
+        { id: "kauf:bauzaun-10075:im:zaun", name: "Bauzaun", qty: 60, note: "inklusive", kat: "bauzaun", bild: "" }
+      ]));
+    });
+    await umstellen.page.reload({ waitUntil: "networkidle" });
+    const nachLaden = await umstellen.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id));
+    point("Kauf-Automatik beim Laden weg", nachLaden.indexOf("kauf:bauzaun-10075:zusatz:felder") !== -1 && nachLaden.indexOf("kauf:bauzaun-10075:im:staender") !== -1 && nachLaden.every((id) => id.indexOf(":zusatz:felder:auto:") === -1), nachLaden.join(", "));
+    await umstellen.page.evaluate(() => {
+      const items = JSON.parse(localStorage.getItem("amk-wunsch") || "[]");
+      items.push({ id: "kauf:bauzaun-10075:zusatz:felder:auto:zubehoer-10002-1", name: "Verbindungsschelle 2,5 mm", qty: 3, note: "automatisch", herkunft: "auto", kat: "bauzaun" });
+      items.push({ id: "kauf:bauzaun-10075:zusatz:felder:auto:fuss-10006", name: "Kunststofffuß schwer 23 kg", qty: 4, note: "automatisch", herkunft: "auto", kat: "bauzaun" });
+      localStorage.setItem("amk-wunsch", JSON.stringify(items));
+    });
+    await umstellen.page.locator(".modus-schalter a[data-modus='miete']").click();
+    await umstellen.page.waitForFunction(() => new URL(location.href).searchParams.get("modus") === "miete");
+    const nachUmstellen = await umstellen.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id));
+    point("Kauf-Automatik beim Umstellen weg", nachUmstellen.indexOf("kauf:bauzaun-10075:zusatz:felder") !== -1 && nachUmstellen.indexOf("kauf:bauzaun-10075:im:staender") !== -1 && nachUmstellen.indexOf("kauf:bauzaun-10075:im:zaun") !== -1 && nachUmstellen.every((id) => id.indexOf(":zusatz:felder:auto:") === -1), nachUmstellen.join(", "));
+    await umstellen.page.evaluate(() => localStorage.removeItem("amk-wunsch"));
+    await umstellen.page.close();
 
     const detail = await open(1280, "/produkt/bauzaun-10075/");
     await detail.page.waitForSelector("#menge-staender");
@@ -1077,6 +1104,17 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
       };
     });
     point("Komplett-Ständer und Einzelfelder", detailInfo.staender && detailInfo.felder, "");
+    const kaufOhne = await detail.page.evaluate(() => ({
+      auto: !!document.getElementById("block-auto"),
+      korb: JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty)
+    }));
+    point("Kauf Einzelfelder ohne Automatik", !kaufOhne.auto && kaufOhne.korb.some((id) => id.indexOf("kauf:bauzaun-10075:im:staender:1") === 0) && kaufOhne.korb.some((id) => id.indexOf("kauf:bauzaun-10075:zusatz:felder:1") === 0) && kaufOhne.korb.every((id) => id.indexOf(":auto:") === -1), kaufOhne.korb.join(", "));
+    const standVorher = kaufOhne.korb.filter((id) => id.indexOf(":im:") !== -1).map((id) => id.replace(/:\d+$/, "")).sort();
+    await detail.page.locator("#menge-staender").fill("3");
+    await detail.page.locator("#menge-staender").dispatchEvent("input");
+    const standNach = await detail.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));
+    const standIds = standNach.filter((id) => id.indexOf(":im:") !== -1).map((id) => id.replace(/:\d+$/, "")).sort();
+    point("Nur die Ständerzahl ändert den Inhalt", standNach.some((id) => id.indexOf("kauf:bauzaun-10075:im:staender:3") === 0) && standIds.join("|") === standVorher.join("|") && standNach.every((id) => id.indexOf(":zusatz:felder:auto:") === -1) && standNach.some((id) => id.indexOf("kauf:bauzaun-10075:zusatz:felder:1") === 0), standNach.join(", "));
     point("Fuß- und Schellentausch", detailInfo.fuss > 1 && detailInfo.schelle > 1, `${detailInfo.fuss}/${detailInfo.schelle}`);
     point("Blöcke enthalten und zusätzlich", detailInfo.im && detailInfo.extra && detailInfo.titel.trim() === "Deine Auswahl" && detailInfo.standKarte && detailInfo.zusatzKarte, detailInfo.titel.trim());
     point("Zubehör", detailInfo.zubehoer > 0, String(detailInfo.zubehoer));
@@ -1400,6 +1438,20 @@ test("Kaufbereich, Funktionsliste", { skip, timeout: 240000 }, async () => {
     point("Detail mieten", staenderKarte === 1 && detailKorb.indexOf("miete:bauzaun-10075:2") !== -1 && detailKorb.indexOf("miete:bauzaun-10075:auto:zubehoer-10002-1:2") !== -1 && detailKorb.indexOf("miete:bauzaun-10075:auto:fuss-10006:3") !== -1 && detailKorb.every((id) => id.indexOf(":im:") === -1) && detailAuto.da && !detailAuto.eingabe && detailAuto.texte.length === 2, detailKorb.join(", ") + " | " + JSON.stringify(detailAuto));
     point("Konsole Detail mieten", detailMiete.errors.length === 0, detailMiete.errors.join(" | "));
     await detailMiete.page.close();
+
+    const standMiete = await open(1280, "/produkt/bauzaun-10075/?modus=miete");
+    await standMiete.page.evaluate(() => localStorage.removeItem("amk-wunsch"));
+    await standMiete.page.reload({ waitUntil: "networkidle" });
+    await standMiete.page.locator("#menge-staender").fill("2");
+    await standMiete.page.locator("#menge-staender").dispatchEvent("input");
+    const standMieteKorb = await standMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty));
+    point("Ständer in der Miete komplett", standMieteKorb.some((id) => id.indexOf("kauf:bauzaun-10075:im:staender:2") === 0) && standMieteKorb.some((id) => id.indexOf("kauf:bauzaun-10075:im:zaun:") === 0) && standMieteKorb.some((id) => id.indexOf("kauf:bauzaun-10075:im:fuss:") === 0) && standMieteKorb.some((id) => id.indexOf("kauf:bauzaun-10075:im:schelle:") === 0) && standMieteKorb.every((id) => id.indexOf(":auto:") === -1), standMieteKorb.join(", "));
+    await standMiete.page.locator("#menge-felder").fill("3");
+    await standMiete.page.locator("#menge-felder").dispatchEvent("input");
+    const beides = await standMiete.page.evaluate(() => JSON.parse(localStorage.getItem("amk-wunsch") || "[]").map((item) => item.id + ":" + item.qty + ":" + (item.note || "")));
+    point("Miete behält Ständer und Feld-Automatik", beides.some((id) => id.indexOf("kauf:bauzaun-10075:im:staender:2") === 0) && beides.indexOf("miete:bauzaun-10075:auto:zubehoer-10002-1:3:automatisch") !== -1 && beides.indexOf("miete:bauzaun-10075:auto:fuss-10006:4:automatisch") !== -1 && beides.every((id) => id.indexOf("kauf:bauzaun-10075:zusatz:felder:auto:") === -1), beides.join(", "));
+    await standMiete.page.evaluate(() => localStorage.removeItem("amk-wunsch"));
+    await standMiete.page.close();
 
     const detailAnh = await open(390, "/produkt/hochlader/?modus=miete");
     await detailAnh.page.waitForSelector("#miete-anhaenger");
